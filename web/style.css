@@ -45,3 +45,11 @@ header{height:76px;border-bottom:1px solid #e9edf3;padding:0 36px}.breadcrumb{co
 .modal .formgrid{grid-template-columns:repeat(3,minmax(0,1fr));column-gap:20px}
 @media(max-width:900px){.modal .formgrid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:600px){.modal{width:calc(100vw - 24px);padding:20px}.modal .formgrid{grid-template-columns:1fr}}
+
+.buildingstaff{display:grid;grid-template-columns:1fr;gap:8px;margin-top:auto;padding-top:11px;border-top:1px solid #e7edf2}
+.buildingstaff>div{display:flex;align-items:baseline;justify-content:space-between;gap:10px;min-width:0}
+.buildingstaff span{font-size:11px;color:#71879a;flex-shrink:0}
+.buildingstaff strong{font-size:12px;font-weight:650;text-align:right;color:#1c425b;overflow-wrap:anywhere}
+[data-theme="dark"] .buildingstaff{border-color:#294158}
+[data-theme="dark"] .buildingstaff span{color:#a2b7c9}
+[data-theme="dark"] .buildingstaff strong{color:#e3edf6}
