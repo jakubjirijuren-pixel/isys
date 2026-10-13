@@ -53,3 +53,11 @@ header{height:76px;border-bottom:1px solid #e9edf3;padding:0 36px}.breadcrumb{co
 [data-theme="dark"] .buildingstaff{border-color:#294158}
 [data-theme="dark"] .buildingstaff span{color:#a2b7c9}
 [data-theme="dark"] .buildingstaff strong{color:#e3edf6}
+
+.tiles article.clickabletile{cursor:pointer;transition:transform .15s,border-color .15s,box-shadow .15s}
+.tiles article.clickabletile:hover,.tiles article.clickabletile:focus-visible{transform:translateY(-2px);border-color:#6cabc9;box-shadow:0 9px 22px #18394c18;outline-offset:3px}
+.buildingcompany{display:flex;justify-content:space-between;gap:10px;align-items:baseline;font-size:12px}
+.buildingcompany span{color:#71879a}
+.buildingcompany strong{color:#1c425b;font-size:12px;font-weight:650;overflow-wrap:anywhere;text-align:right}
+[data-theme="dark"] .buildingcompany span{color:#a2b7c9}
+[data-theme="dark"] .buildingcompany strong{color:#e3edf6}
