@@ -121,3 +121,29 @@ header{height:76px;border-bottom:1px solid #e9edf3;padding:0 36px}.breadcrumb{co
 /* More prominent building identification on overview cards */
 .buildingcard .buildingnumber{font-size:15px;font-weight:850;letter-spacing:.45px;line-height:1.4;color:#176f9c}
 [data-theme="dark"] .buildingcard .buildingnumber{color:#8ed4f5}
+
+.dashboardwidgetheading{display:flex;justify-content:space-between;align-items:center;gap:15px;margin:27px 0 0}
+.dashboardwidgetheading h2{font-size:20px;margin:0 0 5px}.dashboardwidgetheading p{font-size:13px;color:#71879a;margin:0}
+.dashboardtiles{margin-top:15px}
+.dashboardtiles article{position:relative}
+.dashboardtiles .widgettitle{display:flex;justify-content:space-between;align-items:start;gap:8px}
+.dashboardtiles .widgettitle h3{margin:0 0 12px;font-size:14px}
+.dashboardtiles .widgetvalue{font-size:30px;font-weight:800;color:#153b55;margin:2px 0 7px}
+.dashboardtiles article>small{font-size:12px;color:#7c90a0}
+.widgetremove{border:0;border-radius:7px;background:transparent;color:#8ba0b0;font-size:20px;line-height:22px;cursor:pointer;padding:0 6px}
+.widgetremove:hover{background:#f4e6e8;color:#a12c2c}
+.widgetpicker{margin-top:15px;padding:20px;background:#fff;border:1px solid #dbe5ec;border-radius:13px}
+.widgetpickerhead{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:16px}
+.widgetchoices{display:grid;grid-template-columns:repeat(auto-fit,minmax(225px,1fr));gap:10px}
+.widgetchoices label{display:flex;align-items:start;gap:11px;border:1px solid #e1e8ef;border-radius:10px;padding:12px;cursor:pointer}
+.widgetchoices input{margin-top:4px;accent-color:#146c9c}
+.widgetchoices span{display:flex;flex-direction:column;gap:4px}
+.widgetchoices strong{font-size:13px}
+.widgetchoices small{font-size:11px;color:#71879a}
+.emptywidgets{padding:24px;background:#fff;border:1px dashed #c5d8e4;border-radius:12px;color:#61798a;grid-column:1/-1}
+[data-theme="dark"] .dashboardwidgetheading p,[data-theme="dark"] .widgetchoices small,[data-theme="dark"] .dashboardtiles article>small{color:#a2b7c9}
+[data-theme="dark"] .dashboardtiles .widgetvalue{color:#e3edf6}
+[data-theme="dark"] .widgetpicker,[data-theme="dark"] .emptywidgets{background:#142334;border-color:#294158;color:#e3edf6}
+[data-theme="dark"] .widgetchoices label{border-color:#294158}
+[data-theme="dark"] .widgetremove:hover{background:#4a2a37;color:#ffb6c1}
+@media(max-width:600px){.dashboardwidgetheading{align-items:flex-start;flex-direction:column}.widgetpickerhead{align-items:flex-start;flex-wrap:wrap}}
