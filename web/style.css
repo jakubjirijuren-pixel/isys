@@ -87,3 +87,14 @@ header{height:76px;border-bottom:1px solid #e9edf3;padding:0 36px}.breadcrumb{co
 [data-theme="dark"] .buildingtable td strong{color:#e3edf6}
 [data-theme="dark"] .buildingtable td small{color:#9db1c1}
 [data-theme="dark"] .buildingtable tbody tr:hover,[data-theme="dark"] .buildingtable tbody tr:focus-visible{background:#1b3850}
+
+.supportbanner{display:flex;align-items:center;gap:17px;background:#e8f4fb;border:1px solid #b8d9ea;border-left:4px solid #167da8;border-radius:12px;padding:19px 22px;margin-top:24px;color:#173d54}
+.supporticon{width:44px;height:44px;border-radius:12px;background:#d2eaf6;display:grid;place-items:center;font-size:25px;flex-shrink:0}
+.supportcopy{flex:1;min-width:0}.supportcopy strong{font-size:15px}.supportcopy p{margin:5px 0 0;font-size:13px;line-height:1.5;color:#41677b}.supportcopy a{color:#086d9d;font-weight:700}
+.supportaction{display:inline-block;border-radius:9px;background:#146c9c;color:white;text-decoration:none;padding:11px 15px;font-size:13px;font-weight:650;white-space:nowrap}
+.supportaction:hover{background:#0e567e}
+[data-theme="dark"] .supportbanner{background:#163247;border-color:#285b79;border-left-color:#4ba9d5;color:#e2f0f8}
+[data-theme="dark"] .supporticon{background:#254e66}
+[data-theme="dark"] .supportcopy p{color:#b2cedf}
+[data-theme="dark"] .supportcopy a{color:#8bd5f7}
+@media(max-width:700px){.supportbanner{flex-wrap:wrap;padding:16px}.supportaction{width:100%;text-align:center}}
