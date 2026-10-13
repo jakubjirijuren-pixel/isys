@@ -235,3 +235,13 @@ header{height:76px;border-bottom:1px solid #e9edf3;padding:0 36px}.breadcrumb{co
 [data-theme="dark"] .widgetfilterhint{background:#17394c;border-color:#37657b;color:#d5ecf7}
 .dashboardtiles .widgetcard{transition:transform .16s ease,box-shadow .16s ease}
 .dashboardtiles .widgetcard:not(.widgetdragging):hover{transform:translateY(-2px)}
+
+/* Prevent dropdown flex basis from creating large vertical gaps in the profile menu */
+.userdropdown .mytechnicianfield{display:flex;flex-direction:column;align-items:stretch;gap:7px}
+.userdropdown .mytechnicianfield .filterdropdown{flex:0 0 auto;width:100%;min-width:0}
+.userdropdown .mytechnicianfield .filtertrigger{min-height:42px}
+.userdropdown .mytechnicianfield small{margin:0;line-height:1.5}
+.userdropdown .userfieldspacing{margin-top:16px!important}
+.widgetscope .filterdropdown{flex:0 0 auto;width:100%;min-width:0}
+.widgetscope .filtertrigger{min-height:39px;padding:9px 12px}
+.widgetscope .filtermenu{max-height:180px}
