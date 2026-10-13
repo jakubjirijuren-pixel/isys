@@ -276,3 +276,17 @@ header{height:76px;border-bottom:1px solid #e9edf3;padding:0 36px}.breadcrumb{co
 [data-theme="dark"] .accentchoice.selected{border-color:var(--isys-accent)}
 [data-theme="dark"] .filtermenu button.chosen{background:color-mix(in srgb,var(--isys-accent) 30%,#142334);color:#f2f8ff}
 [data-theme="dark"] .avatar{background:color-mix(in srgb,var(--isys-accent) 24%,#15283a);color:#e3f4fa}
+
+/* Account password change */
+.userdropdown{max-height:min(82vh,720px);overflow-y:auto}
+.profilepassword{border-top:1px solid #dbe5ec;margin-top:18px;padding-top:12px}
+.passwordtoggle{display:flex;align-items:center;justify-content:space-between;width:100%;padding:8px 0;background:transparent;border:0;color:inherit;font-size:13px;font-weight:700;cursor:pointer;text-align:left}
+.passwordform{display:flex;flex-direction:column;gap:8px;padding-top:10px}
+.passwordform label{font-size:12px;font-weight:650}
+.passwordform input{min-height:40px;width:100%;padding:9px 11px;border:1px solid #cbd8e0;border-radius:8px;background:#fff;color:#23465c;font:inherit;font-size:13px}
+.passwordform small{font-size:11px;color:#71879a;line-height:1.5}
+.passwordform .primary{margin-top:7px}
+.passwordnotice{font-size:12px;line-height:1.5;margin:10px 0 0;color:inherit}
+[data-theme="dark"] .profilepassword{border-color:#36546a}
+[data-theme="dark"] .passwordform input{background:#1a3043;border-color:#36546a;color:#e3edf6}
+[data-theme="dark"] .passwordform small{color:#a2b7c9}
