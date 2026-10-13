@@ -19,3 +19,21 @@ header{height:76px;border-bottom:1px solid #e9edf3;padding:0 36px}.breadcrumb{co
 .modal{width:min(100%,740px)}.formgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 16px}.formgrid label{min-width:0}@media(max-width:600px){.formgrid{grid-template-columns:1fr}}
 
 .buildinggrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(235px,1fr));gap:14px}.buildingcard{background:#fff;border:1px solid #e1e8ef;border-radius:13px;padding:19px;text-align:left;display:flex;flex-direction:column;gap:9px;cursor:pointer;min-height:175px;color:#19364a;font:inherit;box-shadow:0 3px 14px #18394c09;transition:transform .15s,border-color .15s,box-shadow .15s}.buildingcard:hover,.buildingcard:focus-visible{transform:translateY(-2px);border-color:#70afcd;box-shadow:0 9px 22px #18394c18}.buildingcard strong{font-size:16px;line-height:1.3}.buildingnumber{color:#2b799e;font-weight:800;font-size:10px;letter-spacing:1px}.buildingaddress,.buildingperson{color:#687f91;font-size:12px}.buildingperson{margin-top:auto}.buildinglink{font-weight:700;font-size:12px;color:#14729c}.emptybuilding{background:white;border:1px solid #e2e9ef;border-radius:12px;padding:22px}.buildingdetail{display:grid;gap:18px}.detailtop{display:flex;justify-content:space-between;gap:12px}.detailhero{background:linear-gradient(110deg,#153a56,#237497);color:white;padding:29px;border-radius:16px}.detailhero h2{font-size:27px;margin:12px 0 6px}.detailhero p{color:#d2e6ef;margin:0}.detailtag{font-size:11px;letter-spacing:1.4px;font-weight:800;color:#a9d9eb}.detailsection{background:#fff;border:1px solid #e2e9ef;border-radius:14px;padding:23px}.detailsection h3{margin:0 0 20px;font-size:16px}.detailgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(185px,1fr));gap:22px}.detailfield{display:flex;flex-direction:column;gap:6px;overflow-wrap:anywhere}.detailfield span{font-size:12px;color:#7c8d9a}.detailfield strong{font-size:14px;font-weight:650;color:#19364a}.detailnote{white-space:pre-wrap;color:#536b7d}
+
+.themebutton{background:#edf4f8;color:#20516b;border:1px solid #cfdee8;border-radius:9px;padding:9px 12px;font:inherit;font-size:13px;cursor:pointer;white-space:nowrap}
+[data-theme="dark"]{background:#0b1521;color:#e3edf6}
+[data-theme="dark"] body,[data-theme="dark"] .content{background:#0b1521;color:#e3edf6}
+[data-theme="dark"] aside{background:#081420}
+[data-theme="dark"] header,[data-theme="dark"] .login,[data-theme="dark"] .tiles article,[data-theme="dark"] .buildingcard,[data-theme="dark"] .detailsection,[data-theme="dark"] .modal,[data-theme="dark"] .emptybuilding,[data-theme="dark"] .buildinglist article{background:#142334;color:#e3edf6;border-color:#294158}
+[data-theme="dark"] header{border-color:#294158}
+[data-theme="dark"] .body h1,[data-theme="dark"] .pageheading h1,[data-theme="dark"] .buildingcard strong,[data-theme="dark"] .detailfield strong,[data-theme="dark"] .tiles p,[data-theme="dark"] .breadcrumb strong{color:#e3edf6}
+[data-theme="dark"] .tiles h3,[data-theme="dark"] .pageheading p,[data-theme="dark"] .buildingaddress,[data-theme="dark"] .buildingperson,[data-theme="dark"] .detailfield span,[data-theme="dark"] .detailnote,[data-theme="dark"] .buildinglist p,[data-theme="dark"] .login p,[data-theme="dark"] .breadcrumb{color:#a2b7c9}
+[data-theme="dark"] .secondarybutton,[data-theme="dark"] .logout,[data-theme="dark"] .themebutton,[data-theme="dark"] .searchbox,[data-theme="dark"] .modal input,[data-theme="dark"] .modal textarea,[data-theme="dark"] .login input{background:#1a3043;color:#e3edf6;border-color:#36546a}
+[data-theme="dark"] input::placeholder{color:#9bb0c1}
+[data-theme="dark"] .notice,[data-theme="dark"] .importpanel{background:#183548;color:#c3e2f0;border-color:#2b617b}
+[data-theme="dark"] .importpanel p{color:#b1d2e1}
+[data-theme="dark"] .error{background:#42262b;color:#ffb7bb}
+[data-theme="dark"] .avatar{background:#294b62;color:#d2edf9}
+[data-theme="dark"] .buildingcard:hover{border-color:#4b9cc3;background:#1a3043}
+[data-theme="dark"] .hero,[data-theme="dark"] .detailhero{background:linear-gradient(110deg,#122c46,#205675)}
+@media(max-width:550px){.userbar{gap:7px}.themebutton{font-size:12px;padding:8px}.logout{padding:8px}}
