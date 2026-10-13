@@ -117,3 +117,7 @@ header{height:76px;border-bottom:1px solid #e9edf3;padding:0 36px}.breadcrumb{co
 [data-theme="dark"] .filtermenu button{color:#e3edf6}
 [data-theme="dark"] .filtermenu button:hover,[data-theme="dark"] .filtermenu button:focus-visible{background:#294b62}
 [data-theme="dark"] .filtermenu button.chosen{background:#245574;color:#b9e9ff}
+
+/* More prominent building identification on overview cards */
+.buildingcard .buildingnumber{font-size:15px;font-weight:850;letter-spacing:.45px;line-height:1.4;color:#176f9c}
+[data-theme="dark"] .buildingcard .buildingnumber{color:#8ed4f5}
