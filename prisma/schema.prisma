@@ -1,0 +1,46 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Building {
+  id        String   @id @default(cuid())
+  name      String
+  address   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  tasks     Task[]
+  keys      Key[]
+  inspections Inspection[]
+}
+
+model Task {
+  id         String   @id @default(cuid())
+  title      String
+  description String?
+  completed  Boolean  @default(false)
+  buildingId String
+  building   Building @relation(fields: [buildingId], references: [id], onDelete: Cascade)
+  createdAt  DateTime @default(now())
+}
+
+model Key {
+  id         String   @id @default(cuid())
+  label      String
+  holder     String?
+  buildingId String
+  building   Building @relation(fields: [buildingId], references: [id], onDelete: Cascade)
+  createdAt  DateTime @default(now())
+}
+
+model Inspection {
+  id         String   @id @default(cuid())
+  notes      String?
+  inspectedAt DateTime @default(now())
+  buildingId String
+  building   Building @relation(fields: [buildingId], references: [id], onDelete: Cascade)
+}
