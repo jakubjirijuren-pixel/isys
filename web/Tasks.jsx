@@ -2,8 +2,11 @@ import React,{useEffect,useState} from "react";
 import "./tasks.css";
 const statuses=["nový","přidělený","v řešení","čeká na kontrolu","vráceno k dopracování","uzavřený"];
 const empty={building_id:"",title:"",description:"",priority:"běžná",technician:"",referent:"",due_date:""};
-export default function Tasks({supabase,buildings,myReferent,myTechnician,userId}){
+export default function Tasks({supabase,buildings,myReferent,myTechnician,userId,userEmail}){
  const [items,setItems]=useState([]),[events,setEvents]=useState([]),[selected,setSelected]=useState(null),[draft,setDraft]=useState(empty),[creating,setCreating]=useState(false),[busy,setBusy]=useState(false),[notice,setNotice]=useState(""),[filter,setFilter]=useState("otevřené"),[note,setNote]=useState(""),[resolution,setResolution]=useState("");
+ const [actorNames,setActorNames]=useState({});
+ useEffect(()=>{let active=true;supabase.from("profiles").select("*").then(({data,error})=>{if(!active||error)return;const names={};for(const p of data||[]){const label=[p.full_name,p.display_name,p.name,p.email].find(x=>typeof x==="string"&&x.trim());if(label)names[p.id]=label}setActorNames(names)});return()=>{active=false}},[supabase]);
+ const actorLabel=e=>e.actor_email||actorNames[e.actor_id]||(e.actor_id===userId?userEmail||"Já":"Uživatel "+String(e.actor_id||"").slice(0,8));
  const technicians=[...new Set(buildings.map(b=>b.manager).filter(Boolean))].sort((a,b)=>a.localeCompare(b,"cs"));
  const buildingName=id=>{const b=buildings.find(b=>String(b.id)===String(id));return b?(b.object_number?"Objekt "+b.object_number+" – ":"")+(b.street||b.name||b.address):"Bez objektu"};
  const load=async()=>{const {data,error}=await supabase.from("work_requests").select("*").order("created_at",{ascending:false}).limit(300);if(error)setNotice("Načtení úkolů selhalo: "+error.message);else setItems(data||[])};
@@ -14,7 +17,7 @@ export default function Tasks({supabase,buildings,myReferent,myTechnician,userId
   const payload={...draft,title:draft.title.trim(),description:draft.description.trim(),technician:draft.technician||"",referent:draft.referent||"",due_date:draft.due_date||null,created_by:userId,updated_by:userId,status:draft.technician?"přidělený":"nový"};
   const {data,error}=await supabase.from("work_requests").insert(payload).select().single();
   if(error)setNotice("Požadavek se nepodařilo uložit: "+error.message);
-  else{await supabase.from("work_request_events").insert({request_id:data.id,actor_id:userId,status:data.status,note:"Požadavek vytvořen"});setDraft(empty);setCreating(false);setSelected(data);setNotice("Požadavek byl vytvořen.");await load()}
+  else{await supabase.from("work_request_events").insert({request_id:data.id,actor_id:userId,actor_email:userEmail||null,status:data.status,note:"Požadavek vytvořen"});setDraft(empty);setCreating(false);setSelected(data);setNotice("Požadavek byl vytvořen.");await load()}
   setBusy(false);
  };
  const update=async(status,details={})=>{if(!selected||busy)return;setBusy(true);setNotice("");
@@ -24,7 +27,7 @@ export default function Tasks({supabase,buildings,myReferent,myTechnician,userId
   if(status==="v řešení"||status==="vráceno k dopracování")changes.reviewed_at=null;
   const {error}=await supabase.from("work_requests").update(changes).eq("id",selected.id);
   if(error)setNotice("Změna se nezdařila: "+error.message);
-  else{const historyNote=details.review_note||details.resolution||note||"";const {error:historyError}=await supabase.from("work_request_events").insert({request_id:selected.id,actor_id:userId,status,note:historyNote});if(historyError)setNotice("Stav uložen, ale zápis historie selhal: "+historyError.message);else setNotice("Stav požadavku aktualizován.");setNote("");await load();const {data}=await supabase.from("work_request_events").select("*").eq("request_id",selected.id).order("created_at",{ascending:false});setEvents(data||[])}
+  else{const historyNote=details.review_note||details.resolution||note||"";const {error:historyError}=await supabase.from("work_request_events").insert({request_id:selected.id,actor_id:userId,actor_email:userEmail||null,status,note:historyNote});if(historyError)setNotice("Stav uložen, ale zápis historie selhal: "+historyError.message);else setNotice("Stav požadavku aktualizován.");setNote("");await load();const {data}=await supabase.from("work_request_events").select("*").eq("request_id",selected.id).order("created_at",{ascending:false});setEvents(data||[])}
   setBusy(false);
  };
  const filtered=items.filter(x=>filter==="vše"||filter==="moje"?(filter==="vše"||x.technician===myTechnician):filter==="ke kontrole"?x.status==="čeká na kontrolu":x.status!=="uzavřený");
@@ -40,5 +43,5 @@ export default function Tasks({supabase,buildings,myReferent,myTechnician,userId
  {selected.resolution&&<p><strong>Provedené práce:</strong> {selected.resolution}</p>}
  {selected.status==="čeká na kontrolu"&&<div className="taskreview"><h3>Výsledná kontrola práce</h3><label>Hodnocení / připomínky<textarea rows="3" value={note} onChange={e=>setNote(e.target.value)} placeholder="Zápis referenta o kontrole provedené práce"/></label><div className="taskreviewbuttons"><button disabled={busy} className="primary" onClick={()=>update("uzavřený",{review_note:note})}>Schválit a uzavřít</button><button disabled={busy||!note.trim()} className="secondarybutton" onClick={()=>update("vráceno k dopracování",{review_note:note})}>Vrátit k dopracování</button></div></div>}
  {selected.review_note&&<p><strong>Výsledek kontroly:</strong> {selected.review_note}</p>}</div>
- <h3>Historie změn</h3><div className="taskhistory">{events.map(e=><div key={e.id}><strong>{e.status}</strong><small>{new Date(e.created_at).toLocaleString("cs-CZ")}</small>{e.note&&<p>{e.note}</p>}</div>)}</div></section>}</div></div>;
+ <h3>Historie změn</h3><div className="taskhistory">{events.map(e=><div key={e.id}><strong>{e.status}</strong><small>{new Date(e.created_at).toLocaleString("cs-CZ")} · Změnil: {actorLabel(e)}</small>{e.note&&<p>{e.note}</p>}</div>)}</div></section>}</div></div>;
 }
