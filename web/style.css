@@ -161,3 +161,5 @@ header{height:76px;border-bottom:1px solid #e9edf3;padding:0 36px}.breadcrumb{co
 [data-theme="dark"] .widgetconfig{color:#b2cad9}
 [data-theme="dark"] .widgetconfig:hover{background:#294b62}
 [data-theme="dark"] .scopewarning{color:#f2c487}
+
+.importskipped{max-height:170px;overflow:auto;margin:8px 0;padding:8px 12px;border:1px solid #b6d9e8;border-radius:8px}.importskipped p{margin:5px 0;font-size:12px}
