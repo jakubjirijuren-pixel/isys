@@ -1,0 +1,20 @@
+{
+  "expo": {
+    "name": "iSYS",
+    "slug": "isys",
+    "scheme": "isys",
+    "version": "0.1.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "automatic",
+    "android": {
+      "package": "cz.isys.technici",
+      "edgeToEdgeEnabled": true
+    },
+    "plugins": [
+      "expo-router"
+    ],
+    "experiments": {
+      "typedRoutes": true
+    }
+  }
+}
