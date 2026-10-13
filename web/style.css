@@ -222,3 +222,16 @@ header{height:76px;border-bottom:1px solid #e9edf3;padding:0 36px}.breadcrumb{co
 [data-theme="dark"] .dashboardtiles .widgetcard:not(.widgetcolor-default) h3,[data-theme="dark"] .dashboardtiles .widgetcard:not(.widgetcolor-default) .widgetvalue{color:#f2f8ff}
 [data-theme="dark"] .dashboardtiles .widgetcard:not(.widgetcolor-default)>small{color:#c2d9e6}
 [data-theme="dark"] .swatch-default{background:#1b2b3c}
+
+.widgetpickeranimated{transform-origin:top center;animation:widgetpicker-reveal .28s cubic-bezier(.2,.8,.2,1) both}
+.widgetpickeranimated .widgetchoices label{animation:widgetitem-reveal .32s ease both}
+.widgetpickeranimated .widgetchoices label:nth-child(3n+2){animation-delay:45ms}
+.widgetpickeranimated .widgetchoices label:nth-child(3n){animation-delay:85ms}
+@keyframes widgetpicker-reveal{from{opacity:0;transform:translateY(-12px) scale(.985)}to{opacity:1;transform:translateY(0) scale(1)}}
+@keyframes widgetitem-reveal{from{opacity:0;transform:translateY(7px)}to{opacity:1;transform:translateY(0)}}
+@media(prefers-reduced-motion:reduce){.widgetpickeranimated,.widgetpickeranimated .widgetchoices label{animation:none}}
+.widgetfilterhint{margin:12px 0;padding:9px 12px;border:1px solid #9ecbe2;border-radius:9px;background:#eaf5fc;color:#235570;font-size:13px;display:flex;gap:12px;align-items:center;justify-content:space-between}
+.widgetfilterhint button{border:0;background:transparent;color:inherit;font:inherit;font-weight:700;cursor:pointer}
+[data-theme="dark"] .widgetfilterhint{background:#17394c;border-color:#37657b;color:#d5ecf7}
+.dashboardtiles .widgetcard{transition:transform .16s ease,box-shadow .16s ease}
+.dashboardtiles .widgetcard:not(.widgetdragging):hover{transform:translateY(-2px)}
