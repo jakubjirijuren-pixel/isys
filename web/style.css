@@ -61,3 +61,29 @@ header{height:76px;border-bottom:1px solid #e9edf3;padding:0 36px}.breadcrumb{co
 .buildingcompany strong{color:#1c425b;font-size:12px;font-weight:650;overflow-wrap:anywhere;text-align:right}
 [data-theme="dark"] .buildingcompany span{color:#a2b7c9}
 [data-theme="dark"] .buildingcompany strong{color:#e3edf6}
+
+/* Fixed navigation on desktop; compact sticky navigation on mobile */
+@media(min-width:701px){.layout>aside{position:sticky;top:0;height:100vh;overflow-y:auto;align-self:flex-start}}
+@media(max-width:700px){.layout>aside{position:sticky;top:0;z-index:8;box-shadow:0 3px 12px #061d3020}}
+.viewtoolbar{display:flex;justify-content:flex-end;align-items:center;gap:12px;margin:-4px 0 17px;font-size:12px;color:#71879a}
+.viewswitch{display:flex;gap:3px;border:1px solid #dbe5ec;border-radius:10px;background:#fff;padding:3px}
+.viewswitch button{border:0;background:transparent;color:#456175;border-radius:7px;padding:8px 13px;font:inherit;font-size:12px;cursor:pointer}
+.viewswitch button.active{background:#146c9c;color:white;font-weight:700}
+.buildingtablewrap{overflow-x:auto;border:1px solid #e1e8ef;border-radius:13px;background:#fff}
+.buildingtable{width:100%;border-collapse:collapse;font-size:13px;min-width:800px}
+.buildingtable th{text-align:left;background:#f1f5f8;color:#557084;font-weight:650;font-size:12px;padding:15px 16px;white-space:nowrap}
+.buildingtable td{padding:15px 16px;border-top:1px solid #e7edf2;color:#274458;vertical-align:middle}
+.buildingtable td strong{display:block;color:#183e57}
+.buildingtable td small{display:block;color:#8194a3;margin-top:4px}
+.buildingtable tbody tr{cursor:pointer}
+.buildingtable tbody tr:hover,.buildingtable tbody tr:focus-visible{background:#eaf4f9;outline-offset:-2px}
+.buildingtable .rowarrow{color:#14729c;font-size:19px;text-align:right}
+[data-theme="dark"] .viewtoolbar{color:#a2b7c9}
+[data-theme="dark"] .viewswitch,[data-theme="dark"] .buildingtablewrap{background:#142334;border-color:#294158}
+[data-theme="dark"] .viewswitch button{color:#c4d4e0}
+[data-theme="dark"] .viewswitch button.active{background:#146c9c;color:white}
+[data-theme="dark"] .buildingtable th{background:#1a3043;color:#b3c8d7}
+[data-theme="dark"] .buildingtable td{border-color:#294158;color:#c4d4e0}
+[data-theme="dark"] .buildingtable td strong{color:#e3edf6}
+[data-theme="dark"] .buildingtable td small{color:#9db1c1}
+[data-theme="dark"] .buildingtable tbody tr:hover,[data-theme="dark"] .buildingtable tbody tr:focus-visible{background:#1b3850}
