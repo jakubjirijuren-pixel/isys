@@ -173,3 +173,13 @@ header{height:76px;border-bottom:1px solid #e9edf3;padding:0 36px}.breadcrumb{co
 .userdropdown .mytechnicianfield{margin:0}
 [data-theme="dark"] .userdropdown{background:#142334;border-color:#36546a;color:#e3edf6;box-shadow:0 16px 40px #020c18a6}
 [data-theme="dark"] .useremail{color:#a2b7c9}
+
+.userfieldspacing{margin-top:16px!important}
+.profiletheme{border-top:1px solid #dbe5ec;margin-top:18px;padding-top:16px}
+.profiletheme>strong{font-size:12px}
+.profilethemebuttons{display:flex;gap:8px;margin-top:10px}
+.profilethemebuttons button{flex:1;border:1px solid #dbe5ec;background:transparent;color:inherit;padding:9px;border-radius:8px;cursor:pointer}
+.profilethemebuttons button.active{background:#176d98;color:white;border-color:#176d98}
+[data-theme="dark"] .profiletheme{border-color:#36546a}
+[data-theme="dark"] .profilethemebuttons button{border-color:#36546a}
+[data-theme="dark"] .profilethemebuttons button.active{background:#226b94;border-color:#438ab1}
