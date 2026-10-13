@@ -39,3 +39,9 @@ header{height:76px;border-bottom:1px solid #e9edf3;padding:0 36px}.breadcrumb{co
 @media(max-width:550px){.userbar{gap:7px}.themebutton{font-size:12px;padding:8px}.logout{padding:8px}}
 
 .filterpanel{background:#fff;border:1px solid #e1e8ef;border-radius:13px;padding:17px 19px;margin-bottom:20px}.filterheading{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:13px}.filterheading strong{font-size:14px}.filterheading span{font-size:12px;color:#687f91}.filtercontrols{display:flex;flex-wrap:wrap;align-items:center;gap:10px}.filtercontrols .searchbox{margin:0;max-width:none;flex:2 1 240px;min-width:180px}.filtercontrols select{flex:1 1 150px;min-width:130px;border:1px solid #dbe5ec;border-radius:10px;background:white;color:#23465c;padding:13px 12px;font:inherit;font-size:13px;max-width:100%}.filtercontrols button:disabled{opacity:.45;cursor:default}[data-theme="dark"] .filterpanel{background:#142334;border-color:#294158}[data-theme="dark"] .filterheading span{color:#a2b7c9}[data-theme="dark"] .filtercontrols select{background:#1a3043;color:#e3edf6;border-color:#36546a}
+
+/* Wider, responsive building editor */
+.modal{width:min(1100px,calc(100vw - 48px));max-width:1100px;max-height:92vh;overflow-y:auto}
+.modal .formgrid{grid-template-columns:repeat(3,minmax(0,1fr));column-gap:20px}
+@media(max-width:900px){.modal .formgrid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:600px){.modal{width:calc(100vw - 24px);padding:20px}.modal .formgrid{grid-template-columns:1fr}}
