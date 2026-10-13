@@ -379,3 +379,14 @@ button,select,input,textarea{max-width:100%}
  .layout aside.mobile-nav-open .side-navigation .sideTitle{display:block!important;padding:8px 12px;color:#a9c2d4;font-size:11px}
  .layout aside.mobile-nav-open .side-navigation .sidefooter{display:block!important;margin-top:10px;color:#a9c2d4;font-size:11px}
 }
+
+/* Per-user report signature preferences */
+.profilesignature{display:flex;flex-direction:column;gap:9px;border-top:1px solid var(--border,#426076);padding-top:16px;margin-top:15px}
+.profilesignature>strong{font-size:14px}
+.profilesignature>small{font-size:11px;line-height:1.45;opacity:.8}
+.profilesignature label{font-size:12px;font-weight:650}
+.profilesignature input:not([type=file]){width:100%;padding:10px;border:1px solid var(--border,#426076);border-radius:9px;background:var(--surface,#152f45);color:inherit;font:inherit;font-size:13px}
+.profilesignature input[type=file]{width:100%;max-width:100%;font-size:11px}
+.signaturepreview{display:flex;flex-direction:column;gap:8px;align-items:flex-start;padding:9px;border-radius:9px;background:#fff;color:#17212b}
+.signaturepreview img{max-width:190px;max-height:80px;object-fit:contain}
+.signaturepreview button{padding:6px 10px;border-radius:8px;border:1px solid #a7b5c0;background:#fff;color:#17212b;cursor:pointer}
