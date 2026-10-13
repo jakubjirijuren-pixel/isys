@@ -1,1 +1,50 @@
-.tasks{max-width:1250px;margin:auto}.tasksheader{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;margin-bottom:20px}.tasksheader h1{margin:0 0 6px}.tasksheader p{margin:0;color:#71869a}.taskstats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-bottom:18px}.taskstats>div,.taskform,.tasklist,.taskdetail{border:1px solid #dce5ec;background:#fff;border-radius:14px;padding:18px;color:#1c3042}.taskstats strong{display:block;font-size:26px}.taskstats span{font-size:12px;color:#667b8c}.taskform{margin-bottom:18px}.taskform h2{margin-top:0}.taskgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.taskform label,.taskdetail label,.taskfilters label{display:flex;flex-direction:column;gap:6px;font-size:13px;font-weight:600;margin-bottom:12px}.tasks input,.tasks select,.tasks textarea{width:100%;border:1px solid #ccd7e0;border-radius:9px;padding:10px;font:inherit;background:#fff;color:#1c3042}.taskfilters{display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:12px;gap:12px}.taskfilters label{margin:0}.tasklayout{display:grid;grid-template-columns:minmax(280px,1fr) minmax(0,1.3fr);gap:16px;align-items:start}.tasklist{padding:8px;max-height:75vh;overflow:auto}.taskitem{display:flex;flex-direction:column;align-items:stretch;text-align:left;width:100%;border:0;border-bottom:1px solid #e2e8ed;background:transparent;color:#243b50;padding:13px 10px;gap:7px;cursor:pointer}.taskitem:hover,.taskitem.active{background:#edf5fc;border-radius:9px}.taskitemtop{display:flex;justify-content:space-between;align-items:start;gap:8px}.taskitem small{color:#637b8d}.taskstatus{font-size:11px;border-radius:15px;background:#e5edf5;padding:5px 8px;white-space:nowrap}.taskdetail h2{margin-top:0}.taskdetail p{overflow-wrap:anywhere}.taskactions{border-top:1px solid #e1e7ee;padding-top:12px}.taskactions>button{margin:0 0 15px}.taskreview{border-top:1px solid #e1e7ee;padding-top:10px}.taskreviewbuttons{display:flex;flex-wrap:wrap;gap:9px}.taskhistory>div{border-left:3px solid #b8cde0;padding:7px 12px;margin:9px 0}.taskhistory small{display:block;color:#738697}.taskhistory p{margin:4px 0;white-space:pre-wrap}@media(max-width:780px){.tasklayout{grid-template-columns:1fr}.taskgrid{grid-template-columns:1fr}.tasklist{max-height:340px}.taskstats>div{padding:12px}.taskstats strong{font-size:22px}}
+/* iSYS Tasks — shared app surfaces, accent theme and dark mode */
+.tasks{max-width:1150px;margin:auto;color:var(--isys-text,#1d3145)}
+.tasksheader{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:22px}
+.tasksheader h1{font-size:29px;letter-spacing:-.7px;margin:0 0 6px}
+.tasksheader p{margin:0;color:#71879a;font-size:13px}
+.taskstats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin:18px 0 22px}
+.taskstats>div,.taskform,.tasklist,.taskdetail{background:#fff;border:1px solid #dce5ec;border-radius:14px;box-shadow:0 5px 20px #1b3d530b;color:#1d3145}
+.taskstats>div{padding:20px 22px;position:relative;overflow:hidden}
+.taskstats>div:before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--isys-accent,#146c9c)}
+.taskstats strong{display:block;font-size:28px;line-height:1.2;font-weight:800;color:var(--isys-accent,#146c9c)}
+.taskstats span{display:block;margin-top:6px;font-size:12px;color:#6d8293;font-weight:600}
+.taskform,.taskdetail{padding:22px;margin-bottom:18px}
+.taskform h2,.taskdetail h2{font-size:18px;margin:0 0 18px;letter-spacing:-.25px}
+.taskgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.taskform label,.taskdetail label,.taskfilters label{display:flex;flex-direction:column;gap:7px;font-size:13px;font-weight:650;margin-bottom:13px}
+.tasks input,.tasks select,.tasks textarea{width:100%;min-width:0;border:1px solid #cbd8e0;border-radius:9px;padding:11px;background:#fff;color:#223d52;font:inherit;font-size:13px}
+.tasks textarea{resize:vertical;line-height:1.55}
+.tasks input:focus,.tasks select:focus,.tasks textarea:focus{outline:2px solid var(--isys-accent,#146c9c);outline-offset:1px}
+.taskfilters{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;margin-bottom:13px;flex-wrap:wrap}
+.taskfilters label{margin:0;min-width:185px}
+.tasklayout{display:grid;grid-template-columns:minmax(270px,1fr) minmax(0,1.25fr);gap:16px;align-items:start}
+.tasklist{padding:8px;max-height:75vh;overflow-y:auto}
+.tasklist>p{padding:12px;color:#71879a;font-size:13px}
+.taskitem{display:flex;flex-direction:column;align-items:stretch;text-align:left;width:100%;border:0;border-bottom:1px solid #e2e9ef;background:transparent;color:inherit;padding:15px 12px;gap:8px;cursor:pointer;font:inherit;transition:background .15s}
+.taskitem:last-child{border-bottom:0}
+.taskitem:hover{background:var(--isys-accent-soft,#e6f1f7);border-radius:9px}
+.taskitem.active{background:var(--isys-accent-soft,#e6f1f7);border-radius:9px;box-shadow:inset 3px 0 0 var(--isys-accent,#146c9c)}
+.taskitemtop{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
+.taskitemtop strong{font-size:14px;line-height:1.4}
+.taskitem small{color:#6d8293;font-size:12px;line-height:1.45}
+.taskstatus{display:inline-flex;align-items:center;border-radius:20px;background:var(--isys-accent-soft,#e6f1f7);color:var(--isys-accent,#146c9c);padding:5px 9px;font-size:11px;font-weight:700;white-space:nowrap}
+.taskdetail p{font-size:13px;line-height:1.6;overflow-wrap:anywhere}
+.taskdetail h3{font-size:15px;margin:18px 0 12px}
+.taskactions{border-top:1px solid #e1e9ef;padding-top:10px}
+.taskactions>button{margin:0 0 15px}
+.taskreview{border-top:1px solid #e1e9ef;margin-top:10px;padding-top:10px}
+.taskreviewbuttons{display:flex;gap:10px;flex-wrap:wrap}
+.taskhistory>div{border-left:3px solid var(--isys-accent,#146c9c);padding:7px 12px;margin:10px 0;background:var(--isys-accent-soft,#f1f7fb);border-radius:0 8px 8px 0}
+.taskhistory small{display:block;color:#6d8293;font-size:11px;margin-top:4px}
+.taskhistory p{margin:5px 0;white-space:pre-wrap}
+[data-theme="dark"] .tasks{color:#e4edf5}
+[data-theme="dark"] .tasksheader p,[data-theme="dark"] .taskstats span,[data-theme="dark"] .taskitem small,[data-theme="dark"] .taskhistory small{color:#9cb3c6}
+[data-theme="dark"] .taskstats>div,[data-theme="dark"] .taskform,[data-theme="dark"] .tasklist,[data-theme="dark"] .taskdetail{background:#142334;border-color:#2d465c;color:#e4edf5;box-shadow:none}
+[data-theme="dark"] .tasks input,[data-theme="dark"] .tasks select,[data-theme="dark"] .tasks textarea{background:#1a3043;border-color:#36546a;color:#e3edf6}
+[data-theme="dark"] .taskitem{border-color:#2d465c}
+[data-theme="dark"] .taskitem:hover,[data-theme="dark"] .taskitem.active,[data-theme="dark"] .taskhistory>div{background:#1d3c51}
+[data-theme="dark"] .taskactions,[data-theme="dark"] .taskreview{border-color:#2d465c}
+[data-theme="dark"] .taskstatus{background:#254b60;color:#a9dcf2}
+@media(max-width:780px){.tasklayout{grid-template-columns:1fr}.taskgrid{grid-template-columns:1fr}.tasklist{max-height:340px}.taskstats>div{padding:15px}.taskstats strong{font-size:23px}.taskform,.taskdetail{padding:17px}}
+@media(max-width:500px){.tasksheader{align-items:flex-start}.tasksheader>.primary{width:100%}.taskstats{gap:8px}.taskstats>div{padding:12px 9px}.taskstats span{font-size:11px}.taskitemtop{flex-wrap:wrap}.taskreviewbuttons>button{flex:1}}
