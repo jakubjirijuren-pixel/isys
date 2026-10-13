@@ -147,3 +147,17 @@ header{height:76px;border-bottom:1px solid #e9edf3;padding:0 36px}.breadcrumb{co
 [data-theme="dark"] .widgetchoices label{border-color:#294158}
 [data-theme="dark"] .widgetremove:hover{background:#4a2a37;color:#ffb6c1}
 @media(max-width:600px){.dashboardwidgetheading{align-items:flex-start;flex-direction:column}.widgetpickerhead{align-items:flex-start;flex-wrap:wrap}}
+
+.widgetbuttons{display:flex;gap:3px;align-items:center}
+.widgetconfig{border:0;border-radius:7px;background:transparent;color:#71879a;font-size:17px;cursor:pointer;padding:2px 6px}
+.widgetconfig:hover{background:#e8f3f9;color:#146c9c}
+.widgetscope{display:flex;flex-direction:column;gap:6px;margin:5px 0 10px}
+.widgetscope label,.mytechnicianfield label{font-size:12px;font-weight:700}
+.widgetscope select,.mytechnicianfield select{width:100%;border:1px solid #dbe5ec;border-radius:8px;background:white;color:#23465c;padding:9px;font:inherit;font-size:12px}
+.scopewarning{color:#a15d13;font-size:11px;line-height:1.4}
+.mytechnicianfield{display:flex;flex-direction:column;gap:7px;margin-bottom:17px;max-width:430px}
+.mytechnicianfield small{color:#71879a;font-size:11px}
+[data-theme="dark"] .widgetscope select,[data-theme="dark"] .mytechnicianfield select{background:#1a3043;border-color:#36546a;color:#e3edf6}
+[data-theme="dark"] .widgetconfig{color:#b2cad9}
+[data-theme="dark"] .widgetconfig:hover{background:#294b62}
+[data-theme="dark"] .scopewarning{color:#f2c487}
