@@ -48,3 +48,5 @@
 [data-theme="dark"] .taskstatus{background:#254b60;color:#a9dcf2}
 @media(max-width:780px){.tasklayout{grid-template-columns:1fr}.taskgrid{grid-template-columns:1fr}.tasklist{max-height:340px}.taskstats>div{padding:15px}.taskstats strong{font-size:23px}.taskform,.taskdetail{padding:17px}}
 @media(max-width:500px){.tasksheader{align-items:flex-start}.tasksheader>.primary{width:100%}.taskstats{gap:8px}.taskstats>div{padding:12px 9px}.taskstats span{font-size:11px}.taskitemtop{flex-wrap:wrap}.taskreviewbuttons>button{flex:1}}
+
+.taskhandoff{border:1px solid #dce5ec;background:var(--isys-accent-soft,#f1f7fb);border-radius:12px;padding:16px;margin:16px 0 20px}.taskhandoff h3{margin:0 0 6px;font-size:15px}.taskhandoff>p{margin:0 0 14px;color:#64788b;font-size:12px}.taskhandoff label{margin-bottom:12px}[data-theme="dark"] .taskhandoff{background:#1a3043;border-color:#36546a}[data-theme="dark"] .taskhandoff>p{color:#9cb3c6}
