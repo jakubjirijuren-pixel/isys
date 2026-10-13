@@ -43,8 +43,14 @@ export default function Inspections({buildings,userEmail,myReferent,myTechnician
    const style=document.createElement("style");
    style.textContent=doc.querySelector("style")?.textContent.replace(/@page\\s*\\{[^}]*\\}/g,"")||"";
    host.appendChild(style);
+   // The PDF is rendered inside the running app, not inside the standalone HTML body.
+   // Override dark-mode and global app styles explicitly so text remains black on white.
+   const pdfStyle=document.createElement("style");
+   pdfStyle.textContent=`.inspectionpdfhost,.inspectionpdfhost .inspectionpdfdocument{background:#fff!important;color:#17212b!important;font-family:Arial,sans-serif!important;opacity:1!important;filter:none!important}.inspectionpdfhost .inspectionpdfdocument h1{color:#152d3c!important;font-size:20px!important;font-weight:800!important;line-height:1.35!important;border-bottom:3px solid #196d98!important}.inspectionpdfhost .inspectionpdfdocument h2{color:#17212b!important;font-size:14px!important;font-weight:700!important}.inspectionpdfhost .inspectionpdfdocument p,.inspectionpdfhost .inspectionpdfdocument b,.inspectionpdfhost .inspectionpdfdocument td,.inspectionpdfhost .inspectionpdfdocument th,.inspectionpdfhost .inspectionpdfdocument .sbd-info,.inspectionpdfhost .inspectionpdfdocument .sbd-info div{color:#17212b!important;opacity:1!important;text-shadow:none!important}.inspectionpdfhost .inspectionpdfdocument td,.inspectionpdfhost .inspectionpdfdocument th{border:1px solid #7c8b96!important;background:#fff!important;font-size:11px!important;line-height:1.45!important}.inspectionpdfhost .inspectionpdfdocument th{background:#dce9f2!important;color:#152d3c!important;font-weight:700!important}.inspectionpdfhost .inspectionpdfdocument .meta td{background:#fff!important}.inspectionpdfhost .inspectionpdfdocument .sbd-header{border-bottom:1px solid #8e9ba4!important}.inspectionpdfhost .inspectionpdfdocument .sbd-name{color:#202020!important;font-size:17px!important;font-weight:800!important}.inspectionpdfhost .inspectionpdfdocument .footer{color:#485865!important}`;
+   host.appendChild(pdfStyle);
    const content=document.createElement("div");
-   content.style.cssText="padding:35px 48px;background:white;font-family:Arial,sans-serif;font-size:11px";
+   content.className="inspectionpdfdocument";
+   content.style.cssText="padding:35px 48px;background:#fff;color:#17212b;font-family:Arial,sans-serif;font-size:11px";
    content.innerHTML=doc.body.innerHTML;
    host.appendChild(content);
    document.body.appendChild(host);
