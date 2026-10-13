@@ -300,3 +300,57 @@ header{height:76px;border-bottom:1px solid #e9edf3;padding:0 36px}.breadcrumb{co
 .breadcrumb>span{margin:0 6px}
 [data-theme="dark"] .breadcrumb .breadcrumblink{color:#b4c9d9}
 [data-theme="dark"] .breadcrumb .breadcrumbcurrent,[data-theme="dark"] .breadcrumb strong[aria-current="page"]{color:#8dcff0}
+
+/* Mobile-first refinements and Android installed app support */
+html{min-width:0;-webkit-text-size-adjust:100%;scroll-padding-top:75px}
+body{overflow-x:hidden}
+button,select,input,textarea{max-width:100%}
+@media (max-width:800px){
+ .layout{display:block;min-width:0}
+ .layout aside{position:relative!important;top:auto!important;height:auto!important;min-height:0!important;overflow:visible!important;width:100%!important;padding:12px 12px 0!important;z-index:9}
+ .layout aside .brand{padding:2px 5px 10px}
+ .layout aside .sideTitle,.layout aside .sidefooter{display:none!important}
+ .layout aside .nav{display:inline-flex!important;align-items:center;justify-content:center;width:auto!important;min-height:44px;flex:0 0 auto;margin:0 3px 8px!important;padding:10px 13px!important;white-space:nowrap;font-size:13px}
+ .layout aside{white-space:nowrap;overflow-x:auto!important;overscroll-behavior-x:contain;scrollbar-width:thin}
+ .layout .content{min-width:0;width:100%}
+ .layout header{height:auto;min-height:62px;gap:8px;padding:10px 13px;position:relative;z-index:10}
+ .layout .breadcrumb{flex:1;gap:3px;min-width:0}
+ .layout .breadcrumb .breadcrumblink{font-size:12px;max-width:135px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+ .layout .breadcrumb strong[aria-current="page"]{max-width:120px}
+ .layout .userbar{flex:0 0 auto;gap:8px}
+ .layout .logout{padding:9px 10px;font-size:12px;min-height:42px}
+ .layout .avatarbutton{min-width:42px;min-height:42px}
+ .layout .body{padding:16px 13px 85px!important}
+ .layout .pageheading{gap:12px}
+ .layout .pageheading .actions,.layout .inspectionactions{width:100%;flex-wrap:wrap}
+ .layout .tiles{grid-template-columns:repeat(auto-fit,minmax(min(100%,155px),1fr));gap:12px}
+ .layout .tiles article{padding:16px}
+ .layout .buildinggrid{grid-template-columns:repeat(auto-fit,minmax(min(100%,250px),1fr));gap:12px}
+ .layout .buildingcard{min-width:0}
+ .layout .buildingtablewrap{max-width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch}
+ .layout .filterpanel{max-width:100%}
+ .layout .filtercontrols{display:flex;flex-wrap:wrap;gap:9px}
+ .layout .filtercontrols>*{min-width:0;flex:1 1 160px}
+ .layout .filterdropdown{min-width:0}
+ .layout .modal{width:min(100%,650px);padding:18px;max-height:calc(100dvh - 25px)}
+ .layout .overlay{padding:10px}
+ .layout .formgrid{grid-template-columns:repeat(auto-fit,minmax(min(100%,200px),1fr))}
+ .layout .userdropdown{position:fixed!important;top:72px!important;left:12px!important;right:12px!important;width:auto!important;max-width:none!important;max-height:calc(100dvh - 90px)!important;overflow-y:auto!important;overscroll-behavior:contain}
+ .layout .widgetpicker{max-width:100%}
+ .layout .widgetchoices{grid-template-columns:repeat(auto-fit,minmax(min(100%,175px),1fr))}
+ .layout .inspectionpanel{padding:16px;margin:13px 0}
+ .layout .inspectionfields{grid-template-columns:repeat(auto-fit,minmax(min(100%,210px),1fr))}
+ .layout .inspectionbottom{justify-content:stretch}
+ .layout .inspectionbottom button{flex:1 1 135px}
+}
+@media(max-width:420px){
+ .layout aside .nav{font-size:12px;padding:9px 11px!important}
+ .layout header{padding:8px 10px}
+ .layout .breadcrumb .breadcrumblink{max-width:105px}
+ .layout .userbar .logout{font-size:0;min-width:44px}
+ .layout .userbar .logout::after{content:"↪";font-size:20px}
+ .layout .body{padding:13px 10px 85px!important}
+ .layout .userdropdown{left:8px!important;right:8px!important}
+}
+@media(hover:none) and (pointer:coarse){.layout button,.layout select{touch-action:manipulation}.layout .widgetcard{cursor:pointer}.layout .widgetbuttons button{min-width:38px;height:38px}.layout .filtermenu button{min-height:44px}}
+@media(display-mode:standalone){.layout aside{padding-top:max(12px,env(safe-area-inset-top))!important}.layout .body{padding-bottom:max(80px,env(safe-area-inset-bottom))!important}}
