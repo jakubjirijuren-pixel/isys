@@ -354,3 +354,8 @@ button,select,input,textarea{max-width:100%}
 }
 @media(hover:none) and (pointer:coarse){.layout button,.layout select{touch-action:manipulation}.layout .widgetcard{cursor:pointer}.layout .widgetbuttons button{min-width:38px;height:38px}.layout .filtermenu button{min-height:44px}}
 @media(display-mode:standalone){.layout aside{padding-top:max(12px,env(safe-area-inset-top))!important}.layout .body{padding-bottom:max(80px,env(safe-area-inset-bottom))!important}}
+
+/* Official iSYS app logo */
+.layout aside .brandlogo{display:block;width:48px;height:48px;min-width:48px;object-fit:cover;border-radius:12px;background:transparent;padding:0;box-shadow:0 2px 12px #0002}
+.layout aside .brand{display:flex;align-items:center;gap:11px}
+@media(max-width:800px){.layout aside .brandlogo{width:40px;height:40px;min-width:40px;border-radius:10px}}
