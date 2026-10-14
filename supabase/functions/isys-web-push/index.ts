@@ -143,6 +143,23 @@ Deno.serve(async (req) => {
     );
     const notification = notifications[0];
     if (!notification) return json({ error: "Notification not found" }, 404);
+    // Respect the recipient's push preferences; all notifications remain in-app.
+    const preferences = await dbGet<Array<Record<string, boolean>>>(
+      "notification_preferences",
+      `select=key_loans,tasks,inspections,defects,admin_messages,other&user_id=eq.${encodeURIComponent(notification.user_id)}&limit=1`,
+    );
+    const moduleName = (notification.module || "").toLocaleLowerCase("cs");
+    const titleName = (notification.title || "").toLocaleLowerCase("cs");
+    const category = moduleName.includes("klíč") ? "key_loans"
+      : moduleName.includes("úkol") ? "tasks"
+      : moduleName.includes("kontrol") ? "inspections"
+      : moduleName.includes("závad") ? "defects"
+      : titleName.includes("závad") ? "defects"
+      : moduleName === "přehled" ? "admin_messages" : "other";
+    if (preferences[0]?.[category] === false) {
+      console.log("Web Push skipped by user preference", { category });
+      return json({ sent: 0, expired: 0, failed: 0, skipped: 1 });
+    }
     const subscriptions = await dbGet<Subscription[]>(
       "push_subscriptions", `select=id,endpoint,p256dh,auth&user_id=eq.${encodeURIComponent(notification.user_id)}`,
     );
