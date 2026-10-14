@@ -67,3 +67,20 @@
 .keys-building-field .inspectionbuildingoptions p{padding:10px;font-size:13px}
 [data-theme="dark"] .keys-building-field>label{color:#b6cad8}
 [data-theme="dark"] .keys-building-field .filtermenu input{background:#1a3043;border-color:#36546a;color:#e3edf6}
+
+/* Compact loan cards and advanced filters */
+.keys-filters{display:grid;grid-template-columns:minmax(170px,1.5fr) minmax(125px,1fr) minmax(125px,1fr) auto;align-items:end;gap:10px;margin:0 0 10px}
+.keys-filters label{display:grid;gap:6px;font-size:12px;font-weight:650;color:#607b8f}
+.keys-filters select,.keys-filters input{width:100%;min-width:0;min-height:39px;padding:8px 10px;border:1px solid #dbe5ec;border-radius:9px;background:#fff;color:#19364a;font:inherit;font-size:12px}
+.keys-filters .secondarybutton{min-height:39px;padding:8px 10px}
+.keys-results-count{font-size:12px;color:#71879a;margin:0 0 12px}
+.keys-list{gap:8px}
+.keys-record{padding:12px 14px;gap:5px;font-size:12px;line-height:1.4}
+.keys-recordhead{margin-bottom:0;gap:8px}
+.keys-recordhead strong{font-size:13px}
+.keys-status{font-size:10px;padding:4px 8px}
+.keys-record .secondarybutton{margin-top:4px;padding:7px 10px;font-size:11px}
+[data-theme="dark"] .keys-filters label{color:#b6cad8}
+[data-theme="dark"] .keys-filters select,[data-theme="dark"] .keys-filters input{background:#1a3043;border-color:#36546a;color:#e3edf6}
+@media(max-width:1250px){.keys-filters{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:550px){.keys-filters{grid-template-columns:1fr}.keys-record{padding:11px 12px}}
