@@ -41,3 +41,17 @@
 .keys-module .secondarybutton:hover{border-color:#99c5d8;background:#f6fbfd}
 @media(max-width:1080px){.keys-layout{grid-template-columns:1fr}.keys-panel{padding:22px}}
 @media(max-width:600px){.keys-panel{padding:17px}.keys-top{flex-wrap:wrap}.keys-tools{flex-direction:column;align-items:stretch}.keys-tools input{max-width:none}.keys-tabs{width:100%}.keys-tabs button{flex:1;padding:9px 7px}.keys-recordhead{align-items:flex-start;flex-direction:column}.keys-count{white-space:normal}.keys-return .actions{flex-wrap:wrap}.keys-return .actions button{flex:1}}
+
+[data-theme="dark"] .keys-module{color:#e4edf5}
+[data-theme="dark"] .keys-panel,[data-theme="dark"] .keys-record{background:#142334;border-color:#2d465c;color:#e4edf5;box-shadow:none}
+[data-theme="dark"] .keys-panel h2,[data-theme="dark"] .keys-recordhead strong,[data-theme="dark"] .keys-return h2{color:#e4edf5}
+[data-theme="dark"] .keys-form label,[data-theme="dark"] .keys-return label,[data-theme="dark"] .keys-record b{color:#b6cad8}
+[data-theme="dark"] .keys-form input,[data-theme="dark"] .keys-form select,[data-theme="dark"] .keys-form textarea,[data-theme="dark"] .keys-return input,[data-theme="dark"] .keys-tools input{background:#1a3043;border-color:#36546a;color:#e3edf6}
+[data-theme="dark"] .keys-tabs{background:#1a3043;border-color:#36546a}
+[data-theme="dark"] .keys-tabs button{color:#b6cad8}
+[data-theme="dark"] .keys-tabs button.active{background:#23779d;color:white}
+[data-theme="dark"] .keys-count{background:#193f55;color:#a8d7e7}
+[data-theme="dark"] .keys-status{background:#54401e;color:#ffe0a1}
+[data-theme="dark"] .keys-status.returned{background:#1b4838;color:#b4f1ce}
+[data-theme="dark"] .keys-module .secondarybutton{background:#1a3043;border-color:#36546a;color:#e3edf6}
+[data-theme="dark"] .keys-module .secondarybutton:hover{background:#25455e}
