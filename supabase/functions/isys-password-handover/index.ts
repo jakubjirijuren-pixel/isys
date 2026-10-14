@@ -4,7 +4,7 @@ import { createClient } from "npm:@supabase/supabase-js@2";
 Deno.serve(async req=>{
  const origin=req.headers.get("origin")||"";
  const allowedOrigin="https://jakubjirijuren-pixel.github.io";
- const cors={"Access-Control-Allow-Origin":allowedOrigin,"Access-Control-Allow-Headers":"authorization,apikey,content-type","Access-Control-Allow-Methods":"POST, OPTIONS","Vary":"Origin","Cache-Control":"no-store"};
+ const cors={"Access-Control-Allow-Origin":allowedOrigin,"Access-Control-Allow-Headers":req.headers.get("access-control-request-headers")||"authorization,apikey,content-type,x-client-info,x-supabase-client-platform,x-supabase-client-platform-version,x-supabase-client-runtime,x-supabase-client-runtime-version","Access-Control-Allow-Methods":"POST, OPTIONS","Vary":"Origin","Cache-Control":"no-store"};
  if(req.method==="OPTIONS")return new Response(null,{status:204,headers:cors});
  if(req.method!=="POST"||origin!==allowedOrigin)return new Response("Forbidden",{status:403,headers:cors});
  const token=req.headers.get("authorization")?.replace(/^Bearer\s+/i,"");
