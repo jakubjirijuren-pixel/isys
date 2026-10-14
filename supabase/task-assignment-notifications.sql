@@ -13,7 +13,7 @@ begin
  assignee := nullif(btrim(new.technician),'');
  if assignee is null then return new; end if;
  -- Never guess the recipient when two accounts share a display name.
- select count(distinct p.id), min(p.id)
+ select count(distinct p.id), (array_agg(distinct p.id))[1]
  into match_count,recipient
  from public.profiles p
  where lower(btrim(coalesce(to_jsonb(p)->>'display_name','')))=lower(assignee)
