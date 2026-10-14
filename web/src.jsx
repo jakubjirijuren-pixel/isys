@@ -255,7 +255,22 @@ function App(){
  const [keyInitialFilter,setKeyInitialFilter]=useState("active");
  const [keyWidgetRows,setKeyWidgetRows]=useState([]),[keyWidgetLoading,setKeyWidgetLoading]=useState(false),[keyWidgetError,setKeyWidgetError]=useState("");
  useEffect(()=>{if(!session?.user?.id||page!=="Přehled")return;let active=true;setKeyWidgetLoading(true);supabase.from("key_loans").select("id,returned_at").then(({data,error})=>{if(!active)return;setKeyWidgetLoading(false);if(error)setKeyWidgetError(error.message);else{setKeyWidgetError("");setKeyWidgetRows(data||[])}});return()=>{active=false}},[session?.user?.id,page]);
- useEffect(()=>{if(!session?.user?.id||page!=="Přehled")return;let active=true;setTaskWidgetLoading(true);supabase.from("work_requests").select("id,technician,status,due_date").limit(1000).then(({data,error})=>{if(!active)return;setTaskWidgetLoading(false);if(error)setTaskWidgetError(error.message);else{setTaskWidgetError("");setTaskWidgetRows(data||[])}});return()=>{active=false}},[session?.user?.id,page]);
+ useEffect(()=>{
+  if(!session?.user?.id||page!=="Přehled")return;
+  let active=true;
+  const refresh=async()=>{
+   const {data,error}=await supabase.from("work_requests").select("id,technician,status,due_date").limit(1000);
+   if(!active)return;
+   setTaskWidgetLoading(false);
+   if(error)setTaskWidgetError(error.message);
+   else{setTaskWidgetError("");setTaskWidgetRows(data||[])}
+  };
+  setTaskWidgetLoading(true);refresh();
+  const interval=window.setInterval(refresh,15000);
+  window.addEventListener("focus",refresh);
+  const channel=supabase.channel("isys-task-widgets-"+session.user.id).on("postgres_changes",{event:"*",schema:"public",table:"work_requests"},refresh).subscribe();
+  return()=>{active=false;window.clearInterval(interval);window.removeEventListener("focus",refresh);supabase.removeChannel(channel)};
+ },[session?.user?.id,page]);
  // Module maintenance: hooks must stay before every conditional return.
  const [moduleAvailability,setModuleAvailability]=useState({});
  const [moduleAvailabilityReady,setModuleAvailabilityReady]=useState(false);
