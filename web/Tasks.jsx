@@ -7,7 +7,15 @@ export default function Tasks({supabase,buildings,myReferent,myTechnician,userId
  const [actorNames,setActorNames]=useState({});
  const [assignees,setAssignees]=useState([]);
  useEffect(()=>{let active=true;supabase.from("profiles").select("*").then(({data,error})=>{if(!active||error)return;const names={};for(const p of data||[]){const label=[p.full_name,p.display_name,p.name,p.email].find(x=>typeof x==="string"&&x.trim());if(label)names[p.id]=label}setActorNames(names)});return()=>{active=false}},[supabase]);
- useEffect(()=>{let active=true;supabase.from("profiles").select("*").then(({data,error})=>{if(!active||error)return;setAssignees((data||[]).map(p=>({id:p.id,label:p.display_name||p.full_name||p.name||p.email||String(p.id).slice(0,8)})).sort((a,b)=>a.label.localeCompare(b.label,"cs")))});return()=>{active=false}},[supabase]);
+ useEffect(()=>{
+  let active=true;
+  supabase.rpc("isys_task_assignees").then(({data,error})=>{
+   if(!active)return;
+   if(error){setNotice("Seznam řešitelů se nepodařilo načíst: "+error.message);return;}
+   setAssignees((data||[]).map(p=>({id:p.id,label:p.display_name||"Uživatel"})));
+  });
+  return()=>{active=false};
+ },[supabase]);
  const assigneeLabel=id=>assignees.find(a=>a.id===id)?.label||"Nepřiřazeno";
  const actorLabel=e=>e.actor_email||actorNames[e.actor_id]||(e.actor_id===userId?userEmail||"Já":"Uživatel "+String(e.actor_id||"").slice(0,8));
  const technicians=[...new Set(buildings.map(b=>b.manager).filter(Boolean))].sort((a,b)=>a.localeCompare(b,"cs"));
