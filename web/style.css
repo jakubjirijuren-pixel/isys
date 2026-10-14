@@ -390,3 +390,6 @@ button,select,input,textarea{max-width:100%}
 .signaturepreview{display:flex;flex-direction:column;gap:8px;align-items:flex-start;padding:9px;border-radius:9px;background:#fff;color:#17212b}
 .signaturepreview img{max-width:190px;max-height:80px;object-fit:contain}
 .signaturepreview button{padding:6px 10px;border-radius:8px;border:1px solid #a7b5c0;background:#fff;color:#17212b;cursor:pointer}
+
+/* Password setup: clear separation between primary action and sign-out. */
+.password-change-form button[type="button"].secondarybutton{margin-top:18px}
