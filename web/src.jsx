@@ -138,7 +138,7 @@ function App(){
  const changeMyTechnician=name=>{setMyTechnician(name);if(session?.user?.id)try{localStorage.setItem("isys-technician-"+session.user.id,name)}catch{}};
  const changeWidgetScope=(id,scope)=>{const next={...widgetScopes,[id]:scope};setWidgetScopes(next);if(session?.user?.id)try{localStorage.setItem("isys-widget-scopes-"+session.user.id,JSON.stringify(next))}catch{}};
 
- useEffect(()=>{if(!session?.user?.id)return;try{const saved=JSON.parse(localStorage.getItem("isys-widgets-"+session.user.id)||"null");setDashboardWidgets(Array.isArray(saved)?[...new Set(saved.filter(id=>dashboardWidgetCatalog.some(w=>w[0]===id)))]:defaultDashboardWidgets)}catch{setDashboardWidgets(defaultDashboardWidgets)}},[session?.user?.id]);
+ useEffect(()=>{if(!session?.user?.id)return;try{const saved=JSON.parse(localStorage.getItem("isys-widgets-"+session.user.id)||"null");setDashboardWidgets(Array.isArray(saved)?[...new Set([...saved.filter(id=>dashboardWidgetCatalog.some(w=>w[0]===id)),...(!localStorage.getItem("isys-task-widgets-v1-"+session.user.id)?["myTasks","reviewTasks","overdueTasks"]:[])])]:defaultDashboardWidgets);localStorage.setItem("isys-task-widgets-v1-"+session.user.id,"1")}catch{setDashboardWidgets(defaultDashboardWidgets)}},[session?.user?.id]);
  const changeDashboardWidgets=next=>{setDashboardWidgets(next);if(session?.user?.id)try{localStorage.setItem("isys-widgets-"+session.user.id,JSON.stringify(next))}catch{}};
  const [filters,setFilters]=useState(initialView.filters||{city:"",manager:"",referent:""});
  const [widgetBuildingFilter,setWidgetBuildingFilter]=useState(null);
