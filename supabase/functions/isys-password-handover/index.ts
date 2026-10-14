@@ -14,8 +14,8 @@ Deno.serve(async req=>{
  const {data:{user},error:authError}=await client.auth.getUser(token);
  if(authError||!user)return new Response("Unauthorized",{status:401,headers:cors});
  const admin=createClient(url,service);
- const {data:isAdmin,error:roleError}=await admin.rpc("is_isys_admin_for_handover",{actor_id:user.id});
- if(roleError||isAdmin!==true)return new Response("Forbidden",{status:403,headers:cors});
+ const {data:adminRole,error:roleError}=await admin.from("user_roles").select("role").eq("user_id",user.id).eq("role","admin").maybeSingle();
+ if(roleError||!adminRole)return new Response("Forbidden",{status:403,headers:cors});
  let targetId;try{({user_id:targetId}=await req.json())}catch{return new Response("Invalid request",{status:400,headers:cors})}
  if(typeof targetId!=="string"||!/^[0-9a-f-]{36}$/i.test(targetId))return new Response("Invalid user",{status:400,headers:cors});
  const {data:target,error:targetError}=await admin.auth.admin.getUserById(targetId);
