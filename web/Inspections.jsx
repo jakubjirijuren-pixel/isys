@@ -1,5 +1,6 @@
 import React,{useEffect,useState,useRef} from "react";
 import "./inspections.css";
+import html2pdf from "html2pdf.js";
 const sections=["Fasáda objektu","Vstupní portály","Vnitřní společné prostory","Požární zařízení","Výtahy","Elektro","Topení, voda, kanalizace, plyn","Kontejnerové stání a okolí objektu"];
 const blank=()=>({buildingId:"",date:new Date().toISOString().slice(0,10),referent:"",inspector:"",nextDate:"",overall:"",other:"",unresolved:"",photos:"",photoFiles:[],items:sections.map(title=>({title,status:"",note:""}))});
 const esc=v=>String(v??"").replace(/[&<>"']/g,ch=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[ch]));
@@ -79,8 +80,6 @@ export default function Inspections({buildings,userEmail,myReferent,myTechnician
   setPdfBusy(true);setNotice("");setBackupStatus("");
   let host;
   try{
-   const module=await import("html2pdf.js").catch(async error=>{if(/Failed to fetch dynamically imported module|Importing a module script failed|error loading dynamically imported module/i.test(String(error?.message||error))){throw new Error("Knihovna pro PDF se po aktualizaci aplikace nenačetla. Ulož rozpracovanou kontrolu a obnov stránku (Ctrl+Shift+R nebo Cmd+Shift+R).")}throw error});
-   const html2pdf=module.default;
    const doc=new DOMParser().parseFromString(buildHtml(),"text/html");
    host=document.createElement("div");
    host.className="inspectionpdfhost";
