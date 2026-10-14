@@ -27,7 +27,7 @@ let created=0,skipped=0,failed=0;
 for(const entry of entries){
  if(existing.has(entry.email)){console.log("SKIP existing:",entry.email);skipped++;continue}
  try{
-  const response=await api("/auth/v1/admin/users","POST",{email:entry.email,password:entry.password,email_confirm:true});
+  const response=await api("/auth/v1/admin/users","POST",{email:entry.email,password:entry.password,email_confirm:true,app_metadata:{isys_must_change_password:true}});
   const id=response.user?.id||response.id;
   if(!id)throw Error("Auth API did not return a user id");
   created++;existing.add(entry.email);
