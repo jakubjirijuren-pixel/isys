@@ -248,6 +248,7 @@ function App(){
  const [mobileMenuOpen,setMobileMenuOpen]=useState(false);
  const mobileNavRef=useRef(null);
  useEffect(()=>{if(!mobileMenuOpen)return;const onKey=e=>{if(e.key==="Escape")setMobileMenuOpen(false)};const onPointer=e=>{if(mobileNavRef.current&&!mobileNavRef.current.contains(e.target))setMobileMenuOpen(false)};document.addEventListener("keydown",onKey);document.addEventListener("pointerdown",onPointer);return()=>{document.removeEventListener("keydown",onKey);document.removeEventListener("pointerdown",onPointer)}},[mobileMenuOpen]);
+ useEffect(()=>{if(!("serviceWorker" in navigator))return;const onMessage=e=>{if(e.data?.type!=="isys-push-open")return;const target=e.data.module;if(["Přehled","Objekty","Kontroly","Evidence klíčů","Úkoly","Wiki"].includes(target)){setPage(target);setSelectedBuilding(null)}};navigator.serviceWorker.addEventListener("message",onMessage);return()=>navigator.serviceWorker.removeEventListener("message",onMessage)},[]);
  const [taskWidgetRows,setTaskWidgetRows]=useState([]),[taskWidgetLoading,setTaskWidgetLoading]=useState(false),[taskWidgetError,setTaskWidgetError]=useState("");
  const [taskInitialFilter,setTaskInitialFilter]=useState("otevřené");
  const [keyInitialFilter,setKeyInitialFilter]=useState("active");
