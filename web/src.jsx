@@ -264,7 +264,7 @@ function App(){
  const taskToday=(()=>{const d=new Date();return [d.getFullYear(),String(d.getMonth()+1).padStart(2,"0"),String(d.getDate()).padStart(2,"0")].join("-")})();
  const taskWidgetValues={myTasks:myTechnician?taskWidgetRows.filter(t=>t.technician===myTechnician&&t.status!=="uzavřený").length:null,reviewTasks:taskWidgetRows.filter(t=>t.status==="čeká na kontrolu").length,overdueTasks:taskWidgetRows.filter(t=>t.status!=="uzavřený"&&t.due_date&&t.due_date<taskToday).length};
  const keyWidgetValues={activeKeyLoans:keyWidgetRows.filter(r=>!r.returned_at).length,returnedKeyLoans:keyWidgetRows.filter(r=>!!r.returned_at).length,allKeyLoans:keyWidgetRows.length};
- const openKeyWidget=id=>{setKeyInitialFilter(id==="activeKeyLoans"?"active":id==="returnedKeyLoans"?"returned":"all");setPage("Evidence klíčů");window.scrollTo({top:0,behavior:"smooth")};
+ const openKeyWidget=id=>{setKeyInitialFilter(id==="activeKeyLoans"?"active":id==="returnedKeyLoans"?"returned":"all");setPage("Evidence klíčů");window.scrollTo({top:0,behavior:"smooth"})};
  const openTaskWidget=id=>{setTaskInitialFilter(({myTasks:"moje",reviewTasks:"ke kontrole",overdueTasks:"po termínu"})[id]||"otevřené");setPage("Úkoly");window.scrollTo({top:0,behavior:"smooth"})};
  const visibleDashboardWidgets=dashboardWidgets.filter(id=>canSeeWidget(userRoles,id));
  const visibleWidgetCatalog=dashboardWidgetCatalog.filter(([id])=>canSeeWidget(userRoles,id));
