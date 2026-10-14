@@ -79,7 +79,7 @@ export default function Inspections({buildings,userEmail,myReferent,myTechnician
   setPdfBusy(true);setNotice("");setBackupStatus("");
   let host;
   try{
-   const module=await import("html2pdf.js");
+   const module=await import("html2pdf.js").catch(async error=>{if(/Failed to fetch dynamically imported module|Importing a module script failed|error loading dynamically imported module/i.test(String(error?.message||error))){throw new Error("Knihovna pro PDF se po aktualizaci aplikace nenačetla. Ulož rozpracovanou kontrolu a obnov stránku (Ctrl+Shift+R nebo Cmd+Shift+R).")}throw error});
    const html2pdf=module.default;
    const doc=new DOMParser().parseFromString(buildHtml(),"text/html");
    host=document.createElement("div");
