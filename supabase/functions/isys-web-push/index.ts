@@ -31,7 +31,7 @@ Deno.serve(async req=>{
  let sent=0,expired=0,failed=0;
  for(const sub of subscriptions||[]){
   try{await webpush.sendNotification({endpoint:sub.endpoint,keys:{p256dh:sub.p256dh,auth:sub.auth}},body,{TTL:3600,urgency:"normal"});sent++}
-  catch(e){const status=(e as {statusCode?:number}).statusCode;if(status===404||status===410){await db.from("push_subscriptions").delete().eq("id",sub.id);expired++}else{failed++;console.error("Web Push delivery failed",status||"unknown")}}
+  catch(e){const status=(e as {statusCode?:number}).statusCode;if(status===404||status===410){await db.from("push_subscriptions").delete().eq("id",sub.id);expired++}else{failed++;console.error("Web Push delivery failed",{status:status||null,message:e instanceof Error?e.message:String(e),stack:e instanceof Error?e.stack:undefined})}}
  }
- return json({sent,expired,failed});
+ return json({sent,expired,failed},failed>0?502:200);
 });
