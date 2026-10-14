@@ -16,9 +16,9 @@ begin
  select count(distinct p.id), min(p.id)
  into match_count,recipient
  from public.profiles p
- where lower(btrim(coalesce(p.display_name,'')))=lower(assignee)
-    or lower(btrim(coalesce(p.full_name,'')))=lower(assignee)
-    or lower(btrim(coalesce(p.name,'')))=lower(assignee);
+ where lower(btrim(coalesce(to_jsonb(p)->>'display_name','')))=lower(assignee)
+    or lower(btrim(coalesce(to_jsonb(p)->>'full_name','')))=lower(assignee)
+    or lower(btrim(coalesce(to_jsonb(p)->>'name','')))=lower(assignee);
  if match_count <> 1 or recipient is null then return new; end if;
  notification_title := case when tg_op='INSERT' then 'Byl vám přidělen úkol' else 'Byl vám předán úkol' end;
  insert into public.notifications(user_id,title,body,module)
