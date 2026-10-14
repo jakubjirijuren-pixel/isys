@@ -32,7 +32,7 @@ function App(){
  const accentThemes=[["blue","Modrá"],["green","Zelená"],["purple","Fialová"],["orange","Oranžová"],["red","Červená"],["teal","Tyrkysová"]];
  const [accentTheme,setAccentTheme]=useState(()=>{try{return localStorage.getItem("isys-accent-theme")||"blue"}catch{return "blue"}});
  useEffect(()=>{document.documentElement.dataset.accent=accentThemes.some(([id])=>id===accentTheme)?accentTheme:"blue";try{localStorage.setItem("isys-accent-theme",accentTheme)}catch{}},[accentTheme]);
- const [session,setSession]=useState(null),[loading,setLoading]=useState(true),[email,setEmail]=useState(""),[password,setPassword]=useState(""),[error,setError]=useState(""),[busy,setBusy]=useState(false);
+ const [session,setSession]=useState(null),[passwordChange,setPasswordChange]=useState(""),[passwordRepeat,setPasswordRepeat]=useState(""),[passwordChangeError,setPasswordChangeError]=useState(""),[passwordChangeBusy,setPasswordChangeBusy]=useState(false),[loading,setLoading]=useState(true),[email,setEmail]=useState(""),[password,setPassword]=useState(""),[error,setError]=useState(""),[busy,setBusy]=useState(false);
  const [importRows,setImportRows]=useState(null),[importError,setImportError]=useState(""),[importBusy,setImportBusy]=useState(false),[search,setSearch]=useState(initialView.search||"");
  const [selectedBuilding,setSelectedBuilding]=useState(null);
  const [buildingView,setBuildingView]=useState(()=>{try{return localStorage.getItem("isys-building-view")==="list"?"list":"cards"}catch{return "cards"}});
@@ -156,6 +156,20 @@ function App(){
  useEffect(()=>{if(!session)return;try{sessionStorage.setItem("isys-view",JSON.stringify({page,search,filters,selectedId:selectedBuilding?.id||null}))}catch{}},[session,page,search,filters,selectedBuilding]);
  useEffect(()=>{if(!session||listLoading||listError)return;const y=Number(initialView.scrollY)||0;if(!y)return;const id=requestAnimationFrame(()=>window.scrollTo(0,y));return()=>cancelAnimationFrame(id)},[session,listLoading,listError]);
  useEffect(()=>{if(!session)return;let last=0;const remember=()=>{const now=Date.now();if(now-last<150)return;last=now;try{sessionStorage.setItem("isys-scroll",String(window.scrollY))}catch{}};window.addEventListener("scroll",remember,{passive:true});return()=>window.removeEventListener("scroll",remember)},[session]);
+ async function finishFirstPasswordChange(e){
+  e.preventDefault();setPasswordChangeError("");
+  if(passwordChange.length<12){setPasswordChangeError("Nové heslo musí mít alespoň 12 znaků.");return}
+  if(passwordChange!==passwordRepeat){setPasswordChangeError("Hesla se neshodují.");return}
+  setPasswordChangeBusy(true);
+  const {error}=await supabase.auth.updateUser({password:passwordChange});
+  if(error){setPasswordChangeError("Změna hesla selhala: "+error.message);setPasswordChangeBusy(false);return}
+  setPasswordChange("");setPasswordRepeat("");
+  const {data,error:refreshError}=await supabase.auth.refreshSession();
+  if(refreshError||data?.user?.app_metadata?.isys_must_change_password){
+   setPasswordChangeError("Heslo bylo změněno, ale stav účtu se nepodařilo obnovit. Obnov stránku a přihlas se novým heslem.");
+  }else{setSession(data?.session??null)}
+  setPasswordChangeBusy(false);
+ }
  async function login(e){e.preventDefault();setError("");setBusy(true);const {error}=await supabase.auth.signInWithPassword({email,password});if(error)setError("Přihlášení se nezdařilo. Zkontroluj e-mail, heslo a potvrzení účtu.");setBusy(false)}
  function openForm(item=null){setEditing(item?.id??"new");setForm(item?{...empty,...item}:empty);setMessage("")}
  async function save(e){e.preventDefault();if(role!=="admin")return;setSaving(true);setMessage("");const payload={name:form.name.trim(),address:form.address.trim(),description:form.description.trim()||null,...Object.fromEntries(extraFields.map(([k])=>[k,numericFields.includes(k)?(form[k]===""||form[k]==null?null:Number(form[k])):(String(form[k]??"").trim()||null)]))};if(!payload.name||!payload.address){setMessage("Vyplň název a adresu.");setSaving(false);return}const result=editing==="new"?await supabase.from("buildings").insert(payload):await supabase.from("buildings").update(payload).eq("id",editing);if(result.error)setMessage("Uložení selhalo: "+result.error.message);else{setEditing(null);await load()}setSaving(false)}
@@ -236,6 +250,7 @@ function App(){
  useEffect(()=>{if(!session?.user?.id||page!=="Přehled")return;let active=true;setTaskWidgetLoading(true);supabase.from("work_requests").select("id,technician,status,due_date").limit(1000).then(({data,error})=>{if(!active)return;setTaskWidgetLoading(false);if(error)setTaskWidgetError(error.message);else{setTaskWidgetError("");setTaskWidgetRows(data||[])}});return()=>{active=false}},[session?.user?.id,page]);
  if(loading)return <main className="center">Načítání iSYS…</main>;
  if(!session)return <main className="center"><form className="login" onSubmit={login}><div className="mark">iSYS</div><h1>Přihlášení do systému</h1><p>Interní systém správy bytových domů</p><label>E-mail<input type="email" required value={email} onChange={e=>setEmail(e.target.value)} autoComplete="email"/></label><label>Heslo<input type="password" required value={password} onChange={e=>setPassword(e.target.value)} autoComplete="current-password"/></label>{error&&<div role="alert" className="error">{error}</div>}<button disabled={busy}>{busy?"Přihlašuji…":"Přihlásit se"}</button><small>Účty zakládá správce systému.</small></form></main>;
+ if(session.user?.app_metadata?.isys_must_change_password)return <main className="center"><form className="login" onSubmit={finishFirstPasswordChange}><div className="mark">iSYS</div><h1>První přihlášení</h1><p>Než začneš používat iSYS, nastav si vlastní nové heslo.</p><label>Nové heslo<input type="password" autoComplete="new-password" minLength={12} required value={passwordChange} onChange={e=>setPasswordChange(e.target.value)}/></label><label>Potvrzení nového hesla<input type="password" autoComplete="new-password" minLength={12} required value={passwordRepeat} onChange={e=>setPasswordRepeat(e.target.value)}/></label>{passwordChangeError&&<div className="error" role="alert">{passwordChangeError}</div>}<button disabled={passwordChangeBusy}>{passwordChangeBusy?"Ukládám…":"Změnit heslo a pokračovat"}</button><button type="button" className="secondarybutton" onClick={()=>supabase.auth.signOut()}>Odhlásit se</button></form></main>;
  const filterOptions=Object.fromEntries(["city","manager","referent"].map(key=>[key,[...new Set(buildings.map(b=>String(b[key]??"").trim()).filter(Boolean))].sort((a,b)=>a.localeCompare(b,"cs"))]));
  const visibleBuildings=buildings.filter(b=>[b.name,b.address,b.object_number,b.manager,b.referent].join(" ").toLocaleLowerCase("cs").includes(search.toLocaleLowerCase("cs"))&&Object.entries(filters).every(([key,value])=>!value||String(b[key]??"")===value)&&(!widgetBuildingFilter||widgetBuildingFilter==="unassignedTech"&&!String(b.manager||"").trim()||widgetBuildingFilter==="unassignedRef"&&!String(b.referent||"").trim()||widgetBuildingFilter==="hasFlats"&&Number(b.flats_count)>0||widgetBuildingFilter==="hasNonresidential"&&Number(b.nonresidential_count)>0||widgetBuildingFilter==="hasGarages"&&Number(b.garages_count)>0));
  const filtersActive=Boolean(search.trim()||Object.values(filters).some(Boolean)||widgetBuildingFilter);
