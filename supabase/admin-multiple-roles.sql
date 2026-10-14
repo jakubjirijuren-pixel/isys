@@ -58,9 +58,10 @@ begin
  if length(coalesce(new_display_name,''))>120 then raise exception 'Jméno je příliš dlouhé'; end if;
  delete from public.user_roles where user_id=target_user and role<>all(normalized);
  insert into public.user_roles(user_id,role) select target_user,unnest(normalized) on conflict do nothing;
- insert into public.profiles(id,role,display_name)
- values(target_user,case when 'admin'=any(normalized) then 'admin' when 'technician'=any(normalized) then 'technician' else 'referent' end,nullif(trim(new_display_name),''))
- on conflict(id) do update set role=excluded.role,display_name=excluded.display_name;
+ -- Původní sloupec role má na některých instalacích odlišný CHECK constraint.
+ -- Role jsou vedené výhradně v user_roles, zde aktualizujeme jen jméno.
+ update public.profiles set display_name=nullif(trim(new_display_name),'') where id=target_user;
+ if not found then raise exception 'Profil uživatele neexistuje. Nejdříve vytvoř profil v public.profiles.'; end if;
 end;$$;
 revoke all on function public.isys_update_user(uuid,text[],text) from public;
 grant execute on function public.isys_update_user(uuid,text[],text) to authenticated;
