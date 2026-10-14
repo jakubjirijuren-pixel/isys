@@ -1,1 +1,14 @@
-const CACHE="isys-shell-v2";const SHELL=["/isys/","/isys/index.html","/isys/icon.svg","/isys/icon-maskable.svg"];self.addEventListener("install",event=>{event.waitUntil(caches.open(CACHE).then(cache=>cache.addAll(SHELL)).then(()=>self.skipWaiting()))});self.addEventListener("activate",event=>{event.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(key=>key.startsWith("isys-shell-")&&key!==CACHE).map(key=>caches.delete(key)))).then(()=>self.clients.claim()))});self.addEventListener("fetch",event=>{const req=event.request;if(req.method!=="GET"||new URL(req.url).origin!==self.location.origin)return;const url=new URL(req.url);if(!url.pathname.startsWith("/isys/"))return;if(req.mode==="navigate"){event.respondWith(fetch(req).catch(()=>caches.match("/isys/")));return}event.respondWith(fetch(req).then(response=>{if(response.ok&&response.type==="basic"){const copy=response.clone();caches.open(CACHE).then(cache=>cache.put(req,copy))}return response}).catch(()=>caches.match(req)))})
+const CACHE="isys-shell-v3";
+const SHELL=["/isys/icon.svg","/isys/icon-maskable.svg"];
+self.addEventListener("install",event=>{event.waitUntil(caches.open(CACHE).then(cache=>cache.addAll(SHELL)).then(()=>self.skipWaiting()))});
+self.addEventListener("activate",event=>{event.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(key=>key.startsWith("isys-shell-")&&key!==CACHE).map(key=>caches.delete(key)))).then(()=>self.clients.claim()))});
+self.addEventListener("fetch",event=>{
+ const req=event.request;if(req.method!=="GET"||new URL(req.url).origin!==self.location.origin)return;
+ const url=new URL(req.url);if(!url.pathname.startsWith("/isys/"))return;
+ // Never cache the HTML entry point or versioned JS/CSS chunks: stale HTML
+ // can reference hashed assets that no longer exist after a GitHub Pages deploy.
+ if(req.mode==="navigate"||url.pathname.endsWith(".html")||url.pathname.endsWith(".js")||url.pathname.endsWith(".css")){
+  event.respondWith(fetch(req,{cache:"no-store"}));return;
+ }
+ event.respondWith(fetch(req).then(response=>{if(response.ok&&response.type==="basic"){const copy=response.clone();caches.open(CACHE).then(cache=>cache.put(req,copy))}return response}).catch(()=>caches.match(req)));
+});
