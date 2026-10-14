@@ -393,3 +393,11 @@ button,select,input,textarea{max-width:100%}
 
 /* Password setup: clear separation between primary action and sign-out. */
 .password-change-form button[type="button"].secondarybutton{margin-top:18px}
+
+.userdropdownheading{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:5px}
+.userdropdownheading>strong{font-size:15px}
+.userdropdownclose{display:grid;place-items:center;flex:0 0 36px;width:36px;height:36px;border:1px solid #dbe5ec;border-radius:9px;background:#f3f6f9;color:#23465c;font-size:25px;line-height:1;cursor:pointer}
+.userdropdownclose:hover{background:#e6f1f7;border-color:#92bed3}
+.userdropdownclose:focus-visible{outline:2px solid #2b91be;outline-offset:2px}
+[data-theme="dark"] .userdropdownclose{background:#1a3043;border-color:#36546a;color:#e3edf6}
+@media(max-width:600px){.userdropdown{max-height:calc(100dvh - 100px);overflow-y:auto}.userdropdownheading{position:sticky;top:-20px;background:inherit;z-index:2;padding:5px 0}}
