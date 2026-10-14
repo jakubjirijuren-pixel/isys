@@ -55,3 +55,15 @@
 [data-theme="dark"] .keys-status.returned{background:#1b4838;color:#b4f1ce}
 [data-theme="dark"] .keys-module .secondarybutton{background:#1a3043;border-color:#36546a;color:#e3edf6}
 [data-theme="dark"] .keys-module .secondarybutton:hover{background:#25455e}
+
+/* Searchable building selector matching inspection forms. */
+.keys-building-field{display:flex;flex-direction:column;gap:8px;min-width:0}
+.keys-building-field>label{font-size:13px;font-weight:650;color:#39546a}
+.keys-building-field .filterdropdown{width:100%;flex:none}
+.keys-building-field .filtertrigger{min-height:44px;font-size:14px}
+.keys-building-field .filtermenu{max-height:none;overflow:visible;padding:8px}
+.keys-building-field .filtermenu input{box-sizing:border-box;width:100%;min-height:40px;padding:10px 12px;border:1px solid #dbe5ec;border-radius:8px;background:#fff;color:#23465c;font:inherit;font-size:13px}
+.keys-building-field .inspectionbuildingoptions{max-height:245px;overflow-y:auto;margin-top:6px}
+.keys-building-field .inspectionbuildingoptions p{padding:10px;font-size:13px}
+[data-theme="dark"] .keys-building-field>label{color:#b6cad8}
+[data-theme="dark"] .keys-building-field .filtermenu input{background:#1a3043;border-color:#36546a;color:#e3edf6}
