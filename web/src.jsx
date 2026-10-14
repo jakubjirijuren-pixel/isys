@@ -259,7 +259,7 @@ function App(){
   if(!session?.user?.id||page!=="Přehled")return;
   let active=true;
   const refresh=async()=>{
-   const {data,error}=await supabase.from("work_requests").select("id,technician,status,due_date").limit(1000);
+   const {data,error}=await supabase.from("work_requests").select("id,assigned_user_id,technician,status,due_date").limit(1000);
    if(!active)return;
    setTaskWidgetLoading(false);
    if(error)setTaskWidgetError(error.message);
@@ -300,7 +300,7 @@ function App(){
  const filtersActive=Boolean(search.trim()||Object.values(filters).some(Boolean)||widgetBuildingFilter);
  const dashboardStats=rows=>({buildings:rows.length,flats:rows.reduce((sum,b)=>sum+(Number(b.flats_count)||0),0),nonresidential:rows.reduce((sum,b)=>sum+(Number(b.nonresidential_count)||0),0),garages:rows.reduce((sum,b)=>sum+(Number(b.garages_count)||0),0),cities:new Set(rows.map(b=>String(b.city||"").trim()).filter(Boolean)).size,technicians:new Set(rows.map(b=>String(b.manager||"").trim()).filter(Boolean)).size,referents:new Set(rows.map(b=>String(b.referent||"").trim()).filter(Boolean)).size,unassignedTech:rows.filter(b=>!String(b.manager||"").trim()).length,unassignedRef:rows.filter(b=>!String(b.referent||"").trim()).length});
  const taskToday=(()=>{const d=new Date();return [d.getFullYear(),String(d.getMonth()+1).padStart(2,"0"),String(d.getDate()).padStart(2,"0")].join("-")})();
- const taskWidgetValues={myTasks:myTechnician?taskWidgetRows.filter(t=>t.technician===myTechnician&&t.status!=="uzavřený").length:null,reviewTasks:taskWidgetRows.filter(t=>t.status==="čeká na kontrolu").length,overdueTasks:taskWidgetRows.filter(t=>t.status!=="uzavřený"&&t.due_date&&t.due_date<taskToday).length};
+ const taskWidgetValues={myTasks:taskWidgetRows.filter(t=>t.assigned_user_id===session?.user?.id&&t.status!=="uzavřený").length,reviewTasks:taskWidgetRows.filter(t=>t.status==="čeká na kontrolu").length,overdueTasks:taskWidgetRows.filter(t=>t.status!=="uzavřený"&&t.due_date&&t.due_date<taskToday).length};
  const keyWidgetValues={activeKeyLoans:keyWidgetRows.filter(r=>!r.returned_at).length,returnedKeyLoans:keyWidgetRows.filter(r=>!!r.returned_at).length,allKeyLoans:keyWidgetRows.length};
  const openKeyWidget=id=>{setKeyInitialFilter(id==="activeKeyLoans"?"active":id==="returnedKeyLoans"?"returned":"all");setPage("Evidence klíčů");window.scrollTo({top:0,behavior:"smooth"})};
  const openTaskWidget=id=>{setTaskInitialFilter(({myTasks:"moje",reviewTasks:"ke kontrole",overdueTasks:"po termínu"})[id]||"otevřené");setPage("Úkoly");window.scrollTo({top:0,behavior:"smooth"})};
