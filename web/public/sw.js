@@ -12,3 +12,17 @@ self.addEventListener("fetch",event=>{
  }
  event.respondWith(fetch(req).then(response=>{if(response.ok&&response.type==="basic"){const copy=response.clone();caches.open(CACHE).then(cache=>cache.put(req,copy))}return response}).catch(()=>caches.match(req)));
 });
+self.addEventListener("push",event=>{
+ let data={};try{data=event.data?.json()||{}}catch{data={title:"iSYS",body:event.data?.text()||"Nové oznámení"}}
+ const title=String(data.title||"iSYS");
+ event.waitUntil(self.registration.showNotification(title,{body:String(data.body||""),icon:"/isys/icon.svg",badge:"/isys/icon.svg",tag:String(data.notificationId||"isys"),data:{url:"/isys/",module:String(data.module||"Přehled")}}));
+});
+self.addEventListener("notificationclick",event=>{
+ event.notification.close();
+ event.waitUntil((async()=>{
+  const windows=await self.clients.matchAll({type:"window",includeUncontrolled:true});
+  const app=windows.find(client=>new URL(client.url).pathname.startsWith("/isys/"));
+  if(app){await app.focus();app.postMessage({type:"isys-push-open",module:event.notification.data?.module||"Přehled"});return}
+  await self.clients.openWindow("/isys/");
+ })());
+});
