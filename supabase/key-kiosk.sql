@@ -1,13 +1,23 @@
 -- iSYS key room: one barcode per physical key bundle.
 -- Execute after supabase/key-loans.sql.
 alter table public.keys add column if not exists barcode text;
-update public.keys set barcode='ISYS-' || upper(left(replace(id::text,'-',''),16)) where barcode is null or btrim(barcode)='';
+-- Short, scanner-friendly Code 39 identifiers (K + 7 digits).
+-- Re-running this migration keeps already shortened labels unchanged.
+create sequence if not exists public.isys_key_barcode_seq start with 1000001 increment by 1;
+-- Ensure sequence is ahead of any previously assigned short codes.
+select setval('public.isys_key_barcode_seq',
+ greatest(1000000,coalesce((select max(substring(barcode from 2)::bigint)
+ from public.keys where barcode ~ '^K[0-9]{7}$'),1000000)),
+ true);
+update public.keys
+set barcode='K' || nextval('public.isys_key_barcode_seq')::text
+where barcode is null or barcode !~ '^K[0-9]{7}$';
 create or replace function public.isys_assign_key_barcode() returns trigger
 language plpgsql set search_path='' as $key_barcode_body$
 begin
  if new.id is null then new.id=gen_random_uuid(); end if;
  if new.barcode is null or btrim(new.barcode)='' then
-  new.barcode='ISYS-' || upper(left(replace(new.id::text,'-',''),16));
+  new.barcode='K' || nextval('public.isys_key_barcode_seq')::text;
  end if;
  return new;
 end $key_barcode_body$;
