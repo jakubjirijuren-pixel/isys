@@ -410,3 +410,12 @@ button,select,input,textarea{max-width:100%}
 .dashboardtop .supportaction{margin-left:auto}
 @media(max-width:1050px){.dashboardtop{grid-template-columns:1fr}.dashboardtop .supportbanner{margin-top:0}}
 @media(max-width:700px){.dashboardtop .supportaction{width:100%;margin-left:0}}
+
+/* Compact technical support action in the top application bar */
+.header-support{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:40px;padding:8px 12px;border:1px solid #dbe5ec;border-radius:10px;background:#fff;color:#146c9c;text-decoration:none;font-size:13px;font-weight:700;white-space:nowrap}
+.header-support:hover{background:#e8f4fb;border-color:#69a9c8}
+.header-support:focus-visible{outline:2px solid #2b91be;outline-offset:2px}
+.header-support span:first-child{font-size:17px}
+[data-theme="dark"] .header-support{background:#1a3043;border-color:#36546a;color:#a5def8}
+[data-theme="dark"] .header-support:hover{background:#294b62}
+@media(max-width:650px){.header-support{padding:8px 10px}.header-support span:last-child{display:none}}
