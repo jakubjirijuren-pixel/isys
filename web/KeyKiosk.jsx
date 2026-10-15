@@ -23,8 +23,8 @@ export default function KeyKiosk({supabase,onExit}){
   setBusy(true);setError("");
   const fn=mode==="borrow"?"isys_kiosk_checkout":"isys_kiosk_return";
   const params=mode==="borrow"?{p_barcode:bundle.barcode,p_borrower:borrower.trim()}:{p_barcode:bundle.barcode};
-  const {error:e}=await supabase.rpc(fn,params);
-  if(e)setError(e.message);else setDone(true);
+  const {error:rpcError}=await supabase.rpc(fn,params);
+  if(rpcError)setError(rpcError.message);else setDone(true);
   setBusy(false);
  };
  return <div className="key-kiosk" role="region" aria-label="Terminál klíčárny"><header className="key-kiosk-head"><strong>{t.welcome}</strong><div><label className="key-kiosk-lang"><span aria-label="Language">🌐</span><select aria-label="Jazyk terminálu" value={lang} onChange={e=>setLang(e.target.value)}><option value="cs">Čeština</option><option value="en">English</option><option value="uk">Українська</option></select></label><button type="button" className="key-kiosk-exit" onClick={onExit}>✕</button></div></header><main className="key-kiosk-main">
