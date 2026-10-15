@@ -3,14 +3,14 @@
 alter table public.keys add column if not exists barcode text;
 update public.keys set barcode='ISYS-'+upper(left(replace(id::text,'-',''),16)) where barcode is null or btrim(barcode)='';
 create or replace function public.isys_assign_key_barcode() returns trigger
-language plpgsql set search_path='' as $
+language plpgsql set search_path='' as $key_barcode_body$
 begin
  if new.id is null then new.id=gen_random_uuid(); end if;
  if new.barcode is null or btrim(new.barcode)='' then
   new.barcode='ISYS-'+upper(left(replace(new.id::text,'-',''),16));
  end if;
  return new;
-end $;
+end $key_barcode_body$;
 drop trigger if exists isys_assign_key_barcode on public.keys;
 create trigger isys_assign_key_barcode before insert on public.keys for each row execute function public.isys_assign_key_barcode();
 alter table public.keys alter column barcode set not null;
