@@ -57,7 +57,7 @@ function App(){
  useEffect(()=>{
   if(!session?.user?.id){setShowLoginLoading(false);return}
   setShowLoginLoading(true);
-  const timeout=window.setTimeout(()=>setShowLoginLoading(false),1600);
+  const timeout=window.setTimeout(()=>setShowLoginLoading(false),2000);
   return()=>window.clearTimeout(timeout);
  },[session?.user?.id]);
  const [importRows,setImportRows]=useState(null),[importError,setImportError]=useState(""),[importBusy,setImportBusy]=useState(false),[search,setSearch]=useState(initialView.search||"");
