@@ -106,7 +106,7 @@ export default function Inspections({buildings,userEmail,currentUserId,currentAc
    host.appendChild(pdfStyle);
    const content=document.createElement("div");
    content.className="inspectionpdfdocument";
-   content.style.cssText="padding:35px 48px;background:#fff;color:#17212b;font-family:Arial,sans-serif;font-size:11px";
+   content.style.cssText="padding:0 48px 35px;background:#fff;color:#17212b;font-family:Arial,sans-serif;font-size:11px";
    content.innerHTML=doc.body.innerHTML;
    host.appendChild(content);
    document.body.appendChild(host);
