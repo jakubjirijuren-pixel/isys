@@ -2,6 +2,17 @@
 -- Execute after supabase/key-loans.sql.
 alter table public.keys add column if not exists barcode text;
 update public.keys set barcode='ISYS-'+upper(replace(id::text,'-','')) where barcode is null or btrim(barcode)='';
+create or replace function public.isys_assign_key_barcode() returns trigger
+language plpgsql set search_path='' as $
+begin
+ if new.id is null then new.id=gen_random_uuid(); end if;
+ if new.barcode is null or btrim(new.barcode)='' then
+  new.barcode='ISYS-'+upper(replace(new.id::text,'-',''));
+ end if;
+ return new;
+end $;
+drop trigger if exists isys_assign_key_barcode on public.keys;
+create trigger isys_assign_key_barcode before insert on public.keys for each row execute function public.isys_assign_key_barcode();
 alter table public.keys alter column barcode set not null;
 create unique index if not exists isys_keys_barcode_unique on public.keys(barcode);
 create unique index if not exists isys_one_active_loan_per_bundle on public.key_loans(key_id) where returned_at is null and key_id is not null;
