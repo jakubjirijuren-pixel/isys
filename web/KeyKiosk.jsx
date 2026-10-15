@@ -23,8 +23,6 @@ export default function KeyKiosk({supabase,onExit}){
      if(!result||cancelled||scanLocked.current)return;
      scanLocked.current=true;
      const value=result.getText();
-     controls?.stop();
-     cameraControls.current=null;
      setCameraOn(false);
      lookup(value);
     });
