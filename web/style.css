@@ -401,3 +401,12 @@ button,select,input,textarea{max-width:100%}
 .userdropdownclose:focus-visible{outline:2px solid #2b91be;outline-offset:2px}
 [data-theme="dark"] .userdropdownclose{background:#1a3043;border-color:#36546a;color:#e3edf6}
 @media(max-width:600px){.userdropdown{max-height:calc(100dvh - 100px);overflow-y:auto}.userdropdownheading{position:sticky;top:-20px;background:inherit;z-index:2;padding:5px 0}}
+
+/* Dashboard: overview and support panel share the top row */
+.dashboardtop{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(350px,1fr);gap:16px;align-items:stretch}
+.dashboardtop .hero{min-width:0;box-shadow:0 12px 25px #0b3d571c}
+.dashboardtop .supportbanner{min-width:0;margin-top:0;padding:18px;gap:12px;flex-wrap:wrap;align-content:center}
+.dashboardtop .supportcopy{flex:1 1 210px}
+.dashboardtop .supportaction{margin-left:auto}
+@media(max-width:1050px){.dashboardtop{grid-template-columns:1fr}.dashboardtop .supportbanner{margin-top:0}}
+@media(max-width:700px){.dashboardtop .supportaction{width:100%;margin-left:0}}
