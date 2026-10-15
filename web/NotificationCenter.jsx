@@ -14,7 +14,7 @@ export default function NotificationCenter({supabase,userId,onNavigate}){
   if(!window.confirm("Opravdu smazat všechna oznámení? Tuto akci nelze vrátit zpět."))return;
   setBusy(true);setError("");
   try{
-   const {error:e}=await supabase.from("notifications").delete().eq("user_id",userId);
+   const {error:e}=await supabase.rpc("isys_delete_my_notifications");
    if(e)throw e;
    await refresh();
   }catch(e){setError("Oznámení se nepodařilo smazat: "+e.message)}
