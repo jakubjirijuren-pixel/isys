@@ -1,13 +1,13 @@
 -- iSYS key room: one barcode per physical key bundle.
 -- Execute after supabase/key-loans.sql.
 alter table public.keys add column if not exists barcode text;
-update public.keys set barcode='ISYS-'+upper(left(replace(id::text,'-',''),16)) where barcode is null or btrim(barcode)='';
+update public.keys set barcode='ISYS-' || upper(left(replace(id::text,'-',''),16)) where barcode is null or btrim(barcode)='';
 create or replace function public.isys_assign_key_barcode() returns trigger
 language plpgsql set search_path='' as $key_barcode_body$
 begin
  if new.id is null then new.id=gen_random_uuid(); end if;
  if new.barcode is null or btrim(new.barcode)='' then
-  new.barcode='ISYS-'+upper(left(replace(new.id::text,'-',''),16));
+  new.barcode='ISYS-' || upper(left(replace(new.id::text,'-',''),16));
  end if;
  return new;
 end $key_barcode_body$;
