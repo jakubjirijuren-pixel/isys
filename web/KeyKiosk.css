@@ -3,3 +3,9 @@
 .key-kiosk-scan-prompt>span{font-size:58px;line-height:1;color:#67bbff}
 .key-kiosk-scan-prompt>strong{font-size:clamp(18px,2vw,25px)}
 .key-kiosk-scan-prompt>small{font:600 14px monospace;color:#9ec8e8;word-break:break-all}
+
+.key-kiosk-camera-toggle{background:#246eaa;color:#fff;border:1px solid #60b3ed!important;min-height:58px!important;font-size:18px}
+.key-kiosk-camera-toggle:hover{background:#3489ca}
+.key-kiosk-camera{position:relative;overflow:hidden;border:2px solid #4a9bcf;border-radius:16px;background:#020b13}
+.key-kiosk-camera video{display:block;width:100%;max-height:330px;object-fit:cover}
+.key-kiosk-camera p{margin:0;padding:12px;text-align:center;font-size:14px;color:#d5e8fa}
