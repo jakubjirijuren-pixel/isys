@@ -2,7 +2,7 @@ import React,{useEffect,useState} from "react";
 import "./tasks.css";
 const statuses=["nový","přidělený","v řešení","čeká na kontrolu","vráceno k dopracování","uzavřený"];
 const empty={building_id:"",title:"",description:"",priority:"běžná",technician:"",assigned_user_id:null,referent:"",referent_user_id:null,due_date:""};
-export default function Tasks({supabase,buildings,myReferent,myTechnician,accountDirectory=[],userId,userEmail,initialFilter="otevřené"}){
+export default function Tasks({supabase,buildings,accountDirectory=[],userId,userEmail,initialFilter="otevřené"}){
  const [items,setItems]=useState([]),[events,setEvents]=useState([]),[selected,setSelected]=useState(null),[draft,setDraft]=useState(empty),[creating,setCreating]=useState(false),[busy,setBusy]=useState(false),[notice,setNotice]=useState(""),[filter,setFilter]=useState(initialFilter),[note,setNote]=useState(""),[resolution,setResolution]=useState(""),[handoffTo,setHandoffTo]=useState(""),[handoffReason,setHandoffReason]=useState("");
  const [actorNames,setActorNames]=useState({});
  const [assignees,setAssignees]=useState([]);
