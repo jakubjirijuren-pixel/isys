@@ -106,3 +106,15 @@
 @media(prefers-reduced-motion:reduce){
  .filtertrigger,.filtermenu{transition:none}
 }
+
+/* Searchable multi-referent dropdown in building editor */
+.referentpicker{width:100%;flex:1 1 auto}
+.referentpickermenu{max-height:none;overflow:visible;min-width:100%;padding:8px}
+.referentpickermenu>input{display:block;width:100%;min-height:42px;border:1px solid var(--isys-control-border);border-radius:9px;padding:10px 12px;background:var(--isys-control-bg);color:var(--isys-control-text)}
+.referentpickeroptions{max-height:235px;overflow-y:auto;overscroll-behavior:contain;margin:6px 0}
+.referentpickeroption{display:flex!important;align-items:center;flex-direction:row!important;gap:10px;padding:9px 10px;border-radius:8px;cursor:pointer;color:var(--isys-control-text);font-size:13px}
+.referentpickeroption:hover{background:var(--isys-control-option-hover)}
+.referentpickeroption.chosen{background:var(--isys-control-option-selected)}
+.referentpickeroption input[type="checkbox"]{width:17px!important;height:17px!important;min-height:0!important;flex-shrink:0;accent-color:var(--isys-accent,#146c9c)}
+.referentpickermenu .referentpickerdone{background:var(--isys-accent,#146c9c);color:white;text-align:center;font-weight:700}
+.referentpickermenu .referentpickerdone:hover{filter:brightness(1.1);background:var(--isys-accent,#146c9c)}
