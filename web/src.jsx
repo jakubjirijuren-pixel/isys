@@ -12,7 +12,6 @@ import SignaturePad from "./SignaturePad.jsx";
 import AdminUsers from "./AdminUsers.jsx";
 import Wiki from "./Wiki.jsx";
 import "./controls.css";
-import "./loading.css";
 export const supabase=createClient("https://qcbyjxovnf fdruiznlnt.supabase.co".replace(" ",""),"sb_publishable_AFfvrodRnmBTOLjlFadYfQ_Foa4e_P1");
 const extraFields=[["object_number","Číslo objektu"],["street","Ulice"],["city","Město"],["manager","Technik"],["referent","Referent"],["economist","Ekonom"],["accountant","Účetní"],["legal_entity","Hlavní účetní subjekt"],["company_id","IČO"],["external_id","Unikátní číslo"],["flats_count","Počet bytů"],["nonresidential_count","Počet nebytů"],["garages_count","Počet garáží"],["shared_spaces_count","Počet spol. prostor"],["invoice_approvers_count","Počet schvalovatelů faktur"],["manager_flag","P. Správce"],["economist_flag","P. Ekon"]];
 const numericFields=["flats_count","nonresidential_count","garages_count","shared_spaces_count","invoice_approvers_count","manager_flag","economist_flag"];
@@ -44,7 +43,6 @@ function ReferentPicker({accounts,value=[],onChange}){
   {open&&<div className="filtermenu referentpickermenu"><input ref={searchRef} type="search" aria-label="Hledat referenta" placeholder="Začni psát jméno referenta…" value={query} onChange={e=>setQuery(e.target.value)}/><div className="referentpickeroptions" role="group" aria-label="Výběr referentů">{matches.length?matches.map(a=><label key={a.id} className={"referentpickeroption"+(value.includes(a.id)?" chosen":"")}><input type="checkbox" checked={value.includes(a.id)} onChange={()=>toggle(a.id)}/><span>{a.display_name}</span></label>):<p>Žádní odpovídající uživatelé.</p>}</div><button type="button" className="referentpickerdone" onClick={()=>setOpen(false)}>Hotovo ({value.length})</button></div>}
  </div>;
 }
-function LoadingScreen(){return <main className="isys-loading-screen" role="status" aria-live="polite" aria-label="Načítání systému iSYS"><div className="isys-loading-graphic"><span className="isys-loading-pulse" aria-hidden="true"/></div><p>Načítání iSYS…</p></main>}
 function App(){
  const [initialView]=useState(()=>({...readView(),scrollY:(()=>{try{return sessionStorage.getItem("isys-scroll")}catch{return 0}})()}));
  const [theme,setTheme]=useState(()=>{try{return localStorage.getItem("isys-theme")||"light"}catch{return "light"}});
@@ -53,13 +51,6 @@ function App(){
  const [accentTheme,setAccentTheme]=useState(()=>{try{return localStorage.getItem("isys-accent-theme")||"blue"}catch{return "blue"}});
  useEffect(()=>{document.documentElement.dataset.accent=accentThemes.some(([id])=>id===accentTheme)?accentTheme:"blue";try{localStorage.setItem("isys-accent-theme",accentTheme)}catch{}},[accentTheme]);
  const [session,setSession]=useState(null),[passwordRecovery,setPasswordRecovery]=useState(()=>{const p=new URLSearchParams(window.location.hash.slice(1));const q=new URLSearchParams(window.location.search);return p.get("type")==="recovery"||q.get("type")==="recovery"||q.has("token_hash")&&q.get("type")==="recovery"}),[passwordChange,setPasswordChange]=useState(""),[passwordRepeat,setPasswordRepeat]=useState(""),[passwordChangeError,setPasswordChangeError]=useState(""),[passwordChangeBusy,setPasswordChangeBusy]=useState(false),[loading,setLoading]=useState(true),[email,setEmail]=useState(""),[password,setPassword]=useState(""),[error,setError]=useState(""),[busy,setBusy]=useState(false);
- const [showLoginLoading,setShowLoginLoading]=useState(false);
- useEffect(()=>{
-  if(!session?.user?.id){setShowLoginLoading(false);return}
-  setShowLoginLoading(true);
-  const timeout=window.setTimeout(()=>setShowLoginLoading(false),2000);
-  return()=>window.clearTimeout(timeout);
- },[session?.user?.id]);
  const [importRows,setImportRows]=useState(null),[importError,setImportError]=useState(""),[importBusy,setImportBusy]=useState(false),[search,setSearch]=useState(initialView.search||"");
  const [selectedBuilding,setSelectedBuilding]=useState(null);
  const [buildingView,setBuildingView]=useState(()=>{try{return localStorage.getItem("isys-building-view")==="list"?"list":"cards"}catch{return "cards"}});
@@ -321,8 +312,7 @@ function App(){
   window.addEventListener("focus",refresh);
   return()=>{active=false;window.clearInterval(interval);window.removeEventListener("focus",refresh);};
  },[session?.user?.id]);
- if(loading)return <LoadingScreen/>;
- if(showLoginLoading&&session&&!passwordRecovery)return <LoadingScreen/>;
+ if(loading)return <main className="center">Načítání iSYS…</main>;
  if(!session&&passwordRecovery)return <main className="center"><div className="login"><div className="mark">iSYS</div><h1>Ověření odkazu</h1><p>Ověřujeme odkaz pro nastavení hesla. Pokud se stránka nezmění, odkaz mohl vypršet nebo už byl použit.</p><button type="button" onClick={()=>{setPasswordRecovery(false);window.history.replaceState(null,"",window.location.pathname);}}>Zpět na přihlášení</button></div></main>;
  if(!session)return <main className="center"><form className="login" onSubmit={login}><div className="mark">iSYS</div><h1>Přihlášení do systému</h1><p>Interní systém správy bytových domů</p><label>E-mail<input type="email" required value={email} onChange={e=>setEmail(e.target.value)} autoComplete="email"/></label><label>Heslo<input type="password" required value={password} onChange={e=>setPassword(e.target.value)} autoComplete="current-password"/></label>{error&&<div role="alert" className="error">{error}</div>}<button disabled={busy}>{busy?"Přihlašuji…":"Přihlásit se"}</button><small>Účty zakládá správce systému.</small></form></main>;
  if(passwordRecovery||session.user?.user_metadata?.isys_must_change_password)return <main className="center"><form className="login password-change-form" onSubmit={finishFirstPasswordChange}><div className="mark">iSYS</div><h1>{passwordRecovery?"Obnovení hesla":"První přihlášení"}</h1><p>Nastav si nové heslo, abys mohl pokračovat do iSYS.</p><label>Nové heslo<input type="password" autoComplete="new-password" minLength={12} required value={passwordChange} onChange={e=>setPasswordChange(e.target.value)}/></label><label>Potvrzení nového hesla<input type="password" autoComplete="new-password" minLength={12} required value={passwordRepeat} onChange={e=>setPasswordRepeat(e.target.value)}/></label>{passwordChangeError&&<div className="error" role="alert">{passwordChangeError}</div>}<button disabled={passwordChangeBusy}>{passwordChangeBusy?"Ukládám…":"Změnit heslo a pokračovat"}</button></form></main>;
