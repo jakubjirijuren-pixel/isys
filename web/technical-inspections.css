@@ -9,3 +9,31 @@
 [data-theme="dark"] .technicalmodule .technicalhead{background:#142334;border-color:#2d465c}
 [data-theme="dark"] .technicalmodule .technicalpanel>h2{background:#25445c;color:#e4edf5}
 @media(max-width:650px){.technicalmodule .technicalhead{padding:14px;border-radius:13px}.technicalmodule .technicalpanel>h2{font-size:16px;padding:9px 12px}}
+
+/* Single searchable building dropdown */
+.technicalbuildingfield{min-width:0;position:relative;display:grid;align-content:start;gap:6px}
+.technicalbuildingfield>label{font-size:13px;font-weight:600;line-height:1.4}
+.technicalcombobox{position:relative;min-width:0;isolation:isolate}
+.technicalcomboboxcontrol{display:flex;min-width:0;align-items:stretch;border:1px solid #cbd8e0;border-radius:10px;background:#fff;overflow:hidden}
+.technicalmodule .technicalcomboboxcontrol input{flex:1 1 0;width:0;min-width:0;border:0!important;border-radius:0!important;padding:11px 10px;font-size:15px;line-height:1.4;text-overflow:ellipsis;background:transparent}
+.technicalmodule .technicalcomboboxcontrol input:focus{outline:none}
+.technicalcomboboxcontrol:focus-within{outline:2px solid #66add1;outline-offset:1px}
+.technicalmodule .technicalcomboboxarrow{flex:0 0 42px;min-height:44px;border:0;border-left:1px solid #cbd8e0;border-radius:0;background:transparent;color:inherit;font-size:22px;cursor:pointer;padding:4px}
+.technicalcomboboxbackdrop{position:fixed!important;inset:0!important;z-index:40!important;opacity:0!important;background:transparent!important;border:0!important;cursor:default!important}
+.technicalcomboboxlist{position:absolute;top:calc(100% + 5px);left:0;right:0;min-width:0;max-height:min(360px,45dvh);overflow-y:auto;overscroll-behavior:contain;background:#fff;color:#20394d;border:1px solid #b5c9d9;border-radius:12px;box-shadow:0 14px 32px #071b3050;z-index:41;padding:5px}
+.technicalmodule .technicalcomboboxoption{display:flex;flex-direction:column;align-items:flex-start;text-align:left;gap:3px;width:100%;min-height:48px;border:0;border-radius:8px;background:transparent;color:inherit;padding:10px 12px;cursor:pointer;white-space:normal;overflow-wrap:anywhere;word-break:normal}
+.technicalcomboboxoption strong,.technicalcomboboxoption small{max-width:100%;white-space:normal;overflow-wrap:anywhere;line-height:1.35}
+.technicalcomboboxoption small{font-size:12px;opacity:.75}
+.technicalmodule .technicalcomboboxoption:hover,.technicalmodule .technicalcomboboxoption.is-active{background:#e8f2f8;color:#163d59}
+.technicalcomboboxempty{padding:14px;font-size:13px}
+.technicalmodule .technicalfields{grid-template-columns:repeat(auto-fit,minmax(min(100%,220px),1fr))}
+.technicalmodule .technicalfields>*{min-width:0;max-width:100%}
+.technicalmodule .technicalfields label{min-width:0;overflow-wrap:anywhere}
+.technicalmodule .technicalfields input,.technicalmodule .technicalfields select{min-width:0;max-width:100%;text-overflow:ellipsis}
+.technicalmodule .technicalhead,.technicalmodule .technicalhead>div,.technicalmodule .technicalbuttons,.technicalmodule .technicalpanel,.technicalmodule .technicalrow>*{min-width:0;max-width:100%}
+.technicalmodule .technicalhead h1,.technicalmodule .technicalpanel h2,.technicalmodule .technicalgrouphead strong{overflow-wrap:anywhere;white-space:normal}
+.technicalmodule .technicalbuttons button{white-space:normal;overflow-wrap:anywhere}
+[data-theme="dark"] .technicalcomboboxcontrol,[data-theme="dark"] .technicalcomboboxlist{background:#1a3043;border-color:#36546a;color:#e3edf6}
+[data-theme="dark"] .technicalmodule .technicalcomboboxoption:hover,[data-theme="dark"] .technicalmodule .technicalcomboboxoption.is-active{background:#294d66;color:#fff}
+[data-theme="dark"] .technicalmodule .technicalcomboboxarrow{border-color:#36546a}
+@media(max-width:650px){.technicalcomboboxlist{max-height:min(300px,45dvh)}.technicalmodule .technicalcomboboxcontrol input{font-size:16px}.technicalmodule .technicalfields{grid-template-columns:minmax(0,1fr)}}
