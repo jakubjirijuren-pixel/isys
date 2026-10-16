@@ -37,3 +37,28 @@
 [data-theme="dark"] .technicalmodule .technicalcomboboxoption:hover,[data-theme="dark"] .technicalmodule .technicalcomboboxoption.is-active{background:#294d66;color:#fff}
 [data-theme="dark"] .technicalmodule .technicalcomboboxarrow{border-color:#36546a}
 @media(max-width:650px){.technicalcomboboxlist{max-height:min(300px,45dvh)}.technicalmodule .technicalcomboboxcontrol input{font-size:16px}.technicalmodule .technicalfields{grid-template-columns:minmax(0,1fr)}}
+
+/* Override global fixed-height header rules: prevent title and description clipping. */
+.technicalmodule > header.technicalhead{
+ height:auto!important;
+ min-height:0!important;
+ max-height:none!important;
+ display:flex;
+ align-items:flex-start;
+ justify-content:space-between;
+ flex-wrap:wrap;
+ gap:16px;
+ overflow:visible;
+ position:relative;
+ z-index:auto;
+ padding:20px 22px;
+}
+.technicalmodule > header.technicalhead > div:first-child{flex:1 1 320px;min-width:0;max-width:100%}
+.technicalmodule > header.technicalhead h1{display:block;font-size:clamp(23px,2.6vw,34px);line-height:1.25;letter-spacing:-.025em;margin:0 0 9px;max-height:none;white-space:normal;overflow-wrap:break-word}
+.technicalmodule > header.technicalhead p{display:block;margin:0;line-height:1.55;max-height:none;white-space:normal;overflow-wrap:break-word}
+.technicalmodule > header.technicalhead .technicalbuttons{flex:0 1 auto;align-self:flex-start;min-width:0}
+@media(max-width:750px){
+ .technicalmodule > header.technicalhead{padding:16px;gap:14px}
+ .technicalmodule > header.technicalhead > div:first-child{flex-basis:100%}
+ .technicalmodule > header.technicalhead .technicalbuttons{width:100%;flex:1 1 100%}
+}
