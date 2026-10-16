@@ -67,7 +67,7 @@ export default function Vacation({supabase,userId,isAdmin=false}){
   <div class="line double last"><div class="cell">Podpis vedoucího</div><div class="cell">Za personální útvar</div></div>
   </div></main><div class="actions"><button onclick="window.print()">Tisk / Uložit jako PDF</button></div></body></html>`;
   const win=window.open("","_blank");
-  if(!win){setError("Prohlížeč zablokoval nové okno. Povolte vyskakovací okna pro iSYS.");return}
+  if(!win){setError("Prohlížeč zablokoval nové okno. Povolte vyskakovací okna pro FOXA.");return}
   win.document.open();win.document.write(html);win.document.close();win.focus();
  };
  const mySettings=settings.find(s=>s.user_id===userId);
