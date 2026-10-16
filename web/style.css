@@ -419,3 +419,9 @@ button,select,input,textarea{max-width:100%}
 [data-theme="dark"] .header-support{background:#1a3043;border-color:#36546a;color:#a5def8}
 [data-theme="dark"] .header-support:hover{background:#294b62}
 @media(max-width:650px){.header-support{padding:8px 10px}.header-support span:last-child{display:none}}
+
+.inspection-role-switch{display:flex;flex-wrap:wrap;gap:8px;padding:12px 18px;margin:0 0 8px;border-bottom:1px solid var(--border,#d5dee7)}
+.inspection-role-switch button{padding:10px 16px;border:1px solid #9cabb9;border-radius:9px;background:transparent;color:inherit;font-weight:650;cursor:pointer}
+.inspection-role-switch button.active{background:#176e9d;border-color:#176e9d;color:#fff}
+.inspection-role-switch button:focus-visible{outline:3px solid #62a9db;outline-offset:2px}
+@media(max-width:550px){.inspection-role-switch button{flex:1}}
