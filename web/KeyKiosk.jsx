@@ -23,7 +23,7 @@ export default function KeyKiosk({supabase,onExit}){
     let code="";
     for(const record of event.message.records){
      if(record.recordType!=="text"&&record.recordType!=="url")continue;
-     try{const decoded=new TextDecoder(record.encoding||"utf-8").decode(record.data).trim();const match=decoded.match(/\\bK[0-9]{7,}\\b/i);if(match){code=match[0];break}}catch{}
+     try{const decoded=new TextDecoder(record.encoding||"utf-8").decode(record.data).trim();const match=decoded.match(/\bK[0-9]{7,}\b/i);if(match){code=match[0];break}}catch{}
     }
     if(!code){setError(t.nfcInvalid);return}
     stopNfc();lookup(code);
