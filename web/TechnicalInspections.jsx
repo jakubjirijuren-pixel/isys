@@ -27,8 +27,8 @@ export default function TechnicalInspections({buildings=[],userEmail="",currentA
  const [search,setSearch]=useState("");
  const [open,setOpen]=useState({});
  const set=(name,value)=>setData(p=>({...p,[name]:value}));
- const updateRev=(name,field,value)=>setData(p=>({...p,revisions:{...p.revisions,[name]:{...p.revisions[name],[field]:value}}}}));
- const updateItem=(id,field,value)=>setData(p=>({...p,items:{...p.items,[id]:{...p.items[id],[field]:value}}}}));
+ const updateRev=(name,field,value)=>setData(p=>({...p,revisions:{...p.revisions,[name]:{...p.revisions[name],[field]:value}}}));
+ const updateItem=(id,field,value)=>setData(p=>({...p,items:{...p.items,[id]:{...p.items[id],[field]:value}}}));
  const selected=buildings.find(b=>String(b.id)===String(data.buildingId));
  const matches=useMemo(()=>buildings.filter(b=>[b.name,b.address,b.street,b.city,b.ico].some(v=>String(v||"").toLowerCase().includes(search.toLowerCase()))).slice(0,35),[buildings,search]);
  const choose=b=>{setData(p=>({...p,buildingId:String(b.id),address:[b.address,b.street,b.city].filter(Boolean).join(", ")||b.name||"",svj:b.name||p.svj,technician:currentAccountName||p.technician}));setSearch("");};
