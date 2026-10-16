@@ -58,14 +58,14 @@ grant execute on function public.isys_sick_day_use(date),public.isys_sick_day_ca
 
 -- Block new vacation requests on days already recorded as sick days.
 create or replace function public.isys_vacation_prevent_sick_overlap()
-returns trigger language plpgsql security definer set search_path='' as $
+returns trigger language plpgsql security definer set search_path='' as $$
 begin
  if new.status in ('pending','approved') and exists (
   select 1 from public.sick_days s where s.user_id=new.user_id and s.status='used'
   and s.day between new.starts_on and new.ends_on
  ) then raise exception 'V požadovaném období je již evidován sick day.'; end if;
  return new;
-end $;
+end $$;
 drop trigger if exists isys_vacation_prevent_sick_overlap_trigger on public.vacation_requests;
 create trigger isys_vacation_prevent_sick_overlap_trigger before insert or update of starts_on,ends_on,status
 on public.vacation_requests for each row execute function public.isys_vacation_prevent_sick_overlap();
