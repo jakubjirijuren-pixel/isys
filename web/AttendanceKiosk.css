@@ -1,0 +1,36 @@
+/* Full-screen attendance kiosk, visually aligned with KeyKiosk. */
+.attendance-terminal{position:fixed;inset:0;z-index:30000;background:#091727;color:#f2f7ff;display:flex;flex-direction:column;font-family:inherit}
+.attendance-terminal-head{padding:20px clamp(20px,4vw,64px);display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #304b66;gap:16px}
+.attendance-terminal-head strong{font-size:clamp(18px,2vw,28px)}
+.attendance-terminal-brand{color:#6cbcff;margin-right:10px}
+.attendance-terminal-exit{border:1px solid #45617a;border-radius:12px;background:#19314c;color:#fff;min-height:48px;min-width:48px;cursor:pointer;font-size:20px}
+.attendance-terminal-main{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;padding:20px;overflow:auto;min-height:0}
+.attendance-terminal-panel{width:min(650px,100%);box-sizing:border-box;display:grid;gap:20px;background:#132c46;padding:clamp(22px,4vw,44px);border-radius:22px;border:1px solid #3e6385}
+.attendance-terminal-panel h1{font-size:clamp(25px,3.5vw,40px);line-height:1.2;margin:0;color:#f2f7ff}
+.attendance-terminal-panel h2{font-size:clamp(18px,2vw,23px);margin:0;color:#d4e7f8}
+.attendance-terminal-panel p{font-size:17px;line-height:1.55;color:#c3d7e9;margin:0}
+.attendance-terminal-panel button{border:0;border-radius:12px;padding:14px 20px;min-height:58px;font-weight:750;cursor:pointer;font-size:18px}
+.attendance-terminal-intro,.attendance-terminal-done,.attendance-terminal-progress{text-align:center;justify-items:center}
+.attendance-terminal-icon{font-size:80px;line-height:1;color:#65b7f7}
+.attendance-terminal-primary{background:#298ce5;color:white;width:100%}
+.attendance-terminal-primary:hover{background:#3ca1f3}
+.attendance-terminal-secondary,.attendance-terminal-back{background:#294b69;color:#f2f7ff}
+.attendance-terminal-back{justify-self:start}
+.attendance-terminal-scan{min-height:220px;border:2px dashed #5590bd;border-radius:18px;background:#10243b;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;text-align:center;padding:24px}
+.attendance-terminal-scan>span{font-size:76px;line-height:1;color:#67bbff}
+.attendance-terminal-scan>strong{font-size:clamp(22px,3vw,30px)}
+.attendance-terminal-scan>small{font-size:16px;color:#b9d8ed}
+.attendance-terminal-identity{display:grid;gap:9px;text-align:center;justify-items:center;padding:20px;border-radius:16px;background:#1f4d66}
+.attendance-terminal-identity>span{display:grid;place-items:center;width:54px;height:54px;border-radius:50%;background:#1b6b57;color:#b4ffdf;font-size:32px}
+.attendance-terminal-identity small{color:#b9d8ed;font-size:15px}
+.attendance-terminal-identity h1{overflow-wrap:anywhere}
+.attendance-terminal-actions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.attendance-terminal-action{background:#246eaa;color:#fff;border:1px solid #60b3ed!important;display:flex;align-items:center;justify-content:space-between;gap:10px;text-align:left;min-height:88px!important}
+.attendance-terminal-action span{font-size:26px;color:#b9e6ff}
+.attendance-terminal-action:hover{background:#3489ca}
+.attendance-terminal-action-in{background:#176c59;border-color:#52d6a8!important}
+.attendance-terminal-action-in:hover{background:#20836d}
+.attendance-terminal-check{font-size:100px;line-height:1;color:#56d9a6}
+.attendance-terminal-error{width:min(650px,100%);box-sizing:border-box;color:#ffd2d2;background:#5b1c2b;border:1px solid #a84e63;padding:16px 20px;border-radius:14px;font-size:16px}
+.attendance-terminal button:focus-visible{outline:3px solid #65b7f7;outline-offset:3px}
+@media(max-width:650px){.attendance-terminal-head{padding:12px 16px}.attendance-terminal-head strong{font-size:17px}.attendance-terminal-main{justify-content:flex-start;padding:18px 12px}.attendance-terminal-panel{padding:22px 16px;gap:16px}.attendance-terminal-actions{grid-template-columns:1fr}.attendance-terminal-action{min-height:72px!important}.attendance-terminal-scan{min-height:200px}}
