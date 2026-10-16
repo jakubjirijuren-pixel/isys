@@ -30,7 +30,8 @@ export default function Attendance({supabase,userId,isAdmin=false}){
  const [latest,setLatest]=useState(null);
  const loadLatest=async()=>{const {data}=await supabase.from("attendance_events").select("event_type").eq("user_id",userId).order("occurred_at",{ascending:false}).limit(1);setLatest(data?.[0]?.event_type||"out")};
  useEffect(()=>{loadLatest()},[userId]);
- const mark=async type=>{setBusy(true);setError("");setNotice("");const {error:e}=await supabase.rpc("isys_attendance_mark",{p_type:type});if(e)setError(e.message);else{setNotice("Zaznamenáno: "+labels[type]);await Promise.all([load(),loadLatest()])}setBusy(false)};
+ useEffect(()=>{const refresh=()=>{load();loadLatest()};window.addEventListener("isys-attendance-updated",refresh);return()=>window.removeEventListener("isys-attendance-updated",refresh)},[month,userId,isAdmin]);
+ const mark=async type=>{setBusy(true);setError("");setNotice("");const {error:e}=await supabase.rpc("isys_attendance_mark",{p_type:type});if(e)setError(e.message);else{setNotice("Zaznamenáno: "+labels[type]);window.dispatchEvent(new Event("isys-attendance-updated"));await Promise.all([load(),loadLatest()])}setBusy(false)};
  const mine=events.filter(e=>e.user_id===userId);
  const shown=events.filter(e=>!isAdmin||!selected||e.user_id===selected);
  const names=Object.fromEntries(profiles.map(p=>[p.id,p.full_name||p.display_name||p.name||p.email||p.id]));
