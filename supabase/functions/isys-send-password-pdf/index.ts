@@ -29,8 +29,8 @@ Deno.serve(async(req)=>{
  const apiKey=Deno.env.get("RESEND_API_KEY"),from=Deno.env.get("ISYS_MAIL_FROM");
  if(!apiKey||!from)return respond("Email service not configured",503);
  const mail=await fetch("https://api.resend.com/emails",{method:"POST",headers:{"Authorization":"Bearer "+apiKey,"Content-Type":"application/json"},body:JSON.stringify({
-  from,to:[target.user.email],subject:"iSYS – nastavení přístupového hesla",
-  text:"Dobrý den,\n\nv příloze naleznete osobní dokument s QR kódem a odkazem pro nastavení hesla k účtu iSYS. Odkaz je časově omezený a je určen pouze Vám.\n\nS pozdravem\niSYS",
+  from,to:[target.user.email],subject:"FOXA – nastavení přístupového hesla",
+  text:"Dobrý den,\n\nv příloze naleznete osobní dokument s QR kódem a odkazem pro nastavení hesla k účtu FOXA. Odkaz je časově omezený a je určen pouze Vám.\n\nS pozdravem\nFOXA",
   attachments:[{filename,content:pdf_base64}]
  })});
  if(!mail.ok){const details=await mail.text();console.error("Resend failed",mail.status,details);return respond("Email delivery failed",502)}
