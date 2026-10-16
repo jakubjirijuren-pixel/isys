@@ -21,9 +21,10 @@ export function AttendanceKiosk({supabase,profiles,onClose,onSaved}){
    const reader=new window.NDEFReader();
    reader.onreading=async event=>{
     if(c.signal.aborted)return;
-    const value=extract(event.message);
+    const serial=String(event.serialNumber||"").replace(/[^0-9a-f]/gi,"").toUpperCase();
+    const value=serial.length>=8&&serial.length<=32&&serial.length%2===0?"UID:"+serial:extract(event.message);
     stop();setState("loading");
-    if(!value){setError("Na čipu není docházkový identifikátor iSYS. Použijte čip vydaný v modulu Docházka.");setState("idle");return}
+    if(!value){setError("Nelze přečíst sériové číslo čipu. Web NFC podporuje jen některé typy NFC čipů; zkuste jiný čip nebo Android s Chrome.");setState("idle");return}
     const {data,error:e}=await supabase.rpc("isys_attendance_card_status",{p_token:value});
     if(e||!data?.length){setError(e?.message||"Čip není přiřazen zaměstnanci.");setState("idle");return}
     setToken(value);setPerson(data[0].user_id);setLast(data[0].last_event||"out");setState("confirm");
@@ -49,17 +50,36 @@ export function AttendanceKiosk({supabase,profiles,onClose,onSaved}){
  </section></div>;
 }
 export function AttendanceCardWriter({supabase,profiles}){
- const [user,setUser]=useState(""),[token,setToken]=useState(""),[error,setError]=useState(""),[message,setMessage]=useState(""),[busy,setBusy]=useState(false);
- const issue=async()=>{
-  if(!user)return;setBusy(true);setError("");setMessage("");
-  const {data,error:e}=await supabase.rpc("isys_attendance_issue_card",{p_user_id:user});
-  if(e)setError(e.message);else{setToken(data);setMessage("Nový čipový identifikátor byl vydán. Předchozí čip tohoto zaměstnance už nebude platný.")}
-  setBusy(false);
+ const [user,setUser]=useState(""),[error,setError]=useState(""),[message,setMessage]=useState(""),[busy,setBusy]=useState(false),[scanning,setScanning]=useState(false);
+ const controller=useRef(null);
+ useEffect(()=>()=>controller.current?.abort(),[]);
+ const assign=async()=>{
+  if(!user)return;
+  if(!("NDEFReader" in window)){setError("Pro načtení čipu použijte Chrome na Androidu se zapnutým NFC. Čip musí podporovat čtení přes Web NFC.");return}
+  controller.current?.abort();
+  const c=new AbortController();controller.current=c;
+  setError("");setMessage("Přiložte stávající NFC čip. Nic se na něj nezapisuje.");setBusy(true);setScanning(true);
+  try{
+   const reader=new window.NDEFReader();
+   reader.onreading=async event=>{
+    if(c.signal.aborted)return;
+    c.abort();setScanning(false);
+    const uid=String(event.serialNumber||"").replace(/[^0-9a-f]/gi,"").toUpperCase();
+    if(uid.length<8||uid.length>32||uid.length%2!==0){setError("Tento čip neposkytuje čitelné sériové číslo. Zkuste kompatibilní NFC čip.");setBusy(false);return}
+    const {error:e}=await supabase.rpc("isys_attendance_assign_uid",{p_user_id:user,p_uid:uid});
+    if(e)setError(e.message);
+    else setMessage("Čip byl přiřazen zaměstnanci. Obsah čipu se nezměnil. Můžete jej hned použít v docházkovém terminálu.");
+    setBusy(false);
+   };
+   reader.onreadingerror=()=>{setError("Čip se nepodařilo načíst.");setScanning(false);setBusy(false)};
+   await reader.scan({signal:c.signal});
+  }catch(e){if(!c.signal.aborted)setError(e.message);setBusy(false);setScanning(false)}
  };
- const write=async()=>{
-  if(!("NDEFReader" in window)){setError("Zápis NFC vyžaduje Chrome na Androidu.");return}
-  setBusy(true);setError("");setMessage("Přiložte zapisovatelný NFC čip.");
-  try{await new window.NDEFReader().write({records:[{recordType:"text",data:token}]});setMessage("NFC čip byl zapsán. Vyzkoušejte jej v terminálu.");setToken("")}catch(e){setError(e.message)}finally{setBusy(false)}
- };
- return <section className="attendance-card"><h2>Správa docházkových NFC čipů</h2><p>Vydání nového identifikátoru zneplatní předchozí čip zaměstnance. Identifikátor je tajný přístupový údaj; nesdílejte jej.</p><label>Zaměstnanec <select value={user} onChange={e=>{setUser(e.target.value);setToken("");setMessage("");setError("")}}><option value="">Vyberte zaměstnance</option>{profiles.map(p=><option value={p.id} key={p.id}>{p.display_name||p.full_name||p.email||"Neznámý zaměstnanec"}</option>)}</select></label><div className="attendance-actions"><button type="button" className="primary" disabled={!user||busy} onClick={issue}>Vydat nový NFC čip</button>{token&&<button type="button" className="primary" disabled={busy} onClick={write}>Zapsat identifikátor na NFC</button>}</div>{token&&<p>Čeká na zápis do NFC. Pokud zápis selže, zkuste jej opakovat bez vydání nového identifikátoru.</p>}{message&&<p role="status">{message}</p>}{error&&<p role="alert" className="error">{error}</p>}</section>;
+ const cancel=()=>{controller.current?.abort();controller.current=null;setBusy(false);setScanning(false);setMessage("");};
+ return <section className="attendance-card"><h2>Přiřazení existujícího NFC čipu</h2><p>Vyberte zaměstnance a přiložte jeho stávající NFC čip. iSYS si zapamatuje sériové číslo čipu, aniž by na něj cokoliv zapisoval. Nové přiřazení nahradí předchozí docházkový čip zaměstnance.</p>
+ <label>Zaměstnanec <select value={user} disabled={busy} onChange={e=>{setUser(e.target.value);setMessage("");setError("")}}><option value="">Vyberte zaměstnance</option>{profiles.map(p=><option value={p.id} key={p.id}>{p.display_name||p.full_name||p.email||"Neznámý zaměstnanec"}</option>)}</select></label>
+ <div className="attendance-actions"><button type="button" className="primary" disabled={!user||busy} onClick={assign}>{scanning?"Čekám na NFC čip…":"Přiřadit přiložený NFC čip"}</button>{scanning&&<button type="button" className="secondarybutton" onClick={cancel}>Zrušit</button>}</div>
+ <p className="attendance-payroll-note">Podporováno v Chrome na Androidu s Web NFC. Některé čipy (např. nekompatibilní přístupové karty) nelze přes prohlížeč načíst. Sériové číslo lze u některých čipů napodobit, proto není vhodné jako samostatný bezpečnostní prvek.</p>
+ {message&&<p role="status" className="notice">{message}</p>}{error&&<p role="alert" className="error">{error}</p>}
+ </section>;
 }
