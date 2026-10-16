@@ -110,6 +110,9 @@ export default function TechnicalInspections({buildings=[],userEmail="",currentA
    const style=document.createElement("style");
    style.textContent=(doc.querySelector("style")?.textContent||"").replace(/@page\s*\{[^}]*\}/g,"").replace(/@media print\s*\{[^}]*\}/g,"");
    host.appendChild(style);
+   const pdfOverrides=document.createElement("style");
+   pdfOverrides.textContent=".technicalpdfhost,.technicalpdfhost .technicalpdfdocument{background:#fff!important;color:#111!important}.technicalpdfhost .technicalpdfdocument header{height:auto!important;min-height:0!important;max-height:none!important;display:flex!important;position:static!important;background:#fff!important;color:#111!important;padding:0 0 9px!important;margin:0 0 12px!important;border-bottom:2px solid #111!important}.technicalpdfhost .technicalpdfdocument h1,.technicalpdfhost .technicalpdfdocument h2,.technicalpdfhost .technicalpdfdocument td,.technicalpdfhost .technicalpdfdocument th,.technicalpdfhost .technicalpdfdocument p{color:#111!important;opacity:1!important}.technicalpdfhost .technicalpdfdocument th{background:#e6e6e6!important}.technicalpdfhost .technicalpdfdocument td,.technicalpdfhost .technicalpdfdocument th{border:1px solid #222!important}.technicalpdfhost .technicalpdfdocument .group{background:#eee!important}";
+   host.appendChild(pdfOverrides);
    const content=document.createElement("div");content.className="technicalpdfdocument";
    content.style.cssText="width:794px;padding:28px 45px 35px;background:#fff!important;color:#111!important;font-family:Arial,sans-serif!important;font-size:11px";
    content.innerHTML=doc.body.innerHTML;
