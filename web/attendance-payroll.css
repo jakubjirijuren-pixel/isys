@@ -1,1 +1,8 @@
 .attendance-payroll-top{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;flex-wrap:wrap}.attendance-payroll-top p{margin-top:4px}.attendance-payroll-buttons{display:flex;gap:10px;flex-wrap:wrap}.attendance-payroll-buttons button{min-height:42px}.attendance-payroll-metrics{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:18px 0}.attendance-payroll-metrics>div{display:grid;gap:7px;border:1px solid #cddde7;border-radius:12px;padding:14px}.attendance-payroll-metrics small{font-size:12px}.attendance-payroll-metrics strong{font-size:22px}.attendance-payroll-note{font-size:13px;color:var(--muted,#566c7c);line-height:1.55;margin:12px 0 20px}.attendance-payroll .attendance-table-wrap{margin-bottom:16px}@media(max-width:600px){.attendance-payroll-metrics{grid-template-columns:1fr}.attendance-payroll-buttons{width:100%}.attendance-payroll-buttons button{width:100%}}
+
+
+[data-theme="dark"] .attendance-payroll-metrics>div{background:#1a3043;border-color:#36516a;color:#e3edf6}
+[data-theme="dark"] .attendance-payroll-metrics small{color:#b7ccdd}
+[data-theme="dark"] .attendance-payroll-metrics strong{color:#f0f6fc}
+[data-theme="dark"] .attendance-payroll-note{color:#b7ccdd}
+[data-theme="dark"] .attendance-payroll-buttons .secondarybutton{background:#1a3043;color:#e3edf6;border-color:#36516a}
