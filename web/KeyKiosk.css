@@ -9,3 +9,8 @@
 .key-kiosk-camera{position:relative;overflow:hidden;border:2px solid #4a9bcf;border-radius:16px;background:#020b13}
 .key-kiosk-camera video{display:block;width:100%;max-height:330px;object-fit:cover}
 .key-kiosk-camera p{margin:0;padding:12px;text-align:center;font-size:14px;color:#d5e8fa}
+
+.key-kiosk-nfc-toggle{background:#205b68;color:#fff;border:1px solid #6cdbd5!important;min-height:58px!important;font-size:18px}
+.key-kiosk-nfc-toggle:hover{background:#287482}
+.key-kiosk-nfc-waiting{border:1px dashed #6cdbd5;background:#103a45;color:#d6fff9;border-radius:14px;padding:20px;text-align:center;font-size:18px}
+.key-kiosk-nfc-help{opacity:.7;text-align:center}
