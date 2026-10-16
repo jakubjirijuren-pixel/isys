@@ -1,4 +1,5 @@
 import React,{useEffect,useRef,useState} from "react";
+import "./AttendanceKiosk.css";
 const names={trip_start:"Služební cesta",trip_end:"Konec služební cesty",doctor_start:"Lékař",doctor_end:"Konec lékaře",homeoffice_start:"Home office",homeoffice_end:"Konec home office",in:"Příchod",break_start:"Začátek přestávky",break_end:"Konec přestávky",out:"Odchod"};
 const next={out:["in","trip_start","doctor_start","homeoffice_start"],trip_end:["in","trip_start","doctor_start","homeoffice_start"],doctor_end:["in","trip_start","doctor_start","homeoffice_start"],homeoffice_end:["in","trip_start","doctor_start","homeoffice_start"],trip_start:["trip_end"],doctor_start:["doctor_end"],homeoffice_start:["homeoffice_end"],in:["break_start","out"],break_end:["break_start","out"],break_start:["break_end"]};
 const extract=message=>{
@@ -40,14 +41,16 @@ export function AttendanceKiosk({supabase,profiles,onClose,onSaved}){
   setSuccess("Zaznamenáno: "+names[type]);setState("done");setToken("");onSaved?.();
  };
  const label=profiles.find(p=>p.id===person);
- return <div className="attendance-kiosk-overlay"><section className="attendance-kiosk" role="dialog" aria-modal="true" aria-label="Docházkový terminál"><div className="attendance-kiosk-head"><h2>Docházkový terminál</h2><button onClick={()=>{stop();onClose()}} type="button">Zavřít ✕</button></div>
- {state==="scanning"&&<div className="attendance-kiosk-prompt"><strong>Přiložte osobní NFC čip</strong><p>Podržte čip u zadní strany zařízení.</p></div>}
- {state==="confirm"&&<><h3>{label?.display_name||label?.full_name||label?.email||"Zaměstnanec"}</h3><p>Vyberte akci pro zaznamenání docházky:</p><div className="attendance-actions">{(next[last]||["in"]).map(type=><button type="button" className="primary" key={type} onClick={()=>mark(type)}>{names[type]}</button>)}</div></>}
- {state==="done"&&<div className="attendance-kiosk-prompt"><strong>✓ {success}</strong></div>}
- {state==="loading"||state==="saving"?<p>Pracuji…</p>:null}
- {error&&<p className="error" role="alert">{error}</p>}
- <div className="attendance-actions">{state!=="scanning"&&state!=="saving"&&state!=="loading"&&<button className="secondarybutton" type="button" onClick={start}>{state==="idle"?"Načíst NFC čip":"Další čip"}</button>}{state==="scanning"&&<button className="secondarybutton" onClick={()=>{stop();setState("idle")}}>Zrušit</button>}</div>
- </section></div>;
+ return <div className="attendance-terminal" role="dialog" aria-modal="true" aria-label="Docházkový terminál">
+ <header className="attendance-terminal-head"><strong><span className="attendance-terminal-brand">iSYS</span> Docházkový terminál</strong><button type="button" className="attendance-terminal-exit" onClick={()=>{stop();onClose()}} aria-label="Zavřít terminál">✕</button></header>
+ <main className="attendance-terminal-main">
+ {state==="idle"&&<section className="attendance-terminal-panel attendance-terminal-intro"><span className="attendance-terminal-icon" aria-hidden="true">◷</span><h1>Evidence docházky</h1><p>Pro zaznamenání příchodu, odchodu nebo přestávky použijte svůj NFC čip.</p><button type="button" className="attendance-terminal-primary" onClick={start}>Načíst NFC čip</button></section>}
+ {state==="scanning"&&<section className="attendance-terminal-panel"><div className="attendance-terminal-scan" role="status"><span aria-hidden="true">◈</span><strong>Přiložte osobní NFC čip</strong><small>Podržte čip u NFC čtečky zařízení.</small></div><button type="button" className="attendance-terminal-secondary" onClick={()=>{stop();setState("idle")}}>← Zrušit načítání</button></section>}
+ {(state==="loading"||state==="saving")&&<section className="attendance-terminal-panel attendance-terminal-progress" role="status"><span className="attendance-terminal-icon" aria-hidden="true">◷</span><h1>{state==="loading"?"Načítám zaměstnance…":"Ukládám docházku…"}</h1><p>Počkejte prosím.</p></section>}
+ {state==="confirm"&&<section className="attendance-terminal-panel"><button type="button" className="attendance-terminal-back" onClick={start}>← Jiný čip</button><div className="attendance-terminal-identity"><span aria-hidden="true">✓</span><small>Rozpoznaný zaměstnanec</small><h1>{label?.display_name||label?.full_name||label?.email||"Zaměstnanec"}</h1></div><h2>Vyberte docházkovou akci</h2><div className="attendance-terminal-actions">{(next[last]||["in"]).map(type=><button type="button" className={"attendance-terminal-action "+(type==="in"?"attendance-terminal-action-in":"")} key={type} onClick={()=>mark(type)}>{names[type]}<span aria-hidden="true">→</span></button>)}</div></section>}
+ {state==="done"&&<section className="attendance-terminal-panel attendance-terminal-done"><span aria-hidden="true" className="attendance-terminal-check">✓</span><h1>{success}</h1><p>Docházka byla úspěšně zaznamenána.</p><button type="button" className="attendance-terminal-primary" onClick={start}>Další zaměstnanec</button></section>}
+ {error&&<p className="attendance-terminal-error" role="alert">{error}</p>}
+ </main></div>;
 }
 export function AttendanceCardWriter({supabase,profiles}){
  const [user,setUser]=useState(""),[error,setError]=useState(""),[message,setMessage]=useState(""),[busy,setBusy]=useState(false),[scanning,setScanning]=useState(false);
