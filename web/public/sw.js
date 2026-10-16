@@ -1,4 +1,4 @@
-const CACHE="isys-shell-v3";
+const CACHE="isys-shell-v4";
 const SHELL=["/isys/icon.svg","/isys/icon-maskable.svg"];
 self.addEventListener("install",event=>{event.waitUntil(caches.open(CACHE).then(cache=>cache.addAll(SHELL)).then(()=>self.skipWaiting()))});
 self.addEventListener("activate",event=>{event.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(key=>key.startsWith("isys-shell-")&&key!==CACHE).map(key=>caches.delete(key)))).then(()=>self.clients.claim()))});
