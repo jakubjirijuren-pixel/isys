@@ -116,3 +116,19 @@
 .keys-borrowers-admin{margin:16px 0}.keys-borrowers-form{display:flex;gap:10px;flex-wrap:wrap;margin:16px 0}.keys-borrowers-form input{flex:1 1 230px;min-height:44px;border:1px solid #b7c9d8;border-radius:10px;padding:10px 14px;background:var(--surface,#fff);color:inherit}.keys-borrowers-list{display:grid;gap:8px}.keys-borrowers-list>div{display:flex;align-items:center;gap:12px;flex-wrap:wrap;padding:12px;border:1px solid #bfd0df;border-radius:10px}.keys-borrowers-list strong{flex:1 1 180px}.keys-borrowers-list span{font-size:12px;opacity:.75}
 
 .keys-nfc-writer{display:grid;gap:7px;margin-top:10px}.keys-nfc-writer button{width:100%}.keys-nfc-writer small{overflow-wrap:anywhere;color:#345a74;font-size:12px}@media print{.keys-nfc-writer{display:none!important}}
+
+.keys-nfc-overlay{position:fixed;inset:0;z-index:30000;display:grid;place-items:center;background:rgba(5,15,27,.82);padding:16px}
+.keys-nfc-dialog{width:min(560px,100%);max-height:94dvh;overflow:auto;box-sizing:border-box;background:#152c42;color:#f5f9ff;border:1px solid #65829d;border-radius:20px;padding:clamp(20px,4vw,34px);box-shadow:0 25px 90px #0007}
+.keys-nfc-dialog-head{display:flex;justify-content:space-between;align-items:center;gap:12px}
+.keys-nfc-dialog-head h2{margin:0;font-size:clamp(22px,3vw,30px)}
+.keys-nfc-dialog-head button{background:transparent;color:inherit;border:0;font-size:24px;cursor:pointer}
+.keys-nfc-code{font:700 clamp(28px,5vw,44px) monospace;text-align:center;letter-spacing:3px;background:#244760;border-radius:14px;padding:18px 10px}
+.keys-nfc-hint{color:#c4d9e9;font-size:14px}
+.keys-nfc-progress,.keys-nfc-success{border-radius:14px;padding:24px 16px;text-align:center;background:#1e4561;display:grid;gap:10px}
+.keys-nfc-progress strong,.keys-nfc-success strong{font-size:22px}
+.keys-nfc-pulse{font-size:65px;color:#77d5f6;animation:keys-nfc-pulse 1.5s ease-in-out infinite}
+@keyframes keys-nfc-pulse{50%{opacity:.3;transform:scale(.9)}}
+.keys-nfc-error{padding:12px;border-radius:10px;background:#662a37;color:#fff}
+.keys-nfc-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:20px}
+.keys-nfc-actions button{min-height:52px;flex:1 1 150px}
+@media print{.keys-nfc-overlay{display:none!important}}
