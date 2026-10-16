@@ -57,7 +57,8 @@ export default function AttendancePayroll({events,profiles,month,selected}){
  const [detailsOpen,setDetailsOpen]=useState(false);
  const names=useMemo(()=>Object.fromEntries(profiles.map(p=>[p.id,p.display_name||p.full_name||p.email||"Neznámý zaměstnanec"])),[profiles]);
  const report=useMemo(()=>calculate(events,month),[events,month]);
- const visible=report.summary.filter(s=>!selected||s.id===selected).sort((a,b)=>(names[a.id]||"").localeCompare(names[b.id]||"","cs"));
+ const allSummaries=profiles.map(p=>report.summary.find(s=>s.id===p.id)||{id:p.id,days:0,worked:0,breakMs:0,issues:0});
+ const visible=allSummaries.filter(s=>!selected||s.id===selected).sort((a,b)=>(names[a.id]||"").localeCompare(names[b.id]||"","cs"));
  const detail=report.details.filter(d=>!selected||d.id===selected);
  const allIssues=visible.reduce((a,s)=>a+s.issues,0);
  const exportSummary=()=>downloadCsv("isys-mzdovy-podklad-"+month+".csv",[["Zaměstnanec","Období","Dny s evidovanou prací","Odpracováno (hod.)","Přestávky (hod.)","Dny k prověření","Stav"],...visible.map(s=>[names[s.id]||"Neznámý zaměstnanec",month,s.days,hours(s.worked),hours(s.breakMs),s.issues,s.issues?"K prověření":"Bez zjištěných nesrovnalostí"])]);
