@@ -1,15 +1,15 @@
 import React,{useCallback,useEffect,useMemo,useState} from "react";
 import "./attendance-header.css";
-const choices={out:[["in","Příchod"]],in:[["break_start","Přestávka"],["out","Odchod"]],break_start:[["break_end","Konec přestávky"]],break_end:[["break_start","Přestávka"],["out","Odchod"]]};
-const labels={in:"V práci",break_start:"Na přestávce",break_end:"V práci",out:"Mimo práci"};
+const choices={out:[["in","Příchod"],["trip_start","Služební cesta"],["doctor_start","Lékař"],["homeoffice_start","Home office"]],trip_end:[["in","Příchod"],["trip_start","Služební cesta"],["doctor_start","Lékař"],["homeoffice_start","Home office"]],doctor_end:[["in","Příchod"],["trip_start","Služební cesta"],["doctor_start","Lékař"],["homeoffice_start","Home office"]],homeoffice_end:[["in","Příchod"],["trip_start","Služební cesta"],["doctor_start","Lékař"],["homeoffice_start","Home office"]],trip_start:[["trip_end","Konec cesty"]],doctor_start:[["doctor_end","Konec lékaře"]],homeoffice_start:[["homeoffice_end","Konec home office"]],in:[["break_start","Přestávka"],["out","Odchod"]],break_start:[["break_end","Konec přestávky"]],break_end:[["break_start","Přestávka"],["out","Odchod"]]};
+const labels={trip_start:"Služební cesta",trip_end:"Mimo práci",doctor_start:"U lékaře",doctor_end:"Mimo práci",homeoffice_start:"Home office",homeoffice_end:"Mimo práci",in:"V práci",break_start:"Na přestávce",break_end:"V práci",out:"Mimo práci"};
 const localDate=date=>[date.getFullYear(),String(date.getMonth()+1).padStart(2,"0"),String(date.getDate()).padStart(2,"0")].join("-");
 const minutes=ms=>{const total=Math.max(0,Math.floor(ms/60000));return Math.floor(total/60)+" h "+String(total%60).padStart(2,"0")+" min"};
 function worked(events,now){
  let total=0,start=null;
  for(const item of [...events].sort((a,b)=>new Date(a.occurred_at)-new Date(b.occurred_at))){
   const time=new Date(item.occurred_at).getTime();
-  if(item.event_type==="in"||item.event_type==="break_end")start=time;
-  if((item.event_type==="break_start"||item.event_type==="out")&&start!==null){total+=Math.max(0,time-start);start=null}
+  if(["in","break_end","trip_start","homeoffice_start"].includes(item.event_type))start=time;
+  if((["break_start","out","trip_end","homeoffice_end"].includes(item.event_type))&&start!==null){total+=Math.max(0,time-start);start=null}
  }
  if(start!==null)total+=Math.max(0,now-start);
  return total;
