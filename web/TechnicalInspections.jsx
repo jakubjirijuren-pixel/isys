@@ -1,6 +1,7 @@
 import React,{useEffect,useMemo,useState} from "react";
 import "./technical-inspections.css";
 import SignaturePad from "./SignaturePad.jsx";
+import html2pdf from "html2pdf.js";
 
 const GROUPS=[
  ["21","STŘECHA",["Krytina","Klempířské prvky","Komíny a ventilace","Hromosvody"]],
@@ -20,11 +21,29 @@ const fresh=()=>({buildingId:"",date:todayLocal(),svj:"",representative:"",techn
 const esc=x=>String(x??"").replace(/[&<>"']/g,ch=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[ch]));
 const czDate=x=>x?new Date(x+"T12:00:00").toLocaleDateString("cs-CZ"):"";
 const itemId=(g,i)=>g+"-"+String(i+1).padStart(2,"0");
-export default function TechnicalInspections({buildings=[],userEmail="",currentAccountName="",reportSignature}){
+export default function TechnicalInspections({buildings=[],userEmail="",currentAccountName="",reportSignature,supabase}){
  const key="foxa-technical-inspection-draft-"+userEmail;
  const [data,setData]=useState(()=>{try{const stored=JSON.parse(localStorage.getItem(key)||"null");return stored?{...fresh(),...stored,signedSVJDate:stored.signedSVJDate||todayLocal(),signedTechnicianDate:stored.signedTechnicianDate||todayLocal()}:fresh()}catch{return fresh()}});
  const [notice,setNotice]=useState("");
  const [signatureMode,setSignatureMode]=useState("");
+ const [pdfBusy,setPdfBusy]=useState(false);
+ const [temporaryReports,setTemporaryReports]=useState([]);
+ const [reportsLoading,setReportsLoading]=useState(false);
+ const [backupStatus,setBackupStatus]=useState("");
+ const loadReports=async()=>{
+  if(!supabase)return;
+  setReportsLoading(true);
+  const {data:reports,error}=await supabase.from("temporary_reports").select("id,filename,object_label,storage_path,created_at,expires_at").gt("expires_at",new Date().toISOString()).like("filename","Technicka_kontrola_%").order("created_at",{ascending:false}).limit(50);
+  if(error)setNotice("Načtení uložených technických kontrol selhalo: "+error.message);
+  else setTemporaryReports(reports||[]);
+  setReportsLoading(false);
+ };
+ useEffect(()=>{loadReports()},[supabase]);
+ const retrieveReport=async report=>{
+  const {data:file,error}=await supabase.storage.from("temporary-reports").download(report.storage_path);
+  if(error){setNotice("Stažení reportu selhalo: "+error.message);return}
+  const url=URL.createObjectURL(file),link=document.createElement("a");link.href=url;link.download=report.filename;document.body.appendChild(link);link.click();link.remove();setTimeout(()=>URL.revokeObjectURL(url),60000);
+ };
  const [search,setSearch]=useState("");
  const [buildingPickerOpen,setBuildingPickerOpen]=useState(false);
  const [activeBuildingIndex,setActiveBuildingIndex]=useState(0);
@@ -57,8 +76,8 @@ export default function TechnicalInspections({buildings=[],userEmail="",currentA
  const addSignature=(file,field)=>{if(!file?.type?.startsWith("image/"))return;const reader=new FileReader();reader.onload=()=>{const src=String(reader.result||"");if(!/^data:image\/(png|jpeg|webp);base64,/.test(src)){setNotice("Podporované podpisy: PNG, JPG, WEBP.");return}set(field,src);setSignatureMode("");setNotice("Podpis vložen.")};reader.readAsDataURL(file)};
  const save=()=>{try{localStorage.setItem(key,JSON.stringify(data));setNotice("Koncept technické kontroly uložen v tomto prohlížeči.")}catch{setNotice("Koncept se nepodařilo uložit. Zkuste zmenšit počet fotografií.")}};
  const clear=()=>{if(!window.confirm("Opravdu vymazat rozpracovanou technickou kontrolu?"))return;setData(fresh());localStorage.removeItem(key);setNotice("Formulář byl vymazán.")};
- const print=()=>{
-  if(!data.buildingId){setNotice("Nejprve vyberte objekt.");return}
+ const buildHtml=()=>{
+
   const logo=SBD_LOGO;
   const rows=GROUPS.map(([code,name,items])=>{
    const head='<tr class="group"><td>'+code+'</td><td>'+esc(name)+'</td><td colspan="3"></td></tr>';
@@ -71,7 +90,50 @@ export default function TechnicalInspections({buildings=[],userEmail="",currentA
   const sign=src=>/^data:image\/(png|jpeg|webp);base64,/.test(src||"")?'<img class="signature-image" src="'+src+'" alt="Podpis">':"";
   const revRows=REVISIONS.map(name=>{const r=data.revisions[name]||{};return '<tr><td>'+esc(name)+'</td><td>'+esc(czDate(r.last))+'</td><td>'+esc(czDate(r.next))+'</td><td>'+esc(r.removal)+'</td></tr>'}).join("");
   const html='<!doctype html><html lang="cs"><head><meta charset="utf-8"><title>Technická kontrola – SBD Praha 8</title><style>@page{size:A4;margin:17mm 13mm}*{box-sizing:border-box}body{font:10px Arial,sans-serif;color:#111}header{display:flex;align-items:center;gap:14px;border-bottom:2px solid #111;padding-bottom:9px;margin-bottom:12px}.logo{width:48px}.logo svg{width:48px;height:65px}.identity{font-size:10px}.identity strong{font-size:15px}h1{text-align:center;font-size:18px;margin:15px 0}table{width:100%;border-collapse:collapse;table-layout:fixed;margin:10px 0}td,th{border:1px solid #222;padding:5px 6px;vertical-align:top;overflow-wrap:anywhere}th{background:#e6e6e6}.group{font-weight:700;background:#eee}.detail th:nth-child(1){width:10%}.detail th:nth-child(2){width:25%}.detail th:nth-child(3){width:25%}.detail th:nth-child(4){width:25%}.detail th:nth-child(5){width:15%}tr{break-inside:avoid}.sign{display:flex;justify-content:space-between;gap:35px;margin-top:32px}.sign>div{width:47%}.signline{margin-top:40px;border-top:1px solid #333;padding-top:6px}.meta td:first-child{width:32%}.rev th:first-child{width:32%}.photo-figure{display:inline-block;vertical-align:top;width:47%;margin:0 1% 16px;break-inside:avoid}.photo-figure img{display:block;width:100%;height:170px;object-fit:contain;border:1px solid #ccd5de}.photo-figure figcaption{font-size:10px;margin-top:6px}.signature-image{display:block;max-width:180px;max-height:85px;object-fit:contain;margin-top:6px}footer{text-align:center;font-size:9px;margin-top:20px}@media print{body{-webkit-print-color-adjust:exact;print-color-adjust:exact}}</style></head><body><header><div class="logo">'+logo+'</div><div class="identity"><strong>Stavební bytové družstvo Praha 8</strong><div>SBD Praha 8 · Technický úsek</div><div>FOXA – interní systém správy objektů</div></div></header><h1>Zápis z technické kontroly</h1><table class="meta"><tr><td><b>Datum kontroly</b></td><td>'+esc(czDate(data.date))+'</td></tr><tr><td><b>Společenství vlastníků / objekt</b></td><td>'+esc(data.svj||selected?.name)+'</td></tr><tr><td><b>Adresa</b></td><td>'+esc(data.address)+'</td></tr><tr><td><b>Katastrální území</b></td><td>'+esc(data.cadastral)+'</td></tr><tr><td><b>Za SBD Praha 8</b></td><td>'+esc(data.technician||currentAccountName)+'</td></tr><tr><td><b>Za SVJ</b></td><td>'+esc(data.representative)+'</td></tr></table><h2>Revize a kontroly</h2><table class="rev"><thead><tr><th>Revize</th><th>Poslední</th><th>Příští</th><th>Odstranění závad</th></tr></thead><tbody>'+revRows+'</tbody></table><h2>Technický stav objektu</h2><table class="detail"><thead><tr><th>Č. kp.</th><th>Název</th><th>Současný stav</th><th>Návrh oprav</th><th>Termín provedení</th></tr></thead><tbody>'+rows+'</tbody></table>'+ (photoRows?'<h2>Fotodokumentace ('+(data.photoFiles||[]).length+')</h2><div class="photo-gallery">'+photoRows+'</div>':'') +'<div class="sign"><div><b>Za SVJ</b><div>'+esc(data.representative)+'</div><div class="signline">Podpis</div>'+sign(data.signatureSVJImage)+'<p>Datum: '+esc(czDate(data.signedSVJDate))+'</p></div><div><b>Za SBD Praha 8</b><div>'+esc(data.technician||currentAccountName)+'</div><div class="signline">Podpis</div>'+sign(data.signatureTechnicianImage||reportSignature?.image)+'<p>Datum: '+esc(czDate(data.signedTechnicianDate))+'</p></div></div><footer>SBD Praha 8 · Zápis z technické kontroly · Vytvořeno v systému FOXA</footer><script>window.onload=()=>setTimeout(()=>window.print(),250)<\/script></body></html>';
-  const win=window.open("","_blank");if(!win){setNotice("Povolte vyskakovací okna pro vytvoření PDF.");return}win.document.write(html);win.document.close();
+  return html;
+ };
+
+ const print=()=>{
+  if(!data.buildingId){setNotice("Nejprve vyberte objekt.");return}
+  const win=window.open("","_blank");if(!win){setNotice("Povolte vyskakovací okna pro tisk.");return}
+  win.document.write(buildHtml());win.document.close();
+ };
+ const makePdf=async()=>{
+  if(!data.buildingId){setNotice("Nejprve vyberte objekt.");return}
+  if(pdfBusy)return;
+  setPdfBusy(true);setNotice("");setBackupStatus("");
+  let host;
+  try{
+   const doc=new DOMParser().parseFromString(buildHtml(),"text/html");
+   host=document.createElement("div");host.className="technicalpdfhost";
+   host.style.cssText="position:fixed;left:-12000px;top:0;width:794px;background:#fff;color:#111;z-index:-1;pointer-events:none";
+   const style=document.createElement("style");
+   style.textContent=(doc.querySelector("style")?.textContent||"").replace(/@page\s*\{[^}]*\}/g,"").replace(/@media print\s*\{[^}]*\}/g,"");
+   host.appendChild(style);
+   const content=document.createElement("div");content.className="technicalpdfdocument";
+   content.style.cssText="width:794px;padding:28px 45px 35px;background:#fff!important;color:#111!important;font-family:Arial,sans-serif!important;font-size:11px";
+   content.innerHTML=doc.body.innerHTML;
+   content.querySelectorAll("script").forEach(script=>script.remove());
+   host.appendChild(content);
+   document.body.appendChild(host);
+   await Promise.all(Array.from(content.querySelectorAll("img")).map(img=>img.complete?Promise.resolve():new Promise(resolve=>{img.onload=resolve;img.onerror=resolve;setTimeout(resolve,8000)})));
+   const filename="Technicka_kontrola_"+String(selected?.object_number||selected?.name||"objekt").normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/[^a-zA-Z0-9_-]/g,"_")+"_"+(data.date||todayLocal())+".pdf";
+   const blob=await html2pdf().set({margin:[12,0,8,0],filename,image:{type:"jpeg",quality:0.98},html2canvas:{scale:2,backgroundColor:"#ffffff",scrollY:0},jsPDF:{unit:"mm",format:"a4",orientation:"portrait"},pagebreak:{mode:["css","legacy"],avoid:["tr",".photo-figure",".sign"]}}).from(content).outputPdf("blob");
+   try{
+    const {data:auth,error:authError}=await supabase.auth.getUser();
+    if(authError||!auth?.user?.id)throw new Error("Nepřihlášený uživatel");
+    const path=auth.user.id+"/"+crypto.randomUUID()+".pdf";
+    const {error:uploadError}=await supabase.storage.from("temporary-reports").upload(path,blob,{contentType:"application/pdf"});
+    if(uploadError)throw uploadError;
+    const {error:dbError}=await supabase.from("temporary_reports").insert({user_id:auth.user.id,filename,object_label:String(selected?.object_number||selected?.name||""),storage_path:path});
+    if(dbError){await supabase.storage.from("temporary-reports").remove([path]);throw dbError}
+    await loadReports();
+    setBackupStatus("Technická kontrola byla uložena do FOXA na 24 hodin. Lze ji stáhnout i na jiném zařízení přihlášeném ke stejnému účtu.");
+   }catch(error){setBackupStatus("PDF bylo vytvořeno, ale uložení na 24 hodin selhalo: "+(error?.message||"neznámá chyba"))}
+   const url=URL.createObjectURL(blob),link=document.createElement("a");link.href=url;link.download=filename;document.body.appendChild(link);link.click();link.remove();setTimeout(()=>URL.revokeObjectURL(url),60000);
+   setNotice("PDF technické kontroly bylo připraveno ke stažení.");
+  }catch(error){setNotice("Vytvoření PDF selhalo: "+(error?.message||"neznámá chyba"))}
+  finally{host?.remove();setPdfBusy(false)}
  };
  return <div className="technicalmodule"><header className="technicalhead"><div><h1>Technické kontroly objektů</h1><p>Zápis podle předlohy technické kontroly. Tiskopis se stylotypem SBD Praha 8.</p></div><div className="technicalbuttons"><button type="button" onClick={save}>Uložit koncept</button><button type="button" onClick={print}>Tisk / PDF</button><button type="button" className="technicalclear" onClick={clear}>Nová kontrola</button></div></header>
  {notice&&<p role="status" className="technicalnotice">{notice}</p>}
