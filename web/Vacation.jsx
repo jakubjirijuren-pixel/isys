@@ -46,7 +46,7 @@ export default function Vacation({supabase,userId,isAdmin=false}){
   .blank{display:inline-block;border-bottom:1px dotted #111;text-align:center;font-weight:600;min-width:12mm}
   .blank.date{min-width:19mm}
   .blank.hours{min-width:9mm}
-  .statement{height:14.1mm;padding:1.4mm;line-height:1.3;font-size:7.55pt}
+  .statement{display:block;height:14.1mm;padding:1.4mm;line-height:1.3;font-size:7.55pt}
   .double{grid-template-columns:1fr 1fr;height:10.5mm}
   .triple{grid-template-columns:1fr 1fr 1fr;height:14.5mm}
   .last{flex:1;min-height:10mm}
