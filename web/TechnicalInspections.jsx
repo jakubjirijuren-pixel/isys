@@ -1,0 +1,160 @@
+import React,{useEffect,useMemo,useState} from "react";
+import "./technical-inspections.css";
+import SignaturePad from "./SignaturePad.jsx";
+import html2pdf from "html2pdf.js";
+
+const GROUPS=[
+ ["21","STŘECHA",["Krytina","Klempířské prvky","Komíny a ventilace","Hromosvody"]],
+ ["22","FASÁDA",["Lodžie","Balkony","Plášť"]],
+ ["23","SPOLEČNÉ PROSTORY",["Chodby","Sklepy","Schodiště","Ostatní"]],
+ ["24","OKNA",["Společné prostory","Bytové jednotky"]],
+ ["25","DVEŘE",["Domovní – vchodové","Vnitřní společné prostory","Balkonové"]],
+ ["26","ROZVODY ZTI",["Plynové ležaté rozvody","Plynové stoupací potrubí","Studená voda – ležaté rozvody","Studená voda – stoupací potrubí","Teplá užitková voda – ležaté rozvody","Teplá užitková voda – stoupací potrubí","Kanalizace – ležaté rozvody","Kanalizace – stoupací potrubí","Požární voda – ležaté rozvody","Požární voda – stoupací potrubí"]],
+ ["27","ELEKTROINSTALACE",["Rozvody – společné prostory","Osvětlení","Domovní zvonky"]],
+ ["28","VYTÁPĚNÍ",["Rozvody ÚT – ležaté","Rozvody ÚT – stoupací","Tělesa ÚT","Měřidla","Termoregulace"]],
+ ["29","VÝTAHY",[]],["30","OSTATNÍ",["Strojní vybavení"]],["31","KOTELNA",[]],["32","VÝMĚNÍKOVÁ STANICE",[]]
+];
+const SBD_LOGO="<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"105\" height=\"140\" viewBox=\"0 0 400 532\" role=\"img\" aria-label=\"Původní logo SBD Praha 8 v černobílém provedení\"><path fill=\"#000\" fill-rule=\"evenodd\" d=\"M317 433 312 439 312 445 315 449 312 453 311 461 312 465 316 469 320 470 327 464 328 457 327 453 324 450 327 442 326 437 322 433Z M317 452 321 452 325 458 324 462 320 466 317 465 314 460 314 456Z M321 437 323 439 323 445 318 448 315 441 318 437Z M253 433 243 469 247 468 248 460 250 458 258 458 261 462 262 468 266 469 256 433Z M254 440 257 447 257 454 250 453Z M203 433 203 469 206 469 207 452 220 453 220 469 222 469 223 434 220 433 220 446 218 448 208 448 206 446 206 433Z M170 433 160 469 164 468 164 464 167 458 176 458 179 468 183 469 174 434Z M171 441 174 446 176 453 175 454 167 453Z M121 433 121 469 124 469 125 453 131 454 138 468 142 469 140 462 135 454 140 448 141 444 139 436 136 433Z M124 438 134 437 137 440 137 445 133 449 125 449Z M94 433 80 433 80 469 84 468 83 456 85 454 94 454 99 448 99 440 97 435Z M83 439 93 438 96 442 95 447 92 450 85 450 83 448Z M293 222 292 354 325 355 333 353 339 350 348 340 355 322 358 298 358 276 355 255 347 235 337 225 321 222Z M305 241 328 241 333 243 339 249 345 266 345 309 339 327 329 336 304 336Z M172 222 172 355 206 355 215 353 225 344 230 333 232 322 232 310 229 297 226 291 218 284 224 277 227 268 228 251 226 242 221 231 213 224 203 222Z M184 295 207 295 212 297 217 302 220 312 220 319 218 328 213 334 201 337 183 336Z M184 241 207 241 213 245 216 252 216 267 210 275 201 277 183 276Z M73 222 64 224 59 227 50 239 46 256 47 270 51 281 59 290 67 295 85 302 93 309 95 314 95 327 91 335 86 339 73 341 65 337 59 331 56 324 54 311 44 312 43 318 46 334 52 347 62 356 78 360 92 355 102 343 107 325 107 311 104 300 95 287 87 282 63 272 58 264 59 250 65 243 69 241 80 241 85 243 91 252 93 265 104 264 102 244 98 235 89 226 83 223Z M0 177 0 531 399 531 399 177 244 87 244 419 357 419 357 388 271 388 269 386 269 146 272 145 373 205 372 487 27 487 26 205 127 145 130 146 130 386 128 388 42 388 42 419 155 419 155 87Z M200 72 195 76 195 86 199 101 198 102 181 86 174 85 172 87 173 92 178 96 198 104 176 114 172 118 172 122 175 124 182 122 198 106 199 108 195 123 195 133 199 137 204 133 204 123 200 108 201 106 217 122 224 124 227 121 226 117 220 112 201 104 213 100 224 94 227 89 226 86 218 86 201 102 200 100 204 86 204 76Z M0 121 1 158 200 40 399 158 398 120 200 0Z\"/></svg>";
+const REVISIONS=["NTL – plynové rozvody","Elektro – rozvody","Hromosvody","Hydranty","Studená voda","Teplá užitková voda"];
+const todayLocal=()=>{const d=new Date();return [d.getFullYear(),String(d.getMonth()+1).padStart(2,"0"),String(d.getDate()).padStart(2,"0")].join("-")};
+const fresh=()=>({buildingId:"",date:todayLocal(),svj:"",representative:"",technician:"",address:"",cadastral:"",revisions:{},items:{},signatureSVJ:"",signatureTechnician:"",signedSVJDate:todayLocal(),signedTechnicianDate:todayLocal(),photoFiles:[],signatureSVJImage:"",signatureTechnicianImage:""});
+const esc=x=>String(x??"").replace(/[&<>"']/g,ch=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[ch]));
+const czDate=x=>x?new Date(x+"T12:00:00").toLocaleDateString("cs-CZ"):"";
+const itemId=(g,i)=>g+"-"+String(i+1).padStart(2,"0");
+export default function TechnicalInspections({buildings=[],userEmail="",currentAccountName="",reportSignature,supabase}){
+ const key="foxa-technical-inspection-draft-"+userEmail;
+ const [data,setData]=useState(()=>{try{const stored=JSON.parse(localStorage.getItem(key)||"null");return stored?{...fresh(),...stored,signedSVJDate:stored.signedSVJDate||todayLocal(),signedTechnicianDate:stored.signedTechnicianDate||todayLocal()}:fresh()}catch{return fresh()}});
+ const [notice,setNotice]=useState("");
+ const [signatureMode,setSignatureMode]=useState("");
+ const [pdfBusy,setPdfBusy]=useState(false);
+ const [temporaryReports,setTemporaryReports]=useState([]);
+ const [reportsLoading,setReportsLoading]=useState(false);
+ const [backupStatus,setBackupStatus]=useState("");
+ const loadReports=async()=>{
+  if(!supabase)return;
+  setReportsLoading(true);
+  const {data:reports,error}=await supabase.from("temporary_reports").select("id,filename,object_label,storage_path,created_at,expires_at").gt("expires_at",new Date().toISOString()).like("filename","Technicka_kontrola_%").order("created_at",{ascending:false}).limit(50);
+  if(error)setNotice("Načtení uložených technických kontrol selhalo: "+error.message);
+  else setTemporaryReports(reports||[]);
+  setReportsLoading(false);
+ };
+ useEffect(()=>{loadReports()},[supabase]);
+ const retrieveReport=async report=>{
+  const {data:file,error}=await supabase.storage.from("temporary-reports").download(report.storage_path);
+  if(error){setNotice("Stažení reportu selhalo: "+error.message);return}
+  const url=URL.createObjectURL(file),link=document.createElement("a");link.href=url;link.download=report.filename;document.body.appendChild(link);link.click();link.remove();setTimeout(()=>URL.revokeObjectURL(url),60000);
+ };
+ const [search,setSearch]=useState("");
+ const [buildingPickerOpen,setBuildingPickerOpen]=useState(false);
+ const [activeBuildingIndex,setActiveBuildingIndex]=useState(0);
+ const [open,setOpen]=useState({});
+ const set=(name,value)=>setData(p=>({...p,[name]:value}));
+ const updateRev=(name,field,value)=>setData(p=>({...p,revisions:{...p.revisions,[name]:{...p.revisions[name],[field]:value}}}));
+ const updateItem=(id,field,value)=>setData(p=>({...p,items:{...p.items,[id]:{...p.items[id],[field]:value}}}));
+ const selected=buildings.find(b=>String(b.id)===String(data.buildingId));
+ const matches=useMemo(()=>buildings.filter(b=>[b.name,b.address,b.street,b.city,b.object_number,b.external_id,b.company_id].some(v=>String(v||"").toLocaleLowerCase("cs").includes(search.trim().toLocaleLowerCase("cs")))).slice(0,60),[buildings,search]);
+ const buildingLabel=b=>[b.object_number,b.name||b.address||b.street||String(b.id)].filter(Boolean).join(" – ");
+ const buildingAddress=b=>String(b.address||"").trim()||[b.street,b.city].filter(Boolean).join(", ");
+ const choose=b=>{setData(p=>({...p,buildingId:String(b.id),address:buildingAddress(b),svj:String(b.legal_entity||b.name||"").trim(),technician:currentAccountName||String(b.manager||"").trim()||p.technician,representative:String(b.svj_representative||"").trim(),cadastral:String(b.cadastral_area||b.cadastral||"").trim()}));setSearch("");setBuildingPickerOpen(false);setActiveBuildingIndex(0);setNotice("Základní údaje byly předvyplněny z evidence objektů. Chybějící údaje můžete doplnit ručně.");};
+
+ const addPhotos=async event=>{
+  const files=Array.from(event.target.files||[]);event.target.value="";
+  const remaining=Math.max(0,12-(data.photoFiles||[]).length);
+  if(!remaining){setNotice("Maximum je 12 fotografií.");return}
+  const convert=file=>new Promise((resolve,reject)=>{
+   if(!file.type.startsWith("image/")){reject(new Error("Neplatný obrázek"));return}
+   const url=URL.createObjectURL(file),img=new Image();
+   img.onload=()=>{try{const ratio=Math.min(1,1400/Math.max(img.naturalWidth,img.naturalHeight)),canvas=document.createElement("canvas");canvas.width=Math.max(1,Math.round(img.naturalWidth*ratio));canvas.height=Math.max(1,Math.round(img.naturalHeight*ratio));const ctx=canvas.getContext("2d");ctx.fillStyle="#fff";ctx.fillRect(0,0,canvas.width,canvas.height);ctx.drawImage(img,0,0,canvas.width,canvas.height);resolve({id:crypto.randomUUID(),name:file.name,caption:"",src:canvas.toDataURL("image/jpeg",0.78)})}catch(e){reject(e)}finally{URL.revokeObjectURL(url)}};
+   img.onerror=()=>{URL.revokeObjectURL(url);reject(new Error("Chyba fotografie"))};img.src=url;
+  });
+  const results=await Promise.allSettled(files.slice(0,remaining).map(convert)),photos=results.filter(x=>x.status==="fulfilled").map(x=>x.value);
+  setData(p=>({...p,photoFiles:[...(p.photoFiles||[]),...photos].slice(0,12)}));
+  setNotice("Přidáno fotografií: "+photos.length+(photos.length<files.length?". Některé soubory se nepodařilo přidat.":""));
+ };
+ const editPhoto=(id,caption)=>setData(p=>({...p,photoFiles:(p.photoFiles||[]).map(x=>x.id===id?{...x,caption}:x)}));
+ const removePhoto=id=>setData(p=>({...p,photoFiles:(p.photoFiles||[]).filter(x=>x.id!==id)}));
+ const addSignature=(file,field)=>{if(!file?.type?.startsWith("image/"))return;const reader=new FileReader();reader.onload=()=>{const src=String(reader.result||"");if(!/^data:image\/(png|jpeg|webp);base64,/.test(src)){setNotice("Podporované podpisy: PNG, JPG, WEBP.");return}set(field,src);setSignatureMode("");setNotice("Podpis vložen.")};reader.readAsDataURL(file)};
+ const save=()=>{try{localStorage.setItem(key,JSON.stringify(data));setNotice("Koncept technické kontroly uložen v tomto prohlížeči.")}catch{setNotice("Koncept se nepodařilo uložit. Zkuste zmenšit počet fotografií.")}};
+ const clear=()=>{if(!window.confirm("Opravdu vymazat rozpracovanou technickou kontrolu?"))return;setData(fresh());localStorage.removeItem(key);setNotice("Formulář byl vymazán.")};
+ const buildHtml=()=>{
+
+  const logo=SBD_LOGO;
+  const rows=GROUPS.map(([code,name,items])=>{
+   const head='<tr class="group"><td>'+code+'</td><td>'+esc(name)+'</td><td colspan="3"></td></tr>';
+   const child=(items.length?items:[""]).map((label,i)=>{if(!label)return "";const row=data.items[itemId(code,i)]||{};return '<tr><td>'+itemId(code,i)+'</td><td>'+esc(label)+'</td><td>'+esc(row.state)+'</td><td>'+esc(row.repair)+'</td><td>'+esc(row.deadline)+'</td></tr>'}).join("");
+   const general=data.items[code]||{};
+   return head+child+(items.length?"":'<tr><td></td><td></td><td>'+esc(general.state)+'</td><td>'+esc(general.repair)+'</td><td>'+esc(general.deadline)+'</td></tr>');
+  }).join("");
+
+  const photoRows=(data.photoFiles||[]).filter(p=>/^data:image\/jpeg;base64,/.test(p.src)).map((p,i)=>'<figure class="photo-figure"><img src="'+p.src+'" alt="Fotografie"><figcaption>'+(i+1)+'. '+esc(p.caption||p.name||"")+'</figcaption></figure>').join("");
+  const sign=src=>/^data:image\/(png|jpeg|webp);base64,/.test(src||"")?'<img class="signature-image" src="'+src+'" alt="Podpis">':"";
+  const revRows=REVISIONS.map(name=>{const r=data.revisions[name]||{};return '<tr><td>'+esc(name)+'</td><td>'+esc(czDate(r.last))+'</td><td>'+esc(czDate(r.next))+'</td><td>'+esc(r.removal)+'</td></tr>'}).join("");
+  const html='<!doctype html><html lang="cs"><head><meta charset="utf-8"><title>Technická kontrola – SBD Praha 8</title><style>@page{size:A4;margin:17mm 13mm}*{box-sizing:border-box}body{font:10px Arial,sans-serif;color:#111}header{display:flex;align-items:center;gap:14px;border-bottom:2px solid #111;padding-bottom:9px;margin-bottom:12px}.logo{width:48px}.logo svg{width:48px;height:65px}.identity{font-size:10px}.identity strong{font-size:15px}h1{text-align:center;font-size:18px;margin:15px 0}table{width:100%;border-collapse:collapse;table-layout:fixed;margin:10px 0}td,th{border:1px solid #222;padding:5px 6px;vertical-align:top;overflow-wrap:anywhere}th{background:#e6e6e6}.group{font-weight:700;background:#eee}.detail th:nth-child(1){width:10%}.detail th:nth-child(2){width:25%}.detail th:nth-child(3){width:25%}.detail th:nth-child(4){width:25%}.detail th:nth-child(5){width:15%}tr{break-inside:avoid}.sign{display:flex;justify-content:space-between;gap:35px;margin-top:32px}.sign>div{width:47%}.signline{margin-top:40px;border-top:1px solid #333;padding-top:6px}.meta td:first-child{width:32%}.rev th:first-child{width:32%}.photo-figure{display:inline-block;vertical-align:top;width:47%;margin:0 1% 16px;break-inside:avoid}.photo-figure img{display:block;width:100%;height:170px;object-fit:contain;border:1px solid #ccd5de}.photo-figure figcaption{font-size:10px;margin-top:6px}.signature-image{display:block;max-width:180px;max-height:85px;object-fit:contain;margin-top:6px}footer{text-align:center;font-size:9px;margin-top:20px}@media print{body{-webkit-print-color-adjust:exact;print-color-adjust:exact}}</style></head><body><header><div class="logo">'+logo+'</div><div class="identity"><strong>Stavební bytové družstvo Praha 8</strong><div>SBD Praha 8 · Technický úsek</div><div>FOXA – interní systém správy objektů</div></div></header><h1>Zápis z technické kontroly</h1><table class="meta"><tr><td><b>Datum kontroly</b></td><td>'+esc(czDate(data.date))+'</td></tr><tr><td><b>Společenství vlastníků / objekt</b></td><td>'+esc(data.svj||selected?.name)+'</td></tr><tr><td><b>Adresa</b></td><td>'+esc(data.address)+'</td></tr><tr><td><b>Katastrální území</b></td><td>'+esc(data.cadastral)+'</td></tr><tr><td><b>Za SBD Praha 8</b></td><td>'+esc(data.technician||currentAccountName)+'</td></tr><tr><td><b>Za SVJ</b></td><td>'+esc(data.representative)+'</td></tr></table><h2>Revize a kontroly</h2><table class="rev"><thead><tr><th>Revize</th><th>Poslední</th><th>Příští</th><th>Odstranění závad</th></tr></thead><tbody>'+revRows+'</tbody></table><h2>Technický stav objektu</h2><table class="detail"><thead><tr><th>Č. kp.</th><th>Název</th><th>Současný stav</th><th>Návrh oprav</th><th>Termín provedení</th></tr></thead><tbody>'+rows+'</tbody></table>'+ (photoRows?'<h2>Fotodokumentace ('+(data.photoFiles||[]).length+')</h2><div class="photo-gallery">'+photoRows+'</div>':'') +'<div class="sign"><div><b>Za SVJ</b><div>'+esc(data.representative)+'</div><div class="signline">Podpis</div>'+sign(data.signatureSVJImage)+'<p>Datum: '+esc(czDate(data.signedSVJDate))+'</p></div><div><b>Za SBD Praha 8</b><div>'+esc(data.technician||currentAccountName)+'</div><div class="signline">Podpis</div>'+sign(data.signatureTechnicianImage||reportSignature?.image)+'<p>Datum: '+esc(czDate(data.signedTechnicianDate))+'</p></div></div><footer>SBD Praha 8 · Zápis z technické kontroly · Vytvořeno v systému FOXA</footer><script>window.onload=()=>setTimeout(()=>window.print(),250)<\/script></body></html>';
+  return html;
+ };
+
+ const print=()=>{
+  if(!data.buildingId){setNotice("Nejprve vyberte objekt.");return}
+  const win=window.open("","_blank");if(!win){setNotice("Povolte vyskakovací okna pro tisk.");return}
+  win.document.write(buildHtml());win.document.close();
+ };
+ const makePdf=async()=>{
+  if(!data.buildingId){setNotice("Nejprve vyberte objekt.");return}
+  if(pdfBusy)return;
+  setPdfBusy(true);setNotice("");setBackupStatus("");
+  let host;
+  try{
+   const doc=new DOMParser().parseFromString(buildHtml(),"text/html");
+   host=document.createElement("div");host.className="technicalpdfhost";
+   host.style.cssText="position:fixed;left:-12000px;top:0;width:794px;background:#fff;color:#111;z-index:-1;pointer-events:none";
+   const style=document.createElement("style");
+   style.textContent=(doc.querySelector("style")?.textContent||"").replace(/@page\s*\{[^}]*\}/g,"").replace(/@media print\s*\{[^}]*\}/g,"");
+   host.appendChild(style);
+   const pdfOverrides=document.createElement("style");
+   pdfOverrides.textContent=".technicalpdfhost,.technicalpdfhost .technicalpdfdocument{background:#fff!important;color:#111!important}.technicalpdfhost .technicalpdfdocument header{height:auto!important;min-height:0!important;max-height:none!important;display:flex!important;position:static!important;background:#fff!important;color:#111!important;padding:0 0 9px!important;margin:0 0 12px!important;border-bottom:2px solid #111!important}.technicalpdfhost .technicalpdfdocument h1,.technicalpdfhost .technicalpdfdocument h2,.technicalpdfhost .technicalpdfdocument td,.technicalpdfhost .technicalpdfdocument th,.technicalpdfhost .technicalpdfdocument p{color:#111!important;opacity:1!important}.technicalpdfhost .technicalpdfdocument th{background:#e6e6e6!important}.technicalpdfhost .technicalpdfdocument td,.technicalpdfhost .technicalpdfdocument th{border:1px solid #222!important}.technicalpdfhost .technicalpdfdocument .group{background:#eee!important}";
+   host.appendChild(pdfOverrides);
+   const content=document.createElement("div");content.className="technicalpdfdocument";
+   content.style.cssText="width:794px;padding:28px 45px 35px;background:#fff!important;color:#111!important;font-family:Arial,sans-serif!important;font-size:11px";
+   content.innerHTML=doc.body.innerHTML;
+   content.querySelectorAll("script").forEach(script=>script.remove());
+   host.appendChild(content);
+   document.body.appendChild(host);
+   await Promise.all(Array.from(content.querySelectorAll("img")).map(img=>img.complete?Promise.resolve():new Promise(resolve=>{img.onload=resolve;img.onerror=resolve;setTimeout(resolve,8000)})));
+   const filename="Technicka_kontrola_"+String(selected?.object_number||selected?.name||"objekt").normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/[^a-zA-Z0-9_-]/g,"_")+"_"+(data.date||todayLocal())+".pdf";
+   const blob=await html2pdf().set({margin:[12,0,8,0],filename,image:{type:"jpeg",quality:0.98},html2canvas:{scale:2,backgroundColor:"#ffffff",scrollY:0},jsPDF:{unit:"mm",format:"a4",orientation:"portrait"},pagebreak:{mode:["css","legacy"],avoid:["tr",".photo-figure",".sign"]}}).from(content).outputPdf("blob");
+   try{
+    const {data:auth,error:authError}=await supabase.auth.getUser();
+    if(authError||!auth?.user?.id)throw new Error("Nepřihlášený uživatel");
+    const path=auth.user.id+"/"+crypto.randomUUID()+".pdf";
+    const {error:uploadError}=await supabase.storage.from("temporary-reports").upload(path,blob,{contentType:"application/pdf"});
+    if(uploadError)throw uploadError;
+    const {error:dbError}=await supabase.from("temporary_reports").insert({user_id:auth.user.id,filename,object_label:String(selected?.object_number||selected?.name||""),storage_path:path});
+    if(dbError){await supabase.storage.from("temporary-reports").remove([path]);throw dbError}
+    await loadReports();
+    setBackupStatus("Technická kontrola byla uložena do FOXA na 24 hodin. Lze ji stáhnout i na jiném zařízení přihlášeném ke stejnému účtu.");
+   }catch(error){setBackupStatus("PDF bylo vytvořeno, ale uložení na 24 hodin selhalo: "+(error?.message||"neznámá chyba"))}
+   const url=URL.createObjectURL(blob),link=document.createElement("a");link.href=url;link.download=filename;document.body.appendChild(link);link.click();link.remove();setTimeout(()=>URL.revokeObjectURL(url),60000);
+   setNotice("PDF technické kontroly bylo připraveno ke stažení.");
+  }catch(error){setNotice("Vytvoření PDF selhalo: "+(error?.message||"neznámá chyba"))}
+  finally{host?.remove();setPdfBusy(false)}
+ };
+ return <div className="technicalmodule"><header className="technicalhead"><div><h1>Technické kontroly objektů</h1><p>Zápis podle předlohy technické kontroly. Tiskopis se stylotypem SBD Praha 8.</p></div><div className="technicalbuttons"><button type="button" onClick={save}>Uložit koncept</button><button type="button" onClick={print}>Tisk</button><button type="button" onClick={makePdf} disabled={pdfBusy}>{pdfBusy?"Připravuji PDF…":"Stáhnout PDF a uložit na 24 h"}</button><button type="button" className="technicalclear" onClick={clear}>Nová kontrola</button></div></header>
+ {notice&&<p role="status" className="technicalnotice">{notice}</p>}
+ {backupStatus&&<p role="status" className="technicalnotice">{backupStatus}</p>}
+ <section className="technicalpanel"><h2>Uložené PDF reporty – 24 hodin</h2><p>Stejně jako u pravidelných kontrol se každá vytvořená technická kontrola ukládá do systému FOXA na 24 hodin. Během této doby ji lze stáhnout na jiném zařízení přihlášeném ke stejnému účtu. Po uplynutí lhůty přestane být dostupná a úklidová úloha ji odstraní.</p><button type="button" className="technicalreportrefresh" onClick={loadReports} disabled={reportsLoading}>{reportsLoading?"Načítání…":"Obnovit seznam"}</button>{temporaryReports.length?temporaryReports.map(report=><div className="temporaryreportrow" key={report.id}><div><strong>{report.object_label} – {report.filename}</strong><small>Vytvořeno: {new Date(report.created_at).toLocaleString("cs-CZ")} · Vyprší: {new Date(report.expires_at).toLocaleString("cs-CZ")}</small></div><button type="button" className="technicalreportdownload" onClick={()=>retrieveReport(report)}>Stáhnout</button></div>):<p>Zatím zde nejsou žádné technické kontroly uložené v posledních 24 hodinách.</p>}</section>
+ <section className="technicalpanel"><h2>Základní údaje</h2><div className="technicalfields">
+ <div className="technicalbuildingfield"><label htmlFor="technical-building-combobox">Objekt / středisko *</label><div className="technicalcombobox"><div className="technicalcomboboxcontrol"><input id="technical-building-combobox" type="text" role="combobox" aria-autocomplete="list" aria-controls="technical-building-options" aria-expanded={buildingPickerOpen} autoComplete="off" placeholder="Vyhledat číslo, název nebo adresu…" value={buildingPickerOpen?search:selected?buildingLabel(selected):search} onFocus={()=>{setSearch("");setActiveBuildingIndex(0);setBuildingPickerOpen(true)}} onChange={e=>{setSearch(e.target.value);setActiveBuildingIndex(0);setBuildingPickerOpen(true)}} onKeyDown={e=>{if(e.key==="ArrowDown"){e.preventDefault();setBuildingPickerOpen(true);setActiveBuildingIndex(i=>Math.min(i+1,Math.max(0,matches.length-1)))}else if(e.key==="ArrowUp"){e.preventDefault();setActiveBuildingIndex(i=>Math.max(0,i-1))}else if(e.key==="Enter"&&buildingPickerOpen&&matches[activeBuildingIndex]){e.preventDefault();choose(matches[activeBuildingIndex])}else if(e.key==="Escape"){setBuildingPickerOpen(false);setSearch("")}}}/><button type="button" className="technicalcomboboxarrow" aria-label={buildingPickerOpen?"Zavřít seznam objektů":"Otevřít seznam objektů"} onClick={()=>{setSearch("");setActiveBuildingIndex(0);setBuildingPickerOpen(p=>!p)}} aria-expanded={buildingPickerOpen}>⌄</button></div>{buildingPickerOpen&&<><button type="button" className="technicalcomboboxbackdrop" tabIndex={-1} aria-label="Zavřít seznam" onClick={()=>{setBuildingPickerOpen(false);setSearch("")}}/><div id="technical-building-options" className="technicalcomboboxlist" role="listbox">{matches.length?matches.map((b,i)=><button type="button" role="option" aria-selected={String(data.buildingId)===String(b.id)} className={"technicalcomboboxoption"+(i===activeBuildingIndex?" is-active":"")} key={b.id} onMouseDown={e=>e.preventDefault()} onClick={()=>choose(b)}><strong>{buildingLabel(b)}</strong>{(b.address||b.city)&&<small>{[b.address||b.street,b.city].filter(Boolean).join(", ")}</small>}</button>):<div className="technicalcomboboxempty">Žádný odpovídající objekt</div>}</div></>}</div></div>
+ <label>Datum kontroly<input type="date" value={data.date||""} onChange={e=>set("date",e.target.value)}/></label>
+ <label>Společenství vlastníků<input value={data.svj||""} onChange={e=>set("svj",e.target.value)}/></label>
+ <label>Adresa objektu<input value={data.address||""} onChange={e=>set("address",e.target.value)}/></label>
+ <label>Katastrální území<input value={data.cadastral||""} onChange={e=>set("cadastral",e.target.value)}/></label>
+ <label>Za SBD Praha 8 – technik<input value={data.technician||""} onChange={e=>set("technician",e.target.value)}/></label>
+ <label>Za SVJ – zástupce<input value={data.representative||""} onChange={e=>set("representative",e.target.value)}/></label>
+ </div>{selected&&<p className="technicalautofillnote">Údaje načteny ze střediska / objektu {selected.object_number||selected.name}. Název SVJ a adresa vycházejí z evidence objektů. Zástupce SVJ a katastrální území doplňte ručně, pokud v evidenci chybí.</p>}</section>
+ <section className="technicalpanel"><h2>Revize</h2><div className="technicaltablewrap"><table className="technicaltable"><thead><tr><th>Revize</th><th>Poslední</th><th>Příští</th><th>Odstranění závad</th></tr></thead><tbody>{REVISIONS.map(name=><tr key={name}><th>{name}</th>{["last","next"].map(field=><td key={field}><input aria-label={name+" "+field} type="date" value={data.revisions?.[name]?.[field]||""} onChange={e=>updateRev(name,field,e.target.value)}/></td>)}<td><input aria-label={name+" odstranění závad"} value={data.revisions?.[name]?.removal||""} onChange={e=>updateRev(name,"removal",e.target.value)}/></td></tr>)}</tbody></table></div></section>
+ <section className="technicalpanel"><h2>Technický stav objektu</h2><p>U každé položky vyplňte současný stav, návrh oprav a termín provedení. Nevyplněná pole zůstanou v tiskopisu prázdná.</p>{GROUPS.map(([code,title,items])=><div className="technicalgroup" key={code}><button type="button" className="technicalgrouphead" onClick={()=>setOpen(p=>({...p,[code]:p[code]===false?true:false}))} aria-expanded={open[code]!==false}><strong>{code} – {title}</strong><span>{open[code]===false?"Rozbalit":"Sbalit"}</span></button>{open[code]!==false&&<div className="technicalrows">{(items.length?items.map((label,i)=>[itemId(code,i),label]):[[code,title]]).map(([id,label])=><div className="technicalrow" key={id}><strong>{id} – {label}</strong><label>Současný stav<textarea rows="2" value={data.items?.[id]?.state||""} onChange={e=>updateItem(id,"state",e.target.value)}/></label><label>Návrh oprav<textarea rows="2" value={data.items?.[id]?.repair||""} onChange={e=>updateItem(id,"repair",e.target.value)}/></label><label>Termín provedení<input value={data.items?.[id]?.deadline||""} onChange={e=>updateItem(id,"deadline",e.target.value)} placeholder="Termín nebo poznámka"/></label></div>)}</div>}</div>)}</section>
+ <section className="technicalpanel"><h2>Fotodokumentace</h2><p>Nahraj až 12 fotografií. V PDF budou uspořádané vedle sebe stejně jako u pravidelných kontrol.</p><label className="technicalphotoupload">Přidat fotografie<input type="file" accept="image/*" multiple onChange={addPhotos}/></label>{Boolean(data.photoFiles?.length)&&<div className="technicalphotogrid">{data.photoFiles.map((p,i)=><div className="technicalphotocard" key={p.id}><img src={p.src} alt={"Fotodokumentace "+(i+1)}/><label>Popisek fotografie {i+1}<input value={p.caption||""} onChange={e=>editPhoto(p.id,e.target.value)} placeholder="Např. závada na fasádě"/></label><button type="button" onClick={()=>removePhoto(p.id)}>Odstranit fotografii</button></div>)}</div>}</section>
+ <section className="technicalpanel"><h2>Potvrzení kontroly</h2><div className="technicalfields"><label>Datum za SVJ<input type="date" value={data.signedSVJDate||""} onChange={e=>set("signedSVJDate",e.target.value)}/></label><label>Datum za SBD Praha 8<input type="date" value={data.signedTechnicianDate||""} onChange={e=>set("signedTechnicianDate",e.target.value)}/></label></div><div className="technicalsignatures">{[["signatureSVJImage","Za SVJ"],["signatureTechnicianImage","Za SBD Praha 8"]].map(([field,label])=><div className="technicalsignature" key={field}><h3>{label}</h3>{(data[field]||(field==="signatureTechnicianImage"?reportSignature?.image:null))&&<img src={data[field]||(field==="signatureTechnicianImage"?reportSignature?.image:null)} alt={"Podpis "+label}/>}<div className="technicalbuttons"><label className="technicalsignatureupload">Nahrát podpis<input type="file" accept="image/png,image/jpeg,image/webp" onChange={e=>{const file=e.target.files?.[0];e.target.value="";if(file)addSignature(file,field)}}/></label><button type="button" onClick={()=>setSignatureMode(signatureMode===field?"":field)}>Nakreslit podpis</button>{data[field]&&<button type="button" className="technicalclear" onClick={()=>set(field,"")}>Odebrat</button>}</div>{signatureMode===field&&<SignaturePad onSave={file=>addSignature(file,field)}/>}</div>)}</div><p>Podpis technika se může převzít z profilu FOXA. Nahraný nebo nakreslený podpis má přednost.</p></section>
+ <div className="technicalbuttons technicalbottom"><button onClick={save}>Uložit koncept</button><button onClick={print}>Tisk</button><button onClick={makePdf} disabled={pdfBusy}>{pdfBusy?"Připravuji PDF…":"Stáhnout PDF a uložit na 24 h"}</button></div>
+ </div>;
+}
