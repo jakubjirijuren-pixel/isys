@@ -20,11 +20,17 @@ export default function Attendance({supabase,userId,isAdmin=false}){
  const [kioskOpen,setKioskOpen]=useState(false);const [events,setEvents]=useState([]),[profiles,setProfiles]=useState([]),[busy,setBusy]=useState(false),[error,setError]=useState(""),[notice,setNotice]=useState(""),[month,setMonth]=useState(()=>new Date().toISOString().slice(0,7)),[selected,setSelected]=useState("");
  const load=async()=>{
   const from=month+"-01",to=new Date(Date.UTC(Number(month.slice(0,4)),Number(month.slice(5,7)),1)).toISOString().slice(0,10);
-  let q=supabase.from("attendance_events").select("id,user_id,event_type,occurred_at").gte("occurred_at",from+"T00:00:00").lt("occurred_at",to+"T00:00:00").order("occurred_at",{ascending:false});
-  if(!isAdmin)q=q.eq("user_id",userId);
-  const {data,error:e}=await q;
-  if(e)setError("Docházku se nepodařilo načíst. Je spuštěný SQL skript attendance.sql? "+e.message);
-  else{setEvents(data||[]);setError("")}
+  const all=[];let failure=null;
+  for(let offset=0;offset<100000;offset+=1000){
+   let q=supabase.from("attendance_events").select("id,user_id,event_type,occurred_at").gte("occurred_at",from+"T00:00:00").lt("occurred_at",to+"T00:00:00").order("occurred_at",{ascending:false}).order("id",{ascending:false}).range(offset,offset+999);
+   if(!isAdmin)q=q.eq("user_id",userId);
+   const {data,error:e}=await q;
+   if(e){failure=e;break}
+   all.push(...(data||[]));
+   if((data||[]).length<1000)break;
+  }
+  if(failure)setError("Docházku se nepodařilo načíst: "+failure.message);
+  else{setEvents(all);setError("")}
  };
  useEffect(()=>{load()},[month,isAdmin,userId]);
  useEffect(()=>{if(!isAdmin)return;let active=true;supabase.rpc("isys_list_users").then(({data,error})=>{if(!active)return;if(!error&&data){setProfiles(data);return}supabase.from("profiles").select("*").then(({data:backup})=>{if(active)setProfiles(backup||[])})});return()=>{active=false}},[isAdmin,supabase]);
