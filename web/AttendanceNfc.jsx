@@ -1,6 +1,6 @@
 import React,{useEffect,useRef,useState} from "react";
-const names={in:"Příchod",break_start:"Začátek přestávky",break_end:"Konec přestávky",out:"Odchod"};
-const next={out:["in"],in:["break_start","out"],break_end:["break_start","out"],break_start:["break_end"]};
+const names={trip_start:"Služební cesta",trip_end:"Konec služební cesty",doctor_start:"Lékař",doctor_end:"Konec lékaře",homeoffice_start:"Home office",homeoffice_end:"Konec home office",in:"Příchod",break_start:"Začátek přestávky",break_end:"Konec přestávky",out:"Odchod"};
+const next={out:["in","trip_start","doctor_start","homeoffice_start"],trip_end:["in","trip_start","doctor_start","homeoffice_start"],doctor_end:["in","trip_start","doctor_start","homeoffice_start"],homeoffice_end:["in","trip_start","doctor_start","homeoffice_start"],trip_start:["trip_end"],doctor_start:["doctor_end"],homeoffice_start:["homeoffice_end"],in:["break_start","out"],break_end:["break_start","out"],break_start:["break_end"]};
 const extract=message=>{
  for(const r of message.records){
   if(r.recordType!=="text")continue;
