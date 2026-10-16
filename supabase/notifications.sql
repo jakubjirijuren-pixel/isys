@@ -40,7 +40,7 @@ begin
   select k.building_id into v_building_id from public.keys k where k.id=new.key_id;
  end if;
 
- select coalesce(nullif(b.address,''),nullif(b.name,''),'Objekt') into v_building_name
+ select coalesce(nullif(concat_ws(' ',b.street,b.object_number),''),'Objekt') into v_building_name
  from public.buildings b where b.id=v_building_id;
  v_body:=coalesce(new.borrower_name,'Uživatel')
   ||case when v_title='Nová výpůjčka klíčů' then ' si vypůjčil(a) klíče' else ' vrátil(a) klíče' end
