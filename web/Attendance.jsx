@@ -26,7 +26,7 @@ export default function Attendance({supabase,userId,isAdmin=false}){
   else{setEvents(data||[]);setError("")}
  };
  useEffect(()=>{load()},[month,isAdmin,userId]);
- useEffect(()=>{if(!isAdmin)return;supabase.from("profiles").select("*").then(({data})=>setProfiles(data||[]))},[isAdmin]);
+ useEffect(()=>{if(!isAdmin)return;let active=true;supabase.rpc("isys_list_users").then(({data,error})=>{if(!active)return;if(!error&&data){setProfiles(data);return}supabase.from("profiles").select("*").then(({data:backup})=>{if(active)setProfiles(backup||[])})});return()=>{active=false}},[isAdmin,supabase]);
  const [latest,setLatest]=useState(null);
  const loadLatest=async()=>{const {data}=await supabase.from("attendance_events").select("event_type").eq("user_id",userId).order("occurred_at",{ascending:false}).limit(1);setLatest(data?.[0]?.event_type||"out")};
  useEffect(()=>{loadLatest()},[userId]);
@@ -34,7 +34,7 @@ export default function Attendance({supabase,userId,isAdmin=false}){
  const mark=async type=>{setBusy(true);setError("");setNotice("");const {error:e}=await supabase.rpc("isys_attendance_mark",{p_type:type});if(e)setError(e.message);else{setNotice("Zaznamenáno: "+labels[type]);window.dispatchEvent(new Event("isys-attendance-updated"));await Promise.all([load(),loadLatest()])}setBusy(false)};
  const mine=events.filter(e=>e.user_id===userId);
  const shown=events.filter(e=>!isAdmin||!selected||e.user_id===selected);
- const names=Object.fromEntries(profiles.map(p=>[p.id,p.full_name||p.display_name||p.name||p.email||p.id]));
+ const names=Object.fromEntries(profiles.map(p=>[p.id,p.display_name||p.full_name||p.name||p.email||"Neznámý zaměstnanec"]));
  const csv=()=>{
   const lines=[["Zaměstnanec","Událost","Datum a čas"],...shown.map(e=>[names[e.user_id]||e.user_id,labels[e.event_type],fmt(e.occurred_at)])];
   const data="\ufeff"+lines.map(line=>line.map(v=>'"'+String(v).replaceAll('"','""')+'"').join(";")).join("\r\n");
