@@ -26,17 +26,46 @@ export default function Vacation({supabase,userId,isAdmin=false}){
   const date=value=>value?new Date(value+"T12:00:00").toLocaleDateString("cs-CZ"):"";
   const applicant=r.user_id===userId?(users.find(u=>u.id===userId)?.display_name||users.find(u=>u.id===userId)?.full_name||""):(users.find(u=>u.id===r.user_id)?.display_name||users.find(u=>u.id===r.user_id)?.full_name||"");
   const html=`<!doctype html><html lang="cs"><head><meta charset="utf-8"><title>Dovolenka</title><style>
-  @page{size:A4 portrait;margin:0}*{box-sizing:border-box}body{font-family:Arial,Helvetica,sans-serif;color:#111;margin:0;background:#e7ebf0;font-size:9pt}.sheet{width:194mm;min-height:132mm;padding:0;margin:16px 0 0 16px;zoom:.74;background:#fff;box-shadow:0 3px 24px #0002}h1{font-size:18pt;margin:0 0 5px;font-weight:800;letter-spacing:.3px}.form{border:3px solid #151515;border-radius:20px 0 20px 0;overflow:hidden}.line{display:grid;border-bottom:2px solid #151515}.line:last-child{border-bottom:0}.top{grid-template-columns:56% 19% 25%;min-height:53px}.top .cell:not(:last-child),.triple .cell:not(:last-child),.double .cell:first-child{border-right:2px solid #151515}.cell{padding:5px 8px;min-height:40px}.cell label{display:block;font-size:8pt;margin-bottom:4px}.cell .value{font-size:10pt;font-weight:600;overflow-wrap:anywhere}.blue{background:#b9e0f6}.section{font-size:12pt;font-weight:700;padding:5px 8px;background:#b9e0f6}.period{padding:6px 8px;min-height:36px;line-height:1.6;background:#b9e0f6}.blank{display:inline-block;border-bottom:1px dotted #222;min-width:72px;vertical-align:baseline;text-align:center;font-weight:600}.statement{padding:8px;line-height:1.25;min-height:55px}.double{grid-template-columns:1fr 1fr;min-height:46px}.triple{grid-template-columns:1fr 1fr 1fr;min-height:55px}.signature .cell{min-height:45px}.small{font-size:10pt}.actions{margin:12px 0;text-align:center}.actions button{padding:10px 18px;border:1px solid #555;border-radius:6px;cursor:pointer}@media screen and (max-width:850px){body{overflow-x:auto}.sheet{margin:10px}}@media print{html,body{width:210mm;height:297mm;margin:0;padding:0;background:#fff;overflow:visible}.sheet{width:194mm;min-height:132mm;height:132mm;padding:0;margin:0;zoom:1;transform:scale(.74);transform-origin:top left;box-shadow:none;break-inside:avoid;page-break-inside:avoid}.actions{display:none}body{-webkit-print-color-adjust:exact;print-color-adjust:exact}}
+  @page{size:A4 portrait;margin:0}
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0;font-family:Arial,Helvetica,sans-serif;color:#101010}
+  body{background:#e9edf1}
+  .sheet{width:148mm;height:105mm;background:white;margin:18px 0 0 18px;padding:4mm 3.5mm 2.5mm;overflow:hidden;box-shadow:0 2px 14px #0002}
+  h1{font-size:14.2pt;font-weight:900;line-height:1;margin:0 0 1.4mm 0;letter-spacing:-.4px}
+  .form{width:100%;height:88mm;border:1.1px solid #111;border-radius:3.5mm 0 3.5mm 0;overflow:hidden;display:flex;flex-direction:column;font-size:7.7pt;line-height:1.18}
+  .line{display:grid;flex-shrink:0;border-bottom:1px solid #111}
+  .line:last-child{border-bottom:0}
+  .blue{background:#b8ddf3;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .top{grid-template-columns:58% 17% 25%;height:14.1mm}
+  .top .cell:not(:last-child),.triple .cell:not(:last-child),.double .cell:first-child{border-right:1px solid #111}
+  .cell{padding:1.2mm 1.4mm;min-width:0}
+  .cell .value{margin-top:1.3mm;font-size:8.4pt;font-weight:600;overflow-wrap:anywhere}
+  .leave{height:14.2mm;display:flex;flex-direction:column;justify-content:space-between;border-bottom:1px solid #111}
+  .section{font-size:10pt;font-weight:800;padding:1mm 1.4mm 0}
+  .period{padding:0 1.4mm 1.4mm;white-space:nowrap;font-size:7.3pt;letter-spacing:-.12px}
+  .blank{display:inline-block;border-bottom:1px dotted #111;text-align:center;font-weight:600;min-width:12mm}
+  .blank.date{min-width:19mm}
+  .blank.hours{min-width:9mm}
+  .statement{height:14.1mm;padding:1.4mm;line-height:1.3;font-size:7.55pt}
+  .double{grid-template-columns:1fr 1fr;height:10.5mm}
+  .triple{grid-template-columns:1fr 1fr 1fr;height:14.5mm}
+  .last{flex:1;min-height:10mm}
+  .actions{margin:12px 0 0 18px}
+  .actions button{padding:9px 14px;cursor:pointer}
+  @media print{
+   html,body{width:210mm;height:297mm;background:white;margin:0;overflow:hidden}
+   .sheet{margin:0;width:148mm;height:105mm;box-shadow:none;break-inside:avoid;page-break-inside:avoid}
+   .actions{display:none}
+  }
   </style></head><body><main class="sheet"><h1>DOVOLENKA</h1><div class="form">
-  <div class="line top blue"><div class="cell"><label>Příjmení, jméno, titul</label><div class="value">${escape(applicant)}</div></div><div class="cell"><label>Osobní číslo</label></div><div class="cell"><label>Útvar</label></div></div>
-  <div class="section">Čerpání dovolené</div>
-  <div class="line period">za kalendářní rok <span class="blank">${escape(r.starts_on?.slice(0,4))}</span> a to od <span class="blank">${escape(date(r.starts_on))}</span> do <span class="blank">${escape(date(r.ends_on))}</span> včetně, tj. <span class="blank">&nbsp;</span> hodin z prac. doby</div>
-  <div class="line statement">Zaměstnanec se zaměstnavatelem se dohodli – <strong>nedohodli</strong>, že z technických důvodů výplata mzdy nebo platu splatná během dovolené nebude vyplacena před nástupem dovolené, ale bude poukázána v nejbližším pravidelném termínu výplaty mzdy nebo platu na účet zaměstnance nebo poukázána na jeho adresu.</div>
-  <div class="line double signature"><div class="cell"><label>Datum</label></div><div class="cell"><label>Podpis zaměstnavatele</label></div></div>
-  <div class="line double signature"><div class="cell"><label>Datum</label></div><div class="cell"><label>Podpis zaměstnance</label></div></div>
-  <div class="line triple blue"><div class="cell"><label>Skutečný nástup dovolené</label></div><div class="cell"><label>Z této dovolené skutečně čerpáno hodin z pracovní doby</label></div><div class="cell"><label>Nástup do zaměstnání po dovolené</label></div></div>
-  <div class="line double signature"><div class="cell"><label>Podpis vedoucího</label></div><div class="cell"><label>Za personální útvar</label></div></div>
-  </div><div class="actions"><button onclick="window.print()">Tisk / Uložit jako PDF</button></div></main></body></html>`;
+  <div class="line top blue"><div class="cell">Příjmení, jméno, titul<div class="value">${escape(applicant)}</div></div><div class="cell">Osobní číslo</div><div class="cell">Útvar</div></div>
+  <div class="leave blue"><div class="section">Čerpání dovolené</div><div class="period">za kalendářní rok <span class="blank">${escape(r.starts_on?.slice(0,4))}</span> a to od <span class="blank date">${escape(date(r.starts_on))}</span> do <span class="blank date">${escape(date(r.ends_on))}</span> včetně, tj. <span class="blank hours">&nbsp;</span> hodin z prac. doby</div></div>
+  <div class="line statement">Zaměstnanec se zaměstnavatelem se <strong>dohodli – nedohodli</strong>, že z technických důvodů výplata mzdy nebo platu splatná během dovolené nebude vyplacena před nástupem dovolené, ale bude poukázána v nejbližším pravidelném termínu výplaty mzdy nebo platu na účet zaměstnance nebo poukázána na jeho adresu.</div>
+  <div class="line double"><div class="cell">Datum</div><div class="cell">Podpis zaměstnavatele</div></div>
+  <div class="line double"><div class="cell">Datum</div><div class="cell">Podpis zaměstnance</div></div>
+  <div class="line triple blue"><div class="cell">Skutečný nástup<br/>dovolené</div><div class="cell">Z této dovolené skutečně<br/>čerpáno hodin z pracovní doby</div><div class="cell">Nástup do zaměstnání<br/>po dovolené</div></div>
+  <div class="line double last"><div class="cell">Podpis vedoucího</div><div class="cell">Za personální útvar</div></div>
+  </div></main><div class="actions"><button onclick="window.print()">Tisk / Uložit jako PDF</button></div></body></html>`;
   const win=window.open("","_blank");
   if(!win){setError("Prohlížeč zablokoval nové okno. Povolte vyskakovací okna pro iSYS.");return}
   win.document.open();win.document.write(html);win.document.close();win.focus();
