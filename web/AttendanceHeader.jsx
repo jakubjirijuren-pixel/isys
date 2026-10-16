@@ -17,20 +17,21 @@ function worked(events,now){
 export default function AttendanceHeader({supabase,userId,onOpen}){
  const [events,setEvents]=useState([]),[latest,setLatest]=useState("out"),[ready,setReady]=useState(false),[busy,setBusy]=useState(false),[error,setError]=useState(""),[now,setNow]=useState(Date.now());
  const load=useCallback(async()=>{
-  const today=localDate(new Date());
+  const midnight=new Date();midnight.setHours(0,0,0,0);
   const [day,mostRecent]=await Promise.all([
-   supabase.from("attendance_events").select("event_type,occurred_at").eq("user_id",userId).gte("occurred_at",today+"T00:00:00").order("occurred_at",{ascending:true}),
+   supabase.from("attendance_events").select("event_type,occurred_at").eq("user_id",userId).gte("occurred_at",midnight.toISOString()).order("occurred_at",{ascending:true}),
    supabase.from("attendance_events").select("event_type").eq("user_id",userId).order("occurred_at",{ascending:false}).limit(1)
   ]);
   if(day.error||mostRecent.error){setError("Docházka není dostupná.");setReady(false);return}
   setEvents(day.data||[]);setLatest(mostRecent.data?.[0]?.event_type||"out");setReady(true);setError("");
  },[supabase,userId]);
- useEffect(()=>{load();const refresh=()=>load();window.addEventListener("focus",refresh);const interval=window.setInterval(()=>{setNow(Date.now());if(new Date().getHours()===0&&new Date().getMinutes()===0)load()},30000);return()=>{window.clearInterval(interval);window.removeEventListener("focus",refresh)}},[load]);
+ useEffect(()=>{load();const refresh=()=>load();window.addEventListener("focus",refresh);window.addEventListener("isys-attendance-updated",refresh);const interval=window.setInterval(()=>{setNow(Date.now());if(new Date().getHours()===0&&new Date().getMinutes()===0)load()},30000);return()=>{window.clearInterval(interval);window.removeEventListener("focus",refresh);window.removeEventListener("isys-attendance-updated",refresh)}},[load]);
  const total=useMemo(()=>worked(events,now),[events,now]);
  const mark=async type=>{
   if(busy)return;setBusy(true);setError("");
   const {error:e}=await supabase.rpc("isys_attendance_mark",{p_type:type});
   if(e)setError(e.message);
+  else window.dispatchEvent(new Event("isys-attendance-updated"));
   await load();setNow(Date.now());setBusy(false);
  };
  return <div className="attendance-header" aria-label="Rychlá docházka">
