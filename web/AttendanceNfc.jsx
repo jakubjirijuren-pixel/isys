@@ -42,7 +42,7 @@ export function AttendanceKiosk({supabase,profiles,onClose,onSaved}){
  };
  const label=profiles.find(p=>p.id===person);
  return <div className="attendance-terminal" role="dialog" aria-modal="true" aria-label="Docházkový terminál">
- <header className="attendance-terminal-head"><strong><span className="attendance-terminal-brand">iSYS</span> Docházkový terminál</strong><button type="button" className="attendance-terminal-exit" onClick={()=>{stop();onClose()}} aria-label="Zavřít terminál">✕</button></header>
+ <header className="attendance-terminal-head"><strong><span className="attendance-terminal-brand">FOXA</span> Docházkový terminál</strong><button type="button" className="attendance-terminal-exit" onClick={()=>{stop();onClose()}} aria-label="Zavřít terminál">✕</button></header>
  <main className="attendance-terminal-main">
  {state==="idle"&&<section className="attendance-terminal-panel attendance-terminal-intro"><span className="attendance-terminal-icon" aria-hidden="true">◷</span><h1>Evidence docházky</h1><p>Pro zaznamenání příchodu, odchodu nebo přestávky použijte svůj NFC čip.</p><button type="button" className="attendance-terminal-primary" onClick={start}>Načíst NFC čip</button></section>}
  {state==="scanning"&&<section className="attendance-terminal-panel"><div className="attendance-terminal-scan" role="status"><span aria-hidden="true">◈</span><strong>Přiložte osobní NFC čip</strong><small>Podržte čip u NFC čtečky zařízení.</small></div><button type="button" className="attendance-terminal-secondary" onClick={()=>{stop();setState("idle")}}>← Zrušit načítání</button></section>}
@@ -79,7 +79,7 @@ export function AttendanceCardWriter({supabase,profiles}){
   }catch(e){if(!c.signal.aborted)setError(e.message);setBusy(false);setScanning(false)}
  };
  const cancel=()=>{controller.current?.abort();controller.current=null;setBusy(false);setScanning(false);setMessage("");};
- return <section className="attendance-card"><h2>Přiřazení existujícího NFC čipu</h2><p>Vyberte zaměstnance a přiložte jeho stávající NFC čip. iSYS si zapamatuje sériové číslo čipu, aniž by na něj cokoliv zapisoval. Nové přiřazení nahradí předchozí docházkový čip zaměstnance.</p>
+ return <section className="attendance-card"><h2>Přiřazení existujícího NFC čipu</h2><p>Vyberte zaměstnance a přiložte jeho stávající NFC čip. FOXA si zapamatuje sériové číslo čipu, aniž by na něj cokoliv zapisoval. Nové přiřazení nahradí předchozí docházkový čip zaměstnance.</p>
  <label>Zaměstnanec <select value={user} disabled={busy} onChange={e=>{setUser(e.target.value);setMessage("");setError("")}}><option value="">Vyberte zaměstnance</option>{profiles.map(p=><option value={p.id} key={p.id}>{p.display_name||p.full_name||p.email||"Neznámý zaměstnanec"}</option>)}</select></label>
  <div className="attendance-actions"><button type="button" className="primary" disabled={!user||busy} onClick={assign}>{scanning?"Čekám na NFC čip…":"Přiřadit přiložený NFC čip"}</button>{scanning&&<button type="button" className="secondarybutton" onClick={cancel}>Zrušit</button>}</div>
  <p className="attendance-payroll-note">Podporováno v Chrome na Androidu s Web NFC. Některé čipy (např. nekompatibilní přístupové karty) nelze přes prohlížeč načíst. Sériové číslo lze u některých čipů napodobit, proto není vhodné jako samostatný bezpečnostní prvek.</p>

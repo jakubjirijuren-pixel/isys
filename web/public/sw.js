@@ -1,4 +1,4 @@
-const CACHE="isys-shell-v3";
+const CACHE="isys-shell-v4";
 const SHELL=["/isys/icon.svg","/isys/icon-maskable.svg"];
 self.addEventListener("install",event=>{event.waitUntil(caches.open(CACHE).then(cache=>cache.addAll(SHELL)).then(()=>self.skipWaiting()))});
 self.addEventListener("activate",event=>{event.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(key=>key.startsWith("isys-shell-")&&key!==CACHE).map(key=>caches.delete(key)))).then(()=>self.clients.claim()))});
@@ -13,8 +13,8 @@ self.addEventListener("fetch",event=>{
  event.respondWith(fetch(req).then(response=>{if(response.ok&&response.type==="basic"){const copy=response.clone();caches.open(CACHE).then(cache=>cache.put(req,copy))}return response}).catch(()=>caches.match(req)));
 });
 self.addEventListener("push",event=>{
- let data={};try{data=event.data?.json()||{}}catch{data={title:"iSYS",body:event.data?.text()||"Nové oznámení"}}
- const title=String(data.title||"iSYS");
+ let data={};try{data=event.data?.json()||{}}catch{data={title:"FOXA",body:event.data?.text()||"Nové oznámení"}}
+ const title=String(data.title||"FOXA");
  event.waitUntil(self.registration.showNotification(title,{body:String(data.body||""),icon:"/isys/icon.svg",badge:"/isys/icon.svg",tag:String(data.notificationId||"isys"),data:{url:"/isys/",module:String(data.module||"Přehled")}}));
 });
 self.addEventListener("notificationclick",event=>{

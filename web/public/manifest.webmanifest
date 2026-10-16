@@ -1,7 +1,7 @@
 {
   "id": "/isys/",
-  "name": "iSYS – Správa objektů",
-  "short_name": "iSYS",
+  "name": "FOXA – Správa objektů",
+  "short_name": "FOXA",
   "description": "Evidence objektů a pravidelné kontroly domů",
   "lang": "cs",
   "start_url": "/isys/",

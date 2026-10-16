@@ -7,7 +7,7 @@ export default function KeyNfcWriter({barcode}){
  const close=()=>{stop();setOpen(false);setPhase("ready");setError("")};
  const startWrite=async()=>{
   if(!barcode){setError("Svazek nemá přidělený kód.");return}
-  if(!("NDEFReader" in window)){setError("Zápis NFC je podporovaný v Chromu na Androidu. Zapněte NFC a otevřete iSYS v Chromu.");return}
+  if(!("NDEFReader" in window)){setError("Zápis NFC je podporovaný v Chromu na Androidu. Zapněte NFC a otevřete FOXA v Chromu.");return}
   stop();setError("");setPhase("writing");
   const abort=new AbortController();abortRef.current=abort;
   try{

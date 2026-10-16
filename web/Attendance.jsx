@@ -6,7 +6,7 @@ import AttendancePayroll from "./AttendancePayroll.jsx";
 import AttendanceAdminEntry from "./AttendanceAdminEntry.jsx";
 const labels={in:"Příchod",break_start:"Začátek přestávky",break_end:"Konec přestávky",out:"Odchod",trip_start:"Služební cesta – začátek",trip_end:"Služební cesta – konec",doctor_start:"Lékař – začátek",doctor_end:"Lékař – konec",homeoffice_start:"Home office – začátek",homeoffice_end:"Home office – konec"};
 const actions={out:[["in","Zaznamenat příchod"],["trip_start","Služební cesta"],["doctor_start","Lékař"],["homeoffice_start","Home office"]],trip_end:[["in","Zaznamenat příchod"],["trip_start","Služební cesta"],["doctor_start","Lékař"],["homeoffice_start","Home office"]],doctor_end:[["in","Zaznamenat příchod"],["trip_start","Služební cesta"],["doctor_start","Lékař"],["homeoffice_start","Home office"]],homeoffice_end:[["in","Zaznamenat příchod"],["trip_start","Služební cesta"],["doctor_start","Lékař"],["homeoffice_start","Home office"]],trip_start:[["trip_end","Ukončit služební cestu"]],doctor_start:[["doctor_end","Ukončit návštěvu lékaře"]],homeoffice_start:[["homeoffice_end","Ukončit home office"]],in:[["break_start","Začít přestávku"],["out","Zaznamenat odchod"]],break_end:[["break_start","Začít přestávku"],["out","Zaznamenat odchod"]],break_start:[["break_end","Ukončit přestávku"]]};
-const sourceLabels={web:"Web / aplikace iSYS",nfc:"NFC terminál",admin:"Administrátor",unknown:"Neznámý zdroj"};
+const sourceLabels={web:"Web / aplikace FOXA",nfc:"NFC terminál",admin:"Administrátor",unknown:"Neznámý zdroj"};
 const fmt=v=>new Date(v).toLocaleString("cs-CZ",{dateStyle:"medium",timeStyle:"short"});
 const localDay=v=>new Date(v).toLocaleDateString("sv-SE");
 function duration(rows){

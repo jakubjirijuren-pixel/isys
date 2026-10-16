@@ -27,8 +27,8 @@ export default function Tasks({supabase,buildings,accountDirectory=[],userId,use
   const next=new Date(request.due_date+"T12:00:00");next.setDate(next.getDate()+1);
   const end=[next.getFullYear(),String(next.getMonth()+1).padStart(2,"0"),String(next.getDate()).padStart(2,"0")].join("");
   const stamp=new Date().toISOString().replace(/[-:]/g,"").replace(/\.\d{3}/,"");
-  const description=["Požadavek iSYS",request.description||"", "Objekt: "+buildingName(request.building_id),"Technik: "+(request.technician||"nepřiřazen"),"Referent: "+(request.referent||"—"),"Priorita: "+request.priority,"Stav: "+request.status].filter(Boolean).join("\n");
-  const ics=["BEGIN:VCALENDAR","VERSION:2.0","PRODID:-//iSYS//Pracovni pozadavky//CS","CALSCALE:GREGORIAN","METHOD:PUBLISH","BEGIN:VEVENT","UID:"+request.id+"@isys","DTSTAMP:"+stamp,"DTSTART;VALUE=DATE:"+date,"DTEND;VALUE=DATE:"+end,"SUMMARY:"+escapeIcs(request.title),"DESCRIPTION:"+escapeIcs(description),"END:VEVENT","END:VCALENDAR"].join("\r\n")+"\r\n";
+  const description=["Požadavek FOXA",request.description||"", "Objekt: "+buildingName(request.building_id),"Technik: "+(request.technician||"nepřiřazen"),"Referent: "+(request.referent||"—"),"Priorita: "+request.priority,"Stav: "+request.status].filter(Boolean).join("\n");
+  const ics=["BEGIN:VCALENDAR","VERSION:2.0","PRODID:-//FOXA//Pracovni pozadavky//CS","CALSCALE:GREGORIAN","METHOD:PUBLISH","BEGIN:VEVENT","UID:"+request.id+"@isys","DTSTAMP:"+stamp,"DTSTART;VALUE=DATE:"+date,"DTEND;VALUE=DATE:"+end,"SUMMARY:"+escapeIcs(request.title),"DESCRIPTION:"+escapeIcs(description),"END:VEVENT","END:VCALENDAR"].join("\r\n")+"\r\n";
   const url=URL.createObjectURL(new Blob([ics],{type:"text/calendar;charset=utf-8"}));
   const a=document.createElement("a");a.href=url;a.download="isys-ukol-"+request.id.slice(0,8)+".ics";document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),60000);
   setNotice("Kalendářový soubor byl stažen. Otevři ho nebo importuj do svého kalendáře.");
