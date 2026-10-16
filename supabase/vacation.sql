@@ -84,3 +84,26 @@ begin
 end $$;
 revoke all on function public.isys_vacation_settings_save(uuid,uuid,numeric),public.isys_vacation_submit(date,date,text),public.isys_vacation_decide(uuid,text,text) from public;
 grant execute on function public.isys_vacation_settings_save(uuid,uuid,numeric),public.isys_vacation_submit(date,date,text),public.isys_vacation_decide(uuid,text,text) to authenticated;
+
+-- Notifications are created server-side, so clients cannot forge them.
+create or replace function public.isys_vacation_notify()
+returns trigger language plpgsql security definer set search_path='' as $$
+declare recipient uuid; title text; body text;
+begin
+ if tg_op='INSERT' then
+  recipient:=new.manager_id;
+  title:='Nová žádost o dovolenou';
+  body:='Žádost ke schválení: '||to_char(new.starts_on,'DD.MM.YYYY')||' – '||to_char(new.ends_on,'DD.MM.YYYY');
+ elsif new.status is distinct from old.status then
+  recipient:=new.user_id;
+  title:=case new.status when 'approved' then 'Dovolená schválena' when 'rejected' then 'Dovolená zamítnuta' else 'Žádost o dovolenou zrušena' end;
+  body:=to_char(new.starts_on,'DD.MM.YYYY')||' – '||to_char(new.ends_on,'DD.MM.YYYY');
+ else return new; end if;
+ if recipient is not null then
+  insert into public.notifications(user_id,title,body,module) values(recipient,title,body,'Dovolené');
+ end if;
+ return new;
+end $$;
+drop trigger if exists isys_vacation_notify_trigger on public.vacation_requests;
+create trigger isys_vacation_notify_trigger after insert or update of status on public.vacation_requests
+for each row execute function public.isys_vacation_notify();
