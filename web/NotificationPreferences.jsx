@@ -5,7 +5,7 @@ const fields=[
  ["tasks","Úkoly","Nové úkoly, změny a termíny"],
  ["inspections","Kontroly objektů","Plánované a dokončené kontroly"],
  ["defects","Závady","Nové závady a změny jejich stavu"],
- ["admin_messages","Zprávy administrátora","Individuální zprávy od správce iSYS"],
+ ["admin_messages","Zprávy administrátora","Individuální zprávy od správce FOXA"],
  ["other","Ostatní","Další systémová oznámení"],
 ];
 const defaults=Object.fromEntries(fields.map(([key])=>[key,true]));
