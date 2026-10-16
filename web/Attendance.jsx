@@ -1,6 +1,7 @@
 import React,{useEffect,useMemo,useState} from "react";
 import "./attendance.css";
 import {AttendanceKiosk,AttendanceCardWriter} from "./AttendanceNfc.jsx";
+import AttendancePayroll from "./AttendancePayroll.jsx";
 const labels={in:"Příchod",break_start:"Začátek přestávky",break_end:"Konec přestávky",out:"Odchod"};
 const actions={out:[["in","Zaznamenat příchod"]],in:[["break_start","Začít přestávku"],["out","Zaznamenat odchod"]],break_end:[["break_start","Začít přestávku"],["out","Zaznamenat odchod"]],break_start:[["break_end","Ukončit přestávku"]]};
 const fmt=v=>new Date(v).toLocaleString("cs-CZ",{dateStyle:"medium",timeStyle:"short"});
@@ -43,6 +44,7 @@ export default function Attendance({supabase,userId,isAdmin=false}){
  return <div className="attendance-module"><div className="pageheading"><div><h1>Docházka</h1><p>Evidence příchodů, odchodů a přestávek</p></div></div>
  <div className="attendance-actions"><button className="primary" type="button" onClick={()=>setKioskOpen(true)}>Spustit NFC docházkový terminál</button></div>{kioskOpen&&<AttendanceKiosk supabase={supabase} profiles={profiles} onClose={()=>setKioskOpen(false)} onSaved={()=>{load();loadLatest()}}/>}{isAdmin&&<AttendanceCardWriter supabase={supabase} profiles={profiles}/>}<section className="attendance-card"><h2>Moje docházka</h2><p>Aktuální stav: <strong>{latest===null?"Načítám…":latest==="out"?"Mimo pracoviště":latest==="break_start"?"Přestávka":"V práci"}</strong></p><div className="attendance-actions">{(actions[latest]||[]).map(([type,label])=><button key={type} className="primary" disabled={busy} onClick={()=>mark(type)}>{busy?"Ukládám…":label}</button>)}</div><p>Odpracováno ve vybraném měsíci (orientačně): <strong>{duration(mine)}</strong></p></section>
  {error&&<div className="error" role="alert">{error}</div>}{notice&&<div className="notice" role="status">{notice}</div>}
+ {isAdmin&&<AttendancePayroll events={events} profiles={profiles} month={month} selected={selected}/>}
  <section className="attendance-card"><div className="attendance-toolbar"><h2>{isAdmin?"Přehled docházky":"Moje záznamy"}</h2><label>Měsíc <input type="month" value={month} onChange={e=>setMonth(e.target.value)}/></label>{isAdmin&&<><label>Zaměstnanec <select value={selected} onChange={e=>setSelected(e.target.value)}><option value="">Všichni</option>{profiles.map(p=><option key={p.id} value={p.id}>{names[p.id]}</option>)}</select></label><button className="secondarybutton" onClick={csv}>Export CSV</button></>}<button className="secondarybutton" onClick={()=>{load();loadLatest()}}>Obnovit</button></div>
  <div className="attendance-table-wrap"><table><thead><tr>{isAdmin&&<th>Zaměstnanec</th>}<th>Událost</th><th>Datum a čas</th></tr></thead><tbody>{shown.map(e=><tr key={e.id}>{isAdmin&&<td>{names[e.user_id]||e.user_id}</td>}<td>{labels[e.event_type]}</td><td>{fmt(e.occurred_at)}</td></tr>)}{!shown.length&&<tr><td colSpan={isAdmin?3:2}>Zatím žádné záznamy.</td></tr>}</tbody></table></div></section></div>;
 }
