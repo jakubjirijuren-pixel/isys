@@ -25,7 +25,8 @@ function calculate(events,month){
    const current=dateKey(e.occurred_at),t=new Date(e.occurred_at).getTime();
    if(day!==current){flush();day=current;started=null;worked=0;breakStarted=null;breakMs=0;first=null;last=null;issues=[]}
    if(first===null)first=e.occurred_at;last=e.occurred_at;
-   if(e.event_type==="in"){
+   if(["in","trip_start","homeoffice_start","doctor_start"].includes(e.event_type)){
+    if(e.event_type==="doctor_start"){if(started!==null)issues.push("Lékař během práce – prověřit");started=null;breakStarted=null;issues.push("Lékař – posoudit pro mzdy");continue;}
     if(started!==null||breakStarted!==null)issues.push("Opakovaný příchod");
     started=t;breakStarted=null;
    }else if(e.event_type==="break_start"){
@@ -34,7 +35,8 @@ function calculate(events,month){
    }else if(e.event_type==="break_end"){
     if(breakStarted===null)issues.push("Konec přestávky bez začátku");
     else{breakMs+=Math.max(0,t-breakStarted);breakStarted=null;started=t}
-   }else if(e.event_type==="out"){
+   }else if(["out","trip_end","homeoffice_end","doctor_end"].includes(e.event_type)){
+    if(e.event_type==="doctor_end"){issues.push("Lékař – posoudit pro mzdy");continue;}
     if(started===null)issues.push("Odchod bez aktivní práce");
     else{worked+=Math.max(0,t-started);started=null}
     if(breakStarted!==null){issues.push("Odchod během přestávky");breakStarted=null}
@@ -65,7 +67,7 @@ export default function AttendancePayroll({events,profiles,month,selected}){
  const exportDetails=()=>downloadCsv("isys-dochazka-dny-"+month+".csv",[["Zaměstnanec","Datum","První záznam","Poslední záznam","Odpracováno (hod.)","Přestávky (hod.)","Upozornění"],...detail.map(d=>[names[d.id]||"Neznámý zaměstnanec",d.day,d.first?stamp(d.first):"",d.last?stamp(d.last):"",hours(d.worked),hours(d.breakMs),d.issues.join("; ")])]);
  return <section className="attendance-card attendance-payroll"><div className="attendance-payroll-top"><div><h2>Měsíční podklady pro mzdy</h2><p>Souhrn za {month} pro všechny zaměstnance nebo vybraného zaměstnance.</p></div><div className="attendance-payroll-buttons"><button type="button" className="primary" onClick={exportSummary}>Export mzdového souhrnu CSV</button><button type="button" className="secondarybutton" onClick={exportDetails}>Export po dnech CSV</button></div></div>
  <div className="attendance-payroll-metrics"><div><small>Zaměstnanci</small><strong>{visible.length}</strong></div><div><small>Evidovaná práce</small><strong>{hours(visible.reduce((a,s)=>a+s.worked,0))} h</strong></div><div><small>Dny k prověření</small><strong>{allIssues}</strong></div></div>
- <p className="attendance-payroll-note">Podklad k ruční kontrole před zpracováním mezd. Nezahrnuje dovolenou, nemoc, svátky, přesčasy, příplatky ani schvalování docházky. Neúplné či přes půlnoc vedené směny je nutné ověřit; hodiny z nich nemusí být správně započtené.</p>
+ <p className="attendance-payroll-note">Podklad k ruční kontrole před zpracováním mezd. Služební cesty a home office se počítají jako evidovaná práce; lékař se nezapočítává automaticky a označí se ke kontrole. Nezahrnuje dovolenou, nemoc, svátky, přesčasy, příplatky ani schvalování docházky. Neúplné či přes půlnoc vedené směny je nutné ověřit; hodiny z nich nemusí být správně započtené.</p>
  <div className="attendance-table-wrap"><table><thead><tr><th>Zaměstnanec</th><th>Dny</th><th>Odpracováno</th><th>Přestávky</th><th>Ke kontrole</th></tr></thead><tbody>{visible.map(s=><tr key={s.id}><td>{names[s.id]||"Neznámý zaměstnanec"}</td><td>{s.days}</td><td>{hours(s.worked)} h</td><td>{hours(s.breakMs)} h</td><td>{s.issues?String(s.issues)+" dnů":"—"}</td></tr>)}{!visible.length&&<tr><td colSpan="5">V tomto období zatím nejsou záznamy.</td></tr>}</tbody></table></div>
  <button type="button" className="secondarybutton" onClick={()=>setDetailsOpen(x=>!x)}>{detailsOpen?"Skrýt denní rozpis":"Zobrazit denní rozpis"}</button>
  {detailsOpen&&<div className="attendance-table-wrap"><table><thead><tr><th>Zaměstnanec</th><th>Den</th><th>První / poslední záznam</th><th>Práce</th><th>Přestávka</th><th>Kontrola</th></tr></thead><tbody>{detail.map(d=><tr key={d.id+"-"+d.day}><td>{names[d.id]||"Neznámý zaměstnanec"}</td><td>{d.day}</td><td>{stamp(d.first)} – {stamp(d.last)}</td><td>{hours(d.worked)} h</td><td>{hours(d.breakMs)} h</td><td>{d.issues.join(", ")||"—"}</td></tr>)}</tbody></table></div>}
