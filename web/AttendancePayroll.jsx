@@ -1,5 +1,6 @@
 import React,{useMemo,useState} from "react";
 import "./attendance-payroll.css";
+import {attendanceIntervals,sumIntervals} from "./attendance-calculation.js";
 const dateKey=value=>new Date(value).toLocaleDateString("sv-SE",{timeZone:"Europe/Prague"});
 const minutes=ms=>Math.round(ms/60000);
 const hours=ms=>(ms/3600000).toLocaleString("cs-CZ",{minimumFractionDigits:2,maximumFractionDigits:2});
@@ -12,41 +13,29 @@ function calculate(events,month){
   byUser.get(event.user_id).push(event);
  }
  const details=[],summary=[];
+ const [year,mon]=month.split("-").map(Number);
+ const daysInMonth=new Date(year,mon,0).getDate();
  for(const [id,items] of byUser){
-  items.sort((a,b)=>new Date(a.occurred_at)-new Date(b.occurred_at));
-  let day=null,started=null,worked=0,breakStarted=null,breakMs=0,first=null,last=null,issues=[];
-  const flush=()=>{
-   if(!day)return;
-   if(started!==null)issues.push("Neukončený pracovní úsek");
-   if(breakStarted!==null)issues.push("Neukončená přestávka");
-   details.push({id,day,worked,breakMs,first,last,issues:[...new Set(issues)]});
-  };
-  for(const e of items){
-   const current=dateKey(e.occurred_at),t=new Date(e.occurred_at).getTime();
-   if(day!==current){flush();day=current;started=null;worked=0;breakStarted=null;breakMs=0;first=null;last=null;issues=[]}
-   if(first===null)first=e.occurred_at;last=e.occurred_at;
-   if(["in","trip_start","homeoffice_start","doctor_start"].includes(e.event_type)){
-    if(e.event_type==="doctor_start"){if(started!==null)issues.push("Lékař během práce – prověřit");started=null;breakStarted=null;issues.push("Lékař – posoudit pro mzdy");continue;}
-    if(started!==null||breakStarted!==null)issues.push("Opakovaný příchod");
-    started=t;breakStarted=null;
-   }else if(e.event_type==="break_start"){
-    if(started===null)issues.push("Přestávka bez začátku práce");
-    else{worked+=Math.max(0,t-started);started=null;breakStarted=t}
-   }else if(e.event_type==="break_end"){
-    if(breakStarted===null)issues.push("Konec přestávky bez začátku");
-    else{breakMs+=Math.max(0,t-breakStarted);breakStarted=null;started=t}
-   }else if(["out","trip_end","homeoffice_end","doctor_end"].includes(e.event_type)){
-    if(e.event_type==="doctor_end"){issues.push("Lékař – posoudit pro mzdy");continue;}
-    if(started===null)issues.push("Odchod bez aktivní práce");
-    else{worked+=Math.max(0,t-started);started=null}
-    if(breakStarted!==null){issues.push("Odchod během přestávky");breakStarted=null}
-   }
+  const {intervals,warnings}=attendanceIntervals(items);
+  let total=0,totalBreak=0,days=0,issues=0;
+  for(let day=1;day<=daysInMonth;day++){
+   const from=new Date(year,mon-1,day).getTime();
+   const to=new Date(year,mon-1,day+1).getTime();
+   const {worked,breakMs}=sumIntervals(intervals,from,to);
+   const eventsToday=items.filter(e=>{const t=new Date(e.occurred_at).getTime();return t>=from&&t<to});
+   if(!eventsToday.length&&!worked&&!breakMs)continue;
+   const first=eventsToday[0]?.occurred_at||new Date(from).toISOString();
+   const last=eventsToday[eventsToday.length-1]?.occurred_at||new Date(to).toISOString();
+   const dayWarnings=[];
+   if(eventsToday.some(e=>e.event_type==="doctor_start"||e.event_type==="doctor_end"))dayWarnings.push("Lékař – posoudit pro mzdy");
+   if(eventsToday.some(e=>e.event_type==="in")&&eventsToday.filter(e=>e.event_type==="in").length>1)dayWarnings.push("Více příchodů – ověřit");
+   if(eventsToday.length&&warnings.length)dayWarnings.push(...warnings);
+   if(dayWarnings.length)issues++;
+   if(worked>0)days++;
+   total+=worked;totalBreak+=breakMs;
+   details.push({id,day:dateKey(new Date(from)),worked,breakMs,first,last,issues:[...new Set(dayWarnings)]});
   }
-  flush();
- }
- for(const [id] of byUser){
-  const rows=details.filter(d=>d.id===id);
-  summary.push({id,days:rows.filter(d=>d.worked>0).length,worked:rows.reduce((a,d)=>a+d.worked,0),breakMs:rows.reduce((a,d)=>a+d.breakMs,0),issues:rows.filter(d=>d.issues.length).length});
+  summary.push({id,days,worked:total,breakMs:totalBreak,issues});
  }
  return {details:details.sort((a,b)=>a.day.localeCompare(b.day)||a.id.localeCompare(b.id)),summary};
 }
