@@ -23,21 +23,20 @@ export default function Vacation({supabase,userId,isAdmin=false}){
 
  const printRequest=r=>{
   const escape=value=>String(value??"").replace(/[&<>"']/g,ch=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[ch]));
-  const date=value=>value?new Date(value+"T12:00:00").toLocaleDateString("cs-CZ"):"—";
-  const stamp=value=>value?new Date(value).toLocaleString("cs-CZ"):"—";
-  const applicant=r.user_id===userId?(users.find(u=>u.id===userId)?.display_name||users.find(u=>u.id===userId)?.email||"Zaměstnanec"):(name(r.user_id));
-  const html=`<!doctype html><html lang="cs"><head><meta charset="utf-8"><title>Dovolenka – ${escape(date(r.starts_on))}</title><style>
-  @page{size:A4;margin:17mm}*{box-sizing:border-box}body{font-family:Arial,sans-serif;color:#111;font-size:12pt;margin:0}header{border-bottom:2px solid #111;padding-bottom:12px;margin-bottom:28px}header small{display:block;color:#444;margin-bottom:12px}h1{font-size:22pt;margin:0}h2{font-size:12pt;margin:25px 0 10px}.grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}.field{border-bottom:1px solid #777;padding:9px 0;min-height:48px}.field label{display:block;font-size:9pt;color:#555;margin-bottom:6px}.wide{grid-column:1/-1}.status{font-weight:bold}.signatures{display:grid;grid-template-columns:1fr 1fr;gap:36px;margin-top:75px}.signature{border-top:1px solid #111;text-align:center;padding-top:8px;font-size:10pt}footer{margin-top:38px;font-size:9pt;color:#555}button{padding:10px 16px;margin:20px 0;cursor:pointer}@media print{button{display:none}}
-  </style></head><body><header><small>SBD Praha 8 · interní personální tiskopis</small><h1>ŽÁDOST O DOVOLENOU</h1></header>
-  <div class="grid"><div class="field"><label>Zaměstnanec</label>${escape(applicant)}</div><div class="field"><label>Schvalující osoba</label>${escape(name(r.manager_id))}</div>
-  <div class="field"><label>Datum od</label>${escape(date(r.starts_on))}</div><div class="field"><label>Datum do</label>${escape(date(r.ends_on))}</div>
-  <div class="field"><label>Počet pracovních dnů</label>${escape(r.days)}</div><div class="field"><label>Stav žádosti</label><span class="status">${escape(labels[r.status]||r.status)}</span></div>
-  <div class="field wide"><label>Poznámka zaměstnance</label>${escape(r.note||"—")}</div>
-  <div class="field"><label>Podáno dne</label>${escape(stamp(r.created_at))}</div><div class="field"><label>Rozhodnuto dne</label>${escape(stamp(r.decided_at))}</div>
-  <div class="field wide"><label>Vyjádření schvalujícího</label>${escape(r.decision_note||"—")}</div></div>
-  <div class="signatures"><div class="signature">Podpis zaměstnance</div><div class="signature">Podpis schvalující osoby</div></div>
-  <footer>Vygenerováno ze systému iSYS · Identifikátor žádosti: ${escape(r.id)}<p>Stav odpovídá elektronické evidenci v okamžiku exportu. Podpisová pole jsou určena pro listinné potvrzení.</p></footer>
-  <button onclick="window.print()">Tisk / Uložit jako PDF</button></body></html>`;
+  const date=value=>value?new Date(value+"T12:00:00").toLocaleDateString("cs-CZ"):"";
+  const applicant=r.user_id===userId?(users.find(u=>u.id===userId)?.display_name||users.find(u=>u.id===userId)?.full_name||""):(users.find(u=>u.id===r.user_id)?.display_name||users.find(u=>u.id===r.user_id)?.full_name||"");
+  const html=`<!doctype html><html lang="cs"><head><meta charset="utf-8"><title>Dovolenka</title><style>
+  @page{size:A4 portrait;margin:18mm}*{box-sizing:border-box}body{font-family:Arial,Helvetica,sans-serif;color:#111;margin:0;font-size:11pt}.sheet{width:100%;max-width:180mm;margin:10mm auto}h1{font-size:24pt;margin:0 0 8px;font-weight:800;letter-spacing:.3px}.form{border:3px solid #151515;border-radius:20px 0 20px 0;overflow:hidden}.line{display:grid;border-bottom:2px solid #151515}.line:last-child{border-bottom:0}.top{grid-template-columns:56% 19% 25%;min-height:82px}.top .cell:not(:last-child),.triple .cell:not(:last-child),.double .cell:first-child{border-right:2px solid #151515}.cell{padding:8px 10px;min-height:64px}.cell label{display:block;font-size:10pt;margin-bottom:9px}.cell .value{font-size:13pt;font-weight:600;overflow-wrap:anywhere}.blue{background:#b9e0f6}.section{font-size:16pt;font-weight:700;padding:8px 10px;background:#b9e0f6}.period{padding:10px;min-height:55px;line-height:1.9;background:#b9e0f6}.blank{display:inline-block;border-bottom:1px dotted #222;min-width:72px;vertical-align:baseline;text-align:center;font-weight:600}.statement{padding:13px 10px;line-height:1.4;min-height:86px}.double{grid-template-columns:1fr 1fr;min-height:66px}.triple{grid-template-columns:1fr 1fr 1fr;min-height:90px}.signature .cell{min-height:70px}.small{font-size:10pt}.actions{margin:16px 0}.actions button{padding:10px 18px;border:1px solid #555;border-radius:6px;cursor:pointer}@media print{.sheet{margin:0;max-width:none}.actions{display:none}body{-webkit-print-color-adjust:exact;print-color-adjust:exact}}
+  </style></head><body><main class="sheet"><h1>DOVOLENKA</h1><div class="form">
+  <div class="line top blue"><div class="cell"><label>Příjmení, jméno, titul</label><div class="value">${escape(applicant)}</div></div><div class="cell"><label>Osobní číslo</label></div><div class="cell"><label>Útvar</label></div></div>
+  <div class="section">Čerpání dovolené</div>
+  <div class="line period">za kalendářní rok <span class="blank">${escape(r.starts_on?.slice(0,4))}</span> a to od <span class="blank">${escape(date(r.starts_on))}</span> do <span class="blank">${escape(date(r.ends_on))}</span> včetně, tj. <span class="blank">&nbsp;</span> hodin z prac. doby</div>
+  <div class="line statement">Zaměstnanec se zaměstnavatelem se dohodli – <strong>nedohodli</strong>, že z technických důvodů výplata mzdy nebo platu splatná během dovolené nebude vyplacena před nástupem dovolené, ale bude poukázána v nejbližším pravidelném termínu výplaty mzdy nebo platu na účet zaměstnance nebo poukázána na jeho adresu.</div>
+  <div class="line double signature"><div class="cell"><label>Datum</label></div><div class="cell"><label>Podpis zaměstnavatele</label></div></div>
+  <div class="line double signature"><div class="cell"><label>Datum</label></div><div class="cell"><label>Podpis zaměstnance</label></div></div>
+  <div class="line triple blue"><div class="cell"><label>Skutečný nástup dovolené</label></div><div class="cell"><label>Z této dovolené skutečně čerpáno hodin z pracovní doby</label></div><div class="cell"><label>Nástup do zaměstnání po dovolené</label></div></div>
+  <div class="line double signature"><div class="cell"><label>Podpis vedoucího</label></div><div class="cell"><label>Za personální útvar</label></div></div>
+  </div><div class="actions"><button onclick="window.print()">Tisk / Uložit jako PDF</button></div></main></body></html>`;
   const win=window.open("","_blank");
   if(!win){setError("Prohlížeč zablokoval nové okno. Povolte vyskakovací okna pro iSYS.");return}
   win.document.open();win.document.write(html);win.document.close();win.focus();
