@@ -32,7 +32,7 @@ begin
  insert into public.notifications(user_id,title,body,module)
  select u.id,'Nová zpětná vazba: '||left(btrim(p_subject),95),
  left(coalesce(v_author,'Uživatel')||': '||btrim(p_message),1900),'Zpětná vazba'
- from auth.users u where 'admin'=any(public.isys_roles_for_user(u.id));
+ from public.user_roles r join auth.users u on u.id=r.user_id where r.role='admin';
  return v_id;
 end $feedback_submit$;
 revoke all on function public.isys_submit_feedback(text,text) from public,anon;
