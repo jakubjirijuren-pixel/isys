@@ -1,5 +1,6 @@
 import React,{useEffect,useMemo,useState} from "react";
 import "./attendance.css";
+import {attendanceIntervals,sumIntervals} from "./attendance-calculation.js";
 import {AttendanceKiosk,AttendanceCardWriter} from "./AttendanceNfc.jsx";
 import AttendancePayroll from "./AttendancePayroll.jsx";
 import AttendanceAdminEntry from "./AttendanceAdminEntry.jsx";
@@ -9,13 +10,8 @@ const sourceLabels={web:"Web / aplikace iSYS",nfc:"NFC terminál",admin:"Adminis
 const fmt=v=>new Date(v).toLocaleString("cs-CZ",{dateStyle:"medium",timeStyle:"short"});
 const localDay=v=>new Date(v).toLocaleDateString("sv-SE");
 function duration(rows){
- let total=0,start=null;
- for(const row of [...rows].sort((a,b)=>new Date(a.occurred_at)-new Date(b.occurred_at))){
-  const t=new Date(row.occurred_at).getTime();
-  if(["in","break_end","trip_start","homeoffice_start"].includes(row.event_type))start=t;
-  if(["break_start","out","trip_end","homeoffice_end"].includes(row.event_type)&&start!==null){total+=Math.max(0,t-start);start=null}
- }
- if(start!==null)total+=Math.max(0,Date.now()-start);
+ const {intervals}=attendanceIntervals(rows,{includeOpen:true});
+ const total=sumIntervals(intervals).worked;
  return (total/3600000).toLocaleString("cs-CZ",{minimumFractionDigits:2,maximumFractionDigits:2})+" h";
 }
 export default function Attendance({supabase,userId,isAdmin=false}){
