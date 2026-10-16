@@ -62,3 +62,13 @@
  .technicalmodule > header.technicalhead > div:first-child{flex-basis:100%}
  .technicalmodule > header.technicalhead .technicalbuttons{width:100%;flex:1 1 100%}
 }
+
+/* Match the existing 24-hour PDF archive from regular inspections. */
+.technicalmodule .temporaryreportrow{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:12px 0;border-bottom:1px solid var(--border,#d8e0e7)}
+.technicalmodule .temporaryreportrow>div{min-width:0;flex:1}
+.technicalmodule .temporaryreportrow strong{display:block;overflow-wrap:anywhere}
+.technicalmodule .temporaryreportrow small{display:block;margin-top:4px;opacity:.75;overflow-wrap:anywhere}
+.technicalmodule .technicalreportrefresh,.technicalmodule .technicalreportdownload{padding:10px 14px;min-height:44px;border-radius:9px;border:1px solid #9ba8b5;background:transparent;color:inherit;font:inherit;font-weight:600;cursor:pointer}
+.technicalmodule .technicalreportrefresh:disabled,.technicalmodule .technicalreportdownload:disabled{opacity:.55;cursor:wait}
+[data-theme="dark"] .technicalmodule .technicalreportrefresh,[data-theme="dark"] .technicalmodule .technicalreportdownload{border-color:#36546a;color:#e3edf6}
+@media(max-width:650px){.technicalmodule .temporaryreportrow{align-items:stretch;flex-direction:column}.technicalmodule .technicalreportdownload{align-self:flex-start}}
