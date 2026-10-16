@@ -1,12 +1,12 @@
 -- Global iSYS module maintenance switches. Run in Supabase SQL Editor.
 create table if not exists public.isys_module_availability (
- module text primary key check (module in ('Přehled','Objekty','Kontroly','Evidence klíčů','Úkoly','Wiki')),
+ module text primary key check (module in ('Přehled','Objekty','Kontroly','Evidence klíčů','Docházka','Úkoly','Wiki')),
  enabled boolean not null default true,
  updated_at timestamptz not null default now(),
  updated_by uuid references auth.users(id)
 );
-insert into public.isys_module_availability(module,enabled)
-values ('Přehled',true),('Objekty',true),('Kontroly',true),('Evidence klíčů',true),('Úkoly',true),('Wiki',true)
+-- Existing deployments need the expanded constraint too.\nalter table public.isys_module_availability drop constraint if exists isys_module_availability_module_check;\nalter table public.isys_module_availability add constraint isys_module_availability_module_check check (module in ('Přehled','Objekty','Kontroly','Evidence klíčů','Docházka','Úkoly','Wiki'));\ninsert into public.isys_module_availability(module,enabled)
+values ('Přehled',true),('Objekty',true),('Kontroly',true),('Evidence klíčů',true),('Docházka',true),('Úkoly',true),('Wiki',true)
 on conflict (module) do nothing;
 alter table public.isys_module_availability enable row level security;
 revoke all on public.isys_module_availability from anon,authenticated;
