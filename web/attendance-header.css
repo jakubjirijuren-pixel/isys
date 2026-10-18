@@ -91,3 +91,9 @@
  .layout .body .foxa-mobile-dashboard-attendance .attendance-header-time strong{font-size:13px}
  .layout .body .foxa-mobile-dashboard-attendance .attendance-action-emoji{font-size:21px}
 }
+
+/* Comfortable separation between welcome banner and attendance on phones. */
+@media(max-width:800px){
+ .layout .body .hero:has(+ .foxa-mobile-dashboard-attendance){margin-bottom:18px!important}
+ .layout .body .foxa-mobile-dashboard-attendance{margin-top:0;margin-bottom:20px}
+}
