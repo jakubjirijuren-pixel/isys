@@ -1,114 +1,56 @@
-.attendance-header{display:flex;align-items:center;gap:6px;flex-wrap:wrap;min-width:0}.attendance-header-time{display:flex;align-items:center;gap:8px;border:1px solid var(--border,#c7d6df);border-radius:11px;background:var(--card-bg,#fff);color:inherit;padding:5px 10px;min-height:40px;cursor:pointer}.attendance-header-time>span:last-child{display:grid;gap:1px;text-align:left;white-space:nowrap}.attendance-header-time strong{font-size:14px;font-variant-numeric:tabular-nums}.attendance-header-time small{font-size:10px;opacity:.75}.attendance-header-clock{font-size:24px}.attendance-header-action{min-height:38px;border-radius:9px;padding:6px 10px;border:1px solid var(--border,#b6c9d7);background:var(--card-bg,#fff);color:inherit;font-weight:600;cursor:pointer;font-size:12px}.attendance-header-start{background:#e0f4e7;color:#185e37;border-color:#a9d8b7}.attendance-header-action:disabled{opacity:.55;cursor:wait}.attendance-header-error{color:#b63c43;font-size:11px;max-width:170px}@media(max-width:850px){.attendance-header{gap:4px}.attendance-header-time{padding:4px 6px}.attendance-header-action{padding:5px 7px}.attendance-header-clock{display:none}}@media(max-width:480px){.attendance-header{width:100%;order:2}.attendance-header-time{flex:1;justify-content:center}.attendance-header-action{flex:1}}
-
-
-[data-theme="dark"] .attendance-header-time,[data-theme="dark"] .attendance-header-action{background:#1a3043;color:#e3edf6;border-color:#36516a}
-[data-theme="dark"] .attendance-header-time:hover,[data-theme="dark"] .attendance-header-action:hover{background:#264760}
-[data-theme="dark"] .attendance-header-start{background:#184a39;color:#baf4d0;border-color:#357b5e}
-[data-theme="dark"] .attendance-header-time small{color:#b7ccdd;opacity:1}
-[data-theme="dark"] .attendance-header-error{color:#ffb7bb}
-[data-theme="dark"] .attendance-header button:focus-visible{outline:2px solid #72b9ef;outline-offset:2px}
-
-
-/* Compact attendance controls in the global header.
-   On phones the time is a full-width status row and actions get their own row. */
-@media(max-width:700px){
- .attendance-header{
-  display:grid!important;
-  grid-template-columns:repeat(2,minmax(0,1fr));
-  gap:8px;width:100%;min-width:0;max-width:100%;
-  flex:0 0 100%;order:2;
- }
- .attendance-header-time{
-  grid-column:1/-1;display:flex;align-items:center;justify-content:flex-start;
-  gap:11px;min-width:0;width:100%;min-height:54px;
-  padding:9px 13px;border-radius:13px;box-sizing:border-box;
- }
- .attendance-header-clock{display:inline-flex;font-size:27px;line-height:1;flex:0 0 auto}
- .attendance-header-time>span:last-child{display:flex;flex-direction:column;align-items:flex-start;gap:2px;min-width:0;white-space:normal}
- .attendance-header-time strong{font-size:clamp(16px,4.8vw,21px);line-height:1.15;white-space:nowrap}
- .attendance-header-time small{font-size:12px;line-height:1.25;white-space:normal}
- .attendance-header-action{
-  min-width:0;width:100%;min-height:49px;padding:9px 10px;
-  font-size:14px;line-height:1.25;border-radius:12px;
-  white-space:normal;overflow-wrap:anywhere;box-sizing:border-box;
- }
- .attendance-header-action:only-of-type{grid-column:1/-1}
- .attendance-header-error{grid-column:1/-1;max-width:100%;overflow-wrap:anywhere}
-}
-@media(max-width:380px){
- .attendance-header{gap:7px}
- .attendance-header-action{font-size:13px;padding:9px 7px}
-}
-
-
-/* Header has a separate .userbar flex parent; make it wrap so the quick
-   attendance grid can actually occupy a full mobile row. */
+/* FOXA quick attendance — one compact, coherent control on every device. */
+.attendance-header{display:flex;align-items:center;gap:7px;flex-wrap:wrap;min-width:0}
+.attendance-header-time{display:flex;align-items:center;gap:9px;min-height:43px;padding:6px 12px;border:1px solid var(--fx-border,var(--border,#c7d6df));border-radius:12px;background:var(--fx-surface,var(--card-bg,#fff));color:var(--fx-text,inherit);cursor:pointer;min-width:0}
+.attendance-header-time>span:last-child{display:flex;flex-direction:column;align-items:flex-start;gap:1px;min-width:0}
+.attendance-header-time strong{font-size:15px;line-height:1.1;font-weight:750;font-variant-numeric:tabular-nums;white-space:nowrap}
+.attendance-header-time small{font-size:11px;color:var(--fx-muted,#637b8e);line-height:1.25;white-space:nowrap}
+.attendance-header-clock{font-size:25px;line-height:1;flex:none}
+.attendance-header-action{display:inline-flex;align-items:center;justify-content:center;gap:7px;min-height:43px;padding:8px 12px;border:1px solid var(--fx-border,var(--border,#c7d6df));border-radius:12px;background:var(--fx-surface,var(--card-bg,#fff));color:var(--fx-text,inherit);font-size:13px;font-weight:700;line-height:1.2;cursor:pointer;transition:background-color .15s,border-color .15s;white-space:nowrap}
+.attendance-header-action:hover,.attendance-header-time:hover{background:var(--fx-surface-soft,#edf4f8)}
+.attendance-header-start{border-color:var(--isys-accent,#2b91be)}
+.attendance-action-emoji{display:none}
+.attendance-header-action:disabled{opacity:.6;cursor:wait}
+.attendance-header-error{flex-basis:100%;color:#b63c43;font-size:12px;line-height:1.45;overflow-wrap:anywhere}
+.attendance-header button:focus-visible{outline:2px solid var(--isys-accent,#2b91be);outline-offset:2px}
+:root[data-theme="dark"] .attendance-header-error{color:#ffb7bb}
+/* A single low-height status/action strip rather than stacked oversized boxes. */
 @media(max-width:800px){
- .layout header .userbar{
-  display:flex;flex-wrap:wrap;align-items:center;justify-content:flex-end;
-  width:100%;min-width:0;max-width:100%;gap:8px;
- }
+ .layout header .userbar{display:flex;flex-wrap:wrap;align-items:center;justify-content:flex-end;width:100%;min-width:0;max-width:100%;gap:8px}
  .layout header .userbar .attendance-header{
-  order:10;flex:0 0 100%;width:100%;max-width:100%;min-width:0;
-  display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;
-  gap:8px!important;margin:0;
+  order:10;flex:0 0 100%;display:grid;grid-template-columns:minmax(0,1.35fr) repeat(2,minmax(0,1fr));
+  align-items:stretch;gap:7px;width:100%;min-width:0;max-width:100%;
+  padding:7px;border:1px solid var(--fx-border,#35536a);
+  border-radius:16px;background:var(--fx-surface,#17293a);box-sizing:border-box;
  }
  .layout header .userbar .attendance-header-time{
-  grid-column:1/-1!important;min-width:0;min-height:52px;
-  justify-content:flex-start!important;flex:initial!important;
+  grid-column:auto;min-width:0;min-height:57px;width:100%;padding:7px 8px;
+  border:0;border-radius:10px;background:var(--fx-surface-soft,#1e3447);
+  justify-content:flex-start;gap:7px;box-sizing:border-box;
  }
+ .layout header .userbar .attendance-header-clock{font-size:20px;display:inline-flex}
+ .layout header .userbar .attendance-header-time strong{font-size:clamp(13px,3.8vw,17px);white-space:nowrap}
+ .layout header .userbar .attendance-header-time small{font-size:10px;max-width:100%;white-space:normal;line-height:1.2}
  .layout header .userbar .attendance-header-action{
-  min-width:0;min-height:48px;flex:initial!important;width:100%;
-  font-size:14px;white-space:normal;
+  grid-column:auto;min-width:0;width:100%;min-height:57px;padding:6px 3px;
+  border:1px solid var(--fx-border,#35536a);border-radius:10px;
+  background:var(--fx-surface-soft,#1e3447);color:var(--fx-text,#e8f1f8);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;
+  font-size:11px;line-height:1.1;white-space:normal;text-align:center;
  }
- .layout header .userbar .attendance-header-action:nth-child(2):last-of-type{grid-column:1/-1}
- .layout header .userbar .attendance-header-error{
-  grid-column:1/-1;display:block;width:100%;max-width:none;
-  padding:8px 10px;border-radius:9px;
-  background:color-mix(in srgb,#b63c43 12%,transparent);
-  font-size:12px;line-height:1.4;
- }
+ .layout header .userbar .attendance-header-action:nth-child(2):last-of-type{grid-column:2/-1}
+ .layout header .userbar .attendance-action-emoji{display:block;font-size:23px;line-height:1.1;font-weight:400}
+ .layout header .userbar .attendance-action-label{display:block;max-width:100%;font-size:10px;line-height:1.2;overflow-wrap:anywhere}
+ .layout header .userbar .attendance-header-action[data-action="out"]{border-color:color-mix(in srgb,var(--fx-border,#35536a) 80%,#e1a2a2)}
+ .layout header .userbar .attendance-header-action[data-action="in"]{border-color:var(--isys-accent,#2b91be)}
+ .layout header .userbar .attendance-header-error{grid-column:1/-1;max-width:100%;margin:0;padding:6px 9px;border-radius:8px;background:color-mix(in srgb,#b63c43 10%,transparent)}
 }
-
-@media(max-width:700px){.attendance-header-action-label{display:none}.attendance-header-action-icon{display:inline-flex;font-size:25px;align-items:center;justify-content:center}.attendance-header-action{display:flex;align-items:center;justify-content:center}}
-@media(min-width:701px){.attendance-header-action-icon{display:none}}
-
-/* On narrow screens replace visible action words with familiar symbols.
-   The original button text remains in the DOM for accessibility. */
-@media(max-width:700px){
- .layout header .attendance-header .attendance-header-action{
-  font-size:0!important;position:relative;
- }
- .layout header .attendance-header .attendance-header-action::before{
-  content:"●";font-size:26px;font-weight:700;line-height:1;
- }
- .layout header .attendance-header .attendance-header-action:nth-child(2)::before{content:"Ⅱ"}
- .layout header .attendance-header .attendance-header-action:nth-child(3)::before{content:"↩"}
- .layout header .attendance-header .attendance-header-start:nth-child(2)::before{content:"↪"}
- .layout header .attendance-header .attendance-header-action:disabled::before{opacity:.6}
+@media(max-width:390px){
+ .layout header .userbar .attendance-header{grid-template-columns:minmax(0,1.25fr) repeat(2,minmax(0,1fr));gap:5px;padding:5px}
+ .layout header .userbar .attendance-header-time{padding:5px;gap:5px}
+ .layout header .userbar .attendance-header-clock{font-size:18px}
+ .layout header .userbar .attendance-header-time strong{font-size:13px}
+ .layout header .userbar .attendance-header-time small{font-size:9px}
+ .layout header .userbar .attendance-header-action{padding:5px 2px}
+ .layout header .userbar .attendance-action-emoji{font-size:21px}
 }
-
-
-/* Phone quick attendance: emoji communicate the actual action rather than
-   relying on button position. Keep the text in the accessible button name. */
-@media(max-width:700px){
- .layout header .attendance-header .attendance-header-action::before{
-  content:"📍";font-size:27px;font-weight:400;line-height:1.25;
- }
- .layout header .attendance-header .attendance-header-action[data-action="in"]::before{content:"🟢"}
- .layout header .attendance-header .attendance-header-action[data-action="out"]::before{content:"🚪"}
- .layout header .attendance-header .attendance-header-action[data-action="break_start"]::before{content:"🍗"}
- .layout header .attendance-header .attendance-header-action[data-action="break_end"]::before{content:"▶️"}
- .layout header .attendance-header .attendance-header-action[data-action="trip_start"]::before{content:"🚗"}
- .layout header .attendance-header .attendance-header-action[data-action="trip_end"]::before{content:"🏁"}
- .layout header .attendance-header .attendance-header-action[data-action="doctor_start"]::before{content:"🩺"}
- .layout header .attendance-header .attendance-header-action[data-action="doctor_end"]::before{content:"✅"}
- .layout header .attendance-header .attendance-header-action[data-action="homeoffice_start"]::before{content:"🏠"}
- .layout header .attendance-header .attendance-header-action[data-action="homeoffice_end"]::before{content:"🏢"}
- .layout header .attendance-header .attendance-header-action{
-  min-height:52px!important;cursor:pointer;
- }
- .layout header .attendance-header .attendance-header-action:focus-visible{
-  outline:2px solid var(--isys-accent);outline-offset:3px;
- }
-}
+@media(prefers-reduced-motion:reduce){.attendance-header-action{transition:none}}
