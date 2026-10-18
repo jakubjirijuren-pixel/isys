@@ -25,3 +25,15 @@
 .pf-preview-paper .pf-signature{position:relative;padding-top:14mm}
 .pf-preview-paper .pf-stamp-image{position:absolute;width:48mm;max-height:21mm;object-fit:contain;top:-7mm;left:4mm;opacity:.9}
 .pf-preview-paper .pf-signature-image{position:relative;z-index:1}
+
+
+/* Shared FOXA-style searchable building selector. */
+.pf-editor .pf-building-search{position:relative;display:flex;flex-direction:column;gap:6px}
+.pf-editor .pf-building-options{position:absolute;z-index:100;left:0;right:0;top:100%;max-height:260px;overflow:auto;border:1px solid var(--border,#b9cbd9);border-radius:12px;background:var(--card-bg,#fff);box-shadow:0 12px 28px #091c2d25;padding:5px}
+.pf-editor .pf-building-options button{width:100%;display:flex;align-items:center;gap:10px;text-align:left;background:transparent;color:inherit;border:0;border-radius:8px;padding:10px 12px;cursor:pointer;font:inherit}
+.pf-editor .pf-building-options button:hover,.pf-editor .pf-building-options button:focus-visible{background:var(--hover-bg,#eaf3fb)}
+.pf-editor .pf-building-options button strong{white-space:nowrap;font-size:12px}
+.pf-editor .pf-building-options button span{font-size:12px;opacity:.8}
+.pf-editor .pf-building-empty{padding:12px;font-size:12px;opacity:.7}
+[data-theme="dark"] .pf-editor .pf-building-options{background:#192f43;border-color:#3b5970;color:#e6f1fb}
+[data-theme="dark"] .pf-editor .pf-building-options button:hover{background:#28475f}

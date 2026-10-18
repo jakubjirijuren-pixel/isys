@@ -1,4 +1,4 @@
-import React,{useState} from "react";
+import React,{useEffect,useMemo,useState} from "react";
 import {SBD_LOGO} from "./SbdProtocolLogo.js";
 import {stampImage} from "./SbdProtocolStamp.js";
 import "./PrintForms.css";
@@ -14,14 +14,20 @@ const esc=v=>String(v??"").replace(/[&<>"']/g,ch=>({"&":"&amp;","<":"&lt;",">":"
 const multiline=v=>esc(v).replace(/\r?\n/g,"<br>");
 const dateCZ=v=>v?new Date(v+"T12:00:00").toLocaleDateString("cs-CZ"):"";
 
-export default function PrintForms({buildings=[],currentAccountName="",reportSignature={}}){
+export default function PrintForms({buildings=[],currentAccountName="",reportSignature={},userEmail="",userPhone="",supabase,userId}){
  const [template,setTemplate]=useState("letter");
- const [fields,setFields]=useState({recipient:"",recipientAddress:"",subject:"",greeting:"Vážení,",body:"",closing:"S pozdravem",city:"Praha",date:today(),reference:"",incomingReference:"",email:"",phone:"",contact:currentAccountName,position:"Technik",footer:"Stavební bytové družstvo Praha 8"});
+ const [fields,setFields]=useState({recipient:"",recipientAddress:"",subject:"",greeting:"Vážení,",body:"",closing:"S pozdravem",city:"Praha",date:today(),reference:"",incomingReference:"",email:"",phone:"",contact:currentAccountName,position:"Technik"});
+ const [buildingQuery,setBuildingQuery]=useState("");
+ const [buildingOpen,setBuildingOpen]=useState(false);
  const [selectedBuilding,setSelectedBuilding]=useState("");
+ const [profilePhone,setProfilePhone]=useState(userPhone);
+ useEffect(()=>{setFields(prev=>({...prev,contact:reportSignature?.name?.trim()||currentAccountName||prev.contact,email:userEmail||prev.email,phone:userPhone||prev.phone}))},[currentAccountName,reportSignature?.name,userEmail,userPhone]);
+ useEffect(()=>{if(!supabase||!userId)return;let active=true;supabase.from("profiles").select("*").eq("id",userId).maybeSingle().then(({data,error})=>{if(!active||error||!data)return;const phone=data.phone||data.phone_number||data.telefon||"";const email=data.email||userEmail;const name=data.display_name||data.full_name||data.name||"";setProfilePhone(phone||userPhone);setFields(prev=>({...prev,phone:phone||prev.phone,email:email||prev.email,contact:reportSignature?.name?.trim()||name||prev.contact}))});return()=>{active=false}},[supabase,userId,userEmail,userPhone,reportSignature?.name]);
+ const buildingOptions=useMemo(()=>buildings.filter(b=>[b.object_number,b.name,b.address,b.street,b.city].some(v=>String(v||"").toLocaleLowerCase("cs").includes(buildingQuery.toLocaleLowerCase("cs")))).sort((a,b)=>String(a.object_number||"").localeCompare(String(b.object_number||""),"cs",{numeric:true})).slice(0,35),[buildings,buildingQuery]);
  const [error,setError]=useState("");
  const set=(key,value)=>setFields(prev=>({...prev,[key]:value}));
  const chooseTemplate=id=>{setTemplate(id);const t=templates[id];setFields(prev=>({...prev,subject:t.subject,greeting:t.greeting,body:t.body,closing:t.closing}))};
- const selectBuilding=id=>{setSelectedBuilding(id);const b=buildings.find(x=>String(x.id)===id);if(b)setFields(prev=>({...prev,recipient:b.legal_entity||b.name||"",recipientAddress:b.address||[b.street,b.city].filter(Boolean).join(", ")}))};
+ const selectBuilding=id=>{setSelectedBuilding(id);setBuildingOpen(false);const b=buildings.find(x=>String(x.id)===id);if(b){setBuildingQuery([b.object_number,b.name||b.address].filter(Boolean).join(" – "));setFields(prev=>({...prev,recipient:b.legal_entity||b.name||"",recipientAddress:b.address||[b.street,b.city].filter(Boolean).join(", ")}))}else setBuildingQuery("")};
  const signatureImage=typeof reportSignature?.image==="string"&&reportSignature.image.startsWith("data:image/")?reportSignature.image:"";
  const documentHTML=()=>`<div class="pf-paper"><header class="pf-letterhead sbd-header"><div class="sbd-logo">${SBD_LOGO}</div><div class="sbd-info"><div class="sbd-name">Stavební bytové družstvo Praha 8</div><div>Horňátecká 1772/19, 182 00 Praha 8</div><div>IČO: 00034550, DIČ: CZ 00034550, Bankovní spojení: ČSOB a.s., č.ú. 746873/0300</div><div>Zapsané v Obchodním rejstříku vedeném Městským soudem v Praze v oddílu Dr XCVIII., vložka 254</div></div></header><div class="pf-top"><div class="pf-meta"><div>Váš dopis zn.: ${esc(fields.incomingReference)}</div><div>Naše značka: ${esc(fields.reference)}</div><div>Vyřizuje: ${esc(fields.contact)}</div><div>Email: ${esc(fields.email)}</div><div>Telefon: ${esc(fields.phone)}</div><div>${esc(fields.city)}, dne: ${dateCZ(fields.date)}</div></div><div class="pf-recipient"><strong>Adresa</strong><div>${multiline(fields.recipient)}${fields.recipient&&fields.recipientAddress?"<br>":""}${multiline(fields.recipientAddress)}</div></div></div>${fields.subject?`<h2 class="pf-subject">${multiline(fields.subject)}</h2>`:""}<main class="pf-letterbody">${fields.greeting?`<p>${multiline(fields.greeting)}</p>`:""}<div class="pf-bodytext">${multiline(fields.body)||'<span class="pf-placeholder">Zde bude text tiskopisu…</span>'}</div>${fields.closing?`<p>${multiline(fields.closing)}</p>`:""}<div class="pf-signature"><img class="pf-stamp-image" src="${stampImage}" alt="Razítko SBD Praha 8">${signatureImage?`<img class="pf-signature-image" src="${esc(signatureImage)}" alt="Podpis uživatele">`:""}<span class="pf-signature-line">................................................</span><strong>${multiline(fields.contact)}</strong>${fields.position?`<small>${multiline(fields.position)}</small>`:""}</div></main><footer class="pf-footer"><strong>Stavební bytové družstvo Praha 8</strong><div><span>Tel.: 284 682 814, 284 682 046</span><span>E-mail: info@sbd8.cz</span><span>Web: www.sbd8.cz</span></div></footer></div>`;
  const print=()=>{
@@ -36,18 +42,17 @@ export default function PrintForms({buildings=[],currentAccountName="",reportSig
  return <div className="printforms"><div className="pageheading"><div><h1>Generátor tiskopisů</h1><p>Vytvořte dopis nebo oznámení na hlavičkovém papíře SBD Praha 8 a vytiskněte jej nebo uložte jako PDF.</p></div></div>
   <div className="pf-workspace"><section className="pf-editor"><h2>Nastavení dokumentu</h2>
    <label>Typ tiskopisu<select value={template} onChange={e=>chooseTemplate(e.target.value)}>{Object.entries(templates).map(([id,t])=><option key={id} value={id}>{t.title}</option>)}</select></label>
-   <label>Vyplnit příjemce z objektu<select value={selectedBuilding} onChange={e=>selectBuilding(e.target.value)}><option value="">Bez výběru objektu</option>{[...buildings].sort((a,b)=>String(a.object_number||"").localeCompare(String(b.object_number||""),"cs",{numeric:true})).map(b=><option key={b.id} value={b.id}>{b.object_number?"Objekt "+b.object_number+" – ":""}{b.name||b.address}</option>)}</select></label>
+   <label className="pf-building-search">Vyplnit příjemce z objektu<input value={buildingQuery} onChange={e=>{setBuildingQuery(e.target.value);setBuildingOpen(true);setSelectedBuilding("")}} onFocus={()=>setBuildingOpen(true)} onBlur={()=>window.setTimeout(()=>setBuildingOpen(false),160)} placeholder="Začněte psát číslo objektu nebo adresu…" autoComplete="off" role="combobox" aria-expanded={buildingOpen} aria-autocomplete="list"/>{buildingOpen&&<div className="pf-building-options" role="listbox">{buildingOptions.length?buildingOptions.map(b=><button type="button" role="option" aria-selected={String(selectedBuilding)===String(b.id)} key={b.id} onMouseDown={e=>e.preventDefault()} onClick={()=>selectBuilding(String(b.id))}><strong>{b.object_number?"Objekt "+b.object_number:"Objekt"}</strong><span>{b.name||b.address}</span></button>):<div className="pf-building-empty">Žádný odpovídající objekt</div>}</div>}</label>
    <div className="pf-two"><label>Příjemce<input value={fields.recipient} onChange={e=>set("recipient",e.target.value)} placeholder="Jméno / SVJ / společnost"/></label><label>Adresa příjemce<textarea rows={2} value={fields.recipientAddress} onChange={e=>set("recipientAddress",e.target.value)} placeholder="Ulice, číslo, PSČ, město"/></label></div>
    <div className="pf-two"><label>Místo vystavení<input value={fields.city} onChange={e=>set("city",e.target.value)}/></label><label>Datum<input type="date" value={fields.date} onChange={e=>set("date",e.target.value)}/></label></div>
    <label>Váš dopis zn.<input value={fields.incomingReference} onChange={e=>set("incomingReference",e.target.value)}/></label>
    <label>Naše značka / číslo jednací<input value={fields.reference} onChange={e=>set("reference",e.target.value)}/></label>
-   <div className="pf-two"><label>E-mail vyřizující osoby<input type="email" value={fields.email} onChange={e=>set("email",e.target.value)}/></label><label>Telefon vyřizující osoby<input value={fields.phone} onChange={e=>set("phone",e.target.value)}/></label></div>
+
    <label>Věc / nadpis<input value={fields.subject} onChange={e=>set("subject",e.target.value)}/></label>
    <label>Oslovení<input value={fields.greeting} onChange={e=>set("greeting",e.target.value)}/></label>
    <label>Text dokumentu<textarea rows={11} value={fields.body} onChange={e=>set("body",e.target.value)} placeholder="Napište obsah dopisu…"/></label>
    <label>Závěr<textarea rows={2} value={fields.closing} onChange={e=>set("closing",e.target.value)}/></label>
-   <div className="pf-two"><label>Podpisující osoba<input value={fields.contact} onChange={e=>set("contact",e.target.value)}/></label><label>Funkce<input value={fields.position} onChange={e=>set("position",e.target.value)}/></label></div>
-   <label>Patička dokumentu<input value={fields.footer} onChange={e=>set("footer",e.target.value)}/></label>
+
    {error&&<p className="error" role="alert">{error}</p>}
    <button type="button" className="primary" onClick={print}>Tisk / Uložit jako PDF</button>
    <small>PDF uložíte v tiskovém dialogu volbou „Uložit jako PDF“. Text se při úpravách nikam automaticky neukládá.</small>
