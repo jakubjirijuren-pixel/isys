@@ -66,7 +66,7 @@ export default function Keys({supabase,buildings,userId,isAdmin=false,initialFil
   const logoSrc="data:image/svg+xml;charset=utf-8,"+encodeURIComponent(SBD_LOGO);
   const handoverDate=new Date(loan.loaned_at).toLocaleDateString("cs-CZ");
   const signerName=loan.handover_signer_name||currentAccountName||reportSignature?.name||"";
-  const signatureSrc=/^data:image\/(png|jpeg|webp);base64,/.test(reportSignature?.image||"")?reportSignature.image:"";
+  const signatureSrc=(!loan.handover_signer_name||loan.handover_signer_name===currentAccountName)&&/^data:image\/(png|jpeg|webp);base64,/.test(reportSignature?.image||"")?reportSignature.image:"";
   const body=`<article class="document"><div class="letterhead"><img src="${logoSrc}" alt="SBD Praha 8"/><div><strong>Stavební bytové družstvo Praha 8</strong><p>Horňátecká 1772/19, 182 00 Praha 8</p><p>IČO: 00034550 · DIČ: CZ00034550</p><p>ČSOB a.s., č. ú. 746873/0300</p><small>OR Městský soud v Praze, oddíl Dr XCVIII, vložka 254</small></div></div>
 <h1>PŘEDÁVACÍ PROTOKOL K ZAPŮJČENÍ KLÍČŮ</h1><div class="object">${esc(objectLabel)}</div>
 <p>Dnešního dne byly panu/paní: <strong>${esc(loan.borrower_name)}</strong></p><p>Firma*: <strong>${esc(loan.borrower_company||"....................................................................................")}</strong></p><p>Telefonní číslo*: <strong>${esc(loan.borrower_phone||"")}</strong></p><p>E-mail: <strong>${esc(loan.borrower_email||"....................................................................................")}</strong></p>
