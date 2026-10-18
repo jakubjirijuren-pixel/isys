@@ -29,6 +29,26 @@ export default function PrintForms({buildings=[],currentAccountName="",reportSig
  useEffect(()=>{if(!supabase||!userId)return;let active=true;supabase.from("profiles").select("*").eq("id",userId).maybeSingle().then(({data,error})=>{if(!active||error||!data)return;const phone=data.phone||data.phone_number||data.telefon||"";const email=data.email||userEmail;const name=data.display_name||data.full_name||data.name||"";setProfilePhone(phone||userPhone);setFields(prev=>({...prev,phone:phone||prev.phone,email:email||prev.email,contact:reportSignature?.name?.trim()||name||prev.contact}))});return()=>{active=false}},[supabase,userId,userEmail,userPhone,reportSignature?.name]);
  const buildingOptions=useMemo(()=>buildings.filter(b=>[b.object_number,b.name,b.address,b.street,b.city].some(v=>String(v||"").toLocaleLowerCase("cs").includes(buildingQuery.toLocaleLowerCase("cs")))).sort((a,b)=>String(a.object_number||"").localeCompare(String(b.object_number||""),"cs",{numeric:true})).slice(0,35),[buildings,buildingQuery]);
  const [error,setError]=useState("");
+ const [mailEnabled,setMailEnabled]=useState(false);
+ const [mailMethod,setMailMethod]=useState("Pošta");
+ const [mailSentOn,setMailSentOn]=useState(today());
+ const [mailTracking,setMailTracking]=useState("");
+ const [mailNotes,setMailNotes]=useState("");
+ const [mailSaving,setMailSaving]=useState(false);
+ const [mailSuccess,setMailSuccess]=useState("");
+ const [mailSavedSnapshot,setMailSavedSnapshot]=useState("");
+ const mailSnapshot=JSON.stringify({recipient:fields.recipient,address:fields.recipientAddress,subject:fields.subject,reference:fields.reference,building_id:selectedBuilding,sent_on:mailSentOn,method:mailMethod,tracking_number:mailTracking,notes:mailNotes});
+ const saveToOutgoingMail=async()=>{
+  if(!supabase||!userId){setError("Pro zápis do knihy odchozí pošty je nutné přihlášení.");return}
+  if(!fields.recipient.trim()||!fields.subject.trim()||!mailSentOn){setError("Pro zápis vyplňte příjemce, věc dokumentu a datum odeslání.");return}
+  if(mailSavedSnapshot===mailSnapshot){setError("Tento záznam už byl uložen. Pro další zápis nejprve změňte údaje.");return}
+  setMailSaving(true);setError("");setMailSuccess("");
+  const payload={sent_on:mailSentOn,recipient:fields.recipient.trim(),address:fields.recipientAddress.trim(),subject:fields.subject.trim(),reference:fields.reference.trim(),method:mailMethod,tracking_number:mailTracking.trim(),notes:mailNotes.trim(),building_id:selectedBuilding||null,created_by:userId};
+  const {data,error:insertError}=await supabase.from("outgoing_mail").insert(payload).select("record_number").single();
+  if(insertError)setError("Zápis do knihy odchozí pošty se nezdařil: "+insertError.message);
+  else{setMailSavedSnapshot(mailSnapshot);setMailSuccess("Dokument byl zapsán do knihy odchozí pošty"+(data?.record_number?" pod číslem "+data.record_number:"")+". Zápis neznamená automatické odeslání zásilky.")}
+  setMailSaving(false);
+ };
  const set=(key,value)=>setFields(prev=>({...prev,[key]:value}));
  const chooseTemplate=id=>{setTemplate(id);const t=templates[id];setFields(prev=>({...prev,subject:t.subject,greeting:t.greeting,body:t.body,closing:t.closing}))};
  const selectBuilding=id=>{setSelectedBuilding(id);setBuildingOpen(false);const b=buildings.find(x=>String(x.id)===id);if(b){setBuildingQuery([b.object_number,b.name||b.address].filter(Boolean).join(" – "));setFields(prev=>({...prev,recipient:b.legal_entity||b.name||"",recipientAddress:b.address||[b.street,b.city].filter(Boolean).join(", ")}))}else setBuildingQuery("")};
@@ -58,6 +78,17 @@ export default function PrintForms({buildings=[],currentAccountName="",reportSig
    <label>Závěr<textarea rows={2} value={fields.closing} onChange={e=>set("closing",e.target.value)}/></label>
 
    <div className="pf-signer-settings"><label className="pf-signer-toggle"><input type="checkbox" checked={alternateSigner} onChange={e=>setAlternateSigner(e.target.checked)}/> Dokument podepisuje jiná osoba</label>{alternateSigner&&<div className="pf-two"><label>Jméno podepisující osoby<input value={signerName} onChange={e=>setSignerName(e.target.value)} placeholder="Jméno a příjmení"/></label><label>Funkce podepisující osoby<input value={signerPosition} onChange={e=>setSignerPosition(e.target.value)} placeholder="Např. předseda představenstva"/></label></div>}<small>{alternateSigner?"V dokumentu se zobrazí pouze řádek pro vlastnoruční podpis, bez automatického podpisu a razítka.":"Použije se podpis a razítko přihlášeného uživatele."}</small></div>
+   <div className="pf-outmail">
+    <label className="pf-outmail-toggle"><input type="checkbox" checked={mailEnabled} onChange={e=>{setMailEnabled(e.target.checked);setMailSuccess("");setError("")}}/> Zapsat dokument také do knihy odchozí pošty</label>
+    {mailEnabled&&<div className="pf-outmail-details">
+      <div className="pf-two"><label>Datum odeslání<input type="date" value={mailSentOn} onChange={e=>setMailSentOn(e.target.value)}/></label><label>Způsob odeslání<select value={mailMethod} onChange={e=>setMailMethod(e.target.value)}>{["Pošta","Doporučeně","Datová schránka","E-mail","Osobní předání","Jiné"].map(method=><option key={method} value={method}>{method}</option>)}</select></label></div>
+      <label>Podací číslo / ID zprávy (nepovinné)<input value={mailTracking} maxLength={150} onChange={e=>setMailTracking(e.target.value)}/></label>
+      <label>Poznámka (nepovinné)<textarea rows={2} value={mailNotes} maxLength={2000} onChange={e=>setMailNotes(e.target.value)}/></label>
+      <button type="button" className="secondarybutton" onClick={saveToOutgoingMail} disabled={mailSaving||mailSavedSnapshot===mailSnapshot}>{mailSaving?"Ukládám…":mailSavedSnapshot===mailSnapshot?"Zapsáno v knize odchozí pošty":"Uložit do knihy odchozí pošty"}</button>
+      <small>Příjemce, adresa, věc, naše značka a vybraný objekt se převezmou z tiskopisu. Zápis zásilku automaticky neodešle.</small>
+    </div>}
+   </div>
+   {mailSuccess&&mailSavedSnapshot===mailSnapshot&&<p className="pf-outmail-success" role="status">{mailSuccess}</p>}
    {error&&<p className="error" role="alert">{error}</p>}
    <button type="button" className="primary" onClick={print}>Tisk / Uložit jako PDF</button>
    <small>PDF uložíte v tiskovém dialogu volbou „Uložit jako PDF“. Text se při úpravách nikam automaticky neukládá.</small>
