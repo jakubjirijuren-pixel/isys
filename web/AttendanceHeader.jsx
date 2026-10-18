@@ -46,7 +46,7 @@ export default function AttendanceHeader({supabase,userId,onOpen}){
   <button type="button" className="attendance-header-time" onClick={onOpen} title="Otevřít docházku">
    <span className="attendance-header-clock">◷</span><span><strong>{ready?minutes(total):"—"}</strong><small>{ready?(labels[latest]||"Docházka")+" · dnes":"Docházka"}</small></span>
   </button>
-  {ready&&(choices[latest]||choices.out).map(([type,label])=><button type="button" className={"attendance-header-action "+(type==="in"?"attendance-header-start":"")} key={type} disabled={busy} onClick={()=>mark(type)}>{busy?"Ukládám…":label}</button>)}
+  {ready&&(choices[latest]||choices.out).map(([type,label])=><button type="button" className={"attendance-header-action "+(type==="in"?"attendance-header-start":"")} key={type} data-action={type} aria-label={label} title={label} disabled={busy} onClick={()=>mark(type)}>{busy?"Ukládám…":label}</button>)}
   {error&&<span className="attendance-header-error" role="alert" title={error}>{error}</span>}
  </div>;
 }
