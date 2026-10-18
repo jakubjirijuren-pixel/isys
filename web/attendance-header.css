@@ -7,3 +7,35 @@
 [data-theme="dark"] .attendance-header-time small{color:#b7ccdd;opacity:1}
 [data-theme="dark"] .attendance-header-error{color:#ffb7bb}
 [data-theme="dark"] .attendance-header button:focus-visible{outline:2px solid #72b9ef;outline-offset:2px}
+
+
+/* Compact attendance controls in the global header.
+   On phones the time is a full-width status row and actions get their own row. */
+@media(max-width:700px){
+ .attendance-header{
+  display:grid!important;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:8px;width:100%;min-width:0;max-width:100%;
+  flex:0 0 100%;order:2;
+ }
+ .attendance-header-time{
+  grid-column:1/-1;display:flex;align-items:center;justify-content:flex-start;
+  gap:11px;min-width:0;width:100%;min-height:54px;
+  padding:9px 13px;border-radius:13px;box-sizing:border-box;
+ }
+ .attendance-header-clock{display:inline-flex;font-size:27px;line-height:1;flex:0 0 auto}
+ .attendance-header-time>span:last-child{display:flex;flex-direction:column;align-items:flex-start;gap:2px;min-width:0;white-space:normal}
+ .attendance-header-time strong{font-size:clamp(16px,4.8vw,21px);line-height:1.15;white-space:nowrap}
+ .attendance-header-time small{font-size:12px;line-height:1.25;white-space:normal}
+ .attendance-header-action{
+  min-width:0;width:100%;min-height:49px;padding:9px 10px;
+  font-size:14px;line-height:1.25;border-radius:12px;
+  white-space:normal;overflow-wrap:anywhere;box-sizing:border-box;
+ }
+ .attendance-header-action:only-of-type{grid-column:1/-1}
+ .attendance-header-error{grid-column:1/-1;max-width:100%;overflow-wrap:anywhere}
+}
+@media(max-width:380px){
+ .attendance-header{gap:7px}
+ .attendance-header-action{font-size:13px;padding:9px 7px}
+}
