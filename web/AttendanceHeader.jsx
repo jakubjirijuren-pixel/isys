@@ -2,6 +2,7 @@ import React,{useCallback,useEffect,useMemo,useState} from "react";
 import "./attendance-header.css";
 import {attendanceIntervals,sumIntervals} from "./attendance-calculation.js";
 const choices={out:[["in","Příchod"],["trip_start","Služební cesta"],["doctor_start","Lékař"],["homeoffice_start","Home office"]],trip_end:[["in","Příchod"],["trip_start","Služební cesta"],["doctor_start","Lékař"],["homeoffice_start","Home office"]],doctor_end:[["in","Příchod"],["trip_start","Služební cesta"],["doctor_start","Lékař"],["homeoffice_start","Home office"]],homeoffice_end:[["in","Příchod"],["trip_start","Služební cesta"],["doctor_start","Lékař"],["homeoffice_start","Home office"]],trip_start:[["trip_end","Konec cesty"]],doctor_start:[["doctor_end","Konec lékaře"]],homeoffice_start:[["homeoffice_end","Konec home office"]],in:[["break_start","Přestávka"],["out","Odchod"]],break_start:[["break_end","Konec přestávky"]],break_end:[["break_start","Přestávka"],["out","Odchod"]]};
+const actionEmoji={in:"🟢",out:"🚪",break_start:"🍗",break_end:"▶️",trip_start:"🚗",trip_end:"🏁",doctor_start:"🩺",doctor_end:"✅",homeoffice_start:"🏠",homeoffice_end:"🏢"};
 const labels={trip_start:"Služební cesta",trip_end:"Mimo práci",doctor_start:"U lékaře",doctor_end:"Mimo práci",homeoffice_start:"Home office",homeoffice_end:"Mimo práci",in:"V práci",break_start:"Na přestávce",break_end:"V práci",out:"Mimo práci"};
 const localDate=date=>[date.getFullYear(),String(date.getMonth()+1).padStart(2,"0"),String(date.getDate()).padStart(2,"0")].join("-");
 const minutes=ms=>{const total=Math.max(0,Math.floor(ms/60000));return Math.floor(total/60)+" h "+String(total%60).padStart(2,"0")+" min"};
@@ -46,7 +47,7 @@ export default function AttendanceHeader({supabase,userId,onOpen}){
   <button type="button" className="attendance-header-time" onClick={onOpen} title="Otevřít docházku">
    <span className="attendance-header-clock">◷</span><span><strong>{ready?minutes(total):"—"}</strong><small>{ready?(labels[latest]||"Docházka")+" · dnes":"Docházka"}</small></span>
   </button>
-  {ready&&(choices[latest]||choices.out).map(([type,label])=><button type="button" className={"attendance-header-action "+(type==="in"?"attendance-header-start":"")} key={type} data-action={type} aria-label={label} title={label} disabled={busy} onClick={()=>mark(type)}>{busy?"Ukládám…":label}</button>)}
+  {ready&&(choices[latest]||choices.out).map(([type,label])=><button type="button" className={"attendance-header-action "+(type==="in"?"attendance-header-start":"")} key={type} data-action={type} aria-label={label} title={label} disabled={busy} onClick={()=>mark(type)}><span className="attendance-action-emoji" aria-hidden="true">{actionEmoji[type]||"📍"}</span><span className="attendance-action-label">{busy?"Ukládám…":label}</span></button>)}
   {error&&<span className="attendance-header-error" role="alert" title={error}>{error}</span>}
  </div>;
 }
