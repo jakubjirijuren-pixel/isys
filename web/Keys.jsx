@@ -43,7 +43,7 @@ export default function Keys({supabase,buildings,userId,isAdmin=false,initialFil
  const create=async event=>{
   event.preventDefault();if(busy)return;
   if(!form.building_id){setError("Vyber objekt.");return}
-  if(loanVariant==="handover"&&(!/^\\S+\\s+\\S+/.test(form.borrower.trim())||!/^\\+?[0-9][0-9 ()-]{7,19}$/.test(form.phone.trim()))){setError("Pro předávací protokol vyplňte jméno, příjmení a platné telefonní číslo.");return}
+  if(loanVariant==="handover"&&(!/^\S+\s+\S+/.test(form.borrower.trim())||!/^\+?[0-9][0-9 ()-]{7,19}$/.test(form.phone.trim()))){setError("Pro předávací protokol vyplňte jméno, příjmení a platné telefonní číslo.");return}
   setBusy(true);setError("");setNotice("");
   const payload={building_id:form.building_id,key_description:form.key_description.trim(),borrower_name:form.borrower.trim(),loaned_at:new Date(form.borrowed_at).toISOString(),notes:form.note.trim()||null,issued_by:userId,protocol_type:loanVariant,borrower_phone:loanVariant==="handover"?form.phone.trim():null};
   const {data:created,error:e}=await supabase.from("key_loans").insert(payload).select("*").single();
