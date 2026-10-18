@@ -1,0 +1,87 @@
+/* FOXA theme compatibility: one semantic palette for 2 modes x 6 accents.
+   Loaded last; affects app surfaces, not kiosk, signatures or printable PDFs. */
+:root{
+ color-scheme:light;
+ --fx-accent-contrast:#fff;
+ --fx-accent-link:var(--isys-accent-strong,#176d98);
+ --fx-accent-tint:var(--isys-accent-soft,#e6f1f7);
+ --fx-accent-tint-text:var(--isys-accent-strong,#176d98);
+ --fx-field-bg:#fff;--fx-field-text:#213b50;
+ --fx-placeholder:#667f92;--fx-divider:#dce6ed;
+}
+:root[data-theme="dark"]{
+ color-scheme:dark;
+ --fx-accent-tint:color-mix(in srgb,var(--isys-accent) 22%,#17293a);
+ --fx-accent-tint-text:#e9f4fa;
+ --fx-field-bg:#1e3447;--fx-field-text:#edf5fc;
+ --fx-placeholder:#b1c4d4;--fx-divider:#3a5469;
+ --isys-accent-soft:color-mix(in srgb,var(--isys-accent) 22%,#17293a);
+}
+:root[data-theme="dark"][data-accent="blue"]{--isys-accent:#63b5e1;--isys-accent-strong:#78c6ed;--isys-accent-hover:#84d0f2;--fx-accent-contrast:#092234}
+:root[data-theme="dark"][data-accent="green"]{--isys-accent:#65c89a;--isys-accent-strong:#85dfb0;--isys-accent-hover:#9ae8be;--fx-accent-contrast:#092c1c}
+:root[data-theme="dark"][data-accent="purple"]{--isys-accent:#ba9af1;--isys-accent-strong:#cdb2f7;--isys-accent-hover:#d8c1fc;--fx-accent-contrast:#2b1943}
+:root[data-theme="dark"][data-accent="orange"]{--isys-accent:#e8aa69;--isys-accent-strong:#f3bd85;--isys-accent-hover:#f6c998;--fx-accent-contrast:#3a210c}
+:root[data-theme="dark"][data-accent="red"]{--isys-accent:#f0959e;--isys-accent-strong:#f9b0b8;--isys-accent-hover:#ffc3c9;--fx-accent-contrast:#431b22}
+:root[data-theme="dark"][data-accent="teal"]{--isys-accent:#64cbc6;--isys-accent-strong:#85e0db;--isys-accent-hover:#a0ece7;--fx-accent-contrast:#073230}
+:root[data-theme="light"][data-accent="blue"]{--fx-accent-contrast:#fff}
+:root[data-theme="light"][data-accent="green"]{--fx-accent-contrast:#fff}
+:root[data-theme="light"][data-accent="purple"]{--fx-accent-contrast:#fff}
+:root[data-theme="light"][data-accent="orange"]{--fx-accent-contrast:#fff}
+:root[data-theme="light"][data-accent="red"]{--fx-accent-contrast:#fff}
+:root[data-theme="light"][data-accent="teal"]{--fx-accent-contrast:#fff}
+:root[data-theme="dark"] .layout{background:#0b1521;color:var(--fx-text)}
+:root[data-theme="dark"] .layout .body{background:#0b1521;color:var(--fx-text)}
+:root[data-theme="dark"] .layout :is(.content,aside){color:var(--fx-text)}
+:root[data-theme="dark"] .layout aside{background:var(--isys-sidebar,#10263b)}
+:root[data-theme="dark"] .layout .body :is(.inspectionheading,.technicalhead,.tasksheader,.pageheading,.wikihead,.inspectionpanel,.inspectionprogress,.technicalpanel,.keys-panel,.attendance-card,.vacation-panel,.taskform,.tasklist,.taskdetail,.taskstats>div,.tiles article){
+ background:var(--fx-surface);color:var(--fx-text);border-color:var(--fx-border);
+}
+:root[data-theme="dark"] .layout .body :is(.inspectionheading,.technicalhead,.tasksheader,.pageheading,.wikihead) :is(h1,h2,h3,p),
+:root[data-theme="dark"] .layout .body :is(.inspectionpanel,.technicalpanel,.keys-panel,.attendance-card,.vacation-panel,.taskform,.tasklist,.taskdetail,.wiki-panel) :is(h2,h3){
+ color:var(--fx-text);
+}
+:root[data-theme="dark"] .layout .body :is(.inspectionheading,.technicalhead,.tasksheader,.pageheading,.wikihead) p{color:var(--fx-muted)}
+.layout .body :is(.inspectionmodule,.technicalmodule,.keys-module,.tasks,.vacation,.attendance-module,.wiki,.adminusers) :is(input:not([type="checkbox"]):not([type="radio"]):not([type="file"]):not([type="color"]),select,textarea){
+ background:var(--fx-field-bg);color:var(--fx-field-text);border-color:var(--isys-control-border,var(--fx-border));
+}
+.layout .body :is(.inspectionmodule,.technicalmodule,.keys-module,.tasks,.vacation,.attendance-module,.wiki,.adminusers) :is(input,textarea)::placeholder{color:var(--fx-placeholder);opacity:1}
+.layout .body :is(.inspectionmodule,.technicalmodule,.keys-module,.tasks,.vacation,.attendance-module,.wiki,.adminusers) select option{background:var(--fx-field-bg);color:var(--fx-field-text)}
+.layout .body :is(.inspectionmodule,.technicalmodule,.keys-module,.tasks,.vacation,.attendance-module,.wiki,.adminusers) :is(input,select,textarea):disabled{opacity:.65;cursor:not-allowed}
+:root[data-theme="dark"] .layout .body :is(.keys-module,.tasks,.technicalmodule,.inspectionmodule,.vacation,.attendance-module,.wiki,.adminusers) :is(.secondarybutton,.logout){
+ background:var(--fx-surface-soft);border-color:var(--fx-border);color:var(--fx-text);
+}
+/* Accent follows the chosen theme throughout the main application. */
+.layout .body :is(.inspectionmodule,.technicalmodule,.keys-module,.tasks,.vacation,.attendance-module,.wiki,.adminusers) :is(button.primary,.primary,button[type="submit"]:not(.logout):not(.secondarybutton)),
+.layout .body :is(.technicalbuttons button:not(.technicalclear),.keys-loan-variants button.active,.inspection-role-switch button.active){
+ background:var(--isys-accent);border-color:var(--isys-accent);color:var(--fx-accent-contrast);
+}
+.layout .body :is(.inspectionmodule,.technicalmodule,.keys-module,.tasks,.vacation,.attendance-module,.wiki,.adminusers) :is(button.primary,.primary,button[type="submit"]:not(.logout):not(.secondarybutton)):not(:disabled):hover,
+.layout .body :is(.technicalbuttons button:not(.technicalclear),.keys-loan-variants button.active,.inspection-role-switch button.active):not(:disabled):hover{
+ background:var(--isys-accent-hover);border-color:var(--isys-accent-hover);color:var(--fx-accent-contrast);
+}
+.layout .body :is(.inspectionmodule,.technicalmodule,.keys-module,.tasks,.vacation,.attendance-module,.wiki,.adminusers) :is(a:not(.nav),.filtertrigger):focus-visible{
+ outline:2px solid var(--isys-accent);outline-offset:3px;
+}
+:root[data-theme="dark"] .layout .body :is(.inspectionmodule,.technicalmodule,.keys-module,.tasks,.vacation,.attendance-module,.wiki,.adminusers) :is(a:not(.nav)){color:var(--isys-accent-strong)}
+:root[data-theme="dark"] .layout .body :is(.vacation-balance .vacation-donut>div){background:#fff!important;color:#15293b!important}
+:root[data-theme="dark"] .layout .body :is(.vacation-balance .vacation-donut strong){color:#15293b!important}
+:root[data-theme="dark"] .layout .body :is(.vacation-balance .vacation-donut small){color:#42556b!important}
+:root[data-theme="dark"] .layout .body :is(.technicaltablewrap,.tablewrap,.table-wrap,.attendance-table-wrap){border-color:var(--fx-border)}
+:root[data-theme="dark"] .layout .body :is(.technicaltable,.attendance-table-wrap table,.buildingtable) :is(td,th){border-color:var(--fx-divider);color:var(--fx-text)}
+:root[data-theme="dark"] .layout .body :is(.keys-status,.taskstatus,.wikicount){color:var(--fx-text)}
+:root[data-theme="dark"] .layout .body :is(.taskstats span,.taskitem small,.taskhistory small,.keys-module .pageheading p,.wikihead p){color:var(--fx-muted)}
+:root[data-theme="dark"] .layout .body :is(.filtermenu,.inspectionbuildingmenu,.technicalcomboboxlist){background:var(--fx-surface);border-color:var(--fx-border);color:var(--fx-text)}
+:root[data-theme="dark"] .layout .body :is(.filtermenu button.chosen,.inspectionbuildingoptions button.chosen,.technicalcomboboxoption.is-active){background:var(--fx-accent-tint);color:var(--fx-accent-tint-text)}
+:root[data-theme="dark"] .layout .body :is(.technicalnotice,.notice){background:var(--fx-surface-soft);color:var(--fx-text)}
+:root[data-theme="dark"] .layout .body :is(.keys-tabs button.active,.keys-view-switch button.active){background:var(--fx-accent-tint);color:var(--fx-accent-tint-text);border-color:var(--isys-accent)}
+:root[data-theme="dark"] .layout .body :is(.vacation-year label,.vacation-panel label){color:var(--fx-text)}
+:root[data-theme="dark"] .layout .body :is(.vacation-year select,.vacation-panel select){background:var(--fx-field-bg);color:var(--fx-field-text)}
+/* Profile theme switch and menu should also respond to all accent colors. */
+:root[data-theme="dark"] .profilethemebuttons button.active,
+:root[data-theme="dark"] .profileaccent .accentchoice.selected{border-color:var(--isys-accent)}
+:root[data-theme="dark"] .profilethemebuttons button.active{background:var(--isys-accent);color:var(--fx-accent-contrast)}
+:root[data-theme="dark"] .accentchoice{color:var(--fx-text)}
+:root[data-theme="dark"] .accentchoice.selected{box-shadow:0 0 0 1px var(--isys-accent)}
+:root[data-theme="dark"] .layout .body .inspectionbar>div{background:var(--isys-accent)}
+@media(prefers-reduced-motion:reduce){.layout .body *{transition:none!important;animation-duration:.01ms!important}}
+@media print{ :root{color-scheme:light} }
