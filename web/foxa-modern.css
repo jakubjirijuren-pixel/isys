@@ -1,0 +1,112 @@
+/* FOXA 2026 — shared application design layer.
+   Loaded after all module styles. Intentionally excludes kiosks, printable
+   reports and the public login screen. */
+:root{
+ --fx-radius:16px;--fx-radius-lg:20px;--fx-radius-control:11px;
+ --fx-surface:#fff;--fx-surface-soft:#f7fafc;--fx-text:#1c3448;
+ --fx-muted:#637b8e;--fx-border:#dce6ed;--fx-accent:var(--isys-accent,#146c9c);
+ --fx-shadow:0 4px 18px rgba(14,45,66,.045);
+ --fx-shadow-hover:0 12px 32px rgba(14,45,66,.09);
+}
+[data-theme="dark"]{
+ --fx-surface:#17293a;--fx-surface-soft:#1e3447;--fx-text:#e8f1f8;
+ --fx-muted:#a8bbcb;--fx-border:#35536a;
+ --fx-shadow:0 5px 20px rgba(0,0,0,.13);
+ --fx-shadow-hover:0 14px 30px rgba(0,0,0,.22);
+}
+.layout .body{min-width:0;max-width:100%;padding:clamp(16px,2.6vw,34px)}
+.layout .body> :is(h1,h2){line-height:1.2;letter-spacing:-.035em}
+.layout .body :is(.inspectionmodule,.technicalmodule,.keys-module,.tasks,.vacation,.attendance-module,.wiki,.adminusers){
+ width:100%;max-width:1320px;margin-inline:auto;color:var(--fx-text);
+}
+.layout .body :is(.inspectionheading,.technicalhead,.tasksheader,.pageheading,.wikihead){
+ min-height:auto!important;height:auto!important;max-height:none!important;
+ display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;
+ gap:14px;padding:clamp(16px,2vw,24px);margin:0 0 20px;
+ border:1px solid var(--fx-border);border-radius:var(--fx-radius-lg);
+ background:var(--fx-surface);box-shadow:var(--fx-shadow);overflow:visible;
+}
+.layout .body :is(.inspectionheading,.technicalhead,.tasksheader,.pageheading,.wikihead) :is(h1,h2){
+ margin:0;font-size:clamp(1.4rem,2.1vw,2rem);line-height:1.22;letter-spacing:-.035em;
+ color:var(--fx-text);overflow-wrap:anywhere;
+}
+.layout .body :is(.inspectionheading,.technicalhead,.tasksheader,.pageheading,.wikihead) p{
+ margin:6px 0 0;color:var(--fx-muted);line-height:1.5;
+}
+.layout .body :is(.inspectionpanel,.inspectionprogress,.technicalpanel,.keys-panel,.attendance-card,.vacation-panel,.taskform,.tasklist,.taskdetail,.taskstats>div,.wiki-panel,.adminuserrow,.tiles article){
+ min-width:0;max-width:100%;background:var(--fx-surface);color:var(--fx-text);
+ border:1px solid var(--fx-border);border-radius:var(--fx-radius);
+ box-shadow:var(--fx-shadow);
+}
+.layout .body :is(.inspectionpanel,.technicalpanel,.keys-panel,.attendance-card,.vacation-panel,.taskform,.tasklist,.taskdetail,.wiki-panel){
+ padding:clamp(16px,2vw,24px);
+}
+.layout .body :is(.inspectionpanel,.technicalpanel,.keys-panel,.attendance-card,.vacation-panel,.taskform,.tasklist,.taskdetail,.wiki-panel) :is(h2,h3){
+ color:var(--fx-text);line-height:1.3;overflow-wrap:anywhere;
+}
+.layout .body :is(.inspectionmodule,.technicalmodule,.keys-module,.tasks,.vacation,.attendance-module,.wiki,.adminusers) :is(label,small){
+ overflow-wrap:anywhere;
+}
+.layout .body :is(.inspectionmodule,.technicalmodule,.keys-module,.tasks,.vacation,.attendance-module,.wiki,.adminusers) :is(input:not([type="checkbox"]):not([type="radio"]):not([type="file"]):not([type="color"]),select,textarea){
+ box-sizing:border-box;min-width:0;max-width:100%;min-height:44px;
+ background:var(--isys-control-bg,var(--fx-surface-soft));color:var(--fx-text);
+ border:1px solid var(--isys-control-border,var(--fx-border));
+ border-radius:var(--fx-radius-control);font-size:16px;line-height:1.4;
+}
+.layout .body :is(.inspectionmodule,.technicalmodule,.keys-module,.tasks,.vacation,.attendance-module,.wiki,.adminusers) :is(input,select,textarea):focus-visible{
+ outline:2px solid var(--isys-control-focus,#2b91be);outline-offset:2px;
+}
+.layout .body :is(.inspectionmodule,.technicalmodule,.keys-module,.tasks,.vacation,.attendance-module,.wiki,.adminusers) :is(button,.primary,.secondarybutton){
+ border-radius:var(--fx-radius-control);min-height:42px;max-width:100%;
+ overflow-wrap:anywhere;white-space:normal;transition:background-color .16s ease,border-color .16s ease,box-shadow .16s ease,transform .16s ease;
+}
+.layout .body :is(.inspectionmodule,.technicalmodule,.keys-module,.tasks,.vacation,.attendance-module,.wiki,.adminusers) :is(button,.primary,.secondarybutton):not(:disabled):active{transform:translateY(1px)}
+.layout .body :is(.inspectionmodule,.technicalmodule,.keys-module,.tasks,.vacation,.attendance-module,.wiki,.adminusers) :is(button,.primary,.secondarybutton):focus-visible{
+ outline:2px solid var(--isys-control-focus,#2b91be);outline-offset:2px;
+}
+.layout .body :is(.inspectionmodule,.technicalmodule,.keys-module,.tasks,.vacation,.attendance-module,.wiki,.adminusers) :is(table){width:100%;border-collapse:separate;border-spacing:0}
+.layout .body :is(.inspectionmodule,.technicalmodule,.keys-module,.tasks,.vacation,.attendance-module,.wiki,.adminusers) :is(th,td){
+ overflow-wrap:anywhere;vertical-align:middle;
+}
+.layout .body :is(.inspectionmodule,.technicalmodule,.keys-module,.tasks,.vacation,.attendance-module,.wiki,.adminusers) th{
+ color:var(--fx-text);font-weight:700;
+}
+.layout .body :is(.inspectionmodule,.technicalmodule,.keys-module,.tasks,.vacation,.attendance-module,.wiki,.adminusers) :is(.tablewrap,.table-wrap,.technicaltablewrap,.attendance-table-wrap){
+ max-width:100%;overflow-x:auto;overscroll-behavior-x:contain;-webkit-overflow-scrolling:touch;
+}
+.layout .body :is(.inspectionmodule,.technicalmodule,.keys-module,.tasks,.vacation,.attendance-module,.wiki,.adminusers) :is(.notice,.technicalnotice){
+ border-radius:var(--fx-radius-control);line-height:1.5;overflow-wrap:anywhere;
+}
+.layout .body :is(.keys-panel,.inspectionpanel,.technicalpanel,.attendance-card,.vacation-panel,.taskform,.tasklist,.taskdetail) :is(p,li,span){
+ overflow-wrap:break-word;
+}
+.layout .body .vacation-balance .vacation-donut>div{background:#fff!important;color:#15293b!important}
+.layout .body .vacation-balance .vacation-donut strong{color:#15293b!important;opacity:1!important}
+.layout .body .vacation-balance .vacation-donut small{color:#42556b!important;opacity:1!important}
+@media(hover:hover) and (prefers-reduced-motion:no-preference){
+ .layout .body :is(.tiles article,.taskstats>div):hover{box-shadow:var(--fx-shadow-hover);transform:translateY(-2px)}
+ .layout .body :is(.tiles article,.taskstats>div){transition:box-shadow .18s ease,transform .18s ease}
+}
+@media(max-width:850px){
+ .layout .body :is(.inspectionheading,.technicalhead,.tasksheader,.pageheading,.wikihead){align-items:stretch}
+ .layout .body :is(.inspectionactions,.inspectionbottom,.technicalbuttons,.tasksactions,.pageactions,.vacation-actions){flex-wrap:wrap;gap:9px}
+ .layout .body :is(.inspectionactions,.inspectionbottom,.technicalbuttons,.tasksactions,.pageactions)>button{flex:1 1 150px}
+ .layout .body :is(.keys-layout,.dashboardtop){grid-template-columns:minmax(0,1fr)}
+}
+@media(max-width:600px){
+ .layout .body{padding:14px 12px 26px}
+ .layout .body :is(.inspectionheading,.technicalhead,.tasksheader,.pageheading,.wikihead){padding:16px;border-radius:15px}
+ .layout .body :is(.inspectionpanel,.technicalpanel,.keys-panel,.attendance-card,.vacation-panel,.taskform,.tasklist,.taskdetail,.wiki-panel){padding:15px;border-radius:14px}
+ .layout .body :is(.inspectionactions,.inspectionbottom,.technicalbuttons,.tasksactions,.pageactions)>button{flex:1 1 100%}
+ .layout .body :is(.vacation-balance-body){gap:14px}
+ .layout .body :is(.taskstats){grid-template-columns:minmax(0,1fr)}
+ .layout .body :is(.tiles){grid-template-columns:repeat(auto-fit,minmax(min(100%,170px),1fr));gap:12px}
+ .layout .body :is(.keys-panel,.inspectionpanel,.technicalpanel,.attendance-card,.vacation-panel) :is(input,select,textarea){width:100%}
+}
+@media(prefers-reduced-motion:reduce){
+ .layout .body :is(button,.primary,.secondarybutton,.tiles article,.taskstats>div){transition:none!important;transform:none!important}
+}
+@media print{
+ /* The shared app design must not alter printed PDF layouts. */
+ .layout .body :is(.inspectionmodule,.technicalmodule,.keys-module,.tasks,.vacation,.attendance-module,.wiki,.adminusers) :is(button){box-shadow:none}
+}
