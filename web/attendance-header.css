@@ -69,3 +69,21 @@
   font-size:12px;line-height:1.4;
  }
 }
+
+@media(max-width:700px){.attendance-header-action-label{display:none}.attendance-header-action-icon{display:inline-flex;font-size:25px;align-items:center;justify-content:center}.attendance-header-action{display:flex;align-items:center;justify-content:center}}
+@media(min-width:701px){.attendance-header-action-icon{display:none}}
+
+/* On narrow screens replace visible action words with familiar symbols.
+   The original button text remains in the DOM for accessibility. */
+@media(max-width:700px){
+ .layout header .attendance-header .attendance-header-action{
+  font-size:0!important;position:relative;
+ }
+ .layout header .attendance-header .attendance-header-action::before{
+  content:"●";font-size:26px;font-weight:700;line-height:1;
+ }
+ .layout header .attendance-header .attendance-header-action:nth-child(2)::before{content:"Ⅱ"}
+ .layout header .attendance-header .attendance-header-action:nth-child(3)::before{content:"↩"}
+ .layout header .attendance-header .attendance-header-start:nth-child(2)::before{content:"↪"}
+ .layout header .attendance-header .attendance-header-action:disabled::before{opacity:.6}
+}
