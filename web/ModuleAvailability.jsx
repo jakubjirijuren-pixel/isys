@@ -1,6 +1,6 @@
 import React,{useEffect,useState} from "react";
 import "./module-availability.css";
-export const managedModules=["Přehled","Objekty","Kontroly","Evidence klíčů","Docházka","Úkoly","Wiki"];
+export const managedModules=["Přehled","Objekty","Kontroly","Technické kontroly","Evidence klíčů","Docházka","Dovolené","Tiskopisy","Kniha odchozí pošty","Úkoly","Wiki"];
 export default function ModuleAvailability({supabase}){
  const [states,setStates]=useState({}),[loading,setLoading]=useState(true),[busy,setBusy]=useState(""),[error,setError]=useState(""),[notice,setNotice]=useState("");
  const load=async()=>{setLoading(true);const {data,error:e}=await supabase.from("isys_module_availability").select("module,enabled");if(e)setError("Načtení dostupnosti modulů selhalo: "+e.message+" — Spusť module-availability.sql.");else{setStates(Object.fromEntries((data||[]).map(x=>[x.module,x.enabled])));setError("")}setLoading(false)};
