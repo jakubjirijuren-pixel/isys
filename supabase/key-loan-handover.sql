@@ -10,7 +10,7 @@ alter table public.key_loans add constraint key_loans_handover_contact_check che
  protocol_type <> 'handover' or
  (length(btrim(coalesce(borrower_name,''))) between 3 and 180 and
   borrower_name ~ '^[^[:space:]]+[[:space:]]+[^[:space:]]+' and
-  borrower_phone ~ '^\\+?[0-9][0-9 ()-]{7,19}$')
+  borrower_phone ~ '^\+?[0-9][0-9 ()-]{7,19}$')
 );
 -- Preserve the existing append-only semantics: only returned_at may change.
 create or replace function public.isys_protect_key_loan_return()
