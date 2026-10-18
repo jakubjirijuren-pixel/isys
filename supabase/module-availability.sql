@@ -1,15 +1,15 @@
 -- Global iSYS module maintenance switches. Run in Supabase SQL Editor.
 create table if not exists public.isys_module_availability (
- module text primary key check (module in ('Přehled','Objekty','Kontroly','Evidence klíčů','Docházka','Úkoly','Wiki')),
+ module text primary key check (module in ('Přehled','Objekty','Kontroly','Technické kontroly','Evidence klíčů','Docházka','Dovolené','Tiskopisy','Kniha odchozí pošty','Úkoly','Wiki')),
  enabled boolean not null default true,
  updated_at timestamptz not null default now(),
  updated_by uuid references auth.users(id)
 );
 -- Existing deployments need the expanded constraint too.
 alter table public.isys_module_availability drop constraint if exists isys_module_availability_module_check;
-alter table public.isys_module_availability add constraint isys_module_availability_module_check check (module in ('Přehled','Objekty','Kontroly','Evidence klíčů','Docházka','Úkoly','Wiki'));
+alter table public.isys_module_availability add constraint isys_module_availability_module_check check (module in ('Přehled','Objekty','Kontroly','Technické kontroly','Evidence klíčů','Docházka','Dovolené','Tiskopisy','Kniha odchozí pošty','Úkoly','Wiki'));
 insert into public.isys_module_availability(module,enabled)
-values ('Přehled',true),('Objekty',true),('Kontroly',true),('Evidence klíčů',true),('Docházka',true),('Úkoly',true),('Wiki',true)
+values ('Přehled',true),('Objekty',true),('Kontroly',true),('Technické kontroly',true),('Evidence klíčů',true),('Docházka',true),('Dovolené',true),('Tiskopisy',true),('Kniha odchozí pošty',true),('Úkoly',true),('Wiki',true)
 on conflict (module) do nothing;
 alter table public.isys_module_availability enable row level security;
 revoke all on public.isys_module_availability from anon,authenticated;
