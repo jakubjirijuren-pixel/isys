@@ -185,3 +185,29 @@
  .layout .body .dashboardtiles article.widgetcard .widgettitle{gap:8px;min-width:0}
  .layout .body .dashboardtiles article.widgetcard .widgettitle h3{min-width:0;overflow-wrap:anywhere}
 }
+
+
+/* Critical: paint the WHOLE tile, not just its typography. Theme selectors
+   elsewhere can override inherited card surfaces; these explicit background
+   declarations win for each chosen widget color. */
+.layout .body .tiles.dashboardtiles > article.widgetcard.widgetcolor-default{
+ background-color:var(--fx-widget-default-bg)!important;
+ border-color:var(--fx-widget-default-border)!important;
+}
+.layout .body .tiles.dashboardtiles > article.widgetcard.widgetcolor-blue{background-color:#dcefff!important;border-color:#9bc8ee!important}
+.layout .body .tiles.dashboardtiles > article.widgetcard.widgetcolor-green{background-color:#e1f5e7!important;border-color:#a6dabb!important}
+.layout .body .tiles.dashboardtiles > article.widgetcard.widgetcolor-orange{background-color:#ffebd5!important;border-color:#eac49b!important}
+.layout .body .tiles.dashboardtiles > article.widgetcard.widgetcolor-purple{background-color:#ede3ff!important;border-color:#c6acec!important}
+.layout .body .tiles.dashboardtiles > article.widgetcard.widgetcolor-red{background-color:#ffe3e5!important;border-color:#edb4ba!important}
+.layout .body .tiles.dashboardtiles > article.widgetcard.widgetcolor-teal{background-color:#d8f6f1!important;border-color:#9ddbd2!important}
+:root[data-theme="dark"] .layout .body .tiles.dashboardtiles > article.widgetcard.widgetcolor-blue{background-color:#173c5b!important;border-color:#316c97!important}
+:root[data-theme="dark"] .layout .body .tiles.dashboardtiles > article.widgetcard.widgetcolor-green{background-color:#194634!important;border-color:#317a58!important}
+:root[data-theme="dark"] .layout .body .tiles.dashboardtiles > article.widgetcard.widgetcolor-orange{background-color:#573920!important;border-color:#93603c!important}
+:root[data-theme="dark"] .layout .body .tiles.dashboardtiles > article.widgetcard.widgetcolor-purple{background-color:#392854!important;border-color:#715399!important}
+:root[data-theme="dark"] .layout .body .tiles.dashboardtiles > article.widgetcard.widgetcolor-red{background-color:#542b35!important;border-color:#99505d!important}
+:root[data-theme="dark"] .layout .body .tiles.dashboardtiles > article.widgetcard.widgetcolor-teal{background-color:#194745!important;border-color:#327c75!important}
+/* The color selection is a card background setting. Text stays legible but
+   is not tinted with the selected palette as a substitute for card coloring. */
+.layout .body .tiles.dashboardtiles > article.widgetcard.widgetcolor-default :is(h3,.widgetvalue){color:var(--fx-widget-default-text)!important}
+.layout .body .tiles.dashboardtiles > article.widgetcard:not(.widgetcolor-default) :is(h3,.widgetvalue){color:var(--widget-ink)!important}
+.layout .body .tiles.dashboardtiles > article.widgetcard:not(.widgetcolor-default)>small{color:var(--widget-muted)!important}
