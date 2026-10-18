@@ -27,10 +27,7 @@ drop policy if exists "outgoing_mail_update_own" on public.outgoing_mail;
 create policy "outgoing_mail_update_own" on public.outgoing_mail for update to authenticated using (created_by=auth.uid()) with check (created_by=auth.uid());
 drop policy if exists "outgoing_mail_delete_own" on public.outgoing_mail;
 create policy "outgoing_mail_delete_own" on public.outgoing_mail for delete to authenticated using (created_by=auth.uid());
-create or replace function public.isys_outgoing_mail_admin() returns boolean language sql stable security definer set search_path=public as $$
- select exists(select 1 from public.user_roles where user_id=auth.uid() and role='admin');
-$$;
 drop policy if exists "outgoing_mail_admin_update" on public.outgoing_mail;
-create policy "outgoing_mail_admin_update" on public.outgoing_mail for update to authenticated using (public.isys_outgoing_mail_admin()) with check (public.isys_outgoing_mail_admin());
+create policy "outgoing_mail_admin_update" on public.outgoing_mail for update to authenticated using (public.is_isys_admin()) with check (public.is_isys_admin());
 drop policy if exists "outgoing_mail_admin_delete" on public.outgoing_mail;
-create policy "outgoing_mail_admin_delete" on public.outgoing_mail for delete to authenticated using (public.isys_outgoing_mail_admin());
+create policy "outgoing_mail_admin_delete" on public.outgoing_mail for delete to authenticated using (public.is_isys_admin());
