@@ -21,3 +21,7 @@
 .pf-preview-paper .pf-footer>div{display:flex;justify-content:space-between;gap:10px}
 
 .pf-preview-paper .pf-signature-image{display:block;max-width:55mm;max-height:25mm;object-fit:contain;margin:0 auto 1mm}
+
+.pf-preview-paper .pf-signature{position:relative;padding-top:14mm}
+.pf-preview-paper .pf-stamp-image{position:absolute;width:48mm;max-height:21mm;object-fit:contain;top:-7mm;left:4mm;opacity:.9}
+.pf-preview-paper .pf-signature-image{position:relative;z-index:1}
