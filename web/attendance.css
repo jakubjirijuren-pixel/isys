@@ -31,3 +31,51 @@
 [data-theme="dark"] .attendance-kiosk-overlay{background:#020b14e8}
 
 .attendance-gps-info{font-size:13px;line-height:1.55;opacity:.82;margin:12px 0}.attendance-gps-cell{display:flex;flex-direction:column;gap:3px;min-width:145px}.attendance-gps-cell a{color:var(--accent,#3998ce);text-decoration:underline;text-underline-offset:2px}.attendance-gps-cell small{font-size:12px;opacity:.75;white-space:normal}
+
+
+/* Attendance phone controls — a primary action first, readable records below. */
+.attendance-self-card .attendance-current-status{display:flex;flex-wrap:wrap;align-items:center;gap:7px;margin:0 0 14px}
+.attendance-self-card .attendance-current-status strong{display:inline-flex;align-items:center;border:1px solid var(--fx-border,#dce6ed);border-radius:999px;background:var(--fx-surface-soft,#f4f8fb);color:var(--fx-text,#20394d);padding:6px 12px;font-weight:750}
+.attendance-self-card .attendance-worked{border-top:1px solid var(--fx-border,#dce6ed);padding-top:15px;line-height:1.5}
+.attendance-self-card .attendance-worked strong{font-size:1.15em}
+.attendance-mark-actions button{flex:1 1 170px;min-height:58px;font-weight:750;line-height:1.3;white-space:normal}
+.attendance-mark-actions button:disabled{opacity:.65;cursor:progress}
+@media(max-width:700px){
+ .attendance-module{gap:14px}
+ .attendance-module>.attendance-actions{margin:0;display:flex}
+ .attendance-module>.attendance-actions>button{min-height:48px;width:100%;white-space:normal}
+ .attendance-self-card{order:0}
+ .attendance-self-card h2{font-size:1.22rem;margin-bottom:12px}
+ .attendance-self-card .attendance-current-status{font-size:14px}
+ .attendance-self-card .attendance-current-status strong{font-size:14px}
+ .attendance-mark-actions{display:grid;grid-template-columns:minmax(0,1fr);gap:10px;margin:14px 0}
+ .attendance-mark-actions button{width:100%;min-height:64px;padding:14px 16px;font-size:17px;border-radius:13px}
+ .attendance-mark-actions button:first-child{min-height:68px}
+ .attendance-gps-info{margin:12px 0;font-size:12px;line-height:1.55;opacity:.9}
+ .attendance-worked{margin-bottom:0;font-size:13px}
+ .attendance-toolbar{display:grid;grid-template-columns:minmax(0,1fr);gap:12px;align-items:stretch}
+ .attendance-toolbar h2{margin:0;font-size:1.2rem}
+ .attendance-toolbar label{width:100%;min-width:0;font-size:13px}
+ .attendance-toolbar :is(input,select){width:100%;min-width:0;min-height:48px;font-size:16px}
+ .attendance-toolbar button{width:100%;min-height:46px}
+ .attendance-records-card .attendance-table-wrap{overflow:visible}
+ .attendance-records-table,.attendance-records-table tbody{display:block;width:100%!important;min-width:0!important}
+ .attendance-records-table thead{display:none}
+ .attendance-records-table tbody tr{display:block;margin:0 0 12px;padding:8px 12px;border:1px solid var(--fx-border,#dce6ed);border-radius:13px;background:var(--fx-surface-soft,#f7fafc);overflow:hidden}
+ .attendance-records-table tbody tr:last-child{margin-bottom:0}
+ .attendance-records-table tbody td{display:grid;grid-template-columns:minmax(95px,38%) minmax(0,1fr);gap:10px;align-items:start;min-width:0;width:100%;padding:9px 0;border-bottom:1px solid var(--fx-border,#dce6ed);font-size:13px;line-height:1.4;overflow-wrap:anywhere}
+ .attendance-records-table tbody td:last-child{border-bottom:0}
+ .attendance-records-table tbody td::before{content:attr(data-label);font-size:12px;font-weight:750;color:var(--fx-muted,#637b8e)}
+ .attendance-records-table tbody .attendance-empty-row td{display:block;text-align:center}
+ .attendance-records-table tbody .attendance-empty-row td::before{content:none}
+ .attendance-records-table .attendance-gps-cell{min-width:0;max-width:100%;overflow-wrap:anywhere}
+ .attendance-records-table .attendance-gps-cell a{font-weight:650}
+ .attendance-records-table .attendance-gps-cell small{font-size:11px}
+}
+@media(max-width:390px){
+ .attendance-records-table tbody td{grid-template-columns:minmax(80px,35%) minmax(0,1fr);gap:8px}
+ .attendance-self-card .attendance-current-status{display:block}
+ .attendance-self-card .attendance-current-status strong{margin-top:6px}
+}
+:root[data-theme="dark"] .attendance-self-card .attendance-current-status strong{background:var(--fx-surface-soft,#1e3447);border-color:var(--fx-border,#35536a);color:var(--fx-text,#e8f1f8)}
+:root[data-theme="dark"] .attendance-records-table tbody tr{background:var(--fx-surface-soft,#1e3447);border-color:var(--fx-border,#35536a)}
