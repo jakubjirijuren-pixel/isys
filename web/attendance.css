@@ -29,3 +29,5 @@
 [data-theme="dark"] .attendance-kiosk-head button{background:#1a3043;color:#e3edf6;border:1px solid #36516a;border-radius:9px}
 [data-theme="dark"] .attendance-kiosk-prompt{background:#1a3043;border-color:#4b9cc3;color:#e3edf6}
 [data-theme="dark"] .attendance-kiosk-overlay{background:#020b14e8}
+
+.attendance-gps-info{font-size:13px;line-height:1.55;opacity:.82;margin:12px 0}.attendance-gps-cell{display:flex;flex-direction:column;gap:3px;min-width:145px}.attendance-gps-cell a{color:var(--accent,#3998ce);text-decoration:underline;text-underline-offset:2px}.attendance-gps-cell small{font-size:12px;opacity:.75;white-space:normal}
