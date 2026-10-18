@@ -28,3 +28,20 @@
  color:#f0f5fb;
  border-color:#526b80;
 }
+
+
+/* Manager rejection reason modal, usable on mobile and in dark mode. */
+.vacation-dialog-backdrop{position:fixed;inset:0;z-index:10050;display:flex;align-items:center;justify-content:center;padding:16px;background:rgba(5,17,29,.68);box-sizing:border-box}
+.vacation-dialog{width:min(100%,490px);max-height:calc(100dvh - 32px);overflow-y:auto;padding:24px;border:1px solid var(--border,#c7d6df);border-radius:18px;background:var(--card-bg,#fff);color:inherit;box-shadow:0 20px 65px rgba(0,0,0,.25);box-sizing:border-box}
+.vacation-dialog h2{font-size:20px;margin:0 0 10px}
+.vacation-dialog p{margin:0 0 20px;line-height:1.5}
+.vacation-dialog form{display:flex;flex-direction:column;gap:10px}
+.vacation-dialog label{font-weight:700}
+.vacation-dialog textarea{width:100%;min-height:115px;resize:vertical;padding:12px;border:1px solid var(--border,#b8cad6);border-radius:11px;background:var(--card-bg,#fff);color:inherit;font:inherit;box-sizing:border-box}
+.vacation-dialog textarea:focus-visible{outline:2px solid var(--isys-accent,#2b91be);outline-offset:2px}
+.vacation-dialog small{opacity:.75;line-height:1.4}
+.vacation-dialog-actions{display:flex;justify-content:flex-end;flex-wrap:wrap;gap:10px;margin-top:12px}
+.vacation-dialog-actions button{min-height:42px}
+[data-theme="dark"] .vacation-dialog{background:#192c3d;color:#e7f0f8;border-color:#3a5369}
+[data-theme="dark"] .vacation-dialog textarea{background:#122333;color:#e7f0f8;border-color:#496277}
+@media(max-width:480px){.vacation-dialog{padding:19px;border-radius:15px}.vacation-dialog-actions button{flex:1}}
