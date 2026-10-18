@@ -425,3 +425,22 @@ button,select,input,textarea{max-width:100%}
 .inspection-role-switch button.active{background:#176e9d;border-color:#176e9d;color:#fff}
 .inspection-role-switch button:focus-visible{outline:3px solid #62a9db;outline-offset:2px}
 @media(max-width:550px){.inspection-role-switch button{flex:1}}
+
+
+/* FOXA — compact object cards, without hiding staff or company details. */
+.layout .buildinggrid{grid-template-columns:repeat(auto-fill,minmax(min(100%,225px),1fr));gap:10px}
+.layout .buildingcard{padding:12px 14px;min-height:0;gap:5px;border-radius:11px;box-shadow:0 2px 9px #18394c0a}
+.layout .buildingcard>.buildingnumber{font-size:9px;letter-spacing:.65px;line-height:1.25}
+.layout .buildingcard>strong{font-size:14px;line-height:1.25;font-weight:750}
+.layout .buildingcard>.buildingaddress{font-size:11px;line-height:1.3}
+.layout .buildingcard>.buildingcompany{font-size:11px;gap:7px;margin-top:3px}
+.layout .buildingcard>.buildingcompany strong{font-size:11px}
+.layout .buildingcard>.buildingstaff{margin-top:3px;padding-top:7px;gap:4px}
+.layout .buildingcard>.buildingstaff>div{gap:8px}
+.layout .buildingcard>.buildingstaff span{font-size:10px}
+.layout .buildingcard>.buildingstaff strong{font-size:11px;line-height:1.3}
+.layout .buildingcard>.buildinglink{font-size:10px;line-height:1.25;margin-top:4px}
+@media(max-width:700px){
+ .layout .buildinggrid{grid-template-columns:repeat(auto-fill,minmax(min(100%,210px),1fr));gap:9px}
+ .layout .buildingcard{padding:12px;gap:5px}
+}
