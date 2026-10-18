@@ -19,3 +19,5 @@
 .pf-preview-paper .pf-footer{bottom:12mm;border-top:1px solid #555;padding-top:3mm;color:#444;font-size:9px}
 .pf-preview-paper .pf-footer strong{display:block;font-size:10px;margin-bottom:2mm}
 .pf-preview-paper .pf-footer>div{display:flex;justify-content:space-between;gap:10px}
+
+.pf-preview-paper .pf-signature-image{display:block;max-width:55mm;max-height:25mm;object-fit:contain;margin:0 auto 1mm}
