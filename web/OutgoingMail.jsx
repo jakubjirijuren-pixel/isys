@@ -6,7 +6,7 @@ export default function OutgoingMail({supabase,buildings=[],userId,isAdmin=false
  const [rows,setRows]=useState([]),[form,setForm]=useState(empty),[editing,setEditing]=useState(null),[loading,setLoading]=useState(true),[saving,setSaving]=useState(false),[error,setError]=useState(""),[query,setQuery]=useState("");
  const load=useCallback(async()=>{setLoading(true);const {data,error:e}=await supabase.from("outgoing_mail").select("*").order("sent_on",{ascending:false}).order("created_at",{ascending:false}).limit(1000);if(e)setError("Nepodařilo se načíst knihu odchozí pošty: "+e.message);else{setRows(data||[]);setError("")}setLoading(false)},[supabase]);
  useEffect(()=>{load()},[load]);
- const change=(k,v)=>setForm(prev=>({...prev,[k]:v]}));
+ const change=(k,v)=>setForm(prev=>({...prev,[k]:v}));
  const reset=()=>{setForm(empty);setEditing(null)};
  const save=async e=>{e.preventDefault();if(!form.recipient.trim()||!form.subject.trim()||!form.sent_on)return;setSaving(true);setError("");const payload={...form,recipient:form.recipient.trim(),subject:form.subject.trim(),building_id:form.building_id||null};const result=editing?await supabase.from("outgoing_mail").update(payload).eq("id",editing):await supabase.from("outgoing_mail").insert({...payload,created_by:userId});if(result.error)setError("Uložení se nezdařilo: "+result.error.message);else{reset();await load()}setSaving(false)};
  const edit=r=>{setEditing(r.id);setForm(Object.fromEntries(Object.keys(empty).map(k=>[k,r[k]??""])));window.scrollTo({top:0,behavior:"smooth"})};
