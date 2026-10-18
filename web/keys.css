@@ -132,3 +132,6 @@
 .keys-nfc-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:20px}
 .keys-nfc-actions button{min-height:52px;flex:1 1 150px}
 @media print{.keys-nfc-overlay{display:none!important}}
+
+/* Two key-loan form variants, consistent with FOXA mobile and dark modes. */
+.keys-loan-variants{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0 18px}.keys-loan-variants button{flex:1 1 150px;min-height:44px;border-radius:10px;padding:10px 12px;border:1px solid var(--border,#829aab);background:transparent;color:inherit;font:inherit;font-weight:650;cursor:pointer;white-space:normal;overflow-wrap:anywhere}.keys-loan-variants button.active{background:#176e9d;color:#fff;border-color:#176e9d}.keys-loan-variants button:focus-visible{outline:2px solid #61a6d2;outline-offset:2px}.keys-record>button{max-width:100%;white-space:normal;overflow-wrap:anywhere}@media(max-width:500px){.keys-loan-variants button{flex-basis:100%}}
