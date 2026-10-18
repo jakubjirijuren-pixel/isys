@@ -20,7 +20,7 @@ export default function Attendance({supabase,userId,isAdmin=false}){
   const from=month+"-01",to=new Date(Date.UTC(Number(month.slice(0,4)),Number(month.slice(5,7)),1)).toISOString().slice(0,10);
   const all=[];let failure=null;
   for(let offset=0;offset<100000;offset+=1000){
-   let q=supabase.from("attendance_events").select("id,user_id,event_type,occurred_at,source,recorded_by,entry_note").gte("occurred_at",from+"T00:00:00").lt("occurred_at",to+"T00:00:00").order("occurred_at",{ascending:false}).order("id",{ascending:false}).range(offset,offset+999);
+   let q=supabase.from("attendance_events").select("id,user_id,event_type,occurred_at,source,recorded_by,entry_note,gps_latitude,gps_longitude,gps_accuracy_m,gps_captured_at").gte("occurred_at",from+"T00:00:00").lt("occurred_at",to+"T00:00:00").order("occurred_at",{ascending:false}).order("id",{ascending:false}).range(offset,offset+999);
    if(!isAdmin)q=q.eq("user_id",userId);
    const {data,error:e}=await q;
    if(e){failure=e;break}
@@ -42,20 +42,39 @@ export default function Attendance({supabase,userId,isAdmin=false}){
  const loadLatest=async()=>{const {data}=await supabase.from("attendance_events").select("event_type").eq("user_id",userId).order("occurred_at",{ascending:false}).limit(1);setLatest(data?.[0]?.event_type||"out")};
  useEffect(()=>{loadLatest()},[userId]);
  useEffect(()=>{const refresh=()=>{load();loadLatest()};window.addEventListener("isys-attendance-updated",refresh);return()=>window.removeEventListener("isys-attendance-updated",refresh)},[month,userId,isAdmin]);
- const mark=async type=>{setBusy(true);setError("");setNotice("");const {error:e}=await supabase.rpc("isys_attendance_mark",{p_type:type});if(e)setError(e.message);else{setNotice("Zaznamenáno: "+labels[type]);window.dispatchEvent(new Event("isys-attendance-updated"));await Promise.all([load(),loadLatest()])}setBusy(false)};
+ const getGps=()=>new Promise((resolve,reject)=>{
+  if(!window.isSecureContext){reject(new Error("GPS vyžaduje zabezpečené připojení HTTPS."));return}
+  if(!navigator.geolocation){reject(new Error("Toto zařízení nepodporuje zjištění polohy."));return}
+  navigator.geolocation.getCurrentPosition(
+   pos=>resolve({p_latitude:pos.coords.latitude,p_longitude:pos.coords.longitude,p_accuracy_m:pos.coords.accuracy,p_captured_at:new Date(pos.timestamp).toISOString()}),
+   err=>reject(new Error(err.code===1?"Přístup k poloze byl zamítnut. Povolte FOXA přístup k poloze v nastavení prohlížeče.":err.code===3?"Nepodařilo se včas zjistit polohu. Zkuste to znovu.":"Polohu se nepodařilo zjistit. Zkontrolujte zapnuté polohové služby.")),
+   {enableHighAccuracy:true,maximumAge:0,timeout:15000}
+  );
+ });
+ const mark=async type=>{
+  setBusy(true);setError("");setNotice("");
+  try{
+   const gps=(type==="in"||type==="out")?await getGps():{};
+   const {error:e}=await supabase.rpc("isys_attendance_mark_geo",{p_type:type,...gps});
+   if(e)throw e;
+   setNotice("Zaznamenáno: "+labels[type]+((type==="in"||type==="out")?" (včetně polohy)":""));
+   window.dispatchEvent(new Event("isys-attendance-updated"));await Promise.all([load(),loadLatest()]);
+  }catch(e){setError(e.message||"Docházku se nepodařilo zaznamenat.")}
+  finally{setBusy(false)}
+ };
  const mine=events.filter(e=>e.user_id===userId);
  const shown=events.filter(e=>!isAdmin||!selected||e.user_id===selected);
  const names=Object.fromEntries(profiles.map(p=>[p.id,p.display_name||p.full_name||p.name||p.email||"Neznámý zaměstnanec"]));
  const csv=()=>{
-  const lines=[["Zaměstnanec","Událost","Datum a čas","Zdroj záznamu","Zapsal","Poznámka"],...shown.map(e=>[names[e.user_id]||e.user_id,labels[e.event_type],fmt(e.occurred_at),sourceLabels[e.source]||sourceLabels.unknown,names[e.recorded_by]||"",e.entry_note||""])];
+  const lines=[["Zaměstnanec","Událost","Datum a čas","Zdroj záznamu","Zapsal","Poznámka","GPS souřadnice","Přesnost GPS (m)"],...shown.map(e=>[names[e.user_id]||e.user_id,labels[e.event_type],fmt(e.occurred_at),sourceLabels[e.source]||sourceLabels.unknown,names[e.recorded_by]||"",e.entry_note||"",e.gps_latitude!=null&&e.gps_longitude!=null?e.gps_latitude+", "+e.gps_longitude:"",e.gps_accuracy_m??""])];
   const data="\ufeff"+lines.map(line=>line.map(v=>'"'+String(v).replaceAll('"','""')+'"').join(";")).join("\r\n");
   const url=URL.createObjectURL(new Blob([data],{type:"text/csv;charset=utf-8"}));const a=document.createElement("a");a.href=url;a.download="isys-dochazka-"+month+".csv";a.click();URL.revokeObjectURL(url);
  };
  return <div className="attendance-module"><div className="pageheading"><div><h1>Docházka</h1><p>Evidence příchodů, odchodů a přestávek</p></div></div>
- <div className="attendance-actions"><button className="primary" type="button" onClick={()=>setKioskOpen(true)}>Spustit NFC docházkový terminál</button></div>{kioskOpen&&<AttendanceKiosk supabase={supabase} profiles={profiles} onClose={()=>setKioskOpen(false)} onSaved={()=>{load();loadLatest()}}/>}{isAdmin&&<AttendanceCardWriter supabase={supabase} profiles={profiles}/>}<section className="attendance-card"><h2>Moje docházka</h2><p>Aktuální stav: <strong>{latest===null?"Načítám…":latest==="out"?"Mimo pracoviště":latest==="break_start"?"Přestávka":"V práci"}</strong></p><div className="attendance-actions">{(actions[latest]||[]).map(([type,label])=><button key={type} className="primary" disabled={busy} onClick={()=>mark(type)}>{busy?"Ukládám…":label}</button>)}</div><p>Odpracováno ve vybraném měsíci (orientačně): <strong>{duration(mine)}</strong></p></section>
+ <div className="attendance-actions"><button className="primary" type="button" onClick={()=>setKioskOpen(true)}>Spustit NFC docházkový terminál</button></div>{kioskOpen&&<AttendanceKiosk supabase={supabase} profiles={profiles} onClose={()=>setKioskOpen(false)} onSaved={()=>{load();loadLatest()}}/>}{isAdmin&&<AttendanceCardWriter supabase={supabase} profiles={profiles}/>}<section className="attendance-card"><h2>Moje docházka</h2><p>Aktuální stav: <strong>{latest===null?"Načítám…":latest==="out"?"Mimo pracoviště":latest==="break_start"?"Přestávka":"V práci"}</strong></p><div className="attendance-actions">{(actions[latest]||[]).map(([type,label])=><button key={type} className="primary" disabled={busy} onClick={()=>mark(type)}>{busy?"Ukládám…":label}</button>)}</div><p className="attendance-gps-info">Při příchodu a odchodu přes web se jednorázově načte aktuální poloha zařízení a uloží k docházkovému záznamu. Polohu vidí zaměstnanec u vlastních záznamů a administrátor. Nejde o průběžné sledování. Bez povolení polohy nelze příchod ani odchod přes web uložit.</p><p>Odpracováno ve vybraném měsíci (orientačně): <strong>{duration(mine)}</strong></p></section>
  {error&&<div className="error" role="alert">{error}</div>}{notice&&<div className="notice" role="status">{notice}</div>}
  {isAdmin&&<AttendanceAdminEntry supabase={supabase} profiles={profiles} onSaved={()=>{load();loadLatest();window.dispatchEvent(new Event("isys-attendance-updated"))}}/>}
  {isAdmin&&<AttendancePayroll events={events} leaveDays={leaveDays} sickDays={sickDays} profiles={profiles} month={month} selected={selected}/>}
  <section className="attendance-card"><div className="attendance-toolbar"><h2>{isAdmin?"Přehled docházky":"Moje záznamy"}</h2><label>Měsíc <input type="month" value={month} onChange={e=>setMonth(e.target.value)}/></label>{isAdmin&&<><label>Zaměstnanec <select value={selected} onChange={e=>setSelected(e.target.value)}><option value="">Všichni</option>{profiles.map(p=><option key={p.id} value={p.id}>{names[p.id]}</option>)}</select></label><button className="secondarybutton" onClick={csv}>Export CSV</button></>}<button className="secondarybutton" onClick={()=>{load();loadLatest()}}>Obnovit</button></div>
- <div className="attendance-table-wrap"><table><thead><tr>{isAdmin&&<th>Zaměstnanec</th>}<th>Událost</th><th>Datum a čas</th><th>Zdroj záznamu</th><th>Zapsal</th></tr></thead><tbody>{shown.map(e=><tr key={e.id}>{isAdmin&&<td>{names[e.user_id]||e.user_id}</td>}<td>{labels[e.event_type]}</td><td>{fmt(e.occurred_at)}</td><td>{sourceLabels[e.source]||sourceLabels.unknown}</td><td>{e.source==="admin"?(names[e.recorded_by]||"Administrátor"):"—"}</td></tr>)}{!shown.length&&<tr><td colSpan={isAdmin?5:4}>Zatím žádné záznamy.</td></tr>}</tbody></table></div></section></div>;
+ <div className="attendance-table-wrap"><table><thead><tr>{isAdmin&&<th>Zaměstnanec</th>}<th>Událost</th><th>Datum a čas</th><th>Zdroj záznamu</th><th>Zapsal</th><th>GPS / místo</th></tr></thead><tbody>{shown.map(e=><tr key={e.id}>{isAdmin&&<td>{names[e.user_id]||e.user_id}</td>}<td>{labels[e.event_type]}</td><td>{fmt(e.occurred_at)}</td><td>{sourceLabels[e.source]||sourceLabels.unknown}</td><td>{e.source==="admin"?(names[e.recorded_by]||"Administrátor"):"—"}</td><td>{e.gps_latitude!=null&&e.gps_longitude!=null?<div className="attendance-gps-cell"><a href={"https://www.openstreetmap.org/?mlat="+e.gps_latitude+"&mlon="+e.gps_longitude+"#map=18/"+e.gps_latitude+"/"+e.gps_longitude} target="_blank" rel="noopener noreferrer">Zobrazit polohu na mapě</a><small>Přesnost ±{Math.round(e.gps_accuracy_m||0)} m</small></div>:<span title={e.source==="nfc"?"NFC terminál – poloha zaměstnance se nesnímá":e.source==="admin"?"Záznam zadaný administrátorem":"Poloha není k dispozici"}>—</span>}</td></tr>)}{!shown.length&&<tr><td colSpan={isAdmin?6:5}>Zatím žádné záznamy.</td></tr>}</tbody></table></div></section></div>;
 }
