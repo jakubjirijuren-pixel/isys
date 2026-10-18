@@ -20,6 +20,7 @@ import "./controls.css";
 import "./foxa-responsive.css";
 import "./foxa-modern.css";
 import "./foxa-themes.css";
+import "./foxa-mobile.css";
 export const supabase=createClient("https://qcbyjxovnf fdruiznlnt.supabase.co".replace(" ",""),"sb_publishable_AFfvrodRnmBTOLjlFadYfQ_Foa4e_P1");
 const extraFields=[["object_number","Číslo objektu"],["street","Ulice"],["city","Město"],["manager","Technik"],["referent","Referent"],["economist","Ekonom"],["accountant","Účetní"],["legal_entity","Hlavní účetní subjekt"],["company_id","IČO"],["external_id","Unikátní číslo"],["flats_count","Počet bytů"],["nonresidential_count","Počet nebytů"],["garages_count","Počet garáží"],["shared_spaces_count","Počet spol. prostor"],["invoice_approvers_count","Počet schvalovatelů faktur"],["manager_flag","P. Správce"],["economist_flag","P. Ekon"]];
 const numericFields=["flats_count","nonresidential_count","garages_count","shared_spaces_count","invoice_approvers_count","manager_flag","economist_flag"];

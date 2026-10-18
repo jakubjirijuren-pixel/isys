@@ -1,0 +1,88 @@
+/* FOXA mobile usability pass. Loaded after the theme palette to preserve
+   user-selected widget backgrounds, dark mode and accent colors. */
+@media(max-width:800px){
+ .layout{width:100%;min-width:0;max-width:100%;overflow-x:clip}
+ .layout .content{width:100%;min-width:0;max-width:100%}
+ .layout aside{position:sticky!important;top:0!important;z-index:100!important}
+ .layout aside .mobile-nav-top{min-height:60px;padding-inline:max(12px,env(safe-area-inset-left));padding-right:max(12px,env(safe-area-inset-right))}
+ .layout aside.mobile-nav-open .side-navigation{
+  position:absolute!important;top:100%;left:0;right:0;max-height:calc(100dvh - 60px);
+  overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;
+ }
+ .layout header{min-width:0;min-height:60px;padding:8px 12px;gap:8px;flex-wrap:wrap}
+ .layout header .breadcrumb{min-width:0;max-width:100%;overflow:hidden}
+ .layout header .userbar{margin-left:auto;min-width:0}
+ .layout header :is(.avatarbutton,.logout){min-height:44px}
+ .layout .body{min-width:0;max-width:100%;padding:16px 14px calc(28px + env(safe-area-inset-bottom))!important}
+ .layout .body :is(.hero,.dashboardwidgetheading,.pageheading,.technicalhead,.inspectionheading,.tasksheader){
+  height:auto!important;max-height:none!important;min-height:0!important;overflow:visible!important;
+ }
+ .layout .body :is(.hero,.dashboardwidgetheading,.pageheading,.technicalhead,.inspectionheading,.tasksheader){
+  flex-wrap:wrap;align-items:flex-start;gap:12px;
+ }
+ .layout .body :is(.hero,.dashboardwidgetheading,.pageheading,.technicalhead,.inspectionheading,.tasksheader) :is(h1,h2){
+  max-width:100%;white-space:normal;overflow-wrap:anywhere;line-height:1.25;
+ }
+ .layout .body :is(.hero,.dashboardwidgetheading,.pageheading,.technicalhead,.inspectionheading,.tasksheader) :is(p,small){
+  white-space:normal;overflow-wrap:anywhere;
+ }
+ .layout .body :is(.tiles,.dashboardtiles,.buildinggrid,.taskstats){min-width:0;max-width:100%}
+ .layout .body .dashboardtiles{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+ .layout .body .dashboardtiles>article{min-width:0}
+ .layout .body .dashboardtiles .widgettitle{flex-wrap:wrap}
+ .layout .body .dashboardtiles .widgettitle h3{flex:1 1 120px;min-width:0;white-space:normal}
+ .layout .body .dashboardtiles .widgetbuttons{display:flex;gap:4px;flex:0 0 auto;margin-left:auto}
+ .layout .body .dashboardtiles .widgetbuttons button{min-width:44px;min-height:44px}
+ .layout .body .dashboardtiles .widgetvalue{font-size:clamp(1.6rem,6vw,2.1rem);overflow-wrap:anywhere}
+ .layout .body .dashboardtiles .widgetreorder{display:flex;flex-wrap:wrap;gap:8px}
+ .layout .body .dashboardtiles .widgetreorder button{flex:1 1 125px;white-space:normal;min-width:0}
+ .layout .body :is(.buildinglist article,.buildingcard,.taskitem,.keys-record,.adminuserrow){min-width:0;max-width:100%}
+ .layout .body :is(.buildinglist article,.taskitem,.keys-record,.adminuserrow){overflow-wrap:anywhere}
+ .layout .body :is(.buildinglist article,.taskitem,.keys-record,.adminuserrow) :is(.actions,.buttons){flex-wrap:wrap;gap:8px}
+ .layout .body :is(.buildinglist article,.taskitem,.keys-record,.adminuserrow) :is(button,a){max-width:100%}
+ .layout .body :is(.filtercontrols,.technicalfields,.inspectionfields,.formgrid,.vacation-grid,.keys-layout){min-width:0}
+ .layout .body :is(.filtercontrols,.technicalfields,.inspectionfields,.formgrid,.vacation-grid,.keys-layout)>*{min-width:0}
+ .layout .body :is(.tablewrap,.table-wrap,.technicaltablewrap,.attendance-table-wrap,.buildingtablewrap){
+  max-width:100%;overflow-x:auto;overscroll-behavior-x:contain;-webkit-overflow-scrolling:touch;
+ }
+ .layout .body :is(.tablewrap,.table-wrap,.technicaltablewrap,.attendance-table-wrap,.buildingtablewrap) table{
+  width:max-content;min-width:100%;
+ }
+ .layout .body :is(.technicalphotogrid,.technicalsignatures){grid-template-columns:minmax(0,1fr)}
+ .layout .overlay{padding:12px;align-items:center;overflow-y:auto}
+ .layout .modal{width:min(100%,650px);max-width:100%;max-height:calc(100dvh - 24px);overflow-y:auto;overscroll-behavior:contain}
+ .layout .userdropdown{z-index:110;max-height:calc(100dvh - 75px)}
+ .layout .body :is(input:not([type="checkbox"]):not([type="radio"]),select,textarea){font-size:16px}
+ .layout .body :is(button,[role="button"],.filtertrigger){touch-action:manipulation}
+ .layout .body :is(.pageactions,.inspectionactions,.technicalbuttons,.tasksactions,.attendance-actions){flex-wrap:wrap;gap:8px}
+ .layout .body :is(.pageactions,.inspectionactions,.technicalbuttons,.tasksactions,.attendance-actions)>button{min-height:44px}
+}
+@media(max-width:560px){
+ .layout header{padding:8px 10px}
+ .layout header .breadcrumb .breadcrumblink{max-width:90px}
+ .layout header .breadcrumb strong[aria-current="page"]{max-width:110px;overflow:hidden;text-overflow:ellipsis}
+ .layout .body{padding:12px 10px calc(26px + env(safe-area-inset-bottom))!important}
+ .layout .body .dashboardtiles{grid-template-columns:minmax(0,1fr)}
+ .layout .body .dashboardtiles>article{padding:16px!important}
+ .layout .body :is(.hero,.dashboardwidgetheading,.pageheading,.technicalhead,.inspectionheading,.tasksheader){padding:15px}
+ .layout .body :is(.pageheading,.technicalhead,.inspectionheading,.tasksheader) :is(.actions,.pageactions,.technicalbuttons,.inspectionactions){width:100%;flex-wrap:wrap}
+ .layout .body :is(.pageheading,.technicalhead,.inspectionheading,.tasksheader) :is(.actions,.pageactions,.technicalbuttons,.inspectionactions)>button{flex:1 1 100%}
+ .layout .body :is(.formgrid,.technicalfields,.inspectionfields,.vacation-grid,.keys-layout){grid-template-columns:minmax(0,1fr)}
+ .layout .body :is(.buildinggrid,.taskstats,.widgetchoices){grid-template-columns:minmax(0,1fr)}
+ .layout .body :is(.filtercontrols)>*{flex-basis:100%}
+ .layout .modal{padding:16px;max-height:calc(100dvh - 16px)}
+ .layout .overlay{padding:8px}
+ .layout .body :is(.inspectionpanel,.technicalpanel,.keys-panel,.attendance-card,.vacation-panel,.taskform,.tasklist,.taskdetail,.wiki-panel){padding:14px}
+ .layout .body :is(.technicalbuttons,.inspectionactions,.inspectionbottom,.attendance-actions,.tasksactions,.pageactions)>button{flex:1 1 100%}
+ .layout .body :is(.widgetpicker,.filterpanel){max-width:100%;overflow-wrap:anywhere}
+}
+@media(max-width:360px){
+ .layout .body{padding-inline:8px!important}
+ .layout .body .dashboardtiles>article{padding:12px!important}
+ .layout header .breadcrumb .breadcrumblink{max-width:65px}
+ .layout header .userbar{gap:4px}
+}
+@media print{
+ .layout{overflow:visible!important}
+ .layout .body{padding:0!important}
+}
