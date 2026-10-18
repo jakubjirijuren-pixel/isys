@@ -33,7 +33,7 @@ export default function BuildingActiveKeys({supabase,buildingId}){
   <div className="building-active-keys-heading"><div><h3>Aktuálně zapůjčené klíče</h3><span>{loading?"Načítání…":error?"Nedostupné":loans.length+" aktivních výpůjček"}</span></div><button type="button" className="secondarybutton" onClick={load} disabled={loading}>Obnovit</button></div>
   {error?<p className="building-active-keys-error" role="alert">{error}</p>:loading?<p>Načítání výpůjček…</p>:loans.length===0?<p>Od tohoto objektu nejsou aktuálně zapůjčené žádné klíče.</p>:<div className="building-active-keys-list">{loans.map(loan=><article className="building-active-key-item" key={loan.id}>
    <div className="building-active-key-main"><strong>{loan.displayKey}</strong><span>Zapůjčeno: {formatDate(loan.loaned_at)}</span></div>
-   <div className="building-active-key-person"><span>Vypůjčil(a)</span><strong>{loan.borrower||"Neuvedeno"}</strong>{loan.borrower_company&&<small>{loan.borrower_company}</small>}</div>
+   <div className="building-active-key-person"><span>Vypůjčil(a)</span><strong>{loan.borrower_name||"Neuvedeno"}</strong>{loan.borrower_company&&<small>{loan.borrower_company}</small>}</div>
    <span className="building-active-key-status">Nevráceno</span>
   </article>)}</div>}
  </div>;
