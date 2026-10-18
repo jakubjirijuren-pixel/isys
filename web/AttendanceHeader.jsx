@@ -21,14 +21,28 @@ export default function AttendanceHeader({supabase,userId,onOpen}){
  },[supabase,userId]);
  useEffect(()=>{load();const refresh=()=>load();window.addEventListener("focus",refresh);window.addEventListener("isys-attendance-updated",refresh);const interval=window.setInterval(()=>{setNow(Date.now());if(new Date().getHours()===0&&new Date().getMinutes()===0)load()},30000);return()=>{window.clearInterval(interval);window.removeEventListener("focus",refresh);window.removeEventListener("isys-attendance-updated",refresh)}},[load]);
  const total=useMemo(()=>worked(events,now),[events,now]);
+ const getGps=()=>new Promise((resolve,reject)=>{
+  if(!window.isSecureContext){reject(new Error("GPS vyžaduje zabezpečené připojení HTTPS."));return}
+  if(!navigator.geolocation){reject(new Error("Zařízení nepodporuje zjištění polohy."));return}
+  navigator.geolocation.getCurrentPosition(
+   pos=>resolve({p_latitude:pos.coords.latitude,p_longitude:pos.coords.longitude,p_accuracy_m:pos.coords.accuracy,p_captured_at:new Date(pos.timestamp).toISOString()}),
+   err=>reject(new Error(err.code===1?"Přístup k poloze byl zamítnut. Povolte FOXA přístup k poloze.":err.code===3?"Nepodařilo se včas zjistit polohu. Zkuste to znovu.":"Polohu se nepodařilo zjistit. Zkontrolujte polohové služby.")),
+   {enableHighAccuracy:true,maximumAge:0,timeout:15000}
+  );
+ });
  const mark=async type=>{
-  if(busy)return;setBusy(true);setError("");
-  const {error:e}=await supabase.rpc("isys_attendance_mark",{p_type:type});
-  if(e)setError(e.message);
-  else window.dispatchEvent(new Event("isys-attendance-updated"));
-  await load();setNow(Date.now());setBusy(false);
+  if(busy)return;
+  setBusy(true);setError("");
+  try{
+   const gps=(type==="in"||type==="out")?await getGps():{};
+   const {error:e}=await supabase.rpc("isys_attendance_mark_geo",{p_type:type,...gps});
+   if(e)throw e;
+   window.dispatchEvent(new Event("isys-attendance-updated"));
+   await load();setNow(Date.now());
+  }catch(e){setError(e?.message||"Docházku se nepodařilo zaznamenat.")}
+  finally{setBusy(false)}
  };
- return <div className="attendance-header" aria-label="Rychlá docházka">
+ return <div className="attendance-header" aria-label="Rychlá docházka" aria-busy={busy}>
   <button type="button" className="attendance-header-time" onClick={onOpen} title="Otevřít docházku">
    <span className="attendance-header-clock">◷</span><span><strong>{ready?minutes(total):"—"}</strong><small>{ready?(labels[latest]||"Docházka")+" · dnes":"Docházka"}</small></span>
   </button>
