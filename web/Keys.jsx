@@ -3,8 +3,10 @@ import "./keys.css";
 import KeyKiosk from "./KeyKiosk.jsx";
 import KeyBarcode from "./KeyBarcode.jsx";
 import KeyNfcWriter from "./KeyNfcWriter.jsx";
+import html2pdf from "html2pdf.js";
 const localTime=()=>{const d=new Date();return new Date(d.getTime()-d.getTimezoneOffset()*60000).toISOString().slice(0,16)};
-const empty=()=>({building_id:"",borrower:"",key_description:"",borrowed_at:localTime(),note:""});
+const empty=()=>({building_id:"",borrower:"",phone:"",key_description:"",borrowed_at:localTime(),note:""});
+const esc=v=>String(v??"").replace(/[&<>"\x27]/g,ch=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","\x27":"&#39;"}[ch]));
 const fmt=v=>v?new Date(v).toLocaleString("cs-CZ",{dateStyle:"short",timeStyle:"short"}):"—";
 function KeyBuildingPicker({buildings,value,onChange}){
  const [open,setOpen]=useState(false),[query,setQuery]=useState("");
@@ -18,6 +20,7 @@ function KeyBuildingPicker({buildings,value,onChange}){
 }
 export default function Keys({supabase,buildings,userId,isAdmin=false,initialFilter="active"}){
  const [rows,setRows]=useState([]),[keys,setKeys]=useState([]),[form,setForm]=useState(empty),[loading,setLoading]=useState(true),[busy,setBusy]=useState(false),[error,setError]=useState(""),[notice,setNotice]=useState(""),[filter,setFilter]=useState(initialFilter),[viewMode,setViewMode]=useState(()=>{try{return localStorage.getItem("isys-keys-view")==="list"?"list":"cards"}catch{return "cards"}}),[search,setSearch]=useState(""),[buildingFilter,setBuildingFilter]=useState(""),[dateFrom,setDateFrom]=useState(""),[dateTo,setDateTo]=useState(""),[returning,setReturning]=useState(null),[returnDate,setReturnDate]=useState(localTime);
+ const [loanVariant,setLoanVariant]=useState("standard"),[pdfBusy,setPdfBusy]=useState(false);
  const [borrowerPanel,setBorrowerPanel]=useState(false),[borrowerRows,setBorrowerRows]=useState([]),[borrowerName,setBorrowerName]=useState(""),[borrowerBusy,setBorrowerBusy]=useState(false);
  const refreshBorrowers=async()=>{const {data,error:e}=await supabase.from("key_borrowers").select("id,full_name,active").order("full_name");if(e)setError("Seznam vypůjčitelů: "+e.message);else setBorrowerRows(data||[])};
  useEffect(()=>{if(isAdmin)refreshBorrowers()},[isAdmin]);
@@ -37,7 +40,35 @@ export default function Keys({supabase,buildings,userId,isAdmin=false,initialFil
  useEffect(()=>{try{localStorage.setItem("isys-keys-view",viewMode)}catch{}},[viewMode]);
  const keyName=k=>[k?.label,k?.identifier&&"("+k.identifier+")"].filter(Boolean).join(" ")||"Neznámý klíč";
  const byId=Object.fromEntries(keys.map(k=>[k.id,k]));
- const create=async event=>{event.preventDefault();if(busy)return;if(!form.building_id){setError("Vyber objekt.");return;}setBusy(true);setError("");setNotice("");const {error:e}=await supabase.from("key_loans").insert({building_id:form.building_id,key_description:form.key_description.trim(),borrower_name:form.borrower.trim(),loaned_at:new Date(form.borrowed_at).toISOString(),notes:form.note.trim()||null,issued_by:userId});if(e)setError("Výpůjčku se nepodařilo uložit: "+e.message);else{setForm(empty());setNotice("Výpůjčka klíčů byla zapsána.");await load()}setBusy(false)};
+ const create=async event=>{
+  event.preventDefault();if(busy)return;
+  if(!form.building_id){setError("Vyber objekt.");return}
+  if(loanVariant==="handover"&&(!/^\\S+\\s+\\S+/.test(form.borrower.trim())||!/^\\+?[0-9][0-9 ()-]{7,19}$/.test(form.phone.trim()))){setError("Pro předávací protokol vyplňte jméno, příjmení a platné telefonní číslo.");return}
+  setBusy(true);setError("");setNotice("");
+  const payload={building_id:form.building_id,key_description:form.key_description.trim(),borrower_name:form.borrower.trim(),loaned_at:new Date(form.borrowed_at).toISOString(),notes:form.note.trim()||null,issued_by:userId,protocol_type:loanVariant,borrower_phone:loanVariant==="handover"?form.phone.trim():null};
+  const {data:created,error:e}=await supabase.from("key_loans").insert(payload).select("*").single();
+  if(e)setError("Výpůjčku se nepodařilo uložit: "+e.message);
+  else{
+   setForm(empty());setNotice(loanVariant==="handover"?"Výpůjčka byla uložena. Nyní lze vytisknout předávací protokol.":"Výpůjčka klíčů byla zapsána.");
+   await load();
+   if(loanVariant==="handover"&&created)await exportProtocol(created);
+  }
+  setBusy(false)
+ };
+ const exportProtocol=async loan=>{
+  if(pdfBusy)return;
+  setPdfBusy(true);
+  const building=buildings.find(b=>String(b.id)===String(loan.building_id));
+  const objectLabel=[building?.object_number&&"Středisko "+building.object_number,building?.name||building?.address||building?.street,building?.city].filter(Boolean).join(" – ")||"Neuvedený objekt";
+  const filename="FOXA_predavaci_protokol_klice_"+String(building?.object_number||"objekt").replace(/[^a-zA-Z0-9_-]/g,"_")+"_"+String(loan.id).slice(0,8)+".pdf";
+  const body=`<article class="document"><header><div class="brand"><b>SBD PRAHA 8</b><small>Stavební bytové družstvo Praha 8</small></div><div class="heading"><h1>PŘEDÁVACÍ PROTOKOL</h1><p>o zapůjčení klíčů od objektu</p></div></header><div class="number">Evidenční číslo výpůjčky: ${esc(loan.id)}</div><section><h2>1. Předmět předání</h2><dl><dt>Objekt / středisko</dt><dd>${esc(objectLabel)}</dd><dt>Předávané klíče</dt><dd>${esc(loan.key_description)}</dd><dt>Datum a čas zapůjčení</dt><dd>${esc(fmt(loan.loaned_at))}</dd></dl></section><section><h2>2. Převzetí klíčů</h2><dl><dt>Jméno a příjmení vypůjčitele</dt><dd>${esc(loan.borrower_name)}</dd><dt>Telefonní číslo</dt><dd>${esc(loan.borrower_phone||"—")}</dd><dt>Předávající organizace</dt><dd>SBD Praha 8</dd></dl></section><section><h2>3. Prohlášení</h2><p>Vypůjčitel podpisem potvrzuje převzetí výše uvedených klíčů a zavazuje se chránit je před ztrátou či zneužitím, nepředávat je neoprávněným osobám a po skončení výpůjčky je vrátit předávajícímu.</p><p><strong>Poznámka:</strong> ${esc(loan.notes||"Bez poznámky")}</p></section><div class="signatures"><div><span>Za SBD Praha 8 – předávající</span><div class="signature"></div><small>Podpis</small></div><div><span>Vypůjčitel – přebírající</span><div class="signature"></div><small>Podpis</small></div></div><footer>FOXA · Evidence klíčů · ${esc(fmt(loan.loaned_at))}</footer></article>`;
+  const style=`*{box-sizing:border-box}body{margin:0;color:#172d3d;background:#fff;font:13px Arial,sans-serif}.document{width:100%;padding:0 5mm}header{height:auto!important;display:flex;justify-content:space-between;gap:20px;align-items:flex-start;padding:0 0 16px;border-bottom:3px solid #174d70}.brand{display:flex;flex-direction:column;gap:6px;color:#174d70}.brand b{font-size:19px;letter-spacing:1px}.brand small{font-size:10px}.heading{text-align:right}.heading h1{font-size:22px;margin:0}.heading p{margin:6px 0 0}.number{font-size:10px;color:#647787;margin:16px 0}section{margin:18px 0;break-inside:avoid}h2{font-size:14px;background:#eaf2f7;border-radius:7px;padding:9px 11px;color:#174d70}dl{display:grid;grid-template-columns:40% 60%;margin:0}dt,dd{margin:0;padding:9px 10px;border-bottom:1px solid #d8e3e9;overflow-wrap:anywhere}dt{font-weight:bold;background:#f7fafc}p{line-height:1.6}.signatures{display:grid;grid-template-columns:1fr 1fr;gap:36px;margin-top:40px}.signatures>div{font-weight:bold}.signature{height:65px;border-bottom:1px solid #263b4b}.signatures small{display:block;margin-top:8px;font-weight:normal}footer{border-top:1px solid #d8e3e9;margin-top:32px;padding-top:12px;color:#74828b;font-size:10px}@media print{@page{size:A4;margin:15mm}}`;
+  const host=document.createElement("div");host.style.cssText="position:fixed;left:-12000px;top:0;width:794px;background:#fff;color:#172d3d;z-index:-1";host.innerHTML="<style>"+style+"</style>"+body;document.body.appendChild(host);
+  try{
+   await html2pdf().set({margin:[14,10,14,10],filename,image:{type:"jpeg",quality:0.98},html2canvas:{scale:2,backgroundColor:"#fff",scrollY:0},jsPDF:{unit:"mm",format:"a4",orientation:"portrait"},pagebreak:{mode:["css","legacy"],avoid:["section",".signatures"]}}).from(host.querySelector(".document")).save();
+  }catch(e){setError("PDF protokol se nepodařilo vytvořit: "+e.message)}
+  finally{host.remove();setPdfBusy(false)}
+ };
  const confirmReturn=async()=>{if(!returning||busy)return;const dt=new Date(returnDate);if(Number.isNaN(dt.getTime())||dt<new Date(returning.loaned_at)){setError("Datum vrácení nesmí předcházet výpůjčce.");return}setBusy(true);setError("");const {data,error:e}=await supabase.from("key_loans").update({returned_at:dt.toISOString()}).eq("id",returning.id).is("returned_at",null).select("id");if(e)setError("Vrácení se nepodařilo uložit: "+e.message);else if(!data?.length)setError("Záznam již byl vrácen nebo změněn. Obnov přehled.");else{setNotice("Vrácení klíčů bylo zaznamenáno.");setReturning(null);await load()}setBusy(false)};
  const loanBuilding=r=>r.building_id||byId[r.key_id]?.building_id;
  const loanKeys=r=>r.key_description||keyName(byId[r.key_id]);
