@@ -39,3 +39,16 @@
 [data-theme="dark"] .pf-editor .pf-building-options button:hover{background:#28475f}
 
 .pf-signer-settings{display:grid;gap:12px;padding:14px;border:1px solid var(--border,#cbd8e2);border-radius:12px;margin:12px 0}.pf-signer-toggle{display:flex!important;flex-direction:row!important;align-items:center;gap:10px;font-weight:700}.pf-signer-toggle input{width:18px!important;height:18px;flex:0 0 18px;accent-color:#2678a5}.pf-signer-settings small{font-size:12px;opacity:.75}
+
+
+/* Optional outgoing mail registration from printable forms. */
+.pf-editor .pf-outmail{margin:14px 0;padding:15px;border:1px solid var(--border,#cbd8e2);border-radius:12px;background:var(--card-bg,transparent)}
+.pf-editor .pf-outmail-toggle{display:flex;flex-direction:row;align-items:center;gap:10px;font-weight:700}
+.pf-editor .pf-outmail-toggle input{width:18px;height:18px;flex:0 0 18px;accent-color:#2678a5}
+.pf-editor .pf-outmail-details{display:grid;gap:12px;margin-top:15px}
+.pf-editor .pf-outmail-details>label{display:flex;flex-direction:column;gap:6px}
+.pf-editor .pf-outmail-details small{opacity:.75;font-size:12px;line-height:1.5}
+.pf-editor .pf-outmail-details button{justify-self:start}
+.pf-editor .pf-outmail-success{border:1px solid #67ad85;color:#17613d;background:#e7f7ed;border-radius:10px;padding:12px;font-size:13px}
+[data-theme="dark"] .pf-editor .pf-outmail{background:#172d40;border-color:#38556c}
+[data-theme="dark"] .pf-editor .pf-outmail-success{background:#163a2d;border-color:#41865d;color:#b6f4cb}
