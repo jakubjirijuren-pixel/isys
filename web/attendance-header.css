@@ -87,3 +87,28 @@
  .layout header .attendance-header .attendance-header-start:nth-child(2)::before{content:"↪"}
  .layout header .attendance-header .attendance-header-action:disabled::before{opacity:.6}
 }
+
+
+/* Phone quick attendance: emoji communicate the actual action rather than
+   relying on button position. Keep the text in the accessible button name. */
+@media(max-width:700px){
+ .layout header .attendance-header .attendance-header-action::before{
+  content:"📍";font-size:27px;font-weight:400;line-height:1.25;
+ }
+ .layout header .attendance-header .attendance-header-action[data-action="in"]::before{content:"🟢"}
+ .layout header .attendance-header .attendance-header-action[data-action="out"]::before{content:"🚪"}
+ .layout header .attendance-header .attendance-header-action[data-action="break_start"]::before{content:"🍗"}
+ .layout header .attendance-header .attendance-header-action[data-action="break_end"]::before{content:"▶️"}
+ .layout header .attendance-header .attendance-header-action[data-action="trip_start"]::before{content:"🚗"}
+ .layout header .attendance-header .attendance-header-action[data-action="trip_end"]::before{content:"🏁"}
+ .layout header .attendance-header .attendance-header-action[data-action="doctor_start"]::before{content:"🩺"}
+ .layout header .attendance-header .attendance-header-action[data-action="doctor_end"]::before{content:"✅"}
+ .layout header .attendance-header .attendance-header-action[data-action="homeoffice_start"]::before{content:"🏠"}
+ .layout header .attendance-header .attendance-header-action[data-action="homeoffice_end"]::before{content:"🏢"}
+ .layout header .attendance-header .attendance-header-action{
+  min-height:52px!important;cursor:pointer;
+ }
+ .layout header .attendance-header .attendance-header-action:focus-visible{
+  outline:2px solid var(--isys-accent);outline-offset:3px;
+ }
+}
