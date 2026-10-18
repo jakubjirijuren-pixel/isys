@@ -39,3 +39,33 @@
  .attendance-header{gap:7px}
  .attendance-header-action{font-size:13px;padding:9px 7px}
 }
+
+
+/* Header has a separate .userbar flex parent; make it wrap so the quick
+   attendance grid can actually occupy a full mobile row. */
+@media(max-width:800px){
+ .layout header .userbar{
+  display:flex;flex-wrap:wrap;align-items:center;justify-content:flex-end;
+  width:100%;min-width:0;max-width:100%;gap:8px;
+ }
+ .layout header .userbar .attendance-header{
+  order:10;flex:0 0 100%;width:100%;max-width:100%;min-width:0;
+  display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;
+  gap:8px!important;margin:0;
+ }
+ .layout header .userbar .attendance-header-time{
+  grid-column:1/-1!important;min-width:0;min-height:52px;
+  justify-content:flex-start!important;flex:initial!important;
+ }
+ .layout header .userbar .attendance-header-action{
+  min-width:0;min-height:48px;flex:initial!important;width:100%;
+  font-size:14px;white-space:normal;
+ }
+ .layout header .userbar .attendance-header-action:nth-child(2):last-of-type{grid-column:1/-1}
+ .layout header .userbar .attendance-header-error{
+  grid-column:1/-1;display:block;width:100%;max-width:none;
+  padding:8px 10px;border-radius:9px;
+  background:color-mix(in srgb,#b63c43 12%,transparent);
+  font-size:12px;line-height:1.4;
+ }
+}
