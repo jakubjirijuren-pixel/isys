@@ -37,3 +37,5 @@
 .pf-editor .pf-building-empty{padding:12px;font-size:12px;opacity:.7}
 [data-theme="dark"] .pf-editor .pf-building-options{background:#192f43;border-color:#3b5970;color:#e6f1fb}
 [data-theme="dark"] .pf-editor .pf-building-options button:hover{background:#28475f}
+
+.pf-signer-settings{display:grid;gap:12px;padding:14px;border:1px solid var(--border,#cbd8e2);border-radius:12px;margin:12px 0}.pf-signer-toggle{display:flex!important;flex-direction:row!important;align-items:center;gap:10px;font-weight:700}.pf-signer-toggle input{width:18px!important;height:18px;flex:0 0 18px;accent-color:#2678a5}.pf-signer-settings small{font-size:12px;opacity:.75}
