@@ -69,3 +69,6 @@
   font-size:12px;line-height:1.4;
  }
 }
+
+@media(max-width:700px){.attendance-header-action-label{display:none}.attendance-header-action-icon{display:inline-flex;font-size:25px;align-items:center;justify-content:center}.attendance-header-action{display:flex;align-items:center;justify-content:center}}
+@media(min-width:701px){.attendance-header-action-icon{display:none}}
