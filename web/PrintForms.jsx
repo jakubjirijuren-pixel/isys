@@ -73,9 +73,9 @@ export default function PrintForms({buildings=[],currentAccountName="",reportSig
   setPdfSaving(true);setError("");
   const staging=document.createElement("div");
   staging.className="pf-preview-paper pf-export-preview";
-  staging.style.cssText="position:fixed;left:0;top:0;width:210mm;min-height:297mm;zoom:1;transform:translateX(-200vw);pointer-events:none;background:#fff;z-index:-1";
+  staging.style.cssText="position:absolute;left:0;top:0;width:210mm;min-height:297mm;zoom:1;pointer-events:none;background:#fff;z-index:-1";
   try{
-   // Export exactly the same A4 markup and styling as the live preview.
+   // Keep export at real document coordinates: offscreen CSS transforms render blank in html2canvas.\n   // Use the same A4 markup and styling as the live preview.
    // Previous PDF used a separate compact layout, which caused a mismatch.
    staging.innerHTML=documentHTML();
    document.body.appendChild(staging);
