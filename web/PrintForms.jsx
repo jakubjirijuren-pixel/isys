@@ -73,7 +73,7 @@ export default function PrintForms({buildings=[],currentAccountName="",reportSig
   setPdfSaving(true);setError("");
   const staging=document.createElement("div");
   staging.className="pf-pdf-staging";
-  staging.style.cssText="position:fixed;left:-10000px;top:0;width:170mm;background:#fff;color:#222;z-index:-1";
+  staging.style.cssText="position:absolute;left:0;top:0;width:174mm;background:#fff;color:#222;z-index:-1;visibility:visible;pointer-events:none;transform:translateX(-200vw)";
   try{
    const source=document.createElement("div");source.innerHTML=documentHTML();
    const page=source.querySelector(".pf-paper");
@@ -90,21 +90,21 @@ export default function PrintForms({buildings=[],currentAccountName="",reportSig
    const headerCanvas=await html2pdf().set({html2canvas:canvasOpts}).from(h).toCanvas().get("canvas");
    const footerCanvas=await html2pdf().set({html2canvas:canvasOpts}).from(f).toCanvas().get("canvas");
    const pdf=await worker.set({
-    margin:[41,20,27,20],
+    margin:[32,18,23,18],
     filename:pdfFileName(fields.subject||templates[template].title),
     image:{type:"jpeg",quality:.97},
     html2canvas:canvasOpts,
     jsPDF:{unit:"mm",format:"a4",orientation:"portrait"},
-    pagebreak:{mode:["css","legacy"],avoid:[".pf-signature",".pf-top",".pf-subject"]}
+    pagebreak:{mode:["css","legacy"],avoid:[".pf-signature",".pf-top",".pf-subject",".pf-recipient"]}
    }).from(content).toPdf().get("pdf");
    const headData=headerCanvas.toDataURL("image/png");
    const footData=footerCanvas.toDataURL("image/png");
-   const headerHeight=Math.min(29,170*headerCanvas.height/headerCanvas.width);
-   const footerHeight=Math.min(17,170*footerCanvas.height/footerCanvas.width);
+   const headerHeight=Math.min(23,174*headerCanvas.height/headerCanvas.width);
+   const footerHeight=Math.min(14,174*footerCanvas.height/footerCanvas.width);
    for(let i=1;i<=pdf.internal.getNumberOfPages();i++){
     pdf.setPage(i);
-    pdf.addImage(headData,"PNG",20,7,170,headerHeight);
-    pdf.addImage(footData,"PNG",20,297-7-footerHeight,170,footerHeight);
+    pdf.addImage(headData,"PNG",18,5,174,headerHeight);
+    pdf.addImage(footData,"PNG",18,297-5-footerHeight,174,footerHeight);
    }
    pdf.save(pdfFileName(fields.subject||templates[template].title));
   }catch(e){setError("PDF se nepodařilo vytvořit: "+(e?.message||"Neznámá chyba"))}
