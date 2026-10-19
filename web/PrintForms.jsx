@@ -103,16 +103,35 @@ export default function PrintForms({buildings=[],currentAccountName="",reportSig
    const filename=pdfFileName(template==="key_handover"?"Predavaci_protokol_klicu_"+(keyHandover.objectDescription||keyHandover.recipientName):fields.subject||templates[template].title);
    // The direct save pipeline is the supported html2pdf.js API. The previous
    // custom .toCanvas().get("canvas") pipeline returned no canvas in production.
-   await html2pdf().set({
-    margin:0,
+   preview.classList.add("pf-exporting");
+   const pdf=await html2pdf().set({
+    margin:[0,0,22,0],
     filename,
     image:{type:"jpeg",quality:.98},
     html2canvas:{scale:2,useCORS:true,backgroundColor:"#ffffff",logging:false,scrollX:0,scrollY:0},
     jsPDF:{unit:"mm",format:"a4",orientation:"portrait"},
     pagebreak:{mode:["css","legacy"],avoid:[".pf-signature",".pf-top",".pf-subject",".pf-building-works-note",".pf-building-works-ending"]}
-   }).from(preview).save();
+   }).from(preview).toPdf().get("pdf");
+   const footerCanvas=document.createElement("canvas");
+   footerCanvas.width=1700;footerCanvas.height=160;
+   const ctx=footerCanvas.getContext("2d");
+   if(!ctx)throw new Error("Nelze vykreslit zápatí.");
+   ctx.fillStyle="#fff";ctx.fillRect(0,0,1700,160);
+   ctx.strokeStyle="#9da8b1";ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(0,10);ctx.lineTo(1700,10);ctx.stroke();
+   ctx.fillStyle="#263746";ctx.font="bold 27px Arial";
+   ctx.fillText("Stavební bytové družstvo Praha 8",0,58);
+   ctx.fillStyle="#536676";ctx.font="24px Arial";
+   ctx.fillText("Tel.: 284 682 814, 284 682 046",0,115);
+   ctx.textAlign="center";ctx.fillText("E-mail: info@sbd8.cz",850,115);
+   ctx.textAlign="right";ctx.fillText("www.sbd8.cz",1700,115);
+   const footerImage=footerCanvas.toDataURL("image/png");
+   for(let page=1;page<=pdf.internal.getNumberOfPages();page++){
+    pdf.setPage(page);
+    pdf.addImage(footerImage,"PNG",20,275,170,16);
+   }
+   pdf.save(filename);
   }catch(e){setError("PDF se nepodařilo vytvořit: "+(e?.message||"Neznámá chyba"))}
-  finally{preview.style.zoom=previousZoom;preview.style.overflow=previousOverflow;setPdfSaving(false)}
+  finally{preview.classList.remove("pf-exporting");preview.style.zoom=previousZoom;preview.style.overflow=previousOverflow;setPdfSaving(false)}
  };
  return <div className="printforms"><div className="pageheading"><div><h1>Generátor tiskopisů</h1><p>Vytvořte dopis nebo oznámení na hlavičkovém papíře SBD Praha 8 a vytiskněte jej nebo uložte jako PDF.</p></div></div>
   <div className="pf-workspace"><section className="pf-editor"><h2>Nastavení dokumentu</h2>
