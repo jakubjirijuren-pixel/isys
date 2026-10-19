@@ -62,7 +62,7 @@ export default function NotificationCenter({supabase,userId,onNavigate}){
    }
    if(!subscription)subscription=await reg.pushManager.subscribe({userVisibleOnly:true,applicationServerKey:bytes(publicKey)});
    const data=subscription.toJSON();
-   const {error:e}=await supabase.from("push_subscriptions").upsert({user_id:userId,endpoint:subscription.endpoint,p256dh:data.keys?.p256dh,auth:data.keys?.auth,updated_at:new Date().toISOString()},{onConflict:"endpoint"});
+   const {error:e}=await supabase.rpc("isys_register_push_subscription",{p_endpoint:subscription.endpoint,p_p256dh:data.keys?.p256dh,p_auth:data.keys?.auth});
    if(e){
     if(e.code==="23505")throw Error("Toto zařízení je už přiřazeno jinému účtu. V původním účtu vypni push, případně požádej administrátora o odstranění staré registrace.");
     throw Error(e.message);
