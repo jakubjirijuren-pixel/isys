@@ -61,12 +61,19 @@ export default function NotificationCenter({supabase,userId,onNavigate}){
     }
    }
    if(!subscription)subscription=await reg.pushManager.subscribe({userVisibleOnly:true,applicationServerKey:bytes(publicKey)});
-   const data=subscription.toJSON();
-   const {error:e}=await supabase.rpc("isys_register_push_subscription",{p_endpoint:subscription.endpoint,p_p256dh:data.keys?.p256dh,p_auth:data.keys?.auth});
-   if(e){
-    if(e.code==="23505")throw Error("Toto zařízení je už přiřazeno jinému účtu. V původním účtu vypni push, případně požádej administrátora o odstranění staré registrace.");
-    throw Error(e.message);
+   const register=async sub=>{
+    const keys=sub.toJSON().keys;
+    return supabase.rpc("isys_register_push_subscription",{p_endpoint:sub.endpoint,p_p256dh:keys?.p256dh,p_auth:keys?.auth});
+   };
+   let {error:e}=await register(subscription);
+   if(e&&e.code==="P0001"){
+    // An old browser endpoint may belong to a different account with rotated keys.
+    // Never take it over: unsubscribe locally and request a fresh endpoint.
+    await subscription.unsubscribe();
+    subscription=await reg.pushManager.subscribe({userVisibleOnly:true,applicationServerKey:bytes(publicKey)});
+    ({error:e}=await register(subscription));
    }
+   if(e)throw Error(e.message);
    setPushEnabled(true);setPushStatus("Push oznámení jsou na tomto zařízení aktivní.");
   }catch(e){setPushStatus(e.message||"Push oznámení se nepodařilo aktivovat.")}finally{setPushBusy(false)}
  };
