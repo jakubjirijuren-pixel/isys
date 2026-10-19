@@ -58,3 +58,9 @@
 .pf-preview-paper .pf-glazing .pf-bodytext{line-height:1.42}
 .pf-preview-paper .pf-glazing .pf-signature{break-inside:avoid}
 .pf-preview-paper .pf-glazing .pf-footer{position:relative;left:auto;right:auto;bottom:auto;margin-top:18mm}
+
+/* Variables taken from the supplied glazing conditions document. */
+.pf-editor .pf-glazing-fields{border:1px solid var(--border,#c6d7e3);border-radius:12px;padding:14px;margin:12px 0;min-width:0}
+.pf-editor .pf-glazing-fields legend{font-weight:750;padding:0 8px}
+.pf-editor .pf-glazing-fields p{font-size:12px;opacity:.78;margin:0 0 12px}
+[data-theme="dark"] .pf-editor .pf-glazing-fields{border-color:#395970}
