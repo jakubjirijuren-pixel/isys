@@ -73,33 +73,49 @@ export default function PrintForms({buildings=[],currentAccountName="",reportSig
   setPdfSaving(true);setError("");
   const staging=document.createElement("div");
   staging.className="pf-preview-paper pf-export-preview";
-  staging.style.cssText="position:absolute;left:0;top:0;width:210mm;min-height:297mm;zoom:1;pointer-events:none;background:#fff;z-index:-1";
+  // html2canvas needs a real, visible, on-screen render target. In particular,
+  // negative z-index and offscreen transforms produce blank PDF captures.
+  staging.style.cssText="position:fixed;left:0;top:0;width:210mm;min-height:297mm;zoom:1;transform:none;z-index:2147483647;pointer-events:none;background:#fff;overflow:visible";
   try{
-   // Keep export at real document coordinates: offscreen CSS transforms render blank in html2canvas.\n   // Use the same A4 markup and styling as the live preview.
-   // Previous PDF used a separate compact layout, which caused a mismatch.
    staging.innerHTML=documentHTML();
    document.body.appendChild(staging);
    const paper=staging.querySelector(".pf-paper");
+   if(!paper||!paper.textContent.trim())throw new Error("Dokument nemá obsah k exportu.");
    await Promise.all([...paper.querySelectorAll("img")].map(img=>img.complete?Promise.resolve():new Promise(resolve=>{img.addEventListener("load",resolve,{once:true});img.addEventListener("error",resolve,{once:true})})));
    if(document.fonts?.ready)await document.fonts.ready;
+   await new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)));
    const filename=pdfFileName(fields.subject||templates[template].title);
-   const pdf=await html2pdf().set({
-    margin:0,
-    filename,
-    image:{type:"jpeg",quality:.98},
-    html2canvas:{scale:2,useCORS:true,backgroundColor:"#ffffff",logging:false,scrollX:0,scrollY:0},
+   const options={
+    margin:0,filename,image:{type:"jpeg",quality:.98},
+    html2canvas:{scale:2,useCORS:true,backgroundColor:"#ffffff",logging:false,scrollX:0,scrollY:0,windowWidth:Math.max(window.innerWidth,900)},
     jsPDF:{unit:"mm",format:"a4",orientation:"portrait"},
     pagebreak:{mode:["css","legacy"],avoid:[".pf-signature",".pf-top",".pf-subject"]}
-   }).from(staging).toPdf().get("pdf");
-   // Repeat the same header and footer from the preview on overflow pages.
-   // The first page already contains both elements in its original positions.
+   };
+   const worker=html2pdf().set(options).from(staging);
+   const canvas=await worker.toCanvas().get("canvas");
+   if(!canvas||!canvas.width||!canvas.height)throw new Error("Nepodařilo se vykreslit dokument.");
+   // Reject a white/empty capture rather than downloading a broken PDF.
+   const ctx=canvas.getContext("2d",{willReadFrequently:true});
+   let ink=false;
+   if(ctx){
+    const w=canvas.width,h=canvas.height;
+    const step=Math.max(1,Math.floor(Math.min(w,h)/300));
+    const pixels=ctx.getImageData(0,0,w,h).data;
+    for(let y=0;y<h&&!ink;y+=step)for(let x=0;x<w;x+=step){
+     const i=(y*w+x)*4;
+     if(pixels[i+3]>100&&Math.min(pixels[i],pixels[i+1],pixels[i+2])<170){ink=true;break}
+    }
+   }
+   if(!ink)throw new Error("Vygenerovaný dokument je prázdný. PDF nebylo staženo; zkuste stránku znovu načíst.");
+   const pdf=await worker.toPdf().get("pdf");
    if(pdf.internal.getNumberOfPages()>1){
-    const header=paper.querySelector(".sbd-header"),footer=paper.querySelector(".pf-footer");
+    // Header and footer are already part of page one; repeat on overflow pages.
     const renderElement=async element=>{
-     const canvas=await html2pdf().set({html2canvas:{scale:2,useCORS:true,backgroundColor:"#ffffff",logging:false}}).from(element).toCanvas().get("canvas");
-     return {url:canvas.toDataURL("image/png"),ratio:canvas.height/canvas.width};
+     const capture=await html2pdf().set({html2canvas:{scale:2,useCORS:true,backgroundColor:"#ffffff",logging:false}}).from(element).toCanvas().get("canvas");
+     return {url:capture.toDataURL("image/png"),ratio:capture.height/capture.width};
     };
-    const h=await renderElement(header),f=await renderElement(footer);
+    const h=await renderElement(paper.querySelector(".sbd-header"));
+    const f=await renderElement(paper.querySelector(".pf-footer"));
     const headerWidth=170,headerHeight=Math.min(28,headerWidth*h.ratio);
     const footerWidth=170,footerHeight=Math.min(18,footerWidth*f.ratio);
     for(let i=2;i<=pdf.internal.getNumberOfPages();i++){
