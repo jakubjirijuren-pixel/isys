@@ -87,7 +87,7 @@ export default function PrintForms({buildings=[],currentAccountName="",reportSig
    if(document.fonts?.ready)await document.fonts.ready;
    await Promise.all([...preview.querySelectorAll("img")].map(img=>img.complete?Promise.resolve():new Promise(resolve=>{img.addEventListener("load",resolve,{once:true});img.addEventListener("error",resolve,{once:true})})));
    await new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)));
-   const filename=pdfFileName(fields.subject||templates[template].title);
+   const filename=pdfFileName(template==="key_handover"?"Predavaci_protokol_klicu_"+(keyHandover.objectDescription||keyHandover.recipientName):fields.subject||templates[template].title);
    // The direct save pipeline is the supported html2pdf.js API. The previous
    // custom .toCanvas().get("canvas") pipeline returned no canvas in production.
    await html2pdf().set({
@@ -111,7 +111,7 @@ export default function PrintForms({buildings=[],currentAccountName="",reportSig
     <label>Telefon (nepovinné)<input type="tel" value={keyHandover.recipientPhone} onChange={e=>setKeyHandoverField("recipientPhone",e.target.value)} placeholder="+420 123 456 789"/></label>
     <label>E-mail (nepovinné)<input type="email" value={keyHandover.recipientEmail} onChange={e=>setKeyHandoverField("recipientEmail",e.target.value)}/></label>
    </div><label>Objekt / místo použití klíčů<input value={keyHandover.objectDescription} onChange={e=>setKeyHandoverField("objectDescription",e.target.value)} placeholder="Objekt a adresa"/></label>
-   <label>Předávané klíče a množství<textarea rows={5} value={keyHandover.keyList} onChange={e=>setKeyHandoverField("keyList",e.target.value)} placeholder={"Např. 2× klíč od hlavního vchodu\\n1× klíč od technické místnosti"}/></label>
+   <label>Předávané klíče a množství<textarea rows={5} value={keyHandover.keyList} onChange={e=>setKeyHandoverField("keyList",e.target.value)} placeholder={"Např. 2× klíč od hlavního vchodu\n1× klíč od technické místnosti"}/></label>
    <div className="pf-two"><label>Místo předání<input value={keyHandover.handoverPlace} onChange={e=>setKeyHandoverField("handoverPlace",e.target.value)}/></label><label>Datum předání<input type="date" value={keyHandover.handoverDate} onChange={e=>setKeyHandoverField("handoverDate",e.target.value)}/></label></div>
    <label>Poznámka (nepovinné)<textarea rows={3} value={keyHandover.note} onChange={e=>setKeyHandoverField("note",e.target.value)}/></label></div>}
    {template!=="key_handover"&&<>
