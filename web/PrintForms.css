@@ -156,3 +156,52 @@
 
 /* Upozornění „Pozn.“ ve stavebních úpravách je červené v náhledu i staženém PDF. */
 .pf-preview-paper .pf-bodytext .pf-building-works-note{color:#c82026!important;font-weight:600}
+
+
+/* Renovation conditions: document-like flow rather than an absolute footer
+   that collides with text at the A4 page boundary. */
+.pf-preview-paper .pf-building-works{
+  height:auto!important;
+  min-height:297mm!important;
+  padding-bottom:18mm!important;
+  display:flex!important;
+  flex-direction:column!important;
+}
+.pf-preview-paper .pf-building-works .pf-letterbody{
+  font-size:11px;
+  line-height:1.55;
+  flex:1 0 auto;
+}
+.pf-preview-paper .pf-building-works .pf-bodytext{
+  min-height:0!important;
+  line-height:1.55;
+  white-space:normal;
+}
+.pf-preview-paper .pf-building-works .pf-building-works-note{
+  display:block!important;
+  color:#bc2026!important;
+  font-weight:600;
+  line-height:1.6;
+  padding:3mm 0 0;
+  margin:3mm 0 4mm;
+  break-inside:avoid!important;
+  page-break-inside:avoid!important;
+  orphans:3;
+  widows:3;
+}
+.pf-preview-paper .pf-building-works .pf-signature{
+  margin-top:12mm!important;
+  break-inside:avoid!important;
+  page-break-inside:avoid!important;
+}
+.pf-preview-paper .pf-building-works .pf-footer{
+  position:relative!important;
+  left:auto!important;
+  right:auto!important;
+  bottom:auto!important;
+  flex:0 0 auto;
+  margin-top:12mm!important;
+  padding-top:3mm!important;
+  break-inside:avoid!important;
+  page-break-inside:avoid!important;
+}
