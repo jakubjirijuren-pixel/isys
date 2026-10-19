@@ -112,19 +112,22 @@ export default function PrintForms({buildings=[],currentAccountName="",reportSig
     jsPDF:{unit:"mm",format:"a4",orientation:"portrait"},
     pagebreak:{mode:["css","legacy"],avoid:[".pf-signature",".pf-top",".pf-subject",".pf-building-works-note",".pf-building-works-ending"]}
    }).from(preview).toPdf().get("pdf");
-   const pageCount=pdf.internal.getNumberOfPages();
-   for(let page=1;page<=pageCount;page++){
+   const footerCanvas=document.createElement("canvas");
+   footerCanvas.width=1700;footerCanvas.height=160;
+   const ctx=footerCanvas.getContext("2d");
+   if(!ctx)throw new Error("Nelze vykreslit zápatí.");
+   ctx.fillStyle="#fff";ctx.fillRect(0,0,1700,160);
+   ctx.strokeStyle="#9da8b1";ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(0,10);ctx.lineTo(1700,10);ctx.stroke();
+   ctx.fillStyle="#263746";ctx.font="bold 27px Arial";
+   ctx.fillText("Stavební bytové družstvo Praha 8",0,58);
+   ctx.fillStyle="#536676";ctx.font="24px Arial";
+   ctx.fillText("Tel.: 284 682 814, 284 682 046",0,115);
+   ctx.textAlign="center";ctx.fillText("E-mail: info@sbd8.cz",850,115);
+   ctx.textAlign="right";ctx.fillText("www.sbd8.cz",1700,115);
+   const footerImage=footerCanvas.toDataURL("image/png");
+   for(let page=1;page<=pdf.internal.getNumberOfPages();page++){
     pdf.setPage(page);
-    pdf.setDrawColor(115,125,135);
-    pdf.setLineWidth(.25);
-    pdf.line(20,276,190,276);
-    pdf.setTextColor(45,55,65);
-    pdf.setFont("helvetica","bold");pdf.setFontSize(8);
-    pdf.text("Stavební bytové družstvo Praha 8",20,281);
-    pdf.setFont("helvetica","normal");pdf.setFontSize(7);
-    pdf.text("Tel.: 284 682 814, 284 682 046",20,286);
-    pdf.text("E-mail: info@sbd8.cz",105,286,{align:"center"});
-    pdf.text("www.sbd8.cz",190,286,{align:"right"});
+    pdf.addImage(footerImage,"PNG",20,275,170,16);
    }
    pdf.save(filename);
   }catch(e){setError("PDF se nepodařilo vytvořit: "+(e?.message||"Neznámá chyba"))}
