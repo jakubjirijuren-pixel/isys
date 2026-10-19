@@ -22,6 +22,7 @@ export default function PrintForms({buildings=[],currentAccountName="",reportSig
  const [glazing,setGlazing]=useState({firma:"",sklo:"čirého skla",byt:"",ulice:"",cisloPopisne:"",mesto:"Praha 8",psc:"182 00",katastr:"Kobylisy"});
  const setGlazingField=(key,value)=>setGlazing(prev=>({...prev,[key]:value}));
  const fillGlazingBody=body=>body.replace(/\{\{(firma|sklo|byt|ulice|cisloPopisne|mesto|psc|katastr)\}\}/g,(_,key)=>(key==="byt"?(glazing.byt||fields.apartmentNumber):glazing[key])?.trim()||"…………");
+ const [alternateSigner,setAlternateSigner]=useState(false);
  const [signerName,setSignerName]=useState("");
  const [signerPosition,setSignerPosition]=useState("");
  const [buildingQuery,setBuildingQuery]=useState("");
