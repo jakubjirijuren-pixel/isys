@@ -105,6 +105,16 @@ export default function PrintForms({buildings=[],currentAccountName="",reportSig
   <div className="pf-workspace"><section className="pf-editor"><h2>Nastavení dokumentu</h2>
    <label>Typ tiskopisu<select value={template} onChange={e=>chooseTemplate(e.target.value)}>{Object.entries(templates).map(([id,t])=><option key={id} value={id}>{t.title}</option>)}</select></label>
    <label className="pf-building-search">Vyplnit příjemce z objektu<input value={buildingQuery} onChange={e=>{setBuildingQuery(e.target.value);setBuildingOpen(true);setSelectedBuilding("")}} onFocus={()=>setBuildingOpen(true)} onBlur={()=>window.setTimeout(()=>setBuildingOpen(false),160)} placeholder="Začněte psát číslo objektu nebo adresu…" autoComplete="off" role="combobox" aria-expanded={buildingOpen} aria-autocomplete="list"/>{buildingOpen&&<div className="pf-building-options" role="listbox">{buildingOptions.length?buildingOptions.map(b=><button type="button" role="option" aria-selected={String(selectedBuilding)===String(b.id)} key={b.id} onMouseDown={e=>e.preventDefault()} onClick={()=>selectBuilding(String(b.id))}><strong>{b.object_number?"Objekt "+b.object_number:"Objekt"}</strong><span>{b.name||b.address}</span></button>):<div className="pf-building-empty">Žádný odpovídající objekt</div>}</div>}</label>
+   {template==="key_handover"&&<div className="pf-key-fields"><h3>Údaje předávacího protokolu</h3><p>Jednorázové trvalé předání klíčů. Protokol se pouze stáhne jako PDF a <strong>nevytváří žádný záznam v evidenci klíčů.</strong></p><div className="pf-two">
+    <label>Jméno a příjmení přebírajícího<input value={keyHandover.recipientName} onChange={e=>setKeyHandoverField("recipientName",e.target.value)} placeholder="Jméno a příjmení"/></label>
+    <label>Společnost / organizace (nepovinné)<input value={keyHandover.recipientCompany} onChange={e=>setKeyHandoverField("recipientCompany",e.target.value)}/></label>
+    <label>Telefon (nepovinné)<input type="tel" value={keyHandover.recipientPhone} onChange={e=>setKeyHandoverField("recipientPhone",e.target.value)} placeholder="+420 123 456 789"/></label>
+    <label>E-mail (nepovinné)<input type="email" value={keyHandover.recipientEmail} onChange={e=>setKeyHandoverField("recipientEmail",e.target.value)}/></label>
+   </div><label>Objekt / místo použití klíčů<input value={keyHandover.objectDescription} onChange={e=>setKeyHandoverField("objectDescription",e.target.value)} placeholder="Objekt a adresa"/></label>
+   <label>Předávané klíče a množství<textarea rows={5} value={keyHandover.keyList} onChange={e=>setKeyHandoverField("keyList",e.target.value)} placeholder={"Např. 2× klíč od hlavního vchodu\\n1× klíč od technické místnosti"}/></label>
+   <div className="pf-two"><label>Místo předání<input value={keyHandover.handoverPlace} onChange={e=>setKeyHandoverField("handoverPlace",e.target.value)}/></label><label>Datum předání<input type="date" value={keyHandover.handoverDate} onChange={e=>setKeyHandoverField("handoverDate",e.target.value)}/></label></div>
+   <label>Poznámka (nepovinné)<textarea rows={3} value={keyHandover.note} onChange={e=>setKeyHandoverField("note",e.target.value)}/></label></div>}
+   {template!=="key_handover"&&<>
    <div className="pf-two"><label>Příjemce<input value={fields.recipient} onChange={e=>set("recipient",e.target.value)} placeholder="Jméno / SVJ / společnost"/></label><label>Adresa příjemce<textarea rows={2} value={fields.recipientAddress} onChange={e=>set("recipientAddress",e.target.value)} placeholder="Ulice, číslo, PSČ, město"/></label></div>
    <label>Číslo bytu (nepovinné)<input value={fields.apartmentNumber} onChange={e=>{set("apartmentNumber",e.target.value);setGlazingField("byt",e.target.value)}} placeholder="Např. 12" maxLength={30}/></label>
    <div className="pf-two"><label>Místo vystavení<input value={fields.city} onChange={e=>set("city",e.target.value)}/></label><label>Datum<input type="date" value={fields.date} onChange={e=>set("date",e.target.value)}/></label></div>
@@ -126,8 +136,9 @@ export default function PrintForms({buildings=[],currentAccountName="",reportSig
    <label>Text dokumentu<textarea rows={11} value={fields.body} onChange={e=>set("body",e.target.value)} placeholder="Napište obsah dopisu…"/></label>
    <label>Závěr<textarea rows={2} value={fields.closing} onChange={e=>set("closing",e.target.value)}/></label>
 
+   </>}
    <div className="pf-signer-settings"><label className="pf-signer-toggle"><input type="checkbox" checked={alternateSigner} onChange={e=>setAlternateSigner(e.target.checked)}/> Dokument podepisuje jiná osoba</label>{alternateSigner&&<div className="pf-two"><label>Jméno podepisující osoby<input value={signerName} onChange={e=>setSignerName(e.target.value)} placeholder="Jméno a příjmení"/></label><label>Funkce podepisující osoby<input value={signerPosition} onChange={e=>setSignerPosition(e.target.value)} placeholder="Např. předseda představenstva"/></label></div>}<small>{alternateSigner?"V dokumentu se zobrazí pouze řádek pro vlastnoruční podpis, bez automatického podpisu a razítka.":"Použije se podpis a razítko přihlášeného uživatele."}</small></div>
-   <div className="pf-outmail">
+   {template!=="key_handover"&&<div className="pf-outmail">
     <label className="pf-outmail-toggle"><input type="checkbox" checked={mailEnabled} onChange={e=>{setMailEnabled(e.target.checked);setMailSuccess("");setError("")}}/> Zapsat dokument také do knihy odchozí pošty</label>
     {mailEnabled&&<div className="pf-outmail-details">
       <div className="pf-two"><label>Datum odeslání<input type="date" value={mailSentOn} onChange={e=>setMailSentOn(e.target.value)}/></label><label>Způsob odeslání<select value={mailMethod} onChange={e=>setMailMethod(e.target.value)}>{["Pošta","Doporučeně","Datová schránka","E-mail","Osobní předání","Jiné"].map(method=><option key={method} value={method}>{method}</option>)}</select></label></div>
@@ -136,8 +147,8 @@ export default function PrintForms({buildings=[],currentAccountName="",reportSig
       <button type="button" className="secondarybutton" onClick={saveToOutgoingMail} disabled={mailSaving||mailSavedSnapshot===mailSnapshot}>{mailSaving?"Ukládám…":mailSavedSnapshot===mailSnapshot?"Zapsáno v knize odchozí pošty":"Uložit do knihy odchozí pošty"}</button>
       <small>Příjemce, adresa, věc, naše značka a vybraný objekt se převezmou z tiskopisu. Zápis zásilku automaticky neodešle.</small>
     </div>}
-   </div>
-   {mailSuccess&&mailSavedSnapshot===mailSnapshot&&<p className="pf-outmail-success" role="status">{mailSuccess}</p>}
+   </div>}
+   {mailSuccess&&template!=="key_handover"&&mailSavedSnapshot===mailSnapshot&&<p className="pf-outmail-success" role="status">{mailSuccess}</p>}
    {error&&<p className="error" role="alert">{error}</p>}
    <button type="button" className="primary" onClick={downloadPDF} disabled={pdfSaving}>{pdfSaving?"Vytvářím PDF…":"Stáhnout PDF"}</button>
    <small role="status">{draftStatus||"Rozpracovaný tiskopis se automaticky ukládá do tohoto prohlížeče."} Údaje zůstávají jen v tomto zařízení a v tomto prohlížeči.</small>
