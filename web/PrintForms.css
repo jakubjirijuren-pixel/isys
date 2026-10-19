@@ -64,3 +64,32 @@
 .pf-editor .pf-glazing-fields legend{font-weight:750;padding:0 8px}
 .pf-editor .pf-glazing-fields p{font-size:12px;opacity:.78;margin:0 0 12px}
 [data-theme="dark"] .pf-editor .pf-glazing-fields{border-color:#395970}
+
+
+/* Offscreen A4 PDF source: content is paginated with space reserved for
+   repeating the official letterhead and footer on every PDF page. */
+.pf-pdf-staging{font-family:Arial,Helvetica,sans-serif;font-size:11px;line-height:1.55}
+.pf-pdf-staging .pf-pdf-letterhead{display:flex;align-items:center;gap:10px;width:170mm;box-sizing:border-box;padding:0 0 7px;background:#fff;color:#000;border:0}
+.pf-pdf-staging .pf-pdf-letterhead .sbd-logo{width:49px;flex:0 0 49px}
+.pf-pdf-staging .pf-pdf-letterhead .sbd-logo svg{display:block;width:49px;height:65px}
+.pf-pdf-staging .pf-pdf-letterhead .sbd-info{flex:1;min-width:0;font-size:8px;line-height:1.3}
+.pf-pdf-staging .pf-pdf-letterhead .sbd-name{font-size:11px;font-weight:800;margin-bottom:3px}
+.pf-pdf-staging .pf-pdf-footer{width:170mm;box-sizing:border-box;border-top:1px solid #555;padding-top:3mm;font-size:9px;color:#444;background:#fff}
+.pf-pdf-staging .pf-pdf-footer strong{display:block;font-size:10px;margin-bottom:2mm}
+.pf-pdf-staging .pf-pdf-footer>div{display:flex;justify-content:space-between;gap:10px}
+.pf-pdf-staging .pf-pdf-content{width:170mm;box-sizing:border-box;background:#fff;color:#222;font-size:11px;line-height:1.6}
+.pf-pdf-staging .pf-top{display:grid;grid-template-columns:1fr 45%;gap:18px;margin-top:0;min-height:34mm;align-items:start}
+.pf-pdf-staging .pf-meta{font-size:10px;line-height:1.65}
+.pf-pdf-staging .pf-recipient{border:1px solid #111;padding:7px 8px;min-height:32mm;box-sizing:border-box;font-size:11px;line-height:1.5}
+.pf-pdf-staging .pf-recipient strong{display:block;font-weight:400;margin-bottom:4px}
+.pf-pdf-staging .pf-subject{font-size:12px;font-weight:700;margin:10mm 0 5mm;line-height:1.4}
+.pf-pdf-staging .pf-letterbody{font-size:11px;line-height:1.6}
+.pf-pdf-staging .pf-letterbody p{margin:0 0 9mm}
+.pf-pdf-staging .pf-bodytext{min-height:20mm;overflow-wrap:anywhere}
+.pf-pdf-staging .pf-signature{margin:15mm 0 0 auto;width:55mm;text-align:center;display:flex;flex-direction:column;font-weight:400;position:relative;padding-top:14mm;break-inside:avoid}
+.pf-pdf-staging .pf-stamp-image{position:absolute;width:48mm;max-height:21mm;object-fit:contain;top:-7mm;left:4mm;opacity:.9}
+.pf-pdf-staging .pf-signature-image{display:block;max-width:55mm;max-height:25mm;object-fit:contain;margin:0 auto 1mm;position:relative;z-index:1}
+.pf-pdf-staging .pf-signature-line{font-size:10px}
+.pf-pdf-staging .pf-signature strong{font-weight:400}
+.pf-pdf-staging .pf-signature small{font-size:11px}
+.pf-pdf-staging .pf-placeholder{display:none}
