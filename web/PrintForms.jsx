@@ -72,41 +72,43 @@ export default function PrintForms({buildings=[],currentAccountName="",reportSig
   if(pdfSaving)return;
   setPdfSaving(true);setError("");
   const staging=document.createElement("div");
-  staging.className="pf-pdf-staging";
-  staging.style.cssText="position:absolute;left:0;top:0;width:174mm;background:#fff;color:#222;z-index:-1;visibility:visible;pointer-events:none;transform:translateX(-200vw)";
+  staging.className="pf-preview-paper pf-export-preview";
+  staging.style.cssText="position:fixed;left:0;top:0;width:210mm;min-height:297mm;zoom:1;transform:translateX(-200vw);pointer-events:none;background:#fff;z-index:-1";
   try{
-   const source=document.createElement("div");source.innerHTML=documentHTML();
-   const page=source.querySelector(".pf-paper");
-   const header=page.querySelector(".sbd-header");
-   const footer=page.querySelector(".pf-footer");
-   const content=document.createElement("div");
-   content.className="pf-pdf-content";
-   for(const child of [...page.children])if(child!==header&&child!==footer)content.appendChild(child.cloneNode(true));
-   const h=header.cloneNode(true),f=footer.cloneNode(true);
-   h.className="pf-pdf-letterhead";f.className="pf-pdf-footer";
-   staging.append(h,f,content);document.body.appendChild(staging);
-   const worker=html2pdf();
-   const canvasOpts={scale:2,useCORS:true,backgroundColor:"#ffffff",logging:false};
-   const headerCanvas=await html2pdf().set({html2canvas:canvasOpts}).from(h).toCanvas().get("canvas");
-   const footerCanvas=await html2pdf().set({html2canvas:canvasOpts}).from(f).toCanvas().get("canvas");
-   const pdf=await worker.set({
-    margin:[32,18,23,18],
-    filename:pdfFileName(fields.subject||templates[template].title),
-    image:{type:"jpeg",quality:.97},
-    html2canvas:canvasOpts,
+   // Export exactly the same A4 markup and styling as the live preview.
+   // Previous PDF used a separate compact layout, which caused a mismatch.
+   staging.innerHTML=documentHTML();
+   document.body.appendChild(staging);
+   const paper=staging.querySelector(".pf-paper");
+   await Promise.all([...paper.querySelectorAll("img")].map(img=>img.complete?Promise.resolve():new Promise(resolve=>{img.addEventListener("load",resolve,{once:true});img.addEventListener("error",resolve,{once:true})})));
+   if(document.fonts?.ready)await document.fonts.ready;
+   const filename=pdfFileName(fields.subject||templates[template].title);
+   const pdf=await html2pdf().set({
+    margin:0,
+    filename,
+    image:{type:"jpeg",quality:.98},
+    html2canvas:{scale:2,useCORS:true,backgroundColor:"#ffffff",logging:false,scrollX:0,scrollY:0},
     jsPDF:{unit:"mm",format:"a4",orientation:"portrait"},
-    pagebreak:{mode:["css","legacy"],avoid:[".pf-signature",".pf-top",".pf-subject",".pf-recipient"]}
-   }).from(content).toPdf().get("pdf");
-   const headData=headerCanvas.toDataURL("image/png");
-   const footData=footerCanvas.toDataURL("image/png");
-   const headerHeight=Math.min(23,174*headerCanvas.height/headerCanvas.width);
-   const footerHeight=Math.min(14,174*footerCanvas.height/footerCanvas.width);
-   for(let i=1;i<=pdf.internal.getNumberOfPages();i++){
-    pdf.setPage(i);
-    pdf.addImage(headData,"PNG",18,5,174,headerHeight);
-    pdf.addImage(footData,"PNG",18,297-5-footerHeight,174,footerHeight);
+    pagebreak:{mode:["css","legacy"],avoid:[".pf-signature",".pf-top",".pf-subject"]}
+   }).from(staging).toPdf().get("pdf");
+   // Repeat the same header and footer from the preview on overflow pages.
+   // The first page already contains both elements in its original positions.
+   if(pdf.internal.getNumberOfPages()>1){
+    const header=paper.querySelector(".sbd-header"),footer=paper.querySelector(".pf-footer");
+    const renderElement=async element=>{
+     const canvas=await html2pdf().set({html2canvas:{scale:2,useCORS:true,backgroundColor:"#ffffff",logging:false}}).from(element).toCanvas().get("canvas");
+     return {url:canvas.toDataURL("image/png"),ratio:canvas.height/canvas.width};
+    };
+    const h=await renderElement(header),f=await renderElement(footer);
+    const headerWidth=170,headerHeight=Math.min(28,headerWidth*h.ratio);
+    const footerWidth=170,footerHeight=Math.min(18,footerWidth*f.ratio);
+    for(let i=2;i<=pdf.internal.getNumberOfPages();i++){
+     pdf.setPage(i);
+     pdf.addImage(h.url,"PNG",20,12,headerWidth,headerHeight);
+     pdf.addImage(f.url,"PNG",20,297-12-footerHeight,footerWidth,footerHeight);
+    }
    }
-   pdf.save(pdfFileName(fields.subject||templates[template].title));
+   pdf.save(filename);
   }catch(e){setError("PDF se nepodařilo vytvořit: "+(e?.message||"Neznámá chyba"))}
   finally{staging.remove();setPdfSaving(false)}
  };
