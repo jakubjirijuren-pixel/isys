@@ -22,6 +22,20 @@ export function FeedbackForm({supabase,onClose}){
  };
  return <div className="feedback-overlay" role="presentation" onMouseDown={e=>{if(e.target===e.currentTarget)onClose()}}><section className="feedback-dialog" role="dialog" aria-modal="true" aria-label="Odeslat zpětnou vazbu"><div className="feedback-top"><h2>Zpětná vazba FOXA</h2><button type="button" onClick={onClose} aria-label="Zavřít">✕</button></div><div className="feedback-user-tabs"><button type="button" className={view==="new"?"active":""} onClick={()=>setView("new")}>Nový ticket</button><button type="button" className={view==="mine"?"active":""} onClick={()=>setView("mine")}>Moje tickety</button></div>{view==="mine"?<MyFeedbackTickets items={myTickets} busy={ticketsBusy} error={ticketsError} refresh={loadMyTickets}/>:sent?<div className="feedback-sent"><h3>Děkujeme za zpětnou vazbu.</h3><p>Vaše zpráva byla předána administrátorům systému.</p><button type="button" className="primary" onClick={onClose}>Zavřít</button></div>:<form onSubmit={send}><p>Pošli nám návrh na zlepšení, připomínku nebo nahlášení chyby. Zprávu uvidí pouze administrátoři.</p><label>Předmět<input autoFocus required minLength={3} maxLength={120} value={subject} onChange={e=>setSubject(e.target.value)} placeholder="Čeho se zpráva týká?"/></label><label>Zpráva<textarea required minLength={5} maxLength={3000} rows={6} value={message} onChange={e=>setMessage(e.target.value)} placeholder="Popiš svůj návrh nebo problém…"/></label><label>Fotografie (volitelně, max. 5 MB)<input type="file" accept="image/jpeg,image/png,image/webp" onChange={selectPhoto}/></label>{preview&&<div className="feedback-preview"><img src={preview} alt="Náhled přiložené fotografie"/><button type="button" className="secondarybutton" onClick={()=>setPhoto(null)}>Odebrat fotografii</button></div>}{error&&<p className="feedback-error" role="alert">{error}</p>}<div className="feedback-actions"><button type="button" className="secondarybutton" onClick={onClose}>Zrušit</button><button type="submit" className="primary" disabled={busy}>{busy?"Odesílám…":"Odeslat administrátorům"}</button></div></form>}</section></div>
 }
+function MyFeedbackTickets({items,busy,error,refresh}){
+ return <div className="feedback-my-tickets">
+  <div className="feedback-my-head"><h3>Moje požadavky</h3><button type="button" className="secondarybutton" disabled={busy} onClick={refresh}>Obnovit</button></div>
+  {error&&<p className="feedback-error" role="alert">{error}</p>}
+  {busy&&<p>Načítání ticketů…</p>}
+  {!busy&&!error&&!items.length&&<p>Zatím nemáš žádné odeslané tickety.</p>}
+  {items.map(item=><article className="feedback-my-ticket" key={item.id}>
+   <div className="feedback-my-ticket-title"><strong>{item.subject}</strong><span className={"ticket-status "+item.status}>{STATUSES[item.status]||item.status}</span></div>
+   <small>#{item.id.slice(0,8).toUpperCase()} · Odesláno {dateTime(item.created_at)}</small>
+   <p>{item.message}</p>
+   <small>Poslední aktualizace: {dateTime(item.updated_at)}</small>
+  </article>)}
+ </div>
+}
 const STATUSES={new:"Nový",in_progress:"V řešení",resolved:"Vyřešený",closed:"Uzavřený"};
 const PRIORITIES={low:"Nízká",normal:"Běžná",high:"Vysoká",urgent:"Urgentní"};
 const dateTime=value=>value?new Date(value).toLocaleString("cs-CZ",{dateStyle:"short",timeStyle:"short"}):"—";
