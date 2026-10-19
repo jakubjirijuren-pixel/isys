@@ -231,22 +231,22 @@
 
 /* Conditions: prevent a mostly empty extra PDF page containing only a signature.
    Apply only during PDF export and only if the signature nearly fits. */
-.pf-preview-paper.pf-exporting .pf-glazing .pf-signature,
-.pf-preview-paper.pf-exporting .pf-building-works .pf-signature{
+.pf-preview-paper.pf-exporting.pf-compact-signature .pf-glazing .pf-signature,
+.pf-preview-paper.pf-exporting.pf-compact-signature .pf-building-works .pf-signature{
  margin-top:5mm!important;
  padding-top:4mm!important;
  break-inside:avoid!important;
  page-break-inside:avoid!important;
 }
-.pf-preview-paper.pf-exporting .pf-glazing .pf-letterbody,
-.pf-preview-paper.pf-exporting .pf-building-works .pf-letterbody{
+.pf-preview-paper.pf-exporting.pf-compact-signature .pf-glazing .pf-letterbody,
+.pf-preview-paper.pf-exporting.pf-compact-signature .pf-building-works .pf-letterbody{
  line-height:1.43!important;
 }
-.pf-preview-paper.pf-exporting .pf-glazing .pf-letterbody p,
-.pf-preview-paper.pf-exporting .pf-building-works .pf-letterbody p{margin-bottom:4mm!important}
-.pf-preview-paper.pf-exporting .pf-glazing .pf-bodytext,
-.pf-preview-paper.pf-exporting .pf-building-works .pf-bodytext{line-height:1.43!important}
-.pf-preview-paper.pf-exporting .pf-glazing .pf-conditions-note,
-.pf-preview-paper.pf-exporting .pf-building-works .pf-conditions-note{margin:2mm 0 2mm!important;padding-top:1mm!important;line-height:1.45!important}
-.pf-preview-paper.pf-exporting .pf-building-works .pf-footer,
-.pf-preview-paper.pf-exporting .pf-glazing .pf-footer{display:none!important}
+.pf-preview-paper.pf-exporting.pf-compact-signature .pf-glazing .pf-letterbody p,
+.pf-preview-paper.pf-exporting.pf-compact-signature .pf-building-works .pf-letterbody p{margin-bottom:4mm!important}
+.pf-preview-paper.pf-exporting.pf-compact-signature .pf-glazing .pf-bodytext,
+.pf-preview-paper.pf-exporting.pf-compact-signature .pf-building-works .pf-bodytext{line-height:1.43!important}
+.pf-preview-paper.pf-exporting.pf-compact-signature .pf-glazing .pf-conditions-note,
+.pf-preview-paper.pf-exporting.pf-compact-signature .pf-building-works .pf-conditions-note{margin:2mm 0 2mm!important;padding-top:1mm!important;line-height:1.45!important}
+.pf-preview-paper.pf-exporting.pf-compact-signature .pf-building-works .pf-footer,
+.pf-preview-paper.pf-exporting.pf-compact-signature .pf-glazing .pf-footer{display:none!important}
