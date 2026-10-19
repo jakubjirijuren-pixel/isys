@@ -141,3 +141,15 @@
 .pf-preview-paper .pf-key-handover .pf-handover-line{border-bottom:1px dotted #53646c;margin-bottom:3mm}
 .pf-preview-paper .pf-key-handover .pf-handover-signatures strong,.pf-preview-paper .pf-key-handover .pf-handover-signatures small{display:block}
 .pf-preview-paper .pf-key-handover .pf-handover-signatures small{font-size:9px;color:#52616a;margin-top:1mm}
+
+
+/* Razítko překrývá podpis (jako při skutečném orazítkování), nikoli nad ním. */
+.pf-preview-paper .pf-signature{position:relative!important}
+.pf-preview-paper .pf-signature-image{position:relative!important;z-index:1!important}
+.pf-preview-paper .pf-stamp-image{position:absolute!important;z-index:3!important;top:1mm!important;left:50%!important;transform:translateX(-50%)!important;opacity:.88!important;pointer-events:none}
+.pf-pdf-staging .pf-signature{position:relative!important}
+.pf-pdf-staging .pf-signature-image{position:relative!important;z-index:1!important}
+.pf-pdf-staging .pf-stamp-image{position:absolute!important;z-index:3!important;top:1mm!important;left:50%!important;transform:translateX(-50%)!important;opacity:.88!important;pointer-events:none}
+/* Trvalý předávací protokol: razítko přímo přes podpis předávajícího. */
+.pf-preview-paper .pf-key-handover .pf-handover-sign-image{z-index:1!important}
+.pf-preview-paper .pf-key-handover .pf-handover-stamp{z-index:3!important;left:50%!important;top:50%!important;transform:translate(-50%,-50%)!important;opacity:.88!important;pointer-events:none}
