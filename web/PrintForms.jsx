@@ -120,7 +120,7 @@ export default function PrintForms({buildings=[],currentAccountName="",reportSig
     pdf.line(20,276,190,276);
     pdf.setTextColor(45,55,65);
     pdf.setFont("helvetica","bold");pdf.setFontSize(8);
-    pdf.text("Stavebni bytove druzstvo Praha 8",20,281);
+    pdf.text("Stavební bytové družstvo Praha 8",20,281);
     pdf.setFont("helvetica","normal");pdf.setFontSize(7);
     pdf.text("Tel.: 284 682 814, 284 682 046",20,286);
     pdf.text("E-mail: info@sbd8.cz",105,286,{align:"center"});
