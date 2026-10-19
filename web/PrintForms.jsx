@@ -30,7 +30,7 @@ export default function PrintForms({buildings=[],currentAccountName="",reportSig
  const setKeyHandoverField=(key,value)=>setKeyHandover(prev=>({...prev,[key]:value}));
  const [buildingWorks,setBuildingWorks]=useState(()=>({oznameniDatum:today(),popisPraci:"rekonstrukce bytové jednotky",dum:"",...(savedDraft?.buildingWorks||{})}));
  const setBuildingWorksField=(key,value)=>setBuildingWorks(prev=>({...prev,[key]:value}));
- const fillBuildingWorksBody=body=>body.replace(/\\{\\{(oznameniDatum|popisPraci|dum|byt)\\}\\}/g,(_,key)=>key==="byt"?(fields.apartmentNumber||"…………"):key==="oznameniDatum"?dateCZ(buildingWorks.oznameniDatum):(buildingWorks[key]?.trim()||"…………"));
+ const fillBuildingWorksBody=body=>body.replace(/\{\{(oznameniDatum|popisPraci|dum|byt)\}\}/g,(_,key)=>key==="byt"?(fields.apartmentNumber||"…………"):key==="oznameniDatum"?dateCZ(buildingWorks.oznameniDatum):(buildingWorks[key]?.trim()||"…………"));
  const [glazing,setGlazing]=useState(()=>({firma:"",sklo:"čirého skla",byt:"",ulice:"",cisloPopisne:"",mesto:"Praha 8",psc:"182 00",katastr:"Kobylisy",...(savedDraft?.glazing||{})}));
  const setGlazingField=(key,value)=>setGlazing(prev=>({...prev,[key]:value}));
  const fillGlazingBody=body=>body.replace(/\{\{(firma|sklo|byt|ulice|cisloPopisne|mesto|psc|katastr)\}\}/g,(_,key)=>(key==="byt"?(glazing.byt||fields.apartmentNumber):glazing[key])?.trim()||"…………");
