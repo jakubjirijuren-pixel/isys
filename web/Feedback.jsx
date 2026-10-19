@@ -1,6 +1,7 @@
 import React,{useEffect,useState} from "react";
 import "./Feedback.css";
 export function FeedbackForm({supabase,onClose}){
+ const [view,setView]=useState("new"),[myTickets,setMyTickets]=useState([]),[ticketsBusy,setTicketsBusy]=useState(false),[ticketsError,setTicketsError]=useState("");
  const [photo,setPhoto]=useState(null),[preview,setPreview]=useState(""),[subject,setSubject]=useState(""),[message,setMessage]=useState(""),[busy,setBusy]=useState(false),[error,setError]=useState(""),[sent,setSent]=useState(false);
  useEffect(()=>{if(!photo){setPreview("");return}const url=URL.createObjectURL(photo);setPreview(url);return()=>URL.revokeObjectURL(url)},[photo]);
  const selectPhoto=e=>{const file=e.target.files?.[0]||null;if(file&&(!["image/jpeg","image/png","image/webp"].includes(file.type)||file.size>5*1024*1024)){setError("Fotografie musí být JPG, PNG nebo WebP do 5 MB.");setPhoto(null);return}setError("");setPhoto(file)};
