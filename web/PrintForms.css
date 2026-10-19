@@ -153,3 +153,6 @@
 /* Trvalý předávací protokol: razítko přímo přes podpis předávajícího. */
 .pf-preview-paper .pf-key-handover .pf-handover-sign-image{z-index:1!important}
 .pf-preview-paper .pf-key-handover .pf-handover-stamp{z-index:3!important;left:50%!important;top:50%!important;transform:translate(-50%,-50%)!important;opacity:.88!important;pointer-events:none}
+
+/* Upozornění „Pozn.“ ve stavebních úpravách je červené v náhledu i staženém PDF. */
+.pf-preview-paper .pf-bodytext .pf-building-works-note{color:#c82026!important;font-weight:600}
