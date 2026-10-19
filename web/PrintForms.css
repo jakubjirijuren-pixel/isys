@@ -117,3 +117,27 @@
 .pf-pdf-staging .pf-pdf-footer{width:174mm!important;border-top:1px solid #a8b3bb!important;padding-top:2mm!important;font-size:9px!important;line-height:1.35!important}
 .pf-pdf-staging .pf-pdf-footer strong{font-size:9px!important;margin-bottom:1mm!important}
 .pf-pdf-staging .pf-pdf-footer>div{display:flex!important;justify-content:space-between!important;gap:4mm!important}
+
+
+/* Trvalé předání klíčů: samostatný jednostránkový A4 protokol. */
+.pf-key-fields{display:flex;flex-direction:column;gap:12px;padding:16px;border:1px solid var(--fx-border,#c5d4df);border-radius:12px;background:var(--fx-surface-soft,#f8fbfd)}
+.pf-key-fields h3{font-size:16px;margin:0}.pf-key-fields>p{font-size:12px;line-height:1.5;margin:0;color:var(--fx-muted,#526878)}
+.pf-preview-paper .pf-key-handover h1{text-align:center;font-size:18px;letter-spacing:.3px;margin:15mm 0 2mm}
+.pf-preview-paper .pf-key-handover .pf-handover-subtitle{text-align:center;font-size:11px;color:#596572;margin:0 0 12mm}
+.pf-preview-paper .pf-key-handover .pf-handover-grid{display:grid;grid-template-columns:1fr 1fr;gap:12mm;margin-bottom:9mm}
+.pf-preview-paper .pf-key-handover .pf-handover-grid section{font-size:11px;line-height:1.65;min-height:29mm}
+.pf-preview-paper .pf-key-handover h3{font-size:11px;text-transform:uppercase;letter-spacing:.5px;border-bottom:1px solid #b6c2c9;padding-bottom:2mm;margin:0 0 3mm}
+.pf-preview-paper .pf-key-handover .pf-handover-grid strong{font-size:12px;display:block}
+.pf-preview-paper .pf-key-handover .pf-handover-block{margin:0 0 7mm;font-size:11px}
+.pf-preview-paper .pf-key-handover .pf-handover-block p{margin:0;line-height:1.5;white-space:normal;overflow-wrap:anywhere}
+.pf-preview-paper .pf-key-handover .pf-handover-keys{min-height:16mm;padding:3mm 0;border-bottom:1px dotted #8a969c;line-height:1.6}
+.pf-preview-paper .pf-key-handover .pf-handover-declaration{font-size:11px;line-height:1.6;text-align:justify;margin:9mm 0 7mm}
+.pf-preview-paper .pf-key-handover .pf-handover-date{font-size:11px;margin:0 0 8mm}
+.pf-preview-paper .pf-key-handover .pf-handover-signatures{display:grid;grid-template-columns:1fr 1fr;gap:15mm;break-inside:avoid}
+.pf-preview-paper .pf-key-handover .pf-handover-signatures>div{text-align:center;font-size:11px}
+.pf-preview-paper .pf-key-handover .pf-handover-signmark{height:24mm;display:flex;align-items:flex-end;justify-content:center;position:relative}
+.pf-preview-paper .pf-key-handover .pf-handover-sign-image{max-width:40mm;max-height:20mm;object-fit:contain;position:relative;z-index:2}
+.pf-preview-paper .pf-key-handover .pf-handover-stamp{max-width:37mm;max-height:22mm;object-fit:contain;position:absolute;left:40%;top:0;opacity:.9}
+.pf-preview-paper .pf-key-handover .pf-handover-line{border-bottom:1px dotted #53646c;margin-bottom:3mm}
+.pf-preview-paper .pf-key-handover .pf-handover-signatures strong,.pf-preview-paper .pf-key-handover .pf-handover-signatures small{display:block}
+.pf-preview-paper .pf-key-handover .pf-handover-signatures small{font-size:9px;color:#52616a;margin-top:1mm}
