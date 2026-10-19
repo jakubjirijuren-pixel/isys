@@ -68,14 +68,47 @@ export default function PrintForms({buildings=[],currentAccountName="",reportSig
  const selectBuilding=id=>{setSelectedBuilding(id);setBuildingOpen(false);const b=buildings.find(x=>String(x.id)===id);if(b){setBuildingQuery([b.object_number,b.name||b.address].filter(Boolean).join(" – "));setFields(prev=>({...prev,recipient:b.legal_entity||b.name||"",recipientAddress:b.address||[b.street,b.city].filter(Boolean).join(", ")}));const street=String(b.street||b.address||"").trim();const match=street.match(/^(.*?)[, ]+([0-9]+(?:\/[0-9A-Za-z]+)?)(?:,|$)/);setGlazing(prev=>({...prev,ulice:match?.[1]||prev.ulice,cisloPopisne:match?.[2]||prev.cisloPopisne}))}else setBuildingQuery("")};
  const signatureImage=!alternateSigner&&typeof reportSignature?.image==="string"&&reportSignature.image.startsWith("data:image/")?reportSignature.image:"";
  const documentHTML=()=>`<div class="pf-paper${template==="glazing"?" pf-glazing":""}"><header class="pf-letterhead sbd-header"><div class="sbd-logo">${SBD_LOGO}</div><div class="sbd-info"><div class="sbd-name">Stavební bytové družstvo Praha 8</div><div>Horňátecká 1772/19, 182 00 Praha 8</div><div>IČO: 00034550, DIČ: CZ 00034550, Bankovní spojení: ČSOB a.s., č.ú. 746873/0300</div><div>Zapsané v Obchodním rejstříku vedeném Městským soudem v Praze v oddílu Dr XCVIII., vložka 254</div></div></header><div class="pf-top"><div class="pf-meta"><div>Váš dopis zn.: ${esc(fields.incomingReference)}</div><div>Naše značka: ${esc(fields.reference)}</div><div>Vyřizuje: ${esc(fields.contact)}</div><div>Email: ${esc(fields.email)}</div><div>Telefon: ${esc(formatCzechPhone(fields.phone))}</div><div>${esc(fields.city)}, dne: ${dateCZ(fields.date)}</div></div><div class="pf-recipient"><strong>Adresa</strong><div>${multiline(fields.recipient)}${fields.recipient&&recipientAddressWithApartment?"<br>":""}${multiline(recipientAddressWithApartment)}</div></div></div>${fields.subject?`<h2 class="pf-subject">${multiline(fields.subject)}</h2>`:""}<main class="pf-letterbody">${fields.greeting?`<p>${multiline(fields.greeting)}</p>`:""}<div class="pf-bodytext">${multiline(template==="glazing"?fillGlazingBody(fields.body):fields.body)||'<span class="pf-placeholder">Zde bude text tiskopisu…</span>'}</div>${fields.closing?`<p>${multiline(fields.closing)}</p>`:""}<div class="pf-signature">${!alternateSigner?`<img class="pf-stamp-image" src="${stampImage}" alt="Razítko SBD Praha 8">`:""}${signatureImage?`<img class="pf-signature-image" src="${esc(signatureImage)}" alt="Podpis uživatele">`:""}<span class="pf-signature-line">................................................</span><strong>${multiline(alternateSigner?signerName:fields.contact)}</strong>${(alternateSigner?signerPosition:fields.position)?`<small>${multiline(alternateSigner?signerPosition:fields.position)}</small>`:""}</div></main><footer class="pf-footer"><strong>Stavební bytové družstvo Praha 8</strong><div><span>Tel.: 284 682 814, 284 682 046</span><span>E-mail: info@sbd8.cz</span><span>Web: www.sbd8.cz</span></div></footer></div>`;
- const print=()=>{
-  setError("");
-  const popup=window.open("","_blank");
-  if(!popup){setError("Prohlížeč zablokoval tiskové okno. Povolte vyskakovací okna pro FOXA.");return}
-  const styles=document.querySelector('link[href*="PrintForms.css"]');
-  const css=`@page{size:A4 portrait;margin:0}html,body{margin:0;padding:0;background:white}body{font-family:Arial,Helvetica,sans-serif;color:#222}.pf-paper{width:210mm;min-height:297mm;padding:18mm 20mm 18mm;box-sizing:border-box;position:relative;background:white}.sbd-header{display:flex;align-items:center;gap:10px;padding-bottom:8px;border-bottom:0;break-inside:avoid;color:#000}.sbd-logo{flex:0 0 49px;width:49px}.sbd-logo svg{display:block;width:49px;height:65px}.sbd-info{flex:1;min-width:0;font-size:8px;line-height:1.3;color:#000}.sbd-name{font-weight:800;font-size:11px;line-height:1.2;margin-bottom:3px}.pf-top{display:grid;grid-template-columns:1fr 45%;gap:18px;margin-top:13mm;align-items:start;min-height:34mm}.pf-meta{font-size:10px;line-height:1.65}.pf-recipient{border:1px solid #111;padding:7px 8px;min-height:32mm;box-sizing:border-box;font-size:11px;line-height:1.5}.pf-recipient strong{display:block;font-weight:400;margin-bottom:4px}.pf-subject{font-size:12px;font-weight:700;margin:10mm 0 5mm;line-height:1.4}.pf-letterbody{font-size:11px;line-height:1.6}.pf-letterbody p{margin:0 0 9mm}.pf-bodytext{min-height:20mm;overflow-wrap:anywhere}.pf-placeholder{color:#aaa}.pf-signature{margin:15mm 0 0 auto;width:55mm;text-align:center;display:flex;flex-direction:column;font-weight:400;position:relative;padding-top:14mm}.pf-stamp-image{position:absolute;width:48mm;max-height:21mm;object-fit:contain;top:-7mm;left:4mm;opacity:.9}.pf-signature-image{display:block;max-width:55mm;max-height:25mm;object-fit:contain;margin:0 auto 1mm;position:relative;z-index:1}.pf-signature-line{font-size:10px}.pf-signature strong{font-weight:400}.pf-signature small{font-size:11px}.pf-footer{position:absolute;bottom:12mm;left:20mm;right:20mm;border-top:1px solid #555;padding-top:3mm;color:#444;font-size:9px}.pf-footer strong{display:block;font-size:10px;margin-bottom:2mm}.pf-footer>div{display:flex;justify-content:space-between;gap:10px}.pf-glazing{height:auto;min-height:297mm}.pf-glazing .pf-bodytext{white-space:normal;line-height:1.42}.pf-glazing .pf-signature{break-inside:avoid;page-break-inside:avoid}.pf-glazing .pf-footer{position:relative;left:auto;right:auto;bottom:auto;margin-top:18mm}@media print{.pf-placeholder{display:none}.pf-glazing{min-height:0}.pf-glazing .pf-footer{break-inside:avoid}}`;
-  popup.document.open();popup.document.write('<!doctype html><html lang="cs"><head><meta charset="utf-8"><title>'+esc(fields.subject||templates[template].title)+'</title><style>'+css+'</style></head><body>'+documentHTML()+'</body></html>');popup.document.close();
-  popup.addEventListener("load",()=>{popup.focus();popup.print()},{once:true});
+ const downloadPDF=async()=>{
+  if(pdfSaving)return;
+  setPdfSaving(true);setError("");
+  const staging=document.createElement("div");
+  staging.className="pf-pdf-staging";
+  staging.style.cssText="position:fixed;left:-10000px;top:0;width:170mm;background:#fff;color:#222;z-index:-1";
+  try{
+   const source=document.createElement("div");source.innerHTML=documentHTML();
+   const page=source.querySelector(".pf-paper");
+   const header=page.querySelector(".sbd-header");
+   const footer=page.querySelector(".pf-footer");
+   const content=document.createElement("div");
+   content.className="pf-pdf-content";
+   for(const child of [...page.children])if(child!==header&&child!==footer)content.appendChild(child.cloneNode(true));
+   const h=header.cloneNode(true),f=footer.cloneNode(true);
+   h.className="pf-pdf-letterhead";f.className="pf-pdf-footer";
+   staging.append(h,f,content);document.body.appendChild(staging);
+   const worker=html2pdf();
+   const canvasOpts={scale:2,useCORS:true,backgroundColor:"#ffffff",logging:false};
+   const headerCanvas=await html2pdf().set({html2canvas:canvasOpts}).from(h).toCanvas().get("canvas");
+   const footerCanvas=await html2pdf().set({html2canvas:canvasOpts}).from(f).toCanvas().get("canvas");
+   const pdf=await worker.set({
+    margin:[41,20,27,20],
+    filename:pdfFileName(fields.subject||templates[template].title),
+    image:{type:"jpeg",quality:.97},
+    html2canvas:canvasOpts,
+    jsPDF:{unit:"mm",format:"a4",orientation:"portrait"},
+    pagebreak:{mode:["css","legacy"],avoid:[".pf-signature",".pf-top",".pf-subject"]}
+   }).from(content).toPdf().get("pdf");
+   const headData=headerCanvas.toDataURL("image/png");
+   const footData=footerCanvas.toDataURL("image/png");
+   const headerHeight=Math.min(29,170*headerCanvas.height/headerCanvas.width);
+   const footerHeight=Math.min(17,170*footerCanvas.height/footerCanvas.width);
+   for(let i=1;i<=pdf.internal.getNumberOfPages();i++){
+    pdf.setPage(i);
+    pdf.addImage(headData,"PNG",20,7,170,headerHeight);
+    pdf.addImage(footData,"PNG",20,297-7-footerHeight,170,footerHeight);
+   }
+   pdf.save(pdfFileName(fields.subject||templates[template].title));
+  }catch(e){setError("PDF se nepodařilo vytvořit: "+(e?.message||"Neznámá chyba"))}
+  finally{staging.remove();setPdfSaving(false)}
  };
  return <div className="printforms"><div className="pageheading"><div><h1>Generátor tiskopisů</h1><p>Vytvořte dopis nebo oznámení na hlavičkovém papíře SBD Praha 8 a vytiskněte jej nebo uložte jako PDF.</p></div></div>
   <div className="pf-workspace"><section className="pf-editor"><h2>Nastavení dokumentu</h2>
@@ -115,8 +148,8 @@ export default function PrintForms({buildings=[],currentAccountName="",reportSig
    </div>
    {mailSuccess&&mailSavedSnapshot===mailSnapshot&&<p className="pf-outmail-success" role="status">{mailSuccess}</p>}
    {error&&<p className="error" role="alert">{error}</p>}
-   <button type="button" className="primary" onClick={print}>Tisk / Uložit jako PDF</button>
-   <small>PDF uložíte v tiskovém dialogu volbou „Uložit jako PDF“. Text se při úpravách nikam automaticky neukládá.</small>
+   <button type="button" className="primary" onClick={downloadPDF} disabled={pdfSaving}>{pdfSaving?"Vytvářím PDF…":"Stáhnout PDF"}</button>
+   <small role="status">{draftStatus||"Rozpracovaný tiskopis se automaticky ukládá do tohoto prohlížeče."} Údaje zůstávají jen v tomto zařízení a v tomto prohlížeči.</small>
   </section><section className="pf-preview"><h2>Náhled A4</h2><div className="pf-preview-scroll"><div className="pf-preview-paper" dangerouslySetInnerHTML={{__html:documentHTML()}}/></div></section></div>
  </div>;
 }
