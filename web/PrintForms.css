@@ -52,3 +52,9 @@
 .pf-editor .pf-outmail-success{border:1px solid #67ad85;color:#17613d;background:#e7f7ed;border-radius:10px;padding:12px;font-size:13px}
 [data-theme="dark"] .pf-editor .pf-outmail{background:#172d40;border-color:#38556c}
 [data-theme="dark"] .pf-editor .pf-outmail-success{background:#163a2d;border-color:#41865d;color:#b6f4cb}
+
+/* Long glazing conditions template may span more than one A4 page. */
+.pf-preview-paper .pf-glazing{height:auto;min-height:297mm}
+.pf-preview-paper .pf-glazing .pf-bodytext{line-height:1.42}
+.pf-preview-paper .pf-glazing .pf-signature{break-inside:avoid}
+.pf-preview-paper .pf-glazing .pf-footer{position:relative;left:auto;right:auto;bottom:auto;margin-top:18mm}
