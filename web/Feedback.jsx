@@ -3,6 +3,13 @@ import "./Feedback.css";
 export function FeedbackForm({supabase,onClose}){
  const [view,setView]=useState("new"),[myTickets,setMyTickets]=useState([]),[ticketsBusy,setTicketsBusy]=useState(false),[ticketsError,setTicketsError]=useState("");
  const [photo,setPhoto]=useState(null),[preview,setPreview]=useState(""),[subject,setSubject]=useState(""),[message,setMessage]=useState(""),[busy,setBusy]=useState(false),[error,setError]=useState(""),[sent,setSent]=useState(false);
+ const loadMyTickets=async()=>{
+  setTicketsBusy(true);setTicketsError("");
+  const {data,error:e}=await supabase.from("isys_feedback").select("id,subject,message,status,created_at,updated_at").order("created_at",{ascending:false}).limit(100);
+  if(e)setTicketsError(e.message);else setMyTickets(data||[]);
+  setTicketsBusy(false);
+ };
+ useEffect(()=>{if(view==="mine")loadMyTickets()},[view,supabase]);
  useEffect(()=>{if(!photo){setPreview("");return}const url=URL.createObjectURL(photo);setPreview(url);return()=>URL.revokeObjectURL(url)},[photo]);
  const selectPhoto=e=>{const file=e.target.files?.[0]||null;if(file&&(!["image/jpeg","image/png","image/webp"].includes(file.type)||file.size>5*1024*1024)){setError("Fotografie musí být JPG, PNG nebo WebP do 5 MB.");setPhoto(null);return}setError("");setPhoto(file)};
  const send=async e=>{e.preventDefault();if(busy)return;setBusy(true);setError("");let path=null;
