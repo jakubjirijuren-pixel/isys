@@ -37,3 +37,18 @@
 .ticket-empty{align-self:center;text-align:center;opacity:.75}
 @media(max-width:950px){.ticket-layout{grid-template-columns:1fr}.ticket-list{max-height:300px}.ticket-stats{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:600px){.ticket-filters{grid-template-columns:1fr}.ticket-edit-grid{grid-template-columns:1fr}.ticket-detail{padding:14px}.ticket-stats>div{padding:12px}.ticket-detail-heading{flex-wrap:wrap}}
+
+
+/* Employee feedback ticket status */
+.feedback-user-tabs{display:flex;gap:8px;border-bottom:1px solid var(--border,#68849e);margin:16px 0}
+.feedback-user-tabs button{background:transparent;color:inherit;border:0;border-bottom:3px solid transparent;padding:10px 14px;cursor:pointer;font:inherit;font-weight:650}
+.feedback-user-tabs button.active{border-bottom-color:#56a9db}
+.feedback-my-tickets{display:grid;gap:12px;max-height:55vh;overflow-y:auto}
+.feedback-my-head,.feedback-my-ticket-title{display:flex;justify-content:space-between;align-items:center;gap:12px}
+.feedback-my-head h3{margin:0;font-size:16px}
+.feedback-my-ticket{padding:14px;border:1px solid var(--border,#68849e);border-radius:11px;background:var(--input-bg,#1e364c)}
+.feedback-my-ticket-title{align-items:flex-start}
+.feedback-my-ticket-title strong{overflow-wrap:anywhere}
+.feedback-my-ticket p{white-space:pre-wrap;font-size:13px;line-height:1.5;margin:9px 0}
+.feedback-my-ticket small{opacity:.7;font-size:11px}
+@media(max-width:550px){.feedback-my-ticket-title{flex-wrap:wrap}}
