@@ -71,62 +71,31 @@ export default function PrintForms({buildings=[],currentAccountName="",reportSig
  const downloadPDF=async()=>{
   if(pdfSaving)return;
   setPdfSaving(true);setError("");
-  const staging=document.createElement("div");
-  staging.className="pf-preview-paper pf-export-preview";
-  // html2canvas needs a real, visible, on-screen render target. In particular,
-  // negative z-index and offscreen transforms produce blank PDF captures.
-  staging.style.cssText="position:fixed;left:0;top:0;width:210mm;min-height:297mm;zoom:1;transform:none;z-index:2147483647;pointer-events:none;background:#fff;overflow:visible";
+  // Capture the actual, already-rendered preview instead of constructing an
+  // invisible duplicate. html2pdf clones this element internally.
+  const preview=document.querySelector(".pf-preview-paper");
+  if(!preview?.querySelector(".pf-paper")){setError("Náhled tiskopisu není dostupný.");setPdfSaving(false);return}
+  const previousZoom=preview.style.zoom;
+  const previousOverflow=preview.style.overflow;
   try{
-   staging.innerHTML=documentHTML();
-   document.body.appendChild(staging);
-   const paper=staging.querySelector(".pf-paper");
-   if(!paper||!paper.textContent.trim())throw new Error("Dokument nemá obsah k exportu.");
-   await Promise.all([...paper.querySelectorAll("img")].map(img=>img.complete?Promise.resolve():new Promise(resolve=>{img.addEventListener("load",resolve,{once:true});img.addEventListener("error",resolve,{once:true})})));
+   preview.style.zoom="1";
+   preview.style.overflow="visible";
    if(document.fonts?.ready)await document.fonts.ready;
+   await Promise.all([...preview.querySelectorAll("img")].map(img=>img.complete?Promise.resolve():new Promise(resolve=>{img.addEventListener("load",resolve,{once:true});img.addEventListener("error",resolve,{once:true})})));
    await new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)));
    const filename=pdfFileName(fields.subject||templates[template].title);
-   const options={
-    margin:0,filename,image:{type:"jpeg",quality:.98},
-    html2canvas:{scale:2,useCORS:true,backgroundColor:"#ffffff",logging:false,scrollX:0,scrollY:0,windowWidth:Math.max(window.innerWidth,900)},
+   // The direct save pipeline is the supported html2pdf.js API. The previous
+   // custom .toCanvas().get("canvas") pipeline returned no canvas in production.
+   await html2pdf().set({
+    margin:0,
+    filename,
+    image:{type:"jpeg",quality:.98},
+    html2canvas:{scale:2,useCORS:true,backgroundColor:"#ffffff",logging:false,scrollX:0,scrollY:0},
     jsPDF:{unit:"mm",format:"a4",orientation:"portrait"},
     pagebreak:{mode:["css","legacy"],avoid:[".pf-signature",".pf-top",".pf-subject"]}
-   };
-   const worker=html2pdf().set(options).from(staging);
-   const canvas=await worker.toCanvas().get("canvas");
-   if(!canvas||!canvas.width||!canvas.height)throw new Error("Nepodařilo se vykreslit dokument.");
-   // Reject a white/empty capture rather than downloading a broken PDF.
-   const ctx=canvas.getContext("2d",{willReadFrequently:true});
-   let ink=false;
-   if(ctx){
-    const w=canvas.width,h=canvas.height;
-    const step=Math.max(1,Math.floor(Math.min(w,h)/300));
-    const pixels=ctx.getImageData(0,0,w,h).data;
-    for(let y=0;y<h&&!ink;y+=step)for(let x=0;x<w;x+=step){
-     const i=(y*w+x)*4;
-     if(pixels[i+3]>100&&Math.min(pixels[i],pixels[i+1],pixels[i+2])<170){ink=true;break}
-    }
-   }
-   if(!ink)throw new Error("Vygenerovaný dokument je prázdný. PDF nebylo staženo; zkuste stránku znovu načíst.");
-   const pdf=await worker.toPdf().get("pdf");
-   if(pdf.internal.getNumberOfPages()>1){
-    // Header and footer are already part of page one; repeat on overflow pages.
-    const renderElement=async element=>{
-     const capture=await html2pdf().set({html2canvas:{scale:2,useCORS:true,backgroundColor:"#ffffff",logging:false}}).from(element).toCanvas().get("canvas");
-     return {url:capture.toDataURL("image/png"),ratio:capture.height/capture.width};
-    };
-    const h=await renderElement(paper.querySelector(".sbd-header"));
-    const f=await renderElement(paper.querySelector(".pf-footer"));
-    const headerWidth=170,headerHeight=Math.min(28,headerWidth*h.ratio);
-    const footerWidth=170,footerHeight=Math.min(18,footerWidth*f.ratio);
-    for(let i=2;i<=pdf.internal.getNumberOfPages();i++){
-     pdf.setPage(i);
-     pdf.addImage(h.url,"PNG",20,12,headerWidth,headerHeight);
-     pdf.addImage(f.url,"PNG",20,297-12-footerHeight,footerWidth,footerHeight);
-    }
-   }
-   pdf.save(filename);
+   }).from(preview).save();
   }catch(e){setError("PDF se nepodařilo vytvořit: "+(e?.message||"Neznámá chyba"))}
-  finally{staging.remove();setPdfSaving(false)}
+  finally{preview.style.zoom=previousZoom;preview.style.overflow=previousOverflow;setPdfSaving(false)}
  };
  return <div className="printforms"><div className="pageheading"><div><h1>Generátor tiskopisů</h1><p>Vytvořte dopis nebo oznámení na hlavičkovém papíře SBD Praha 8 a vytiskněte jej nebo uložte jako PDF.</p></div></div>
   <div className="pf-workspace"><section className="pf-editor"><h2>Nastavení dokumentu</h2>
