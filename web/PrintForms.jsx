@@ -105,6 +105,22 @@ export default function PrintForms({buildings=[],currentAccountName="",reportSig
    // The direct save pipeline is the supported html2pdf.js API. The previous
    // custom .toCanvas().get("canvas") pipeline returned no canvas in production.
    preview.classList.add("pf-exporting");
+   // The fixed PDF header/footer occupy 37 + 22 mm. Keep the signature
+   // on the preceding page whenever a modest reduction of vertical spacing fits.
+   const paper=preview.querySelector(".pf-paper");
+   const signature=paper?.querySelector(".pf-signature");
+   let compacted=false;
+   if(signature&&(template==="glazing"||template==="building_works")){
+    const pxPerMm=preview.getBoundingClientRect().width/210;
+    const pageContentPx=(297-37-22)*pxPerMm;
+    const paperTop=paper.getBoundingClientRect().top;
+    const signatureBottom=signature.getBoundingClientRect().bottom-paperTop;
+    const overflow=signatureBottom-pageContentPx;
+    if(overflow>0&&overflow<35*pxPerMm){
+     preview.classList.add("pf-compact-signature");
+     compacted=true;
+    }
+   }
    const pdf=await html2pdf().set({
     margin:[37,0,22,0],
     filename,
@@ -155,7 +171,7 @@ export default function PrintForms({buildings=[],currentAccountName="",reportSig
    }
    pdf.save(filename);
   }catch(e){setError("PDF se nepodařilo vytvořit: "+(e?.message||"Neznámá chyba"))}
-  finally{preview.classList.remove("pf-exporting");preview.style.zoom=previousZoom;preview.style.overflow=previousOverflow;setPdfSaving(false)}
+  finally{preview.classList.remove("pf-exporting","pf-compact-signature");preview.style.zoom=previousZoom;preview.style.overflow=previousOverflow;setPdfSaving(false)}
  };
  return <div className="printforms"><div className="pageheading"><div><h1>Generátor tiskopisů</h1><p>Vytvořte dopis nebo oznámení na hlavičkovém papíře SBD Praha 8 a vytiskněte jej nebo uložte jako PDF.</p></div></div>
   <div className="pf-workspace"><section className="pf-editor"><h2>Nastavení dokumentu</h2>
