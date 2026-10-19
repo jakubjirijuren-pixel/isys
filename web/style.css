@@ -444,3 +444,27 @@ button,select,input,textarea{max-width:100%}
  .layout .buildinggrid{grid-template-columns:repeat(auto-fill,minmax(min(100%,210px),1fr));gap:9px}
  .layout .buildingcard{padding:12px;gap:5px}
 }
+
+
+/* FOXA: clearer, more defined object cards while keeping compact layout. */
+.layout .buildingcard{
+ border:2px solid #9ab7ca;
+ box-shadow:0 3px 12px #123d581c;
+ transition:transform .15s ease,border-color .15s ease,box-shadow .15s ease;
+}
+.layout .buildingcard:hover,
+.layout .buildingcard:focus-visible{
+ border-color:#1979ad;
+ box-shadow:0 7px 20px #14648c32;
+ transform:translateY(-2px);
+}
+.layout .buildingcard:focus-visible{outline:2px solid #1979ad;outline-offset:2px}
+[data-theme="dark"] .layout .buildingcard{
+ border-color:#547b96;
+ box-shadow:0 3px 12px #0005;
+}
+[data-theme="dark"] .layout .buildingcard:hover,
+[data-theme="dark"] .layout .buildingcard:focus-visible{
+ border-color:#7fc5ec;
+ box-shadow:0 7px 20px #0007;
+}
