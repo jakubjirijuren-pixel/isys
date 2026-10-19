@@ -90,7 +90,7 @@ export default function PrintForms({buildings=[],currentAccountName="",reportSig
     html2canvas:{scale:2,useCORS:true,backgroundColor:"#ffffff",logging:false,scrollX:0,scrollY:0},
     jsPDF:{unit:"mm",format:"a4",orientation:"portrait"},
     pagebreak:{mode:["css","legacy"],avoid:[".pf-signature",".pf-top",".pf-subject"]}
-   }).from(paper).toPdf().get("pdf");
+   }).from(staging).toPdf().get("pdf");
    // Repeat the same header and footer from the preview on overflow pages.
    // The first page already contains both elements in its original positions.
    if(pdf.internal.getNumberOfPages()>1){
