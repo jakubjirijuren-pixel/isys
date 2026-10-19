@@ -225,3 +225,6 @@
 /* PDF: header is drawn separately on each page; avoid duplicate on page one. */
 .pf-preview-paper.pf-exporting .sbd-header{display:none!important}
 .pf-preview-paper.pf-exporting .pf-top{margin-top:0!important}
+
+/* Červená závěrečná poznámka ve všech šablonách typu Podmínky. */
+.pf-preview-paper .pf-bodytext .pf-conditions-note{display:block;color:#bc2026!important;font-weight:600;line-height:1.6;margin:3mm 0 4mm;padding-top:2mm;break-inside:avoid!important;page-break-inside:avoid!important}
