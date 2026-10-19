@@ -105,13 +105,35 @@ export default function PrintForms({buildings=[],currentAccountName="",reportSig
    // custom .toCanvas().get("canvas") pipeline returned no canvas in production.
    preview.classList.add("pf-exporting");
    const pdf=await html2pdf().set({
-    margin:[0,0,22,0],
+    margin:[37,0,22,0],
     filename,
     image:{type:"jpeg",quality:.98},
     html2canvas:{scale:2,useCORS:true,backgroundColor:"#ffffff",logging:false,scrollX:0,scrollY:0},
     jsPDF:{unit:"mm",format:"a4",orientation:"portrait"},
     pagebreak:{mode:["css","legacy"],avoid:[".pf-signature",".pf-top",".pf-subject",".pf-building-works-note",".pf-building-works-ending"]}
    }).from(preview).toPdf().get("pdf");
+   const headerCanvas=document.createElement("canvas");
+   headerCanvas.width=1700;headerCanvas.height=240;
+   const hc=headerCanvas.getContext("2d");
+   if(!hc)throw new Error("Nelze vykreslit hlavičku.");
+   hc.fillStyle="#fff";hc.fillRect(0,0,1700,240);
+   const logo=preview.querySelector(".sbd-header svg");
+   if(logo){
+    const svgText=new XMLSerializer().serializeToString(logo);
+    const img=new Image();
+    const src="data:image/svg+xml;charset=utf-8,"+encodeURIComponent(svgText);
+    await new Promise((resolve,reject)=>{img.onload=resolve;img.onerror=()=>reject(new Error("Nepodařilo se načíst logo."));img.src=src});
+    hc.drawImage(img,0,8,155,206);
+   }
+   hc.fillStyle="#111";hc.textBaseline="top";
+   hc.font="bold 29px Arial";hc.fillText("Stavební bytové družstvo Praha 8",185,35);
+   hc.font="20px Arial";
+   hc.fillText("Horňátecká 1772/19, 182 00 Praha 8",185,80);
+   hc.fillText("IČO: 00034550, DIČ: CZ 00034550, Bankovní spojení: ČSOB a.s., č.ú. 746873/0300",185,111);
+   hc.font="18px Arial";
+   hc.fillText("Zapsané v Obchodním rejstříku vedeném Městským soudem v Praze",185,145);
+   hc.fillText("v oddílu Dr XCVIII., vložka 254",185,172);
+   const headerImage=headerCanvas.toDataURL("image/png");
    const footerCanvas=document.createElement("canvas");
    footerCanvas.width=1700;footerCanvas.height=160;
    const ctx=footerCanvas.getContext("2d");
@@ -127,6 +149,7 @@ export default function PrintForms({buildings=[],currentAccountName="",reportSig
    const footerImage=footerCanvas.toDataURL("image/png");
    for(let page=1;page<=pdf.internal.getNumberOfPages();page++){
     pdf.setPage(page);
+    pdf.addImage(headerImage,"PNG",20,8,170,24);
     pdf.addImage(footerImage,"PNG",20,275,170,16);
    }
    pdf.save(filename);
