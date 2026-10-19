@@ -103,16 +103,32 @@ export default function PrintForms({buildings=[],currentAccountName="",reportSig
    const filename=pdfFileName(template==="key_handover"?"Predavaci_protokol_klicu_"+(keyHandover.objectDescription||keyHandover.recipientName):fields.subject||templates[template].title);
    // The direct save pipeline is the supported html2pdf.js API. The previous
    // custom .toCanvas().get("canvas") pipeline returned no canvas in production.
-   await html2pdf().set({
-    margin:0,
+   preview.classList.add("pf-exporting");
+   const pdf=await html2pdf().set({
+    margin:[0,0,22,0],
     filename,
     image:{type:"jpeg",quality:.98},
     html2canvas:{scale:2,useCORS:true,backgroundColor:"#ffffff",logging:false,scrollX:0,scrollY:0},
     jsPDF:{unit:"mm",format:"a4",orientation:"portrait"},
     pagebreak:{mode:["css","legacy"],avoid:[".pf-signature",".pf-top",".pf-subject",".pf-building-works-note",".pf-building-works-ending"]}
-   }).from(preview).save();
+   }).from(preview).toPdf().get("pdf");
+   const pageCount=pdf.internal.getNumberOfPages();
+   for(let page=1;page<=pageCount;page++){
+    pdf.setPage(page);
+    pdf.setDrawColor(115,125,135);
+    pdf.setLineWidth(.25);
+    pdf.line(20,276,190,276);
+    pdf.setTextColor(45,55,65);
+    pdf.setFont("helvetica","bold");pdf.setFontSize(8);
+    pdf.text("Stavebni bytove druzstvo Praha 8",20,281);
+    pdf.setFont("helvetica","normal");pdf.setFontSize(7);
+    pdf.text("Tel.: 284 682 814, 284 682 046",20,286);
+    pdf.text("E-mail: info@sbd8.cz",105,286,{align:"center"});
+    pdf.text("www.sbd8.cz",190,286,{align:"right"});
+   }
+   pdf.save(filename);
   }catch(e){setError("PDF se nepodařilo vytvořit: "+(e?.message||"Neznámá chyba"))}
-  finally{preview.style.zoom=previousZoom;preview.style.overflow=previousOverflow;setPdfSaving(false)}
+  finally{preview.classList.remove("pf-exporting");preview.style.zoom=previousZoom;preview.style.overflow=previousOverflow;setPdfSaving(false)}
  };
  return <div className="printforms"><div className="pageheading"><div><h1>Generátor tiskopisů</h1><p>Vytvořte dopis nebo oznámení na hlavičkovém papíře SBD Praha 8 a vytiskněte jej nebo uložte jako PDF.</p></div></div>
   <div className="pf-workspace"><section className="pf-editor"><h2>Nastavení dokumentu</h2>
