@@ -250,3 +250,28 @@
 .pf-preview-paper.pf-exporting.pf-compact-signature .pf-building-works .pf-conditions-note{margin:2mm 0 2mm!important;padding-top:1mm!important;line-height:1.45!important}
 .pf-preview-paper.pf-exporting.pf-compact-signature .pf-building-works .pf-footer,
 .pf-preview-paper.pf-exporting.pf-compact-signature .pf-glazing .pf-footer{display:none!important}
+
+
+/* PDF has its own repeating header/footer and page margins. Do not render
+   a whole A4-height preview sheet inside that smaller printable region:
+   this was producing an additional entirely empty page. */
+.pf-preview-paper.pf-exporting{
+ min-height:0!important;
+ height:auto!important;
+ box-shadow:none!important;
+}
+.pf-preview-paper.pf-exporting .pf-paper,
+.pf-preview-paper.pf-exporting .pf-building-works,
+.pf-preview-paper.pf-exporting .pf-glazing,
+.pf-preview-paper.pf-exporting .pf-key-handover{
+ min-height:0!important;
+ height:auto!important;
+ padding-top:0!important;
+ padding-bottom:0!important;
+ margin-bottom:0!important;
+}
+.pf-preview-paper.pf-exporting .pf-letterbody{
+ flex:0 0 auto!important;
+ min-height:0!important;
+}
+.pf-preview-paper.pf-exporting .pf-footer{display:none!important}
