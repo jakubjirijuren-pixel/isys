@@ -1,9 +1,13 @@
 import React,{useEffect,useMemo,useState} from "react";
+import html2pdf from "html2pdf.js";
 import {SBD_LOGO} from "./SbdProtocolLogo.js";
 import {stampImage} from "./SbdProtocolStamp.js";
 import "./PrintForms.css";
 
 const today=()=>new Date().toISOString().slice(0,10);
+const draftKey=id=>id?"foxa-printforms-draft-v2-"+id:null;
+const readDraft=id=>{try{const key=draftKey(id);return key?JSON.parse(localStorage.getItem(key)||"null"):null}catch{return null}};
+const pdfFileName=value=>String(value||"Tiskopis").normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/[^a-zA-Z0-9 _-]/g,"").trim().replace(/\s+/g,"_").slice(0,80)+".pdf";
 const templates={
  glazing:{title:"Podmínky k zasklení lodžie",subject:"Věc: Podmínky k zasklení lodžie",greeting:"",body:"Po předložení navrhované stavební úpravy vydává správce objektu SBD Praha 8 – podmínky,\nkteré se vlastník-stavebník zavazuje dodržet:\n\n1. Stavební úprava bude plně hrazena z prostředků vlastníka,\n   - jedná se o zasklení lodžie bezrámovým systémem firmou {{firma}} z {{sklo}}\n   - č.b. {{byt}}, ul. {{ulice}} č.p. {{cisloPopisne}}, {{mesto}}, {{psc}}, k.ú. {{katastr}}\n2. Úprava bude provedena dle schválené stavební technologie a způsobu zasklívání doložené certifikátem, pod odborným stavebním dozorem a bude zadána k provedení odborné firmě.\n3. Budou respektovány platné normy vč. předpisů o bezpečnosti práce a požární ochraně.\n4. Stav. úprava bude oznámena výboru SVJ objektu, zejména zahájení prací. Ukončení prací bude oznámeno TPÚ SBD 8 písemně.\n5. Práce budou probíhat s ohledem na ostatní bydlící za průběžného dodržování pořádku a čistoty v objektu v souladu s domovním řádem, resp. práce bude prováděna pouze ve všední dny od 7.00 do 19.00hod. /mimo SO+NE/ ! Případné škody vzniklé v souvislosti s úpravou budou vlastníkem bezprostředně na jeho náklady odstraněny. V případě rekonstrukce lodžií v objektu umožní vlastník bytu přístup a v příp. nutnosti demontáže zasklení zajistí na své náklady demontáž. Nebude skladován žádný materiál na veřej. prostranství, ani zeleni bez povolení ÚMČ P-8, rovněž tak v objektu bez povolení výboru SVJ.\n6. Horní díl bezrámového zasklení bude proveden z čirého skla, stávající základní rám bude ve shodném barevném provedení se stávajícími lodžiemi. V případě nátěrů lodžií /údržby, oprav apod./ zajistí vlastník bytu na své náklady demontáž. Rovněž zateplení spodní části nelze barevně ani materiálově odlišovat, pokud to nepovolí stavební odbor ÚMČ P-8. Lodžiové panely zůstanou v původní barevnosti, jsou součástí fasády, nikoli interiéru bytu.\n\nPozn.: Podmínky jsou platné pouze se souhlasem výboru SVJ.\n\nCo: TPÚ, SVJ",closing:"Za správce:"},
  letter:{title:"Dopis na hlavičkovém papíře",subject:"Věc: ",greeting:"Vážení,",body:"",closing:"S pozdravem"},
@@ -17,30 +21,35 @@ const dateCZ=v=>v?new Date(v+"T12:00:00").toLocaleDateString("cs-CZ"):"";
 const formatCzechPhone=value=>{const raw=String(value??"").trim();if(!raw)return "";const digits=raw.replace(/\\D/g,"");let national=digits;if(digits.startsWith("00420")&&digits.length===14)national=digits.slice(5);else if(digits.startsWith("420")&&digits.length===12)national=digits.slice(3);if(national.length===9)return "+420 "+national.match(/.{3}/g).join(" ");return raw;};
 
 export default function PrintForms({buildings=[],currentAccountName="",reportSignature={},userEmail="",userPhone="",supabase,userId}){
- const [template,setTemplate]=useState("letter");
- const [fields,setFields]=useState({recipient:"",recipientAddress:"",apartmentNumber:"",subject:"",greeting:"Vážení,",body:"",closing:"S pozdravem",city:"Praha",date:today(),reference:"",incomingReference:"",email:"",phone:"",contact:currentAccountName,position:"Technik"});
- const [glazing,setGlazing]=useState({firma:"",sklo:"čirého skla",byt:"",ulice:"",cisloPopisne:"",mesto:"Praha 8",psc:"182 00",katastr:"Kobylisy"});
+ const savedDraft=useMemo(()=>readDraft(userId),[userId]);
+ const [template,setTemplate]=useState(()=>savedDraft?.template&&templates[savedDraft.template]?savedDraft.template:"letter");
+ const [fields,setFields]=useState(()=>({...{recipient:"",recipientAddress:"",apartmentNumber:"",subject:"",greeting:"Vážení,",body:"",closing:"S pozdravem",city:"Praha",date:today(),reference:"",incomingReference:"",email:"",phone:"",contact:currentAccountName,position:"Technik"},...(savedDraft?.fields||{})}));
+ const [glazing,setGlazing]=useState(()=>({firma:"",sklo:"čirého skla",byt:"",ulice:"",cisloPopisne:"",mesto:"Praha 8",psc:"182 00",katastr:"Kobylisy",...(savedDraft?.glazing||{})}));
  const setGlazingField=(key,value)=>setGlazing(prev=>({...prev,[key]:value}));
  const fillGlazingBody=body=>body.replace(/\{\{(firma|sklo|byt|ulice|cisloPopisne|mesto|psc|katastr)\}\}/g,(_,key)=>(key==="byt"?(glazing.byt||fields.apartmentNumber):glazing[key])?.trim()||"…………");
- const [alternateSigner,setAlternateSigner]=useState(false);
- const [signerName,setSignerName]=useState("");
- const [signerPosition,setSignerPosition]=useState("");
- const [buildingQuery,setBuildingQuery]=useState("");
+ const [alternateSigner,setAlternateSigner]=useState(savedDraft?.alternateSigner||false);
+ const [signerName,setSignerName]=useState(savedDraft?.signerName||"");
+ const [signerPosition,setSignerPosition]=useState(savedDraft?.signerPosition||"");
+ const [buildingQuery,setBuildingQuery]=useState(savedDraft?.buildingQuery||"");
  const [buildingOpen,setBuildingOpen]=useState(false);
- const [selectedBuilding,setSelectedBuilding]=useState("");
+ const [selectedBuilding,setSelectedBuilding]=useState(savedDraft?.selectedBuilding||"");
  const [profilePhone,setProfilePhone]=useState(userPhone);
- useEffect(()=>{setFields(prev=>({...prev,contact:reportSignature?.name?.trim()||currentAccountName||prev.contact,email:userEmail||prev.email,phone:userPhone||prev.phone}))},[currentAccountName,reportSignature?.name,userEmail,userPhone]);
- useEffect(()=>{if(!supabase||!userId)return;let active=true;supabase.from("profiles").select("*").eq("id",userId).maybeSingle().then(({data,error})=>{if(!active||error||!data)return;const phone=data.phone||data.phone_number||data.telefon||"";const email=data.email||userEmail;const name=data.display_name||data.full_name||data.name||"";setProfilePhone(phone||userPhone);setFields(prev=>({...prev,phone:phone||prev.phone,email:email||prev.email,contact:reportSignature?.name?.trim()||name||prev.contact}))});return()=>{active=false}},[supabase,userId,userEmail,userPhone,reportSignature?.name]);
+ useEffect(()=>{setFields(prev=>savedDraft?prev:({...prev,contact:reportSignature?.name?.trim()||currentAccountName||prev.contact,email:userEmail||prev.email,phone:userPhone||prev.phone}))},[currentAccountName,reportSignature?.name,userEmail,userPhone]);
+ useEffect(()=>{if(!supabase||!userId)return;let active=true;supabase.from("profiles").select("*").eq("id",userId).maybeSingle().then(({data,error})=>{if(!active||error||!data)return;const phone=data.phone||data.phone_number||data.telefon||"";const email=data.email||userEmail;const name=data.display_name||data.full_name||data.name||"";setProfilePhone(phone||userPhone);setFields(prev=>savedDraft?prev:({...prev,phone:phone||prev.phone,email:email||prev.email,contact:reportSignature?.name?.trim()||name||prev.contact}))});return()=>{active=false}},[supabase,userId,userEmail,userPhone,reportSignature?.name]);
  const buildingOptions=useMemo(()=>buildings.filter(b=>[b.object_number,b.name,b.address,b.street,b.city].some(v=>String(v||"").toLocaleLowerCase("cs").includes(buildingQuery.toLocaleLowerCase("cs")))).sort((a,b)=>String(a.object_number||"").localeCompare(String(b.object_number||""),"cs",{numeric:true})).slice(0,35),[buildings,buildingQuery]);
  const [error,setError]=useState("");
- const [mailEnabled,setMailEnabled]=useState(false);
- const [mailMethod,setMailMethod]=useState("Pošta");
- const [mailSentOn,setMailSentOn]=useState(today());
- const [mailTracking,setMailTracking]=useState("");
- const [mailNotes,setMailNotes]=useState("");
+ const [mailEnabled,setMailEnabled]=useState(savedDraft?.mailEnabled||false);
+ const [mailMethod,setMailMethod]=useState(savedDraft?.mailMethod||"Pošta");
+ const [mailSentOn,setMailSentOn]=useState(savedDraft?.mailSentOn||today());
+ const [mailTracking,setMailTracking]=useState(savedDraft?.mailTracking||"");
+ const [mailNotes,setMailNotes]=useState(savedDraft?.mailNotes||"");
  const [mailSaving,setMailSaving]=useState(false);
  const [mailSuccess,setMailSuccess]=useState("");
  const [mailSavedSnapshot,setMailSavedSnapshot]=useState("");
+ const [draftStatus,setDraftStatus]=useState(savedDraft?"Rozpracovaný dokument byl obnoven.":"");
+ const [pdfSaving,setPdfSaving]=useState(false);
+ useEffect(()=>{const key=draftKey(userId);if(!key)return;const timer=setTimeout(()=>{try{localStorage.setItem(key,JSON.stringify({template,fields,glazing,alternateSigner,signerName,signerPosition,buildingQuery,selectedBuilding,mailEnabled,mailMethod,mailSentOn,mailTracking,mailNotes,updatedAt:new Date().toISOString()}));setDraftStatus("Rozpracovaný dokument automaticky uložen v tomto prohlížeči.")}catch{setDraftStatus("Automatické ukládání není v tomto prohlížeči dostupné.")}},450);return()=>clearTimeout(timer)},[userId,template,fields,glazing,alternateSigner,signerName,signerPosition,buildingQuery,selectedBuilding,mailEnabled,mailMethod,mailSentOn,mailTracking,mailNotes]);
+
  const recipientAddressWithApartment=[fields.recipientAddress.trim(),fields.apartmentNumber.trim()?`Byt č. ${fields.apartmentNumber.trim()}`:""].filter(Boolean).join("\n");
  const mailSnapshot=JSON.stringify({recipient:fields.recipient,address:recipientAddressWithApartment,subject:fields.subject,reference:fields.reference,building_id:selectedBuilding,sent_on:mailSentOn,method:mailMethod,tracking_number:mailTracking,notes:mailNotes});
  const saveToOutgoingMail=async()=>{
