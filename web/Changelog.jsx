@@ -30,7 +30,7 @@ export default function Changelog({supabase,userId,open,onClose}){
   if(!ids.length){setDismissed(true);onClose();setSaving(false);return}
   const {error:e}=await supabase.from("foxa_changelog_reads").upsert(ids.map(release_id=>({user_id:userId,release_id})),{onConflict:"user_id,release_id",ignoreDuplicates:true});
   if(e)setError("Potvrzení se nepodařilo uložit: "+e.message);
-  else{setReadIds(prev=>[...new Set([...prev,...ids])]);setDismissed(true);onClose()}
+  else{setReadIds(prev=>[...new Set([...prev,...ids])]);window.dispatchEvent(new Event("foxa-changelog-updated"));setDismissed(true);onClose()}
   setSaving(false);
  };
  if(!userId||!visible)return null;
