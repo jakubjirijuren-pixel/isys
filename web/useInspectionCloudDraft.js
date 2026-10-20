@@ -41,8 +41,9 @@ export default function useInspectionCloudDraft({supabase,kind,data,setData,loca
   return()=>{active=false;ready.current=false};
  },[supabase,kind,localKey]);
  useEffect(()=>{
-  if(!ready.current||paused.current)return;
+  if(!ready.current)return;
   if(skip.current){skip.current=false;return}
+  if(paused.current)paused.current=false;
   const current=++revision.current;
   setStatus("Ukládání do Supabase…");
   const timer=setTimeout(async()=>{
