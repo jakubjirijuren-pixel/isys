@@ -118,3 +118,11 @@
 .layout .body .building-heading-actions{display:flex;align-items:center;flex-wrap:wrap;gap:10px;min-width:0}
 .layout .body .building-heading-actions>.secondarybutton{min-height:42px;white-space:normal}
 @media(max-width:700px){.layout .body .building-heading-actions{width:100%}.layout .body .building-heading-actions>.secondarybutton{width:100%}}
+
+/* Dashboard hero: changelog shortcut inside the welcome banner. */
+.layout .body .foxa-dashboard-hero{display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap}
+.layout .body .foxa-dashboard-hero>div{min-width:0;flex:1 1 300px}
+.layout .body .foxa-hero-changelog-button{flex:0 0 auto;min-height:44px;padding:11px 18px;border:1px solid rgba(255,255,255,.42);border-radius:var(--fx-radius-control,11px);background:rgba(255,255,255,.13);color:#fff;font:inherit;font-size:14px;font-weight:750;cursor:pointer;white-space:normal}
+.layout .body .foxa-hero-changelog-button:hover{background:rgba(255,255,255,.23)}
+.layout .body .foxa-hero-changelog-button:focus-visible{outline:2px solid #fff;outline-offset:3px}
+@media(max-width:600px){.layout .body .foxa-hero-changelog-button{width:100%}}
