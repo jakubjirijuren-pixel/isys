@@ -155,3 +155,11 @@
 @media(max-width:700px){
  .layout .body .building-heading-actions>.secondarybutton:first-child{width:100%;min-height:46px;padding:11px 16px;font-size:14px}
 }
+
+/* Inspection view switch belongs inside each inspection header banner. */
+.layout .body :is(.inspectionheading,.technicalhead)>div:first-child{min-width:0;flex:1 1 330px}
+.layout .body :is(.inspectionheading,.technicalhead) .inspection-role-switch{display:inline-flex;flex-wrap:wrap;gap:6px;margin:14px 0 0;padding:4px;max-width:100%;border:1px solid var(--fx-border);border-radius:12px;background:var(--fx-surface-soft)}
+.layout .body :is(.inspectionheading,.technicalhead) .inspection-role-switch button{min-height:39px;padding:8px 13px;border:0;border-radius:9px;background:transparent;color:var(--fx-text);font:inherit;font-size:13px;font-weight:700;cursor:pointer;box-shadow:none}
+.layout .body :is(.inspectionheading,.technicalhead) .inspection-role-switch button.active{background:var(--fx-accent);color:#fff}
+.layout .body :is(.inspectionheading,.technicalhead) .inspection-role-switch button:focus-visible{outline:2px solid var(--fx-accent);outline-offset:2px}
+@media(max-width:650px){.layout .body :is(.inspectionheading,.technicalhead) .inspection-role-switch{display:flex;width:100%;box-sizing:border-box}.layout .body :is(.inspectionheading,.technicalhead) .inspection-role-switch button{flex:1 1 125px}}
