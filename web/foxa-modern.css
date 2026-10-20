@@ -175,3 +175,13 @@
 .layout .body .technicalhead .technicalbuttons>button:disabled{opacity:.55;cursor:not-allowed}
 @media(max-width:850px){.layout .body .technicalhead .technicalbuttons{justify-content:flex-start;flex-basis:100%}.layout .body .technicalhead .inspection-autosave-status{text-align:left}}
 @media(max-width:600px){.layout .body .technicalhead .technicalbuttons>button{flex:1 1 calc(50% - 9px);min-width:0}.layout .body .technicalhead .technicalbuttons>button.primary{flex-basis:100%}}
+
+/* Technician inspection header now shares referent action layout. */
+.layout .body .technicalhead>.inspectionactions{display:flex;align-items:center;justify-content:flex-end;flex-wrap:wrap;gap:10px;flex:0 1 auto;min-width:0}
+.layout .body .technicalhead>.inspectionactions .inspection-autosave-status{flex:0 1 auto;width:auto;max-width:100%;margin:0;white-space:normal}
+.layout .body .technicalhead>.inspectionactions>button{flex:0 0 auto;min-height:44px;padding:10px 17px;font-size:14px;white-space:normal}
+.layout .body .technical-extra-actions{display:flex;justify-content:flex-end;flex-wrap:wrap;gap:8px;margin:-8px 0 18px}
+.layout .body .technical-extra-actions>button{min-height:38px;padding:8px 14px;border:1px solid var(--fx-border);border-radius:10px;background:var(--fx-surface-soft);color:var(--fx-text);font:inherit;font-size:13px;font-weight:650;cursor:pointer}
+.layout .body .technical-extra-actions>button:hover{border-color:var(--fx-accent)}
+@media(max-width:850px){.layout .body .technicalhead>.inspectionactions{flex:1 1 100%;justify-content:flex-start}.layout .body .technicalhead>.inspectionactions .inspection-autosave-status{flex:1 1 100%}}
+@media(max-width:600px){.layout .body .technicalhead>.inspectionactions>button{flex:1 1 140px}.layout .body .technical-extra-actions{justify-content:stretch}.layout .body .technical-extra-actions>button{flex:1 1 120px}}
