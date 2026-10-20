@@ -1,8 +1,9 @@
 import React,{useEffect,useState} from "react";
-import {foxaReleases} from "./foxaReleases.js";
+import {getVisibleReleases} from "./foxaReleases.js";
 import "./Changelog.css";
 
-export default function Changelog({supabase,userId,open,onClose}){
+export default function Changelog({supabase,userId,roles=[],open,onClose}){
+ const foxaReleases=getVisibleReleases(roles);
  const [readIds,setReadIds]=useState([]);
  const [ready,setReady]=useState(false);
  const [error,setError]=useState("");
