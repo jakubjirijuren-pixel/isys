@@ -130,3 +130,9 @@
 /* Attendance controls belong to the dashboard overview on every screen size. */
 .layout .body .foxa-dashboard-attendance{display:block!important;width:100%;margin:18px 0 22px;min-width:0}
 .layout .body .foxa-dashboard-attendance>*{max-width:100%;min-width:0}
+
+/* Prominent shortcut to inspections in the Buildings banner. */
+.layout .body .building-heading-actions>.secondarybutton:first-child{min-height:64px;padding:16px 28px;border:2px solid var(--fx-accent,#218dc1);border-radius:16px;background:var(--fx-accent,#218dc1);color:#fff;font-size:clamp(17px,1.35vw,21px);font-weight:800;line-height:1.3;letter-spacing:-.015em;box-shadow:0 6px 18px color-mix(in srgb,var(--fx-accent,#218dc1) 25%,transparent);transition:transform .16s,box-shadow .16s,background-color .16s}
+.layout .body .building-heading-actions>.secondarybutton:first-child:hover{background:color-mix(in srgb,var(--fx-accent,#218dc1) 85%,#000);box-shadow:0 9px 22px color-mix(in srgb,var(--fx-accent,#218dc1) 32%,transparent);transform:translateY(-1px)}
+.layout .body .building-heading-actions>.secondarybutton:first-child:focus-visible{outline:3px solid var(--fx-accent,#218dc1);outline-offset:3px}
+@media(max-width:700px){.layout .body .building-heading-actions>.secondarybutton:first-child{width:100%;min-height:68px;padding:16px 20px;font-size:18px}}
