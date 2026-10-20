@@ -1,8 +1,9 @@
 import React,{useEffect,useRef,useState} from "react";
 import "./notifications.css";
-import {foxaReleases} from "./foxaReleases.js";
+import {getVisibleReleases} from "./foxaReleases.js";
 
-export default function NotificationCenter({supabase,userId,onNavigate,onOpenChangelog}){
+export default function NotificationCenter({supabase,userId,roles=[],onNavigate,onOpenChangelog}){
+ const foxaReleases=getVisibleReleases(roles);
  const [open,setOpen]=useState(false),[items,setItems]=useState([]),[error,setError]=useState(""),[busy,setBusy]=useState(false);
  const [permission,setPermission]=useState(()=>typeof Notification==="undefined"?"unsupported":Notification.permission);
  const panel=useRef(null),initialized=useRef(false);
