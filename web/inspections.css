@@ -12,3 +12,6 @@
 .inspectionbuildingoptions{max-height:245px;overflow-y:auto;margin-top:6px}
 .inspectionbuildingoptions p{padding:10px;font-size:13px}
 [data-theme="dark"] .inspectionbuildingmenu input{background:#1a3043;border-color:#36546a;color:#e3edf6}
+
+.inspection-autosave-status{display:inline-flex;align-items:center;font-size:12px;line-height:1.35;padding:7px 10px;border-radius:8px;border:1px solid var(--border,#b9cbd8);color:inherit;max-width:320px;white-space:normal}
+@media(max-width:650px){.inspection-autosave-status{width:100%;max-width:none;justify-content:center;text-align:center}}

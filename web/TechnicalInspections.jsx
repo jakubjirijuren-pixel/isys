@@ -1,4 +1,4 @@
-import React,{useEffect,useMemo,useState} from "react";
+import React,{useEffect,useMemo,useState,useRef} from "react";
 import "./technical-inspections.css";
 import SignaturePad from "./SignaturePad.jsx";
 import html2pdf from "html2pdf.js";
@@ -25,6 +25,18 @@ export default function TechnicalInspections({buildings=[],userEmail="",currentA
  const key="foxa-technical-inspection-draft-"+userEmail;
  const [data,setData]=useState(()=>{try{const stored=JSON.parse(localStorage.getItem(key)||"null");return stored?{...fresh(),...stored,signedSVJDate:stored.signedSVJDate||todayLocal(),signedTechnicianDate:stored.signedTechnicianDate||todayLocal()}:fresh()}catch{return fresh()}});
  const [notice,setNotice]=useState("");
+ const [autoSaveStatus,setAutoSaveStatus]=useState("Automatické ukládání aktivní");
+ const skipAutoSave=useRef(false);
+ useEffect(()=>{
+  if(skipAutoSave.current){skipAutoSave.current=false;return}
+  setAutoSaveStatus("Ukládání změn…");
+  const timer=setTimeout(()=>{
+   try{localStorage.setItem(key,JSON.stringify(data));setAutoSaveStatus("Automaticky uloženo v "+new Date().toLocaleTimeString("cs-CZ",{hour:"2-digit",minute:"2-digit"}))}
+   catch{try{localStorage.setItem(key,JSON.stringify({...data,photoFiles:[],signatureSVJImage:"",signatureTechnicianImage:""}));setAutoSaveStatus("Text uložen; fotografie nebo podpisy se nevešly do paměti zařízení")}
+   catch{setAutoSaveStatus("Automatické uložení se nezdařilo – ulož koncept ručně")}}
+  },900);
+  return()=>clearTimeout(timer);
+ },[data,key]);
  const [signatureMode,setSignatureMode]=useState("");
  const [pdfBusy,setPdfBusy]=useState(false);
  const [temporaryReports,setTemporaryReports]=useState([]);
@@ -75,7 +87,7 @@ export default function TechnicalInspections({buildings=[],userEmail="",currentA
  const removePhoto=id=>setData(p=>({...p,photoFiles:(p.photoFiles||[]).filter(x=>x.id!==id)}));
  const addSignature=(file,field)=>{if(!file?.type?.startsWith("image/"))return;const reader=new FileReader();reader.onload=()=>{const src=String(reader.result||"");if(!/^data:image\/(png|jpeg|webp);base64,/.test(src)){setNotice("Podporované podpisy: PNG, JPG, WEBP.");return}set(field,src);setSignatureMode("");setNotice("Podpis vložen.")};reader.readAsDataURL(file)};
  const save=()=>{try{localStorage.setItem(key,JSON.stringify(data));setNotice("Koncept technické kontroly uložen v tomto prohlížeči.")}catch{setNotice("Koncept se nepodařilo uložit. Zkuste zmenšit počet fotografií.")}};
- const clear=()=>{if(!window.confirm("Opravdu vymazat rozpracovanou technickou kontrolu?"))return;setData(fresh());localStorage.removeItem(key);setNotice("Formulář byl vymazán.")};
+ const clear=()=>{if(!window.confirm("Opravdu vymazat rozpracovanou technickou kontrolu?"))return;skipAutoSave.current=true;setData(fresh());try{localStorage.removeItem(key)}catch{}setAutoSaveStatus("Koncept vymazán");setNotice("Formulář byl vymazán.")};
  const buildHtml=()=>{
 
   const logo=SBD_LOGO;
@@ -138,7 +150,7 @@ export default function TechnicalInspections({buildings=[],userEmail="",currentA
   }catch(error){setNotice("Vytvoření PDF selhalo: "+(error?.message||"neznámá chyba"))}
   finally{host?.remove();setPdfBusy(false)}
  };
- return <div className="technicalmodule"><header className="technicalhead"><div><h1>Technické kontroly objektů</h1><p>Zápis podle předlohy technické kontroly. Tiskopis se stylotypem SBD Praha 8.</p></div><div className="technicalbuttons"><button type="button" onClick={save}>Uložit koncept</button><button type="button" onClick={print}>Tisk</button><button type="button" onClick={makePdf} disabled={pdfBusy}>{pdfBusy?"Připravuji PDF…":"Stáhnout PDF a uložit na 24 h"}</button><button type="button" className="technicalclear" onClick={clear}>Nová kontrola</button></div></header>
+ return <div className="technicalmodule"><header className="technicalhead"><div><h1>Technické kontroly objektů</h1><p>Zápis podle předlohy technické kontroly. Tiskopis se stylotypem SBD Praha 8.</p></div><div className="technicalbuttons"><span className="inspection-autosave-status" role="status">{autoSaveStatus}</span><button type="button" onClick={save}>Uložit koncept</button><button type="button" onClick={print}>Tisk</button><button type="button" onClick={makePdf} disabled={pdfBusy}>{pdfBusy?"Připravuji PDF…":"Stáhnout PDF a uložit na 24 h"}</button><button type="button" className="technicalclear" onClick={clear}>Nová kontrola</button></div></header>
  {notice&&<p role="status" className="technicalnotice">{notice}</p>}
  {backupStatus&&<p role="status" className="technicalnotice">{backupStatus}</p>}
  <section className="technicalpanel"><h2>Uložené PDF reporty – 24 hodin</h2><p>Stejně jako u pravidelných kontrol se každá vytvořená technická kontrola ukládá do systému FOXA na 24 hodin. Během této doby ji lze stáhnout na jiném zařízení přihlášeném ke stejnému účtu. Po uplynutí lhůty přestane být dostupná a úklidová úloha ji odstraní.</p><button type="button" className="technicalreportrefresh" onClick={loadReports} disabled={reportsLoading}>{reportsLoading?"Načítání…":"Obnovit seznam"}</button>{temporaryReports.length?temporaryReports.map(report=><div className="temporaryreportrow" key={report.id}><div><strong>{report.object_label} – {report.filename}</strong><small>Vytvořeno: {new Date(report.created_at).toLocaleString("cs-CZ")} · Vyprší: {new Date(report.expires_at).toLocaleString("cs-CZ")}</small></div><button type="button" className="technicalreportdownload" onClick={()=>retrieveReport(report)}>Stáhnout</button></div>):<p>Zatím zde nejsou žádné technické kontroly uložené v posledních 24 hodinách.</p>}</section>
