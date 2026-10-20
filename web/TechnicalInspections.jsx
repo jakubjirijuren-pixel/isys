@@ -141,6 +141,8 @@ export default function TechnicalInspections({buildings=[],userEmail="",currentA
    }catch(error){setBackupStatus("PDF bylo vytvořeno, ale uložení na 24 hodin selhalo: "+(error?.message||"neznámá chyba"))}
    const url=URL.createObjectURL(blob),link=document.createElement("a");link.href=url;link.download=filename;document.body.appendChild(link);link.click();link.remove();setTimeout(()=>URL.revokeObjectURL(url),60000);
    setNotice("PDF technické kontroly bylo připraveno ke stažení.");
+   if(await discard()){setData(fresh());setNotice("PDF technické kontroly bylo vytvořeno. Koncept byl odstraněn ze Supabase a formulář je připraven pro novou kontrolu.");}
+   else setBackupStatus(prev=>[prev,"PDF bylo vytvořeno, ale koncept se nepodařilo odstranit ze Supabase. Odstraň jej ručně tlačítkem Nová kontrola."].filter(Boolean).join(" "));
   }catch(error){setNotice("Vytvoření PDF selhalo: "+(error?.message||"neznámá chyba"))}
   finally{host?.remove();setPdfBusy(false)}
  };
