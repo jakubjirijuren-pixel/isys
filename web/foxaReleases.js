@@ -1,6 +1,17 @@
 // Aktualizovat při každé změně aplikace společně s CHANGELOG.md.
 // Nové vydání = nový jedinečný id; přečtená vydání se znovu nezobrazují.
 export const foxaReleases=[
+ {id:"2026-10-20-fleet-forms-inspections",date:"2026-10-20",title:"Vozidla, tiskopisy a přehlednější kontroly",changes:[
+  {area:"Rezervace vozidel",roles:["admin","technician","referent"],description:"Rezervace služebních vozidel se zobrazují ve společném kalendáři s přepínáním dne, týdne a měsíce a filtrem vozidel."},
+  {area:"Outlook",roles:["admin","technician","referent"],description:"Každý zaměstnanec si může vytvořit soukromý odkaz pro odběr kalendáře rezervací v Outlooku. Změny se synchronizují podle intervalu Outlooku."},
+  {area:"Kniha jízd",roles:["admin","technician","referent"],description:"Do vozového parku přibyla evidence jízd a rezervace služebních aut."},
+  {area:"Tiskopisy",roles:["admin","technician","referent"],description:"Vybrané údaje se předvyplňují z evidence objektů. U zasklení lodžie se příslušný ÚMČ odvozuje z městské části v adrese."},
+  {area:"Kontroly",roles:["admin","technician","referent"],description:"Přepínač Technické kontroly / Kontroly referenta je přímo v banneru kontrol."},
+  {area:"Technické kontroly",roles:["admin","technician"],description:"Horní ovládání sjednoceno s kontrolami referenta: Nová kontrola a Generovat PDF; další akce jsou pod bannerem."},
+  {area:"Správa uživatelů",roles:["admin"],description:"Upraven vzhled administrace uživatelů, hlavičky, statistických karet a seznamu zaměstnanců."},
+  {area:"Evidence objektů",roles:["admin","technician","referent"],description:"Tlačítko Kontroly objektů je kompaktnější a odpovídá vzhledu ostatních ovládacích prvků."},
+  {area:"Wiki",description:"Doplněny návody ke kalendáři vozidel, Outlooku, tiskopisům, docházce a technickým kontrolám."}
+ ]},
  {id:"2026-10-20-navigation-ticketing",date:"2026-10-20",title:"Přehlednější navigace a opravy ticketů",changes:[
   {area:"Přehled",description:"Tlačítko Novinky a aktualizace je nově přímo v uvítacím banneru; z hlavního menu bylo odstraněno."},
   {area:"Objekty a kontroly",roles:["admin","technician","referent"],description:"Kontroly objektů se otevírají tlačítkem v horním banneru Evidence objektů místo samostatné položky v menu."},
