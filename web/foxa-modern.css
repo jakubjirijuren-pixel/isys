@@ -126,3 +126,7 @@
 .layout .body .foxa-hero-changelog-button:hover{background:rgba(255,255,255,.23)}
 .layout .body .foxa-hero-changelog-button:focus-visible{outline:2px solid #fff;outline-offset:3px}
 @media(max-width:600px){.layout .body .foxa-hero-changelog-button{width:100%}}
+
+/* Attendance controls belong to the dashboard overview on every screen size. */
+.layout .body .foxa-dashboard-attendance{display:block!important;width:100%;margin:18px 0 22px;min-width:0}
+.layout .body .foxa-dashboard-attendance>*{max-width:100%;min-width:0}
