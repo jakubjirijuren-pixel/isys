@@ -4,6 +4,18 @@ Tento soubor zaznamenává změny aplikace FOXA nasazené do produkční větve 
 
 > **Pravidlo pro další vývoj:** Každý pull request měnící chování FOXA musí současně aktualizovat tento soubor a soubor `web/foxaReleases.js` (nové vydání s unikátním ID pro zaměstnance). Uvádějte datum, oblast, stručný popis změny a číslo PR. Změny zapisujte až jako součást příslušného PR; nerozpracované návrhy se sem nezapisují.
 
+## 2026-10-20 – Vozidla, tiskopisy a kontroly (aktualizace)
+
+- **Vozový park:** Modul rezervací vozidel a knihy jízd; společný kalendář pro zaměstnance s denním, týdenním a měsíčním pohledem a filtrováním podle auta.
+- **Outlook:** Soukromý iCalendar odkaz na odběr společných rezervací. Aktualizace probíhají při synchronizaci Outlooku, nikoli okamžitě; odběr je jednosměrný.
+- **Supabase:** Upraveny RLS politiky pro správu vozidel a vytváření rezervací; přidána tabulka odběrů kalendáře a Edge Function poskytující ICS.
+- **Tiskopisy:** Automatické doplnění dostupných údajů z objektu a odvození příslušného ÚMČ z adresy u podmínek zasklení lodžie; neznámé katastrální území zůstává k ručnímu ověření.
+- **Kontroly:** Přepínač technických kontrol a kontrol referenta přesunut do banneru. Horní akce technických kontrol sjednoceny s referentskými; další akce jsou pod bannerem.
+- **Správa uživatelů:** Sjednocen vzhled hlavičky, statistik, záložek a seznamu zaměstnanců.
+- **Objekty:** Zmenšeno a sjednoceno tlačítko Kontroly objektů.
+- **Wiki:** Nové návody k rezervacím, kalendáři, Outlooku, knize jízd, tiskopisům, docházce a technickým kontrolám.
+- **AI asistent (rozpracováno):** Nasazena serverová funkce a vytvořen návrh chatovacího rozhraní. Plnohodnotná integrace do FOXA ani konfigurace AI klíče nejsou potvrzeny; zaměstnancům zatím není prezentován jako hotová funkce.
+
 ## 2026-10-20
 
 - **Navigace:** Novinky a aktualizace přesunuty do uvítacího banneru Přehledu. Kontroly objektů se otevírají z banneru Evidence objektů.
