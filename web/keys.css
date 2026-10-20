@@ -135,3 +135,8 @@
 
 /* Two key-loan form variants, consistent with FOXA mobile and dark modes. */
 .keys-loan-variants{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0 18px}.keys-loan-variants button{flex:1 1 150px;min-height:44px;border-radius:10px;padding:10px 12px;border:1px solid var(--border,#829aab);background:transparent;color:inherit;font:inherit;font-weight:650;cursor:pointer;white-space:normal;overflow-wrap:anywhere}.keys-loan-variants button.active{background:#176e9d;color:#fff;border-color:#176e9d}.keys-loan-variants button:focus-visible{outline:2px solid #61a6d2;outline-offset:2px}.keys-record>button{max-width:100%;white-space:normal;overflow-wrap:anywhere}@media(max-width:500px){.keys-loan-variants button{flex-basis:100%}}
+
+.keys-sort-control{display:flex;align-items:center;gap:8px;font-size:12px;font-weight:650;color:inherit}
+.keys-sort-control select{width:auto;max-width:100%;min-width:200px;padding:8px 10px;border-radius:9px;border:1px solid #cad9e5;background:#fff;color:#173e58;font:inherit;font-size:12px}
+[data-theme="dark"] .keys-sort-control select{background:#1a3043;border-color:#36546a;color:#e5f0f7}
+@media(max-width:600px){.keys-sort-control{width:100%;justify-content:space-between}.keys-sort-control select{min-width:0;flex:1;max-width:70%}}
