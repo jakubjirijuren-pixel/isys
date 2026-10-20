@@ -6,6 +6,8 @@ export default function useInspectionCloudDraft({supabase,kind,data,setData,loca
  const [status,setStatus]=useState("Načítám uložený koncept…");
  const ready=useRef(false);
  const skip=useRef(false);
+ const paused=useRef(false);
+ const pending=useRef(Promise.resolve());
  const revision=useRef(0);
  const latest=useRef(data);
  latest.current=data;
@@ -39,7 +41,7 @@ export default function useInspectionCloudDraft({supabase,kind,data,setData,loca
   return()=>{active=false;ready.current=false};
  },[supabase,kind,localKey]);
  useEffect(()=>{
-  if(!ready.current)return;
+  if(!ready.current||paused.current)return;
   if(skip.current){skip.current=false;return}
   const current=++revision.current;
   setStatus("Ukládání do Supabase…");
@@ -56,7 +58,10 @@ export default function useInspectionCloudDraft({supabase,kind,data,setData,loca
    try{
     const id=user.current;
     if(!id)throw new Error("Chybí přihlášení.");
-    const {error}=await supabase.from("isys_inspection_drafts").upsert({user_id:id,kind,content:snapshot,updated_at:new Date(time).toISOString()},{onConflict:"user_id,kind"});
+    const request=supabase.from("isys_inspection_drafts").upsert({user_id:id,kind,content:snapshot,updated_at:new Date(time).toISOString()},{onConflict:"user_id,kind"});
+    const operation=pending.current.then(()=>request);
+    pending.current=operation.catch(()=>{});
+    const {error}=await operation;
     if(error)throw error;
     if(current===revision.current)setStatus("Uloženo do Supabase v "+new Date().toLocaleTimeString("cs-CZ",{hour:"2-digit",minute:"2-digit"}));
    }catch(e){if(current===revision.current)setStatus("Cloudové uložení selhalo – zkontroluj připojení nebo velikost fotografií")}
@@ -64,23 +69,28 @@ export default function useInspectionCloudDraft({supabase,kind,data,setData,loca
   return()=>clearTimeout(timer);
  },[data,supabase,kind,localKey]);
  const discard=async()=>{
+  paused.current=true;
   revision.current++;
   skip.current=true;
+  await pending.current;
   try{localStorage.removeItem(localKey);localStorage.removeItem(localStampKey)}catch{}
   const id=user.current;
   if(id){
    const {error}=await supabase.from("isys_inspection_drafts").delete().eq("user_id",id).eq("kind",kind);
-   if(error){setStatus("Koncept se nepodařilo odstranit ze Supabase");return false}
+   if(error){paused.current=false;setStatus("Koncept se nepodařilo odstranit ze Supabase");return false}
   }
   setStatus("Koncept odstraněn");
   return true;
  };
  const saveNow=async()=>{
+  paused.current=false;
   const snapshot=latest.current;
   try{
    const id=user.current;
    if(!id)throw new Error("Chybí přihlášení");
-   const {error}=await supabase.from("isys_inspection_drafts").upsert({user_id:id,kind,content:snapshot,updated_at:new Date().toISOString()},{onConflict:"user_id,kind"});
+   const operation=pending.current.then(()=>supabase.from("isys_inspection_drafts").upsert({user_id:id,kind,content:snapshot,updated_at:new Date().toISOString()},{onConflict:"user_id,kind"}));
+   pending.current=operation.catch(()=>{});
+   const {error}=await operation;
    if(error)throw error;
    try{localStorage.setItem(localKey,JSON.stringify(snapshot));localStorage.setItem(localStampKey,String(Date.now()))}catch{}
    setStatus("Uloženo do Supabase");return true;
