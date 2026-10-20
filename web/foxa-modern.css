@@ -113,3 +113,8 @@
 
 /* Object cards: make centre numbers easier to scan. */
 .layout .buildinggrid .buildingcard .buildingnumber{display:block;font-size:clamp(16px,1.15vw,19px)!important;font-weight:800!important;line-height:1.3!important;letter-spacing:.035em!important;margin-bottom:7px!important;overflow-wrap:anywhere}
+
+/* Buildings header: inspections shortcut beside administrative actions. */
+.layout .body .building-heading-actions{display:flex;align-items:center;flex-wrap:wrap;gap:10px;min-width:0}
+.layout .body .building-heading-actions>.secondarybutton{min-height:42px;white-space:normal}
+@media(max-width:700px){.layout .body .building-heading-actions{width:100%}.layout .body .building-heading-actions>.secondarybutton{width:100%}}
