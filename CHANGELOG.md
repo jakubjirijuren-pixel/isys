@@ -2,9 +2,11 @@
 
 Tento soubor zaznamenává změny aplikace FOXA nasazené do produkční větve `web-supabase`. Nové funkce, opravy a úpravy uživatelského rozhraní se zapisují při každé další změně aplikace. Záznamy jsou řazeny od nejnovějšího.
 
-> **Pravidlo pro další vývoj:** Každý pull request měnící chování FOXA musí současně aktualizovat tento soubor. Uvádějte datum, oblast, stručný popis změny a číslo PR. Změny zapisujte až jako součást příslušného PR; nerozpracované návrhy se sem nezapisují.
+> **Pravidlo pro další vývoj:** Každý pull request měnící chování FOXA musí současně aktualizovat tento soubor a soubor `web/foxaReleases.js` (nové vydání s unikátním ID pro zaměstnance). Uvádějte datum, oblast, stručný popis změny a číslo PR. Změny zapisujte až jako součást příslušného PR; nerozpracované návrhy se sem nezapisují.
 
 ## 2026-10-20
+
+- **Novinky a aktualizace:** Po přihlášení se zaměstnancům zobrazí nepřečtené změny FOXA; přečtení potvrdí tlačítkem a potvrzení se ukládá ke konkrétnímu účtu do Supabase. Historie je dostupná i z navigace. Při dalších změnách je potřeba aktualizovat také `web/foxaReleases.js`, přidat nové jedinečné ID vydání a doplnit tento soubor. [PR #102](https://github.com/jakubjirijuren-pixel/isys/pull/102)
 
 - **Kontroly referentů – PDF na iPhonu:** Opraven způsob rozdělování výkazu na stránky A4, aby nevznikaly velké prázdné mezery a oddělené záhlaví tabulek. [PR #100](https://github.com/jakubjirijuren-pixel/isys/pull/100)
 - **Kontroly referentů – nová kontrola:** Přidáno tlačítko „Nová kontrola“ do horní lišty. [PR #99](https://github.com/jakubjirijuren-pixel/isys/pull/99)
