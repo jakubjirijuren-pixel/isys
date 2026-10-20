@@ -55,10 +55,10 @@ export default function Inspections({buildings,userEmail,currentUserId,currentAc
  if(!remaining){setNotice("Maximum je 12 fotografií.");return}
  const convert=file=>new Promise((resolve,reject)=>{if(!file.type.startsWith("image/")){reject(new Error("Neplatný obrázek"));return}
   const url=URL.createObjectURL(file),img=new Image();
-  img.onload=()=>{try{const ratio=Math.min(1,1400/Math.max(img.naturalWidth,img.naturalHeight)),c=document.createElement("canvas");c.width=Math.max(1,Math.round(img.naturalWidth*ratio));c.height=Math.max(1,Math.round(img.naturalHeight*ratio));const ctx=c.getContext("2d");ctx.fillStyle="#fff";ctx.fillRect(0,0,c.width,c.height);ctx.drawImage(img,0,0,c.width,c.height);resolve({id:crypto.randomUUID(),name:file.name,caption:"",src:c.toDataURL("image/jpeg",0.78)})}catch(e){reject(e)}finally{URL.revokeObjectURL(url)}};
+  img.onload=()=>{try{const ratio=Math.min(1,900/Math.max(img.naturalWidth,img.naturalHeight)),c=document.createElement("canvas");c.width=Math.max(1,Math.round(img.naturalWidth*ratio));c.height=Math.max(1,Math.round(img.naturalHeight*ratio));const ctx=c.getContext("2d");ctx.fillStyle="#fff";ctx.fillRect(0,0,c.width,c.height);ctx.drawImage(img,0,0,c.width,c.height);resolve({id:crypto.randomUUID(),name:file.name,caption:"",src:c.toDataURL("image/jpeg",0.65)})}catch(e){reject(e)}finally{URL.revokeObjectURL(url)}};
   img.onerror=()=>{URL.revokeObjectURL(url);reject(new Error("Chyba načítání fotografie"))};img.src=url;
  });
- const results=await Promise.allSettled(files.slice(0,remaining).map(convert)),photos=results.filter(x=>x.status==="fulfilled").map(x=>x.value);
+ const photos=[];for(const file of files.slice(0,remaining)){try{photos.push(await convert(file))}catch(e){console.warn("Fotografii nelze zpracovat:",e)}}
  setData(prev=>({...prev,photoFiles:[...(prev.photoFiles||[]),...photos].slice(0,12)}));
  setNotice("Přidáno fotografií: "+photos.length+(photos.length<files.length?". Některé soubory se nepodařilo přidat.":""));
  };
@@ -112,7 +112,7 @@ export default function Inspections({buildings,userEmail,currentUserId,currentAc
    document.body.appendChild(host);
    const filename="Kontrola_objekt_"+String(building.object_number||"bez_cisla").replace(/[^a-zA-Z0-9_-]/g,"_")+"_"+data.date+".pdf";
    await Promise.all(Array.from(content.querySelectorAll("img")).map(img=>img.complete?Promise.resolve():new Promise(resolve=>{img.onload=resolve;img.onerror=resolve;setTimeout(resolve,8000)})));
-   const blob=await html2pdf().set({margin:[20,0,0,0],filename,image:{type:"jpeg",quality:0.98},html2canvas:{scale:2,backgroundColor:"#ffffff",scrollY:0},jsPDF:{unit:"mm",format:"a4",orientation:"portrait"},pagebreak:{mode:["css","legacy"],avoid:["tr","h2",".photo-figure",".photo-figure img",".photo-figure figcaption","table.meta"]}}).from(content).outputPdf("blob");
+   const blob=await html2pdf().set({margin:[20,0,0,0],filename,image:{type:"jpeg",quality:0.98},html2canvas:{scale:/iPhone|iPad|iPod/i.test(navigator.userAgent)?1:1.5,backgroundColor:"#ffffff",scrollY:0,logging:false},jsPDF:{unit:"mm",format:"a4",orientation:"portrait"},pagebreak:{mode:["css","legacy"],avoid:["tr","h2",".photo-figure",".photo-figure img",".photo-figure figcaption","table.meta"]}}).from(content).outputPdf("blob");
    try{
     const {data:auth}=await supabase.auth.getUser();
     if(!auth?.user?.id)throw new Error("Nepřihlášený uživatel");
