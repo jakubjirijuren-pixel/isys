@@ -1,3 +1,4 @@
+import useInspectionCloudDraft from "./useInspectionCloudDraft.js";
 import React,{useEffect,useMemo,useState,useRef} from "react";
 import "./technical-inspections.css";
 import SignaturePad from "./SignaturePad.jsx";
@@ -25,18 +26,11 @@ export default function TechnicalInspections({buildings=[],userEmail="",currentA
  const key="foxa-technical-inspection-draft-"+userEmail;
  const [data,setData]=useState(()=>{try{const stored=JSON.parse(localStorage.getItem(key)||"null");return stored?{...fresh(),...stored,signedSVJDate:stored.signedSVJDate||todayLocal(),signedTechnicianDate:stored.signedTechnicianDate||todayLocal()}:fresh()}catch{return fresh()}});
  const [notice,setNotice]=useState("");
- const [autoSaveStatus,setAutoSaveStatus]=useState("Automatické ukládání aktivní");
- const skipAutoSave=useRef(false);
- useEffect(()=>{
-  if(skipAutoSave.current){skipAutoSave.current=false;return}
-  setAutoSaveStatus("Ukládání změn…");
-  const timer=setTimeout(()=>{
-   try{localStorage.setItem(key,JSON.stringify(data));setAutoSaveStatus("Automaticky uloženo v "+new Date().toLocaleTimeString("cs-CZ",{hour:"2-digit",minute:"2-digit"}))}
-   catch{try{localStorage.setItem(key,JSON.stringify({...data,photoFiles:[],signatureSVJImage:"",signatureTechnicianImage:""}));setAutoSaveStatus("Text uložen; fotografie nebo podpisy se nevešly do paměti zařízení")}
-   catch{setAutoSaveStatus("Automatické uložení se nezdařilo – ulož koncept ručně")}}
-  },900);
-  return()=>clearTimeout(timer);
- },[data,key]);
+ const {status:autoSaveStatus,discard,saveNow}=useInspectionCloudDraft({
+  supabase,kind:"technician",data,setData,localKey:key,
+  validate:value=>!!value&&typeof value==="object"&&!Array.isArray(value)&&typeof value.items==="object",
+  normalize:value=>({...fresh(),...value,signedSVJDate:value.signedSVJDate||todayLocal(),signedTechnicianDate:value.signedTechnicianDate||todayLocal()})
+ });
  const [signatureMode,setSignatureMode]=useState("");
  const [pdfBusy,setPdfBusy]=useState(false);
  const [temporaryReports,setTemporaryReports]=useState([]);
@@ -86,8 +80,8 @@ export default function TechnicalInspections({buildings=[],userEmail="",currentA
  const editPhoto=(id,caption)=>setData(p=>({...p,photoFiles:(p.photoFiles||[]).map(x=>x.id===id?{...x,caption}:x)}));
  const removePhoto=id=>setData(p=>({...p,photoFiles:(p.photoFiles||[]).filter(x=>x.id!==id)}));
  const addSignature=(file,field)=>{if(!file?.type?.startsWith("image/"))return;const reader=new FileReader();reader.onload=()=>{const src=String(reader.result||"");if(!/^data:image\/(png|jpeg|webp);base64,/.test(src)){setNotice("Podporované podpisy: PNG, JPG, WEBP.");return}set(field,src);setSignatureMode("");setNotice("Podpis vložen.")};reader.readAsDataURL(file)};
- const save=()=>{try{localStorage.setItem(key,JSON.stringify(data));setNotice("Koncept technické kontroly uložen v tomto prohlížeči.")}catch{setNotice("Koncept se nepodařilo uložit. Zkuste zmenšit počet fotografií.")}};
- const clear=()=>{if(!window.confirm("Opravdu vymazat rozpracovanou technickou kontrolu?"))return;skipAutoSave.current=true;setData(fresh());try{localStorage.removeItem(key)}catch{}setAutoSaveStatus("Koncept vymazán");setNotice("Formulář byl vymazán.")};
+ const save=async()=>{setNotice(await saveNow()?"Koncept technické kontroly uložen do Supabase.":"Koncept se nepodařilo uložit do Supabase.")};
+ const clear=async()=>{if(!window.confirm("Opravdu vymazat rozpracovanou technickou kontrolu?"))return;if(await discard()){setData(fresh());setNotice("Formulář byl vymazán.")}};
  const buildHtml=()=>{
 
   const logo=SBD_LOGO;
