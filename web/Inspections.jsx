@@ -1,3 +1,4 @@
+import renderInspectionPdf from "./renderInspectionPdf.js";
 import useInspectionCloudDraft from "./useInspectionCloudDraft.js";
 import React,{useEffect,useState,useRef} from "react";
 import "./inspections.css";
@@ -117,8 +118,7 @@ export default function Inspections({buildings,userEmail,currentUserId,currentAc
    document.body.appendChild(host);
    const filename="Kontrola_objekt_"+String(building.object_number||"bez_cisla").replace(/[^a-zA-Z0-9_-]/g,"_")+"_"+data.date+".pdf";
    await Promise.all(Array.from(content.querySelectorAll("img")).map(img=>img.complete?Promise.resolve():new Promise(resolve=>{img.onload=resolve;img.onerror=resolve;setTimeout(resolve,8000)})));
-   const {default:html2pdf}=await import("html2pdf.js");
-   const blob=await html2pdf().set({margin:[20,0,0,0],filename,image:{type:"jpeg",quality:0.98},html2canvas:{scale:/iPhone|iPad|iPod/i.test(navigator.userAgent)?1:1.5,backgroundColor:"#ffffff",scrollY:0,logging:false},jsPDF:{unit:"mm",format:"a4",orientation:"portrait"},pagebreak:{mode:["css","legacy"],avoid:["tr","h2",".photo-figure",".photo-figure img",".photo-figure figcaption","table.meta"]}}).from(content).outputPdf("blob");
+   const blob=await renderInspectionPdf(content);
    try{
     const {data:auth}=await supabase.auth.getUser();
     if(!auth?.user?.id)throw new Error("Nepřihlášený uživatel");
