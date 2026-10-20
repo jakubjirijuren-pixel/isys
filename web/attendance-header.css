@@ -56,48 +56,6 @@
 @media(prefers-reduced-motion:reduce){.attendance-header-action{transition:none}}
 
 
-/* Dashboard phone order: welcome banner, quick attendance, then widgets.
-   Keep header attendance on desktop and on all other pages. */
-.foxa-mobile-dashboard-attendance{display:none}
-@media(max-width:800px){
- .layout header .userbar .foxa-header-attendance-overview{display:none}
- .layout .body .foxa-mobile-dashboard-attendance{display:block;width:100%;min-width:0;margin:0 0 16px}
- .layout .body .foxa-mobile-dashboard-attendance .attendance-header{
-  display:grid;grid-template-columns:minmax(0,1.35fr) repeat(2,minmax(0,1fr));
-  gap:7px;align-items:stretch;padding:7px;border:1px solid var(--fx-border,#35536a);
-  border-radius:16px;background:var(--fx-surface,#17293a);width:100%;box-sizing:border-box;
- }
- .layout .body .foxa-mobile-dashboard-attendance .attendance-header-time{
-  grid-column:auto;min-height:57px;width:100%;min-width:0;padding:7px 8px;
-  background:var(--fx-surface-soft,#1e3447);border:0;border-radius:10px;
- }
- .layout .body .foxa-mobile-dashboard-attendance .attendance-header-clock{display:inline-flex;font-size:20px}
- .layout .body .foxa-mobile-dashboard-attendance .attendance-header-time strong{font-size:clamp(13px,3.8vw,17px)}
- .layout .body .foxa-mobile-dashboard-attendance .attendance-header-time small{font-size:10px;white-space:normal}
- .layout .body .foxa-mobile-dashboard-attendance .attendance-header-action{
-  min-width:0;width:100%;min-height:57px;padding:6px 3px;display:flex;
-  flex-direction:column;gap:3px;align-items:center;justify-content:center;
-  border-radius:10px;background:var(--fx-surface-soft,#1e3447);
-  color:var(--fx-text,#e8f1f8);border:1px solid var(--fx-border,#35536a);
-  font-size:11px;white-space:normal;text-align:center;
- }
- .layout .body .foxa-mobile-dashboard-attendance .attendance-action-emoji{display:block;font-size:23px;line-height:1.1}
- .layout .body .foxa-mobile-dashboard-attendance .attendance-action-label{display:block;font-size:10px;line-height:1.2}
- .layout .body .foxa-mobile-dashboard-attendance .attendance-header-error{grid-column:1/-1;max-width:100%}
-}
-@media(max-width:390px){
- .layout .body .foxa-mobile-dashboard-attendance .attendance-header{gap:5px;padding:5px}
- .layout .body .foxa-mobile-dashboard-attendance .attendance-header-time{padding:5px}
- .layout .body .foxa-mobile-dashboard-attendance .attendance-header-time strong{font-size:13px}
- .layout .body .foxa-mobile-dashboard-attendance .attendance-action-emoji{font-size:21px}
-}
-
-/* Comfortable separation between welcome banner and attendance on phones. */
-@media(max-width:800px){
- .layout .body .hero:has(+ .foxa-mobile-dashboard-attendance){margin-bottom:18px!important}
- .layout .body .foxa-mobile-dashboard-attendance{margin-top:0;margin-bottom:20px}
-}
-
 /* Dashboard attendance — modern FOXA panel with clear status and actions. */
 .layout .body .foxa-dashboard-attendance{margin:20px 0 24px}
 .layout .body .foxa-dashboard-attendance .attendance-header{
@@ -145,4 +103,30 @@
  .layout .body .foxa-dashboard-attendance .attendance-header-time{grid-column:1/-1}
  .layout .body .foxa-dashboard-attendance .attendance-header-action{min-height:76px;padding:10px 6px;font-size:12px}
  .layout .body .foxa-dashboard-attendance .attendance-action-emoji{font-size:21px}
+}
+
+/* Responsive FOXA dashboard attendance: same controls on desktop, tablet and phone. */
+.layout .body .foxa-dashboard-attendance{min-width:0;max-width:100%;overflow:visible}
+.layout .body .foxa-dashboard-attendance .attendance-header{min-width:0;max-width:100%;box-sizing:border-box}
+.layout .body .foxa-dashboard-attendance .attendance-header-action{width:100%;box-sizing:border-box}
+.layout .body .foxa-dashboard-attendance .attendance-header-time{width:100%;box-sizing:border-box}
+.layout .body .foxa-dashboard-attendance .attendance-header-time>span:last-child{min-width:0}
+.layout .body .foxa-dashboard-attendance .attendance-action-emoji{display:block}
+.layout .body .foxa-dashboard-attendance .attendance-action-label{display:block;overflow-wrap:anywhere}
+@media(max-width:1150px) and (min-width:651px){
+ .layout .body .foxa-dashboard-attendance .attendance-header{grid-template-columns:repeat(4,minmax(0,1fr))}
+ .layout .body .foxa-dashboard-attendance .attendance-header-time{grid-column:1/-1}
+}
+@media(max-width:650px){
+ .layout .body .foxa-dashboard-attendance{margin:14px 0 20px!important}
+ .layout .body .foxa-dashboard-attendance .attendance-header{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;padding:12px}
+ .layout .body .foxa-dashboard-attendance .attendance-header-time{grid-column:1/-1;min-height:76px}
+ .layout .body .foxa-dashboard-attendance .attendance-header-action{min-height:76px;touch-action:manipulation}
+ .layout .body .foxa-dashboard-attendance .attendance-header-time strong{white-space:normal;font-size:21px}
+ .layout .body .foxa-dashboard-attendance .attendance-header-time small{white-space:normal;font-size:12px}
+}
+@media(max-width:360px){
+ .layout .body .foxa-dashboard-attendance .attendance-header{gap:8px;padding:9px}
+ .layout .body .foxa-dashboard-attendance .attendance-header-action{font-size:11px;padding:9px 5px}
+ .layout .body .foxa-dashboard-attendance .attendance-header-time{padding:11px}
 }
