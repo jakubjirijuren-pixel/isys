@@ -24,3 +24,8 @@
 .foxa-changelog-footer button:focus-visible{outline:2px solid var(--fx-accent,#146c9c);outline-offset:3px}
 .foxa-changelog-error{color:#c33e3e;margin:8px 28px;font-size:13px}
 @media(max-width:600px){.foxa-changelog-backdrop{padding:10px}.foxa-changelog-dialog{max-height:94dvh;border-radius:16px}.foxa-changelog-release li{grid-template-columns:1fr;gap:2px;padding:12px 2px}.foxa-changelog-footer button{min-height:44px}}
+
+/* Keep the title and subtitle inside the header at every zoom/font scale. */
+.foxa-changelog-dialog .foxa-changelog-header{height:auto!important;min-height:0!important;max-height:none!important;flex:none!important;display:block!important;overflow:visible!important;box-sizing:border-box!important;padding:22px clamp(18px,3vw,28px)!important}
+.foxa-changelog-dialog .foxa-changelog-header h2{font-size:clamp(21px,3vw,28px)!important;line-height:1.25!important;margin:8px 0 8px!important;max-width:100%;overflow-wrap:anywhere}
+.foxa-changelog-dialog .foxa-changelog-header p{position:static!important;margin:0!important;line-height:1.5!important}
