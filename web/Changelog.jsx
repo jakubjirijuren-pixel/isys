@@ -42,7 +42,7 @@ export default function Changelog({supabase,userId,open,onClose}){
     <ul>{release.changes.map((change,i)=><li key={i}><strong>{change.area}</strong><span>{change.description}</span></li>)}</ul>
    </article>)}</div>
    {error&&<p className="foxa-changelog-error" role="alert">{error}</p>}
-   <footer className="foxa-changelog-footer">{open&&<button type="button" className="secondarybutton" onClick={onClose}>Zavřít</button>}<button type="button" className="primary" onClick={markRead} disabled={saving||!!error}>{saving?"Ukládám…":unread.length?"Označit jako přečtené":"Rozumím"}</button></footer>
+   <footer className="foxa-changelog-footer">{(open||error)&&<button type="button" className="secondarybutton" onClick={()=>{setDismissed(true);onClose()}}>{error?"Zavřít bez potvrzení":"Zavřít"}</button>}<button type="button" className="primary" onClick={markRead} disabled={saving||!!error}>{saving?"Ukládám…":unread.length?"Označit jako přečtené":"Rozumím"}</button></footer>
   </section>
  </div>;
 }
