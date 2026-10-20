@@ -6,6 +6,8 @@ Tento soubor zaznamenává změny aplikace FOXA nasazené do produkční větve 
 
 ## 2026-10-20
 
+- **Správa uživatelů – nový vzhled:** Sjednocení grafiky s FOXA, přehledové statistiky uživatelů, vyhledávání podle jména a e-mailu, filtr podle role a přehlednější karty účtů. Přizpůsobeno mobilům a tmavému režimu. [PR #103](https://github.com/jakubjirijuren-pixel/isys/pull/103)
+
 - **Navigace:** Novinky a aktualizace přesunuty do uvítacího banneru Přehledu. Kontroly objektů se otevírají z banneru Evidence objektů.
 - **Objekty:** Zvětšena čísla středisek na kartách.
 - **Oznamovací centrum:** Changelog propojen s oznámeními a potvrzením přečtení.
