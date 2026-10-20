@@ -140,3 +140,22 @@
 .keys-sort-control select{width:auto;max-width:100%;min-width:200px;padding:8px 10px;border-radius:9px;border:1px solid #cad9e5;background:#fff;color:#173e58;font:inherit;font-size:12px}
 [data-theme="dark"] .keys-sort-control select{background:#1a3043;border-color:#36546a;color:#e5f0f7}
 @media(max-width:600px){.keys-sort-control{width:100%;justify-content:space-between}.keys-sort-control select{min-width:0;flex:1;max-width:70%}}
+
+
+/* Loan creator, management controls and confirmation dialogs */
+.keys-record-actions{display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+.keys-record-actions .secondarybutton{font-size:11px;padding:9px 10px;white-space:nowrap}
+.keys-record .keys-issued-by{font-size:11px}
+.keys-record .keys-issued-by b{font-weight:700}
+.keys-delete-button{color:#b83b43!important;border-color:#dba9ad!important}
+.keys-delete-button:hover{background:#b83b4315!important}
+.keys-loan-edit,.keys-loan-delete{width:min(94vw,520px);max-height:90vh;overflow-y:auto}
+.keys-loan-edit form{display:grid;gap:12px}
+.keys-loan-edit form>label{display:grid;gap:6px}
+.keys-loan-edit input,.keys-loan-edit textarea{width:100%;box-sizing:border-box}
+.keys-modal-actions{display:flex;justify-content:flex-end;gap:10px;flex-wrap:wrap;margin-top:14px}
+.keys-confirm-delete{background:#ba3039;border:1px solid #ba3039;color:#fff;border-radius:9px;padding:10px 14px;font:inherit;font-weight:700;cursor:pointer}
+.keys-confirm-delete:disabled{opacity:.6;cursor:wait}
+.keys-edit-error{color:#c92f38;font-size:13px}
+@media(max-width:850px){.keys-list-view .keys-record{grid-template-columns:repeat(2,minmax(0,1fr))}.keys-list-view .keys-record-actions{grid-column:1/-1}}
+@media(max-width:600px){.keys-list-view .keys-record{grid-template-columns:1fr}.keys-list-view .keys-record-actions{grid-column:auto}}
