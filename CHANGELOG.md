@@ -6,6 +6,14 @@ Tento soubor zaznamenává změny aplikace FOXA nasazené do produkční větve 
 
 ## 2026-10-20
 
+- **Navigace:** Novinky a aktualizace přesunuty do uvítacího banneru Přehledu. Kontroly objektů se otevírají z banneru Evidence objektů.
+- **Objekty:** Zvětšena čísla středisek na kartách.
+- **Oznamovací centrum:** Changelog propojen s oznámeními a potvrzením přečtení.
+- **Changelog:** Sjednocen vzhled a opraveno rozložení hlavičky.
+- **Zpětná vazba:** Databáze nově povoluje uzavření ticketu.
+- **Wiki:** Doplněny návody k navigaci, aktualizacím a ticketům.
+
+
 - **Novinky a aktualizace:** Po přihlášení se zaměstnancům zobrazí nepřečtené změny FOXA; přečtení potvrdí tlačítkem a potvrzení se ukládá ke konkrétnímu účtu do Supabase. Historie je dostupná i z navigace. Při dalších změnách je potřeba aktualizovat také `web/foxaReleases.js`, přidat nové jedinečné ID vydání a doplnit tento soubor. [PR #102](https://github.com/jakubjirijuren-pixel/isys/pull/102)
 
 - **Kontroly referentů – PDF na iPhonu:** Opraven způsob rozdělování výkazu na stránky A4, aby nevznikaly velké prázdné mezery a oddělené záhlaví tabulek. [PR #100](https://github.com/jakubjirijuren-pixel/isys/pull/100)
