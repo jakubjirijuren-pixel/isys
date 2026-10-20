@@ -159,3 +159,13 @@
 .keys-edit-error{color:#c92f38;font-size:13px}
 @media(max-width:850px){.keys-list-view .keys-record{grid-template-columns:repeat(2,minmax(0,1fr))}.keys-list-view .keys-record-actions{grid-column:1/-1}}
 @media(max-width:600px){.keys-list-view .keys-record{grid-template-columns:1fr}.keys-list-view .keys-record-actions{grid-column:auto}}
+
+
+.keys-return-mode{display:flex;gap:18px;flex-wrap:wrap;padding:10px 0}
+.keys-return-mode label{display:flex;align-items:center;gap:7px;cursor:pointer;font-weight:650}
+.keys-return-mode input{width:auto;accent-color:#1687bf}
+.keys-partial-fields{display:grid;gap:10px;border:1px solid var(--border,#aabfcc);border-radius:11px;padding:13px;margin:8px 0}
+.keys-partial-fields label{display:grid;gap:6px;font-weight:650}
+.keys-partial-fields textarea{width:100%;min-height:66px;box-sizing:border-box;background:var(--input-bg,#fff);color:inherit;border:1px solid var(--border,#aabfcc);border-radius:8px;padding:9px;font:inherit}
+.keys-partial-fields p{font-size:12px;opacity:.8;margin:0}
+.keys-partial-history{font-size:11px;line-height:1.4;color:var(--text-muted,inherit);overflow-wrap:anywhere}
