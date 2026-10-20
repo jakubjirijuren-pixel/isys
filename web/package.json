@@ -16,6 +16,8 @@
     "xlsx": "^0.18.5",
     "html2pdf.js": "^0.10.3",
     "qrcode": "^1.5.4",
-    "@zxing/browser": "^0.1.5"
+    "@zxing/browser": "^0.1.5",
+    "html2canvas": "^1.4.1",
+    "jspdf": "^3.0.4"
   }
 }
