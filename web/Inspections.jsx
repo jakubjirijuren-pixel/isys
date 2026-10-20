@@ -144,6 +144,8 @@ export default function Inspections({buildings,userEmail,currentUserId,currentAc
      setNotice("PDF se stáhlo. Připoj ho k připravenému e-mailu pro "+userEmail+".");
     }
    }else{download();setNotice("PDF bylo připraveno ke stažení.");}
+   if(await discard()){setData(blank());setNotice("PDF bylo vytvořeno. Rozpracovaný koncept byl odstraněn ze Supabase a formulář je připraven pro novou kontrolu.");}
+   else setBackupStatus(prev=>[prev,"PDF bylo vytvořeno, ale koncept se nepodařilo odstranit ze Supabase. Odstraň jej ručně tlačítkem Nová kontrola."].filter(Boolean).join(" "));
   }catch(error){setNotice("PDF se nepodařilo vytvořit: "+(error?.message||"neznámá chyba"))}
   finally{host?.remove();setPdfBusy(false)}
  };
