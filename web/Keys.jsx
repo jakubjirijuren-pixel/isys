@@ -20,8 +20,9 @@ function KeyBuildingPicker({buildings,value,onChange}){
  useEffect(()=>{if(open)searchRef.current?.focus();else setQuery("")},[open]);
  return <div ref={root} className={"filterdropdown inspectionbuildingpicker"+(open?" isopen":"")}><button type="button" className="filtertrigger" aria-expanded={open} aria-haspopup="listbox" onClick={()=>setOpen(v=>!v)}><span>{selected?label(selected):"Vyber objekt…"}</span><span className="filterchevron" aria-hidden="true">⌄</span></button>{open&&<div className="filtermenu inspectionbuildingmenu"><input ref={searchRef} type="search" aria-label="Vyhledat objekt" placeholder="Hledat číslo, ulici nebo město…" value={query} onChange={e=>setQuery(e.target.value)}/><div role="listbox" aria-label="Seznam objektů" className="inspectionbuildingoptions">{options.length?options.map(b=><button type="button" role="option" aria-selected={String(b.id)===String(value)} className={String(b.id)===String(value)?"chosen":""} key={b.id} onClick={()=>{onChange(String(b.id));setOpen(false)}}>{label(b)}</button>):<p>Žádné odpovídající objekty.</p>}</div></div>}</div>;
 }
-export default function Keys({supabase,buildings,userId,isAdmin=false,initialFilter="active",currentAccountName="",reportSignature}){
+export default function Keys({supabase,buildings,userId,isAdmin=false,initialFilter="active",currentAccountName="",reportSignature,accountDirectory=[]}){
  const [rows,setRows]=useState([]),[keys,setKeys]=useState([]),[form,setForm]=useState(empty),[loading,setLoading]=useState(true),[busy,setBusy]=useState(false),[error,setError]=useState(""),[notice,setNotice]=useState(""),[filter,setFilter]=useState(initialFilter),[viewMode,setViewMode]=useState(()=>{try{return localStorage.getItem("isys-keys-view")==="list"?"list":"cards"}catch{return "cards"}}),[search,setSearch]=useState(""),[buildingFilter,setBuildingFilter]=useState(""),[dateFrom,setDateFrom]=useState(""),[dateTo,setDateTo]=useState(""),[returning,setReturning]=useState(null),[returnDate,setReturnDate]=useState(localTime);
+ const [editingLoan,setEditingLoan]=useState(null),[editFields,setEditFields]=useState(null),[deletingLoan,setDeletingLoan]=useState(null);
  const [loanSort,setLoanSort]=useState(()=>{try{return localStorage.getItem("isys-keys-sort")==="center_asc"?"center_asc":localStorage.getItem("isys-keys-sort")==="center_desc"?"center_desc":"newest"}catch{return "newest"}});
  const [loanVariant,setLoanVariant]=useState("standard"),[pdfBusy,setPdfBusy]=useState(false);
  const [borrowerPanel,setBorrowerPanel]=useState(false),[borrowerRows,setBorrowerRows]=useState([]),[borrowerName,setBorrowerName]=useState(""),[borrowerBusy,setBorrowerBusy]=useState(false);
@@ -84,6 +85,30 @@ export default function Keys({supabase,buildings,userId,isAdmin=false,initialFil
   finally{host.remove();setPdfBusy(false)}
  };
  const confirmReturn=async()=>{if(!returning||busy)return;const dt=new Date(returnDate);if(Number.isNaN(dt.getTime())||dt<new Date(returning.loaned_at)){setError("Datum vrácení nesmí předcházet výpůjčce.");return}setBusy(true);setError("");const {data,error:e}=await supabase.from("key_loans").update({returned_at:dt.toISOString()}).eq("id",returning.id).is("returned_at",null).select("id");if(e)setError("Vrácení se nepodařilo uložit: "+e.message);else if(!data?.length)setError("Záznam již byl vrácen nebo změněn. Obnov přehled.");else{setNotice("Vrácení klíčů bylo zaznamenáno.");setReturning(null);await load()}setBusy(false)};
+ const authorName=id=>!id?"Neuvedeno":String(id)===String(userId)?(accountDirectory.find(u=>u.id===id)?.display_name||currentAccountName||"Já"):(accountDirectory.find(u=>u.id===id)?.display_name||accountDirectory.find(u=>u.id===id)?.email||"Uživatel "+String(id).slice(0,8));
+ const canEditLoan=r=>isAdmin||!!(r.issued_by&&String(r.issued_by)===String(userId));
+ const openEditLoan=r=>{setEditingLoan(r);setEditFields({building_id:String(r.building_id||byId[r.key_id]?.building_id||""),borrower_name:r.borrower_name||"",key_description:r.key_description||"",loaned_at:r.loaned_at?new Date(new Date(r.loaned_at).getTime()-new Date(r.loaned_at).getTimezoneOffset()*60000).toISOString().slice(0,16):localTime(),notes:r.notes||""});setError("")};
+ const saveEditLoan=async event=>{
+  event.preventDefault();if(!editingLoan||!editFields||busy)return;
+  if(!editFields.building_id||!editFields.borrower_name.trim()||!editFields.key_description.trim()){setError("Vyplň objekt, vypůjčitele a klíče.");return}
+  const date=new Date(editFields.loaned_at);if(Number.isNaN(date.getTime())){setError("Neplatné datum výpůjčky.");return}
+  setBusy(true);setError("");
+  const payload={building_id:editFields.building_id,borrower_name:editFields.borrower_name.trim(),key_description:editFields.key_description.trim(),loaned_at:date.toISOString(),notes:editFields.notes.trim()||null};
+  const {data,error:e}=await supabase.from("key_loans").update(payload).eq("id",editingLoan.id).is("returned_at",null).select("id");
+  if(e)setError("Úprava výpůjčky selhala: "+e.message);
+  else if(!data?.length)setError("Výpůjčku nelze upravit. Možná už byla vrácena nebo nemáš oprávnění.");
+  else{setEditingLoan(null);setEditFields(null);setNotice("Výpůjčka byla upravena.");await load()}
+  setBusy(false);
+ };
+ const deleteLoan=async()=>{
+  if(!deletingLoan||busy||!isAdmin)return;
+  setBusy(true);setError("");
+  const {data,error:e}=await supabase.from("key_loans").delete().eq("id",deletingLoan.id).select("id");
+  if(e)setError("Smazání výpůjčky selhalo: "+e.message);
+  else if(!data?.length)setError("Záznam se nepodařilo smazat. Zkontroluj oprávnění.");
+  else{setDeletingLoan(null);setNotice("Záznam výpůjčky byl odstraněn bez označení vrácení.");await load()}
+  setBusy(false);
+ };
  const loanBuilding=r=>r.building_id||byId[r.key_id]?.building_id;
  const loanKeys=r=>r.key_description||keyName(byId[r.key_id]);
  const visible=rows.filter(r=>{
