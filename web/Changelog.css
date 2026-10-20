@@ -16,3 +16,7 @@
 .foxa-changelog-footer{display:flex;justify-content:flex-end;gap:10px;padding:16px 26px;border-top:1px solid var(--border,#d2dee6)}
 .foxa-changelog-error{color:#db4747;margin:8px 26px;font-size:13px}
 @media(max-width:600px){.foxa-changelog-dialog{max-height:92dvh}.foxa-changelog-header{padding:18px}.foxa-changelog-body{padding:14px 18px}.foxa-changelog-footer{padding:14px 18px}.foxa-changelog-footer button{min-height:44px}}
+
+:root[data-theme="dark"] .foxa-changelog-dialog{background:#172b3d;color:#edf5fc;border-color:#3a5469}
+:root[data-theme="dark"] .foxa-changelog-release li{background:#20394d;border-color:#3a5469}
+:root[data-theme="dark"] .foxa-changelog-header,:root[data-theme="dark"] .foxa-changelog-footer,:root[data-theme="dark"] .foxa-changelog-release+.foxa-changelog-release{border-color:#3a5469}
