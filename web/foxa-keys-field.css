@@ -1,0 +1,47 @@
+/* FOXA FIELD: dedicated handheld key workflow, desktop intentionally unchanged */
+.foxa-keys-field-home,.foxa-keys-field-back{display:none}
+@media screen and (max-width:650px){
+ .foxa-terminal-page-evidence-klicu>.foxa-field-module-tools{display:none!important}
+ .foxa-keys-field{display:flex;flex-direction:column;gap:12px;min-width:0}
+ .foxa-keys-field-home{display:flex;flex-direction:column;gap:13px}
+ .foxa-keys-field-banner{padding:17px 15px;border-radius:14px;border:1.5px solid #0aaef0;background:linear-gradient(125deg,#0e3655,#09243c);box-shadow:inset 0 1px 0 #276486}
+ .foxa-keys-field-eyebrow{font-size:10px;font-weight:850;letter-spacing:.13em;color:#34d0ff;margin-bottom:13px}
+ .foxa-keys-field-banner-main{display:flex;align-items:center;gap:13px}
+ .foxa-keys-field-emblem{display:grid;place-items:center;width:52px;height:52px;flex:none;border:1px solid #d9973d;background:#3a2c20;border-radius:12px;font-size:31px;color:#ffb44d}
+ .foxa-keys-field-banner h2{margin:0 0 4px!important;font-size:24px!important;line-height:1.1;color:#fff!important}
+ .foxa-keys-field-banner p{margin:0!important;font-size:12px;color:#b9d8eb!important}
+ .foxa-keys-field-actions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
+ .foxa-keys-action{min-width:0;min-height:165px;display:flex;flex-direction:column;align-items:flex-start;text-align:left;gap:6px;padding:14px!important;border-radius:13px!important}
+ .foxa-keys-action-loan{border:1px solid #13d8a0!important;background:#103b35!important;color:#fff!important}
+ .foxa-keys-action-return{border:1px solid #f3a045!important;background:#3b2d21!important;color:#fff!important}
+ .foxa-keys-action-icon{font-size:30px;line-height:1;color:#3af1bd}
+ .foxa-keys-action-return .foxa-keys-action-icon{color:#ffb54f}
+ .foxa-keys-action strong{font-size:15px;color:#fff!important}
+ .foxa-keys-action small{font-size:11px;color:#c3e4df!important}
+ .foxa-keys-arrow{align-self:flex-end;margin-top:auto;font-size:22px;color:#27efb6}
+ .foxa-keys-action-return .foxa-keys-arrow{color:#ffb54f}
+ .foxa-keys-field-summary{display:flex;flex-direction:column;gap:7px;padding:16px;background:#0d2c45;border:1px solid #226d99;border-radius:13px}
+ .foxa-keys-field-summary-title{color:#b9e5ff;font-size:11px;font-weight:850;letter-spacing:.09em}
+ .foxa-keys-field-summary>strong{color:#fff!important;font-size:38px;line-height:1;font-variant-numeric:tabular-nums}
+ .foxa-keys-field-summary>span{font-size:12px;color:#b4d8ee}
+ .foxa-keys-field-summary button{display:flex;align-items:center;justify-content:space-between;width:100%;margin-top:6px;padding:12px 0 0!important;border:0!important;border-top:1px solid #2a5d7f!important;background:transparent!important;color:#e6f7ff!important;text-align:left;font-weight:750}
+ .foxa-keys-field-scan{display:flex;align-items:center;gap:12px;text-align:left;width:100%;padding:15px!important;background:#103954!important;border:1px solid #0da7df!important;border-radius:12px!important;color:#fff!important}
+ .foxa-keys-field-scan>span:first-child{font-size:27px;color:#28d0ff}
+ .foxa-keys-field-scan>span:nth-child(2){display:flex;flex:1;flex-direction:column;gap:3px}
+ .foxa-keys-field-scan strong{font-size:13px;color:#fff!important}
+ .foxa-keys-field-scan small{font-size:11px;color:#bbdbee}
+ .foxa-keys-field-scan>span:last-child{font-size:24px;color:#28d0ff}
+ .foxa-keys-field-back{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 12px;background:#0c2d46;border:1px solid #23678d;border-radius:11px}
+ .foxa-keys-field-back button{background:transparent!important;border:0!important;color:#2dd2ff!important;font-size:12px;font-weight:750;text-align:left}
+ .foxa-keys-field-back>span{font-size:11px;color:#c6e4f5}
+ .foxa-keys-mode-home>.foxa-keys-field-back,.foxa-keys-mode-home>.pageheading,.foxa-keys-mode-home>.keys-panel,.foxa-keys-mode-home>.keys-panel.keys-records{display:none!important}
+ .foxa-keys-mode-loan>.foxa-keys-field-home,.foxa-keys-mode-return>.foxa-keys-field-home,.foxa-keys-mode-records>.foxa-keys-field-home{display:none!important}
+ .foxa-keys-mode-loan>.pageheading,.foxa-keys-mode-return>.pageheading,.foxa-keys-mode-records>.pageheading{display:none!important}
+ .foxa-keys-mode-loan>.keys-panel:not(.foxa-keys-loan-panel),.foxa-keys-mode-loan>.foxa-keys-records-panel{display:none!important}
+ .foxa-keys-mode-return>.keys-panel:not(.foxa-keys-records-panel),.foxa-keys-mode-records>.keys-panel:not(.foxa-keys-records-panel){display:none!important}
+ .foxa-keys-mode-return .keys-filters,.foxa-keys-mode-return .keys-viewbar{display:none!important}
+ .foxa-keys-mode-loan .foxa-keys-loan-panel{padding:14px!important}
+ .foxa-keys-mode-loan .keys-loan-variants{display:flex;gap:8px;flex-wrap:wrap}
+ .foxa-keys-mode-loan .keys-loan-variants button{flex:1 1 120px;min-height:49px}
+ .foxa-keys-mode-return .keys-record:not(:has(.keys-record-actions button)){opacity:.8}
+}
