@@ -185,3 +185,12 @@
 .layout .body .technical-extra-actions>button:hover{border-color:var(--fx-accent)}
 @media(max-width:850px){.layout .body .technicalhead>.inspectionactions{flex:1 1 100%;justify-content:flex-start}.layout .body .technicalhead>.inspectionactions .inspection-autosave-status{flex:1 1 100%}}
 @media(max-width:600px){.layout .body .technicalhead>.inspectionactions>button{flex:1 1 140px}.layout .body .technical-extra-actions{justify-content:stretch}.layout .body .technical-extra-actions>button{flex:1 1 120px}}
+
+/* Compact mobile referent inspection header: avoid flex growth and reserved blank space. */
+@media screen and (max-width:650px){
+.layout .body .inspectionmodule.foxa-field-referent-wizard>.inspectionheading{display:block!important;height:auto!important;min-height:0!important;max-height:none!important;flex:none!important;align-content:start!important;justify-content:start!important;margin:0 0 8px!important;padding:12px!important}
+.layout .body .inspectionmodule.foxa-field-referent-wizard>.inspectionheading>div:first-child{display:block!important;flex:none!important;height:auto!important;min-height:0!important;margin:0!important;padding:0!important}
+.layout .body .inspectionmodule.foxa-field-referent-wizard .inspection-role-switch{margin:8px 0 0!important}
+.layout .body .inspectionmodule.foxa-field-referent-wizard>.inspection-actions-outside{display:flex!important;position:static!important;flex-direction:column!important;justify-content:start!important;align-items:stretch!important;flex:none!important;height:auto!important;min-height:0!important;margin:0 0 10px!important;padding:0!important;gap:7px!important}
+.layout .body .inspectionmodule.foxa-field-referent-wizard>.inspection-actions-outside>*{flex:none!important;margin:0!important}
+}
