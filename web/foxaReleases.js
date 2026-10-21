@@ -1,6 +1,7 @@
 // Aktualizovat při každé změně aplikace společně s CHANGELOG.md.
 // Nové vydání = nový jedinečný id; přečtená vydání se znovu nezobrazují.
 export const foxaReleases=[
+ {id:"2026-10-21-mobile-terminal",date:"2026-10-21",title:"Nové mobilní pracovní prostředí FOXA",changes:[{area:"Mobilní terminál",description:"Nová domovská obrazovka s rychlými pracovními akcemi, přehledem připojení a velkými dotykovými prvky."},{area:"NFC a QR",description:"Mobilní skener identifikátorů s možností ručního zadání, podle podpory zařízení a prohlížeče."},{area:"Terénní koncepty",description:"Poznámky lze uchovávat lokálně i bez internetu. Automatická cloudová synchronizace těchto konceptů zatím není dostupná."},{area:"Oprávnění",description:"Mobilní terminál respektuje dostupnost modulů a uživatelské role; desktopový přehled zůstává zachován."}]},
  {id:"2026-10-21-keys-excel-backup",date:"2026-10-21",title:"Excelová záloha evidence klíčů",changes:[{area:"Evidence klíčů",roles:["admin"],description:"Administrátor může stáhnout kompletní Excelovou zálohu výpůjček, historie částečných vrácení a svazků klíčů, nezávisle na nastavených filtrech."}]},
  {id:"2026-10-20-fleet-forms-inspections",date:"2026-10-20",title:"Vozidla, tiskopisy a přehlednější kontroly",changes:[
   {area:"Rezervace vozidel",roles:["admin","technician","referent"],description:"Rezervace služebních vozidel se zobrazují ve společném kalendáři s přepínáním dne, týdne a měsíce a filtrem vozidel."},
