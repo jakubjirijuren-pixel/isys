@@ -4,6 +4,13 @@ Tento soubor zaznamenává změny aplikace FOXA nasazené do produkční větve 
 
 > **Pravidlo pro další vývoj:** Každý pull request měnící chování FOXA musí současně aktualizovat tento soubor a soubor `web/foxaReleases.js` (nové vydání s unikátním ID pro zaměstnance). Uvádějte datum, oblast, stručný popis změny a číslo PR. Změny zapisujte až jako součást příslušného PR; nerozpracované návrhy se sem nezapisují.
 
+## 2026-10-21 – Mobilní pracovní terminál
+
+- **Mobilní domovská obrazovka:** Samostatný pracovní terminál FOXA FIELD se stavovým panelem, časem, rychlými akcemi a přístupem k dostupným modulům.
+- **Skener:** NFC (Web NFC na podporovaných zařízeních) a QR/čárové kódy (BarcodeDetector, pokud jej prohlížeč podporuje), včetně ručního zadání.
+- **Offline koncept:** Lokální formulář pro identifikátor objektu a terénní poznámku; uchovává se v prohlížeči a lze jej zkopírovat. **Automatická synchronizace do Supabase zatím není implementována.**
+- **Přístupová práva:** Navigace se řídí dostupnými moduly a rolemi; desktopový dashboard zůstává beze změny.
+
 ## 2026-10-21
 
 - **Evidence klíčů:** Administrátor může stáhnout úplnou zálohu XLSX se třemi listy (výpůjčky, částečná vrácení, svazky). Export načítá data po stránkách přímo ze Supabase a nepodléhá filtrům zobrazení. Soubor obsahuje osobní údaje a vyžaduje zabezpečené uložení.
