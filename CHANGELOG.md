@@ -1,3 +1,11 @@
+## 2026-10-21 – FOXA FIELD v jednotlivých modulech
+
+- Nová společná komponenta `FoxaModuleTerminal` pro všechny mobilní pracovní moduly kromě úvodní obrazovky Přehled, která zůstala beze změny.
+- Terminálová hlavička s ikonou, názvem a popisem modulu; kontextové zkratky do souvisejících modulů respektují dostupnost modulů podle oprávnění.
+- Funkční formuláře, tlačítka, přepínače a workflow stávajících modulů zůstávají zachované; úpravy se aktivují jen do šířky 650 px.
+- Sjednocené pracovní karty a ovládání využívají dříve přidané mobilní terminálové styly.
+- Vyžaduje ověření sestavení a test na fyzickém telefonu.
+
 ## 2026-10-21 – Sjednocení mobilních modulů FOXA FIELD
 
 - Mobilní zobrazení všech modulů používá jednotné tmavě modré terminálové panely, kontrastní formuláře, větší dotykové akce a stálou spodní navigaci.
