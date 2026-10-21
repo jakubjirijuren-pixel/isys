@@ -129,3 +129,21 @@
  .layout:has(.foxa-terminal-home) .body{overflow-y:visible!important;overscroll-behavior-y:auto!important;min-height:0!important}
  .foxa-terminal-home{overflow-y:visible!important;overscroll-behavior-y:auto!important;touch-action:pan-y}
 }
+
+/* Compact FOXA FIELD landing page after removal of draft and module directory. */
+@media screen and (max-width:650px){
+ .layout:has(.foxa-terminal-home) .body{
+  padding-top:6px!important;
+  padding-bottom:calc(84px + env(safe-area-inset-bottom))!important;
+ }
+ .foxa-terminal-home{
+  padding-bottom:0!important;
+  margin-bottom:0!important;
+  min-height:0!important;
+ }
+ .foxa-terminal-home .terminal-section-heading{margin-top:8px!important}
+ .foxa-terminal-home .terminal-section-title{margin-top:10px!important;margin-bottom:9px!important}
+ .foxa-terminal-home .terminal-updates{margin-top:12px!important;margin-bottom:0!important}
+ .foxa-terminal-home .terminal-action-grid{margin-bottom:0!important}
+ .layout:has(.foxa-terminal-home) .content{min-height:0!important}
+}
