@@ -1,3 +1,11 @@
+## 2026-10-21 – Terminálové průvodce v dalších modulech
+
+- Zavedena sdílená komponenta `FieldWizardForm` s průběhem kroků, kontrolou povinných polí a závěrečným potvrzením; původní události odeslání a ukládání zůstávají.
+- Mobilní formuláře výpůjčky klíčů, rezervace vozidel, záznamu jízdy, správy vozidel, žádosti o dovolenou, sick day, nastavení zaměstnance a odchozí pošty převedeny na průvodce.
+- Kontroly referenta mají čtyřkrokové zobrazení existujících sekcí; technické kontroly a úkoly byly převedeny dříve.
+- Desktopová podoba formulářů a úvodní stránka FOXA FIELD zůstávají zachovány.
+- **Nedokončeno:** tiskopisy bez standardního HTML formuláře, některé administrátorské a servisní dialogy a kompletní offline synchronizace s idempotentní frontou. Potřebné jsou testy buildů a jednotlivých mobilních formulářů.
+
 ## 2026-10-21 – Vícekrokové mobilní formuláře FOXA FIELD
 
 - **Úkoly:** Nový mobilní formulář ve třech krocích (objekt a přiřazení, podrobnosti, kontrola a odeslání). Průběžný lokální koncept navázaný na přihlášeného uživatele; odeslání se provede pouze při připojení a výslovném potvrzení.
