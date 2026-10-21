@@ -1,3 +1,4 @@
+import FieldWizardForm from "./FieldWizardForm.jsx";
 import React,{useCallback,useEffect,useMemo,useState} from "react";
 import "./OutgoingMail.css";
 const empty={sent_on:new Date().toISOString().slice(0,10),recipient:"",address:"",subject:"",reference:"",method:"Pošta",tracking_number:"",notes:"",building_id:""};
@@ -14,7 +15,7 @@ export default function OutgoingMail({supabase,buildings=[],userId,isAdmin=false
  const filtered=useMemo(()=>rows.filter(r=>[r.reference,r.recipient,r.subject,r.address,r.tracking_number,r.method].some(v=>String(v||"").toLocaleLowerCase("cs").includes(query.toLocaleLowerCase("cs")))),[rows,query]);
  const buildingLabel=id=>{const b=buildings.find(x=>String(x.id)===String(id));return b?(b.object_number?"Objekt "+b.object_number+" – ":"")+(b.name||b.address):"—"};
  return <div className="outmail"><div className="pageheading"><div><h1>Kniha odchozí pošty</h1><p>Evidence odeslaných dopisů, oznámení a dalších písemností.</p></div></div>
- <form className="om-panel" onSubmit={save}><h2>{editing?"Upravit záznam":"Nová odchozí zásilka"}</h2><div className="om-fields">
+ <FieldWizardForm className="om-panel" onSubmit={save} steps={["Údaje zásilky","Kontrola a zápis"]}><h2>{editing?"Upravit záznam":"Nová odchozí zásilka"}</h2><div className="om-fields">
  <label>Datum odeslání<input type="date" required value={form.sent_on} onChange={e=>change("sent_on",e.target.value)}/></label>
  <label>Příjemce<input required maxLength={250} value={form.recipient} onChange={e=>change("recipient",e.target.value)}/></label>
  <label>Adresa příjemce<input maxLength={500} value={form.address} onChange={e=>change("address",e.target.value)}/></label>
@@ -24,7 +25,7 @@ export default function OutgoingMail({supabase,buildings=[],userId,isAdmin=false
  <label>Podací číslo / ID zprávy<input maxLength={150} value={form.tracking_number} onChange={e=>change("tracking_number",e.target.value)}/></label>
  <label>Objekt<select value={form.building_id} onChange={e=>change("building_id",e.target.value)}><option value="">Bez objektu</option>{buildings.map(b=><option key={b.id} value={b.id}>{buildingLabel(b.id)}</option>)}</select></label>
  <label className="om-wide">Poznámka<textarea rows={2} maxLength={2000} value={form.notes} onChange={e=>change("notes",e.target.value)}/></label></div>
- <div className="om-actions"><button className="primary" type="submit" disabled={saving}>{saving?"Ukládám…":editing?"Uložit změny":"Zapsat odchozí poštu"}</button>{editing&&<button type="button" className="secondarybutton" onClick={reset}>Zrušit úpravu</button>}</div></form>
+ <div className="om-actions"><button className="primary" type="submit" disabled={saving}>{saving?"Ukládám…":editing?"Uložit změny":"Zapsat odchozí poštu"}</button>{editing&&<button type="button" className="secondarybutton" onClick={reset}>Zrušit úpravu</button>}</div></FieldWizardForm>
  <section className="om-panel"><div className="om-listhead"><h2>Evidence zásilek ({filtered.length})</h2><div><input aria-label="Hledat v odchozí poště" placeholder="Hledat příjemce, věc, značku…" value={query} onChange={e=>setQuery(e.target.value)}/><button className="secondarybutton" type="button" onClick={load}>Obnovit</button></div></div>{error&&<p className="error" role="alert">{error}</p>}
  {loading?<p>Načítání…</p>:filtered.length===0?<p>Žádné záznamy.</p>:<div className="om-tablewrap"><table><thead><tr><th>Datum</th><th>Č. záznamu</th><th>Příjemce</th><th>Věc</th><th>Způsob</th><th>Podací číslo</th><th>Objekt</th><th>Akce</th></tr></thead><tbody>{filtered.map(r=><tr key={r.id}><td>{dateCZ(r.sent_on)}</td><td>{r.record_number||"—"}</td><td><strong>{r.recipient}</strong><small>{r.address}</small></td><td>{r.subject}<small>{r.reference}</small></td><td>{r.method}</td><td>{r.tracking_number||"—"}</td><td>{r.building_id?buildingLabel(r.building_id):"—"}</td><td><div className="om-rowactions">{(isAdmin||r.created_by===userId)&&<><button type="button" onClick={()=>edit(r)}>Upravit</button><button type="button" onClick={()=>remove(r)}>Smazat</button></>}</div></td></tr>)}</tbody></table></div>}</section></div>;
 }
