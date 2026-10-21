@@ -20,3 +20,32 @@
  .foxa-terminal-module:not(.foxa-terminal-page-prehled) :is(.keys-module,.tasks,.technicalmodule,.attendance-module,.foxa-fleet){min-width:0;max-width:100%}
  .foxa-terminal-module:not(.foxa-terminal-page-prehled) :is(.keys-layout,.tasklayout,.technicalfields,.taskgrid){max-width:100%;min-width:0}
 }
+
+/* Progressive wizard forms: desktop retains the full original forms. */
+.foxa-wizard-progress,.foxa-wizard-controls,.foxa-wizard-step>h3,.foxa-inspection-wizard-nav{display:none}
+.foxa-wizard-step{display:contents}
+.foxa-wizard-review{display:none}
+@media screen and (max-width:650px){
+ .foxa-field-task-wizard .foxa-wizard-step{display:none}
+ .foxa-field-task-wizard .foxa-wizard-step[data-active="true"]{display:block}
+ .foxa-field-task-wizard .foxa-wizard-step>h3{display:block;color:#fff;font-size:16px;margin:5px 0 14px}
+ .foxa-field-task-wizard .foxa-wizard-review{display:grid;grid-template-columns:90px minmax(0,1fr);gap:9px 12px;padding:12px;border:1px solid #225c82;border-radius:10px;background:#0a2439}
+ .foxa-wizard-review dt{color:#99cde9;font-size:12px}
+ .foxa-wizard-review dd{color:#f4faff;font-size:13px;font-weight:700;margin:0;overflow-wrap:anywhere}
+ .foxa-wizard-progress{display:block;margin:8px 0 15px;color:#bde8ff;font-size:12px;font-weight:750}
+ .foxa-wizard-progress>div{height:7px;background:#103954;border-radius:10px;overflow:hidden;margin-top:8px}
+ .foxa-wizard-progress i{display:block;height:100%;background:#0ac6ff;border-radius:10px;transition:width .18s ease}
+ .foxa-wizard-controls{display:flex;gap:9px;margin-top:15px;flex-wrap:wrap}
+ .foxa-wizard-controls>button{flex:1 1 110px;min-height:50px!important;border-radius:10px}
+ .foxa-field-task-wizard .foxa-wizard-submit{display:none}
+ .foxa-field-task-wizard:has(.foxa-wizard-step[data-active="true"]:nth-of-type(4)) .foxa-wizard-submit{display:block}
+ .foxa-field-task-wizard:has(.foxa-wizard-step[data-active="true"]:nth-of-type(4)) .foxa-wizard-controls>button:nth-child(2){display:none}
+ .foxa-inspection-wizard-nav{display:block;position:sticky;top:0;z-index:12;background:#081c2f;border:1px solid #1b6795;border-radius:12px;padding:12px;margin:10px 0}
+ .foxa-inspection-wizard-nav .foxa-wizard-progress{margin:0 0 10px}
+ .foxa-inspection-wizard-nav .foxa-wizard-controls{margin:0}
+ .foxa-field-inspection-wizard>.technicalpanel.foxa-field-inspection-step{display:none}
+ .foxa-field-inspection-wizard>.technicalpanel.foxa-field-inspection-step.field-step-active{display:block}
+ .foxa-field-inspection-wizard>.technicalbottom{display:flex;gap:8px;flex-wrap:wrap}
+ .foxa-field-inspection-wizard>.technicalbottom button{flex:1 1 120px;min-height:50px}
+}
+@media(prefers-reduced-motion:reduce){.foxa-wizard-progress i{transition:none}}
