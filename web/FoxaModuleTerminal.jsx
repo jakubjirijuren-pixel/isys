@@ -1,4 +1,4 @@
-import React from "react";
+import React,{useEffect,useState} from "react";
 import "./foxa-module-terminal.css";
 
 const MODULES={
@@ -18,9 +18,12 @@ const MODULES={
 };
 export default function FoxaModuleTerminal({page,availablePages=[],onNavigate}){
  if(page==="Přehled")return null;
+ const [online,setOnline]=useState(()=>typeof navigator==="undefined"||navigator.onLine);
+ useEffect(()=>{const update=()=>setOnline(navigator.onLine);window.addEventListener("online",update);window.addEventListener("offline",update);return()=>{window.removeEventListener("online",update);window.removeEventListener("offline",update)}},[]);
  const info=MODULES[page]||{icon:"▦",subtitle:"Pracovní modul",links:[]};
  const links=info.links.filter(name=>availablePages.includes(name));
  return <div className="foxa-field-module-tools" aria-label={"Terminálové ovládání: "+page}>
+  <div className="foxa-field-module-topline"><button type="button" className="foxa-field-module-back" onClick={()=>onNavigate("Přehled")} aria-label="Zpět na úvodní terminál">‹ Terminál</button><span className={"foxa-field-module-network "+(online?"is-online":"is-offline")} role="status"><span aria-hidden="true">●</span> {online?"Připojeno":"Bez připojení"}</span></div>
   <div className="foxa-field-module-header">
    <div className="foxa-field-module-icon" aria-hidden="true">{info.icon}</div>
    <div className="foxa-field-module-title"><span>FOXA FIELD / PRACOVNÍ MODUL</span><h1>{page}</h1><p>{info.subtitle}</p></div>
