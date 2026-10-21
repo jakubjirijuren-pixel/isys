@@ -1,3 +1,10 @@
+## 2026-10-21 – Evidence klíčů jako samostatný mobilní terminál
+
+- Mobilní úvodní obrazovka evidence klíčů nově odpovídá konceptu FOXA FIELD: dvě výrazné akční karty Půjčit klíče / Vrátit klíče, počet aktuálních výpůjček a rychlý vstup do NFC / čárového terminálu.
+- Výpůjčka a vrácení mají oddělené pracovní pohledy, navigace Zpět na terminál klíčů.
+- Stávající logika Supabase, PDF protokolů, částečného vracení a desktopové zobrazení zůstává zachována.
+- Změna je určena pro šířky obrazovky do 650 px; vyžaduje kontrolu sestavení a funkční test na telefonu.
+
 ## 2026-10-21 – Terminálové průvodce v dalších modulech
 
 - Zavedena sdílená komponenta `FieldWizardForm` s průběhem kroků, kontrolou povinných polí a závěrečným potvrzením; původní události odeslání a ukládání zůstávají.
