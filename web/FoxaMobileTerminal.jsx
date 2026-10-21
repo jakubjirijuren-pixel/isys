@@ -11,15 +11,10 @@ const TerminalIcon=({name,size=26})=>{const paths={
  settings:<><circle cx="12" cy="12" r="3"/><path d="M10 2h4l1 3 3 1 3-1 2 4-2 3 1 3-2 3-3-1-3 2-1 3h-4l-1-3-3-1-3 1-2-4 2-3-1-3 2-3 3 1 3-2Z"/></>
  };return <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">{paths[name]||paths.building}</svg>};
 
-const STORE="foxa-terminal-draft-v1";
-const quick=[["Objekty","building-2","Objekty"],["Evidence klíčů","key-round","Klíče"],["Docházka","clock","Docházka"],["Vozidla a kniha jízd","car","Vozidla"],["Tiskopisy","file","Tiskopisy"],["Wiki","book","Návody"]];
 export default function FoxaMobileTerminal({pages=[],onNavigate=()=>{},onOpenInspections=()=>{},userLabel="",onOpenChangelog=()=>{}}){
  const [online,setOnline]=useState(()=>navigator.onLine);
  const [clock,setClock]=useState(()=>new Date());
- const [draft,setDraft]=useState(()=>{try{return JSON.parse(localStorage.getItem(STORE)||"null")||{object:"",note:"",savedAt:""}}catch{return {object:"",note:"",savedAt:""}}});
- const [saveState,setSaveState]=useState("");
  useEffect(()=>{const update=()=>setOnline(navigator.onLine);window.addEventListener("online",update);window.addEventListener("offline",update);const t=setInterval(()=>setClock(new Date()),30000);return()=>{window.removeEventListener("online",update);window.removeEventListener("offline",update);clearInterval(t)}},[]);
- useEffect(()=>{try{localStorage.setItem(STORE,JSON.stringify({...draft,savedAt:new Date().toISOString()}));setSaveState("Koncept uložen v tomto zařízení")}catch{setSaveState("Lokální uložení není dostupné")}},[draft.object,draft.note]);
  const navigate=target=>onNavigate(target);
  const has=target=>pages.includes(target);
  return <section className="foxa-terminal-home" aria-label="Mobilní pracovní terminál">
@@ -33,8 +28,6 @@ export default function FoxaMobileTerminal({pages=[],onNavigate=()=>{},onOpenIns
    {has("Docházka")&&<button type="button" className="action-attendance" onClick={()=>navigate("Docházka")}><span className="terminal-action-icon"><TerminalIcon name="clock" size={33}/></span><span className="terminal-action-arrow"><TerminalIcon name="chevron" size={20}/></span><strong>Docházka</strong><small>Pracovní doba</small></button>}
   </div>
 
-  <section className="terminal-draft"><div className="terminal-draft-heading"><h2>Terénní koncept</h2><span>{online?"Lokální uložení":"Offline režim"}</span></div><p>Rychlá poznámka při výjezdu. Ukládá se pouze do tohoto zařízení, bez automatického odesílání do databáze.</p><label>Objekt / identifikátor<input value={draft.object} onChange={e=>setDraft(v=>({...v,object:e.target.value}))} placeholder="Objekt nebo naskenovaný kód"/></label><label>Pracovní poznámka<textarea rows={3} value={draft.note} onChange={e=>setDraft(v=>({...v,note:e.target.value}))} placeholder="Zapiš poznámku z terénu…"/></label><div className="terminal-draft-footer"><small role="status">{saveState}</small><button type="button" disabled={!draft.object&&!draft.note} onClick={()=>{const text=[draft.object,draft.note].filter(Boolean).join("\n");navigator.clipboard?.writeText(text).then(()=>setSaveState("Koncept zkopírován")).catch(()=>setSaveState("Kopírování se nezdařilo"))}}>Kopírovat</button><button type="button" disabled={!draft.object&&!draft.note} onClick={()=>{if(window.confirm("Smazat lokální koncept?"))setDraft({object:"",note:""})}}>Vymazat</button></div></section>
-  <h2 className="terminal-section-title">Všechny pracovní moduly</h2><div className="terminal-modules">{quick.filter(([target])=>has(target)).map(([target,symbol,label])=><button type="button" key={target} onClick={()=>navigate(target)}><span>{symbol==="building-2"?"▤":symbol==="key-round"?"⚿":symbol==="clock"?"◷":symbol==="car"?"▣":symbol==="file"?"▤":"▧"}</span>{label}<b>›</b></button>)}</div>
   <button type="button" className="terminal-updates" onClick={onOpenChangelog}>Novinky a aktualizace FOXA ›</button>
  </section>
 }
