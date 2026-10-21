@@ -89,3 +89,18 @@
 .foxa-terminal-page-objekty .foxa-object-empty{padding:20px;text-align:center}
 .foxa-terminal-page-objekty .building-update-note{font-size:11px!important}
 }
+
+/* Object terminal: remove redundant page banner and present filters as a compact search console. */
+@media screen and (max-width:650px){
+.foxa-terminal-page-objekty>.pageheading{display:none!important}
+.foxa-terminal-page-objekty .filterpanel{background:#0a253a!important;border:1px solid #286082!important;border-radius:15px!important;padding:13px!important;box-shadow:none!important;margin:0 0 10px!important}
+.foxa-terminal-page-objekty .filterheading{margin:0 0 12px!important;padding:0!important;gap:10px!important}
+.foxa-terminal-page-objekty .filterheading strong{font-size:13px!important;letter-spacing:.035em!important;text-transform:uppercase!important;color:#b8e8ff!important}
+.foxa-terminal-page-objekty .filterheading span{flex:none;border-radius:20px;background:#16445f;color:#d3f3ff;padding:5px 9px;font-size:12px!important;font-weight:700}
+.foxa-terminal-page-objekty .filtercontrols{display:grid!important;grid-template-columns:minmax(0,1fr) minmax(0,1fr)!important;gap:9px!important;align-items:stretch!important}
+.foxa-terminal-page-objekty .filtercontrols>.searchbox{grid-column:1/-1!important;order:0!important;margin:0!important;border-radius:11px!important;min-width:0!important;padding:13px 14px!important}
+.foxa-terminal-page-objekty .filtercontrols>.secondarybutton{grid-column:1/-1!important;min-height:40px!important;border-radius:10px!important;margin:0!important}
+.foxa-terminal-page-objekty .filtercontrols>:not(.searchbox):not(.secondarybutton){min-width:0!important;width:100%!important;margin:0!important}
+.foxa-terminal-page-objekty .filtercontrols :is(button,select){max-width:100%!important;min-height:44px!important;border-radius:10px!important}
+.foxa-terminal-page-objekty .widgetfilterhint{margin-bottom:10px!important;font-size:12px!important}
+}
