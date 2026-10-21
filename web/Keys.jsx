@@ -2,6 +2,7 @@ import FieldWizardForm from "./FieldWizardForm.jsx";
 import * as XLSX from "xlsx";
 import React,{useEffect,useRef,useState} from "react";
 import "./keys.css";
+import "./foxa-keys-field.css";
 import KeyKiosk from "./KeyKiosk.jsx";
 import KeyBarcode from "./KeyBarcode.jsx";
 import KeyNfcWriter from "./KeyNfcWriter.jsx";
