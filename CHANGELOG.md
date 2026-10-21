@@ -1,3 +1,9 @@
+## 2026-10-21 – Zjednodušení úvodního terminálu FOXA FIELD
+
+- Z úvodního mobilního terminálu odstraněny sekce **Terénní koncept** a **Všechny pracovní moduly**.
+- Zachovány rychlé akce, přehled připojení a času a tlačítko Novinky a aktualizace.
+- Odstraněna související logika lokálního konceptu pouze z úvodního terminálu; evidence a formuláře v jednotlivých modulech zůstávají zachované.
+
 ## 2026-10-21 – Dočasné skrytí skeneru v terminálu
 
 - Odstraněno tlačítko NFC/QR skeneru z mobilní úvodní obrazovky FOXA FIELD a z mobilního terminálu Evidence klíčů.
