@@ -53,3 +53,9 @@
 .foxa-terminal-page-evidence-klicu .foxa-keys-mode-home>.foxa-keys-field-home>.foxa-keys-field-banner,.foxa-terminal-page-evidence-klicu .foxa-keys-mode-home>.foxa-keys-field-home>.foxa-keys-field-actions{display:none!important}
 .foxa-terminal-page-evidence-klicu .foxa-keys-mode-home>.foxa-keys-field-home{gap:9px!important}
 }
+
+/* Key terminal landing screen: nothing beneath the current-loans summary. */
+@media screen and (max-width:650px){
+.foxa-terminal-page-evidence-klicu .foxa-keys-mode-home>.foxa-keys-field-home~*:not(.foxa-keys-field-back){display:none!important}
+.foxa-terminal-page-evidence-klicu .foxa-keys-mode-home>.foxa-keys-field-back{display:none!important}
+}
