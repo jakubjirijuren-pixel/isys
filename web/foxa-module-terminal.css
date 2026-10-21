@@ -104,3 +104,6 @@
 .foxa-terminal-page-objekty .filtercontrols :is(button,select){max-width:100%!important;min-height:44px!important;border-radius:10px!important}
 .foxa-terminal-page-objekty .widgetfilterhint{margin-bottom:10px!important;font-size:12px!important}
 }
+
+/* Hide duplicated legacy object heading in handheld terminal only. */
+@media(max-width:650px){.layout .body.foxa-terminal-page-objekty>.pageheading,.layout .body.foxa-terminal-page-objekty>div>.pageheading{display:none!important}}
