@@ -241,3 +241,29 @@
  .layout aside .mobile-nav-top{justify-content:center!important}
  .layout aside .mobile-nav-title{margin-inline:auto}
 }
+
+/* Remove the duplicated mobile FOXA strip and breadcrumb toolbar on terminal home.
+   Keep notifications and account controls accessible in one compact top bar. */
+@media screen and (max-width:650px){
+ .layout:has(.foxa-terminal-home) aside .mobile-nav-top{display:none!important}
+ .layout:has(.foxa-terminal-home) .content>header{
+  min-height:52px!important;display:flex!important;justify-content:flex-end!important;
+  align-items:center!important;flex-wrap:nowrap!important;
+  gap:8px!important;padding:5px 12px!important;
+  border-bottom:1px solid #1a557c!important;
+ }
+ .layout:has(.foxa-terminal-home) .content>header .breadcrumb{display:none!important}
+ .layout:has(.foxa-terminal-home) .content>header .userbar{
+  display:flex!important;align-items:center!important;justify-content:flex-end!important;
+  gap:8px!important;width:100%!important;max-width:100%!important;margin:0!important;
+ }
+ .layout:has(.foxa-terminal-home) .content>header .header-support{display:none!important}
+ .layout:has(.foxa-terminal-home) .content>header .userbar:before{
+  content:"FOXA FIELD";margin-right:auto;white-space:nowrap;
+  font-size:14px;font-weight:850;letter-spacing:.075em;color:#e6f7ff;
+ }
+ .layout:has(.foxa-terminal-home) .content>header .userbar :is(.avatarbutton,.logout){
+  min-height:40px;min-width:40px;
+ }
+ .layout:has(.foxa-terminal-home) .body{padding-top:10px!important}
+}
