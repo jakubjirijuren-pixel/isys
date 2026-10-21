@@ -4,6 +4,11 @@ Tento soubor zaznamenává změny aplikace FOXA nasazené do produkční větve 
 
 > **Pravidlo pro další vývoj:** Každý pull request měnící chování FOXA musí současně aktualizovat tento soubor a soubor `web/foxaReleases.js` (nové vydání s unikátním ID pro zaměstnance). Uvádějte datum, oblast, stručný popis změny a číslo PR. Změny zapisujte až jako součást příslušného PR; nerozpracované návrhy se sem nezapisují.
 
+## 2026-10-21
+
+- **Evidence klíčů:** Administrátor může stáhnout úplnou zálohu XLSX se třemi listy (výpůjčky, částečná vrácení, svazky). Export načítá data po stránkách přímo ze Supabase a nepodléhá filtrům zobrazení. Soubor obsahuje osobní údaje a vyžaduje zabezpečené uložení.
+- **Wiki:** Přidán administrátorský návod pro Excelovou zálohu evidence klíčů.
+
 ## 2026-10-20 – Vozidla, tiskopisy a kontroly (aktualizace)
 
 - **Vozový park:** Modul rezervací vozidel a knihy jízd; společný kalendář pro zaměstnance s denním, týdenním a měsíčním pohledem a filtrováním podle auta.
