@@ -234,3 +234,10 @@
  .foxa-terminal-dock .terminal-dock-icon{font-size:21px}
 }
 @media print{.foxa-terminal-dock{display:none!important}}
+
+/* The terminal dock replaces the old top hamburger on phones. */
+@media screen and (max-width:650px){
+ .layout aside .mobile-nav-top .mobile-hamburger{display:none!important}
+ .layout aside .mobile-nav-top{justify-content:center!important}
+ .layout aside .mobile-nav-title{margin-inline:auto}
+}
