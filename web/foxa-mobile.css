@@ -359,3 +359,114 @@
 @media print{
  .layout .body :is(.technicalpanel,.inspectionpanel,.attendance-card,.fleet-card,.keys-panel){background:transparent!important;color:#000!important;border:0!important}
 }
+
+/* Field workflow mode: turn module screens into actual handheld task panels. */
+@media screen and (max-width:650px){
+ .layout .foxa-terminal-module:not(.foxa-terminal-page-prehled){
+  --terminal-cyan:#08c4ff;--terminal-line:#176c9d;
+ }
+ .layout .foxa-terminal-module:not(.foxa-terminal-page-prehled)>:first-child:is(.keys-module,.tasks,.attendance-module,.technicalmodule,.foxa-fleet){
+  display:flex;flex-direction:column;gap:11px;min-width:0;
+ }
+ .layout .foxa-terminal-module :is(.pageheading,.tasksheader,.technicalhead,.inspectionheading,.fleet-hero){
+  display:flex!important;flex-direction:column!important;align-items:stretch!important;
+  gap:12px!important;padding:17px 15px!important;
+  background:linear-gradient(120deg,#0d3453,#0a223a)!important;
+  border:1.5px solid #06a9ef!important;border-radius:14px!important;
+ }
+ .layout .foxa-terminal-module :is(.pageheading,.tasksheader,.technicalhead,.inspectionheading,.fleet-hero):before{
+  content:"FOXA / PRACOVNÍ MODUL";display:block;width:100%;
+  color:#28c8ff;font-size:10px;font-weight:850;letter-spacing:.15em;
+ }
+ .layout .foxa-terminal-module :is(.pageheading,.tasksheader,.technicalhead,.inspectionheading,.fleet-hero) h1{
+  font-size:clamp(23px,6.6vw,29px)!important;line-height:1.15!important;
+  font-weight:850!important;color:#fff!important;
+ }
+ .layout .foxa-terminal-module :is(.pageheading,.tasksheader,.technicalhead,.inspectionheading,.fleet-hero) p{
+  font-size:12px!important;color:#acd5f0!important;line-height:1.5!important;
+ }
+ .layout .foxa-terminal-module :is(.keys-top,.keys-tools,.keys-viewbar,.attendance-toolbar,.taskfilters,.fleet-tabs,.inspectionactions,.technical-extra-actions,.attendance-actions){
+  background:#0b2a43!important;border:1px solid #195d89!important;
+  padding:10px!important;border-radius:11px!important;gap:8px!important;
+ }
+ .layout .foxa-terminal-module :is(.taskstats,.keys-layout,.tasklayout,.technicalfields,.taskgrid,.fleet-form){
+  min-width:0!important;max-width:100%!important;
+ }
+ .layout .foxa-terminal-module .taskstats{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:7px!important}
+ .layout .foxa-terminal-module .taskstats>div{
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:5px;min-width:0;padding:12px 5px!important;background:#0c304d!important;
+  border:1px solid #1a719f!important;border-radius:11px!important;
+ }
+ .layout .foxa-terminal-module .taskstats strong{font-size:clamp(20px,6vw,28px)!important;color:#0fc6ff!important;font-variant-numeric:tabular-nums}
+ .layout .foxa-terminal-module .taskstats span{font-size:11px!important;text-align:center;color:#b7d9f0!important}
+ .layout .foxa-terminal-module :is(.keys-record,.taskitem,.buildingcard,.fleet-entry){
+  position:relative;padding:15px!important;border-left:3px solid #0cbcf9!important;
+  background:linear-gradient(115deg,#0d314e,#0b253c)!important;
+  border-radius:11px!important;
+ }
+ .layout .foxa-terminal-module :is(.keys-recordhead,.taskitemtop){
+  display:flex;flex-wrap:wrap;align-items:center;gap:9px;
+ }
+ .layout .foxa-terminal-module :is(.keys-record-actions,.taskactions,.attendance-mark-actions){
+  display:flex!important;flex-wrap:wrap!important;gap:8px!important;
+ }
+ .layout .foxa-terminal-module :is(.keys-record-actions,.taskactions,.attendance-mark-actions)>button{
+  flex:1 1 125px!important;min-height:50px!important;
+ }
+ .layout .foxa-terminal-module :is(.attendance-self-card,.attendance-records-card,.technicalpanel,.keys-panel,.fleet-card,.taskform,.tasklist){
+  border:1px solid #1b6e9f!important;
+  background:linear-gradient(135deg,#0b304d,#0a253c)!important;
+ }
+ .layout .foxa-terminal-module :is(.attendance-self-card,.technicalpanel,.keys-panel,.fleet-card,.taskform) h2{
+  font-size:18px!important;font-weight:800!important;
+  padding-bottom:9px;margin-bottom:12px;
+  border-bottom:1px solid #225b7e;color:#fff!important;
+ }
+ .layout .foxa-terminal-module :is(.technicalfields,.taskgrid,.fleet-form,.keys-form){
+  grid-template-columns:minmax(0,1fr)!important;
+ }
+ .layout .foxa-terminal-module :is(.technicalfields,.taskgrid,.fleet-form,.keys-form)>*{
+  min-width:0!important;max-width:100%!important;
+ }
+ .layout .foxa-terminal-module :is(.technicalfields,.taskgrid,.fleet-form,.keys-form) label{
+  display:flex;flex-direction:column;gap:6px;font-size:12px!important;
+  font-weight:750!important;color:#cceaff!important;
+ }
+ .layout .foxa-terminal-module :is(.technicalfields,.taskgrid,.fleet-form,.keys-form) :is(input,select,textarea){
+  width:100%!important;min-height:50px!important;
+ }
+ .layout .foxa-terminal-module :is(.keys-tabs,.fleet-tabs,.inspection-role-switch) button[aria-selected="true"],
+ .layout .foxa-terminal-module :is(.keys-tabs,.fleet-tabs,.inspection-role-switch) button.active{
+  background:#08649b!important;border-color:#00bfff!important;color:#fff!important;
+ }
+ .layout .foxa-terminal-module :is(.keys-count,.keys-results-count,.attendance-current-status){
+  color:#aee1ff!important;font-weight:750;
+ }
+ .layout .foxa-terminal-module :is(.technicalgroup,.technicalrow,.keys-partial-history){
+  border-color:#245c81!important;
+ }
+ .layout .foxa-terminal-module :is(.technicalgrouphead,.technicalgroup h3){
+  background:#103b5a!important;color:#eaf8ff!important;
+ }
+ .layout .foxa-terminal-module :is(.technicalphotoupload,.technicalphotocard,.technicalsignature){
+  border:1px solid #2c739c!important;border-radius:11px!important;
+ }
+ .layout .foxa-terminal-module :is(.filtertrigger,.technicalcomboboxcontrol){
+  min-height:50px!important;background:#081d30!important;
+  color:#eaf8ff!important;border:1px solid #31749c!important;border-radius:10px!important;
+ }
+ .layout .foxa-terminal-module :is(.filtermenu,.technicalcomboboxlist,.inspectionbuildingmenu){
+  background:#0d2b45!important;color:#fff!important;border:1px solid #3280ad!important;
+ }
+ .layout .foxa-terminal-module :is(.filtermenu,.technicalcomboboxlist,.inspectionbuildingmenu) button{
+  min-height:44px;color:#eef8ff;
+ }
+ .layout .foxa-terminal-module :is(.taskitem,.keys-record,.buildingcard) :is(.taskstatus,.badge){
+  border-radius:8px;padding:4px 8px;
+ }
+ .layout .foxa-terminal-module button:active{filter:brightness(1.18)}
+}
+@media screen and (max-width:650px) and (prefers-reduced-motion:no-preference){
+ .layout .foxa-terminal-module button{transition:filter .12s ease,border-color .12s ease}
+}
