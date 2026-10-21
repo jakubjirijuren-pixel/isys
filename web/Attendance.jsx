@@ -14,7 +14,7 @@ function duration(rows){
  const total=sumIntervals(intervals).worked;
  return (total/3600000).toLocaleString("cs-CZ",{minimumFractionDigits:2,maximumFractionDigits:2})+" h";
 }
-export default function Attendance({supabase,userId,isAdmin=false}){
+export default function Attendance({supabase,userId,isAdmin=false,terminalMode=false}){
  const [leaveDays,setLeaveDays]=useState([]),[sickDays,setSickDays]=useState([]);const [kioskOpen,setKioskOpen]=useState(false);const [events,setEvents]=useState([]),[profiles,setProfiles]=useState([]),[busy,setBusy]=useState(false),[error,setError]=useState(""),[notice,setNotice]=useState(""),[month,setMonth]=useState(()=>new Date().toISOString().slice(0,7)),[selected,setSelected]=useState("");
  const load=async()=>{
   const from=month+"-01",to=new Date(Date.UTC(Number(month.slice(0,4)),Number(month.slice(5,7)),1)).toISOString().slice(0,10);
@@ -70,7 +70,7 @@ export default function Attendance({supabase,userId,isAdmin=false}){
   const data="\ufeff"+lines.map(line=>line.map(v=>'"'+String(v).replaceAll('"','""')+'"').join(";")).join("\r\n");
   const url=URL.createObjectURL(new Blob([data],{type:"text/csv;charset=utf-8"}));const a=document.createElement("a");a.href=url;a.download="isys-dochazka-"+month+".csv";a.click();URL.revokeObjectURL(url);
  };
- return <div className="attendance-module"><div className="pageheading"><div><h1>Docházka</h1><p>Evidence příchodů, odchodů a přestávek</p></div></div>
+ return <div className={"attendance-module"+(terminalMode?" attendance-terminal-mode":"")} >{!terminalMode&&<div className="pageheading"><div><h1>Docházka</h1><p>Evidence příchodů, odchodů a přestávek</p></div></div>}
  {isAdmin&&<div className="attendance-actions"><button className="primary" type="button" onClick={()=>setKioskOpen(true)}>Spustit NFC docházkový terminál</button></div>}{isAdmin&&kioskOpen&&<AttendanceKiosk supabase={supabase} profiles={profiles} onClose={()=>setKioskOpen(false)} onSaved={()=>{load();loadLatest()}}/>}{isAdmin&&<AttendanceCardWriter supabase={supabase} profiles={profiles}/>}<section className="attendance-card attendance-self-card"><h2>Moje docházka</h2><p className="attendance-current-status">Aktuální stav: <strong>{latest===null?"Načítám…":latest==="out"?"Mimo pracoviště":latest==="break_start"?"Přestávka":"V práci"}</strong></p><div className="attendance-actions attendance-mark-actions">{(actions[latest]||[]).map(([type,label])=><button key={type} className="primary" disabled={busy} onClick={()=>mark(type)}>{busy?"Ukládám…":label}</button>)}</div><p className="attendance-gps-info">Při příchodu a odchodu přes web se jednorázově načte aktuální poloha zařízení a uloží k docházkovému záznamu. Polohu vidí zaměstnanec u vlastních záznamů a administrátor. Nejde o průběžné sledování. Bez povolení polohy nelze příchod ani odchod přes web uložit.</p><p className="attendance-worked">Odpracováno ve vybraném měsíci (orientačně): <strong>{duration(mine)}</strong></p></section>
  {error&&<div className="error" role="alert">{error}</div>}{notice&&<div className="notice" role="status">{notice}</div>}
  {isAdmin&&<AttendanceAdminEntry supabase={supabase} profiles={profiles} onSaved={()=>{load();loadLatest();window.dispatchEvent(new Event("isys-attendance-updated"))}}/>}
