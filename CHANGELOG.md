@@ -1,3 +1,11 @@
+## 2026-10-21 – Sjednocení pracovních modulů FOXA FIELD
+
+- Všechny mobilní pracovní moduly dostaly jednotnou terminálovou navigaci s návratem na hlavní obrazovku a živým indikátorem připojení.
+- Sjednoceny terminálové panely, ovládací prvky, dotykové plochy, záhlaví, tabulky, filtry a navigace formulářů; změny jsou omezené na mobilní šířky do 650 px.
+- Zachována oprávnění jednotlivých rolí, stávající funkce modulů a desktopové zobrazení.
+- Opraveno zobrazení tlačítka pro odeslání úkolu na desktopu.
+- **Poznámka:** Jde o plošnou úpravu rozhraní, nikoli kompletní přepsání veškeré interní logiky jednotlivých modulů. Před označením za produkčně ověřené je nutné úspěšné sestavení a mobilní regresní testy.
+
 ## 2026-10-21 – Zjednodušení úvodního terminálu FOXA FIELD
 
 - Z úvodního mobilního terminálu odstraněny sekce **Terénní koncept** a **Všechny pracovní moduly**.
