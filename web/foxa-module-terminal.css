@@ -49,3 +49,11 @@
  .foxa-field-inspection-wizard>.technicalbottom button{flex:1 1 120px;min-height:50px}
 }
 @media(prefers-reduced-motion:reduce){.foxa-wizard-progress i{transition:none}}
+
+@media screen and (max-width:650px){
+ .foxa-field-referent-wizard>.inspectionpanel.foxa-field-referent-step{display:none}
+ .foxa-field-referent-wizard>.inspectionpanel.foxa-field-referent-step.field-step-active{display:block}
+ .foxa-field-referent-wizard>.foxa-inspection-wizard-nav{display:block;position:sticky;top:0;z-index:12}
+ .foxa-field-form-wizard :is(.keys-building-field,.fleet-wide){min-width:0;width:100%}
+ .foxa-field-form-wizard .foxa-field-form-step .fleet-form{display:block}
+}
