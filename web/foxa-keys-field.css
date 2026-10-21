@@ -45,3 +45,11 @@
  .foxa-keys-mode-loan .keys-loan-variants button{flex:1 1 120px;min-height:49px}
  .foxa-keys-mode-return .keys-record:not(:has(.keys-record-actions button)){opacity:.8}
 }
+
+/* Streamlined key terminal home: keep active loans, remove duplicated hero and action tiles. */
+@media screen and (max-width:650px){
+.foxa-terminal-page-evidence-klicu .foxa-field-module-topline,.foxa-terminal-page-evidence-klicu .foxa-field-module-links{display:none!important}
+.foxa-terminal-page-evidence-klicu>.foxa-field-module-tools{display:block!important}
+.foxa-terminal-page-evidence-klicu .foxa-keys-mode-home>.foxa-keys-field-home>.foxa-keys-field-banner,.foxa-terminal-page-evidence-klicu .foxa-keys-mode-home>.foxa-keys-field-home>.foxa-keys-field-actions{display:none!important}
+.foxa-terminal-page-evidence-klicu .foxa-keys-mode-home>.foxa-keys-field-home{gap:9px!important}
+}
