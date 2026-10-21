@@ -267,3 +267,95 @@
  }
  .layout:has(.foxa-terminal-home) .body{padding-top:10px!important}
 }
+
+/* FOXA FIELD — consistent industrial handheld appearance across ALL mobile modules.
+   Presentation-only: do not replace forms, tables, actions or role checks. */
+@media screen and (max-width:650px){
+ .layout{--fx-surface:#0b2942;--fx-surface-soft:#102f4a;--fx-border:#1b638e;--fx-text:#f1f8ff;--fx-muted:#a6cee8;--fx-accent:#09bcfa;--foxa-surface:#0b2942;--foxa-border:#1b638e;--foxa-text:#f1f8ff;--foxa-muted:#a6cee8;--foxa-accent:#09bcfa}
+ .layout,.layout .content,.layout .body{background:#071622!important;color:#f1f8ff!important}
+ .layout .body{background:linear-gradient(180deg,#071622 0%,#0a1c2d 48%,#071622 100%)!important;padding:12px 10px calc(110px + env(safe-area-inset-bottom))!important}
+ /* Compact single-row terminal toolbar instead of the duplicate FOXA and breadcrumb rows. */
+ .layout aside .mobile-nav-top{display:none!important}
+ .layout .content>header{display:flex!important;align-items:center!important;justify-content:flex-end!important;flex-wrap:nowrap!important;gap:7px!important;min-height:52px!important;padding:5px 11px!important;background:#081b2c!important;border-bottom:1px solid #18557b!important;color:#e8f6ff!important}
+ .layout .content>header .breadcrumb{display:none!important}
+ .layout .content>header .userbar{display:flex!important;align-items:center!important;justify-content:flex-end!important;gap:7px!important;width:100%!important;max-width:100%!important;min-width:0!important;margin:0!important}
+ .layout .content>header .userbar:before{content:"FOXA FIELD";margin-right:auto;white-space:nowrap;font-size:13px;font-weight:850;letter-spacing:.08em;color:#e7f6ff}
+ .layout .content>header .header-support{display:none!important}
+ .layout .content>header :is(.avatarbutton,.logout){min-height:39px!important;min-width:39px!important}
+ /* Uniform module banners. */
+ .layout .body :is(.pageheading,.tasksheader,.technicalhead,.inspectionheading,.fleet-hero,.keys-module>.pageheading,.hero,.attendance-module>.pageheading,.dashboardwidgetheading){
+  position:relative;overflow:visible;min-height:0!important;
+  background:linear-gradient(115deg,#0c304e,#0a233b)!important;
+  border:1.5px solid #078dd2!important;border-radius:14px!important;
+  box-shadow:inset 0 1px 0 #285c7b!important;color:#f4faff!important;
+  padding:16px 14px!important;margin-bottom:12px!important;
+ }
+ .layout .body :is(.pageheading,.tasksheader,.technicalhead,.inspectionheading,.fleet-hero,.hero) :is(h1,h2){
+  color:#f7fbff!important;line-height:1.2!important;letter-spacing:-.035em;
+ }
+ .layout .body :is(.pageheading,.tasksheader,.technicalhead,.inspectionheading,.fleet-hero,.hero) :is(p,small){color:#b8d9ee!important}
+ /* Every working surface follows the terminal card treatment. */
+ .layout .body :is(.keys-panel,.keys-record,.keys-catalog,.keys-form,.keys-records,.taskform,.tasklist,.taskstats,.taskitem,.technicalpanel,.inspectionpanel,.attendance-card,.attendance-records-card,.fleet-card,.fleet-form,.fleet-list,.fleet-entry,.buildingcard,.dashboardtiles>article,.wiki-panel,.vacation-panel,.adminuserrow,.taskdetail,.taskhistory,.keys-borrowers-admin,.keys-borrowers-list){
+  background:#0c2a43!important;color:#f1f8ff!important;
+  border:1px solid #1b6696!important;border-radius:12px!important;
+  box-shadow:inset 0 1px 0 #1b4d6b!important;
+ }
+ .layout .body :is(.keys-record,.taskitem,.fleet-entry,.buildingcard,.adminuserrow){margin-bottom:8px}
+ .layout .body :is(.keys-panel,.taskform,.tasklist,.technicalpanel,.inspectionpanel,.attendance-card,.fleet-card,.fleet-form){padding:14px!important}
+ .layout .body :is(h1,h2,h3,h4,strong,label){color:#f2f9ff}
+ .layout .body :is(p,small,.muted,.hint,.description){color:#b6d7ec}
+ /* Readable inputs and native select menus in both light and dark OS modes. */
+ .layout .body :is(input:not([type="checkbox"]):not([type="radio"]),textarea,select){
+  background:#081d30!important;color:#f3faff!important;
+  border:1px solid #31749c!important;border-radius:10px!important;
+  min-height:48px;max-width:100%;font-size:16px!important;
+  color-scheme:dark;
+ }
+ .layout .body :is(input,textarea)::placeholder{color:#91b3cb!important;opacity:1}
+ .layout .body select option{background:#102c43;color:#fff}
+ .layout .body :is(input,textarea,select,button):focus-visible{outline:3px solid #00c7ff!important;outline-offset:2px!important}
+ .layout .body :is(.primary,.fleet-primary,button.primary){
+  background:linear-gradient(130deg,#087fbd,#045e9b)!important;
+  border:1px solid #04b6ff!important;color:#fff!important;
+  box-shadow:inset 0 1px 0 #4db9e9!important;
+ }
+ .layout .body :is(.secondarybutton,button.secondarybutton){
+  background:#123c5b!important;border:1px solid #2a80b4!important;
+  color:#e6f7ff!important;box-shadow:none!important;
+ }
+ .layout .body :is(.pageheading,.tasksheader,.technicalhead,.inspectionheading,.keys-heading-actions,.attendance-actions,.technical-extra-actions,.inspectionactions,.taskactions,.taskreviewbuttons,.keys-record-actions,.keys-modal-actions) button{
+  min-height:48px;border-radius:10px!important;font-weight:750;
+ }
+ .layout .body :is(.keys-heading-actions,.attendance-actions,.technical-extra-actions,.inspectionactions,.taskactions,.taskreviewbuttons,.keys-record-actions,.keys-modal-actions){
+  display:flex;flex-wrap:wrap;gap:8px;
+ }
+ .layout .body :is(.keys-heading-actions,.attendance-actions,.technical-extra-actions,.inspectionactions,.taskactions)>button{flex:1 1 132px}
+ .layout .body :is(.keys-tabs,.fleet-tabs,.inspection-role-switch,.adminusers-tabs,.keys-viewbar,.taskfilters,.attendance-toolbar){
+  max-width:100%;overflow-x:auto;overscroll-behavior-x:contain;-webkit-overflow-scrolling:touch;
+ }
+ .layout .body :is(.keys-tabs,.fleet-tabs,.inspection-role-switch,.adminusers-tabs) button{min-height:44px}
+ .layout .body :is(.technicaltablewrap,.attendance-table-wrap,.tablewrap,.table-wrap,.buildingtablewrap,.keys-records){
+  max-width:100%;overflow-x:auto;overscroll-behavior-x:contain;
+  border:1px solid #1b608c!important;border-radius:11px!important;
+ }
+ .layout .body table{color:#eaf7ff}
+ .layout .body :is(th,thead){background:#10334e!important;color:#bde5ff!important}
+ .layout .body td{border-color:#235574!important}
+ .layout .body :is(.notice,.error){border-radius:10px}
+ .layout .body :is(.technicalphotocard,.technicalsignature,.keys-barcode-label){background:#0d304a;color:#f2faff;border:1px solid #246c99;border-radius:10px}
+ /* Fixed navigation identical to the terminal home. */
+ .foxa-terminal-dock{background:linear-gradient(180deg,#0a253b,#081a2b)!important;border-top:1px solid #235677!important;box-shadow:0 -4px 18px #0007!important}
+ .foxa-terminal-dock button{color:#b2d5ee!important;font-size:11px!important}
+ .foxa-terminal-dock button.active{background:linear-gradient(135deg,#075b91,#07406b)!important;color:#0bd0ff!important;border:1px solid #00a9f6!important}
+ .foxa-terminal-dock .terminal-dock-icon{font-size:26px!important}
+ /* Modal surfaces remain readable over dark terminal shell. */
+ .layout :is(.modal,.userdropdown,.filtermenu,.inspectionbuildingoptions){color:#f1f8ff;background:#0c2b44;border-color:#28719c}
+ .layout .body :is(button,input,select,textarea){touch-action:manipulation}
+}
+@media screen and (max-width:370px){
+ .layout .body :is(.pageheading,.tasksheader,.technicalhead,.inspectionheading,.fleet-hero){padding:12px 10px!important}
+ .layout .body :is(.pageheading,.tasksheader,.technicalhead,.inspectionheading,.fleet-hero) h1{font-size:21px!important}
+}
+@media print{
+ .layout .body :is(.technicalpanel,.inspectionpanel,.attendance-card,.fleet-card,.keys-panel){background:transparent!important;color:#000!important;border:0!important}
+}
