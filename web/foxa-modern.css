@@ -194,3 +194,12 @@
 .layout .body .inspectionmodule.foxa-field-referent-wizard>.inspection-actions-outside{display:flex!important;position:static!important;flex-direction:column!important;justify-content:start!important;align-items:stretch!important;flex:none!important;height:auto!important;min-height:0!important;margin:0 0 10px!important;padding:0!important;gap:7px!important}
 .layout .body .inspectionmodule.foxa-field-referent-wizard>.inspection-actions-outside>*{flex:none!important;margin:0!important}
 }
+
+/* Technical inspections: same compact mobile header as referent inspections. */
+@media screen and (max-width:650px){
+.layout .body .technicalmodule.foxa-field-inspection-wizard>.technicalhead{display:block!important;height:auto!important;min-height:0!important;max-height:none!important;flex:none!important;align-content:start!important;justify-content:start!important;margin:0 0 8px!important;padding:12px!important}
+.layout .body .technicalmodule.foxa-field-inspection-wizard>.technicalhead>div:first-child{display:block!important;flex:none!important;height:auto!important;min-height:0!important;margin:0!important;padding:0!important}
+.layout .body .technicalmodule.foxa-field-inspection-wizard>.technicalhead .inspection-role-switch{margin:8px 0 0!important}
+.layout .body .technicalmodule.foxa-field-inspection-wizard>.technicalhead>.inspectionactions{display:flex!important;position:static!important;flex-direction:column!important;justify-content:start!important;align-items:stretch!important;flex:none!important;width:100%!important;height:auto!important;min-height:0!important;margin:10px 0 0!important;padding:0!important;gap:7px!important}
+.layout .body .technicalmodule.foxa-field-inspection-wizard>.technicalhead>.inspectionactions>*{flex:none!important;margin:0!important}
+}
