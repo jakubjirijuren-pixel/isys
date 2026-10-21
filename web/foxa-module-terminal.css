@@ -57,3 +57,10 @@
  .foxa-field-form-wizard :is(.keys-building-field,.fleet-wide){min-width:0;width:100%}
  .foxa-field-form-wizard .foxa-field-form-step .fleet-form{display:block}
 }
+
+/* Desktop task wizard: retain original submit action, hide only step navigation. */
+@media screen and (min-width:651px){
+ .foxa-field-task-wizard .foxa-wizard-controls{display:flex;justify-content:flex-end}
+ .foxa-field-task-wizard .foxa-wizard-controls>button:not(.foxa-wizard-submit){display:none}
+ .foxa-field-task-wizard .foxa-wizard-submit{display:inline-flex}
+}
