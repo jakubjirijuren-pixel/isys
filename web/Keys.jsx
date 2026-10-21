@@ -58,7 +58,7 @@ export default function Keys({supabase,buildings,userId,isAdmin=false,initialFil
    const [loans,history,catalog]=await Promise.all([
     readAll("key_loans","loaned_at"),
     readAll("key_loan_partial_returns","returned_at"),
-    readAll("keys","created_at")
+    readAll("keys","id")
    ]);
    const buildingById=Object.fromEntries(buildings.map(b=>[String(b.id),b]));
    const bundleById=Object.fromEntries(catalog.map(k=>[String(k.id),k]));
