@@ -21,7 +21,7 @@ export default function FieldWizardForm({children,steps=["Údaje","Podrobnosti",
  };
  const handleSubmit=e=>{if(window.matchMedia("(max-width:650px)").matches){if(step<steps.length-1){e.preventDefault();advance();return}const fields=[...(formRef.current?.querySelectorAll("input,select,textarea")||[])];for(const el of fields){if(!el.disabled&&!el.checkValidity()){e.preventDefault();setStep(Number(el.closest(".foxa-field-form-step")?.dataset.step||0));requestAnimationFrame(()=>{el.reportValidity();el.focus()});return}}}onSubmit?.(e)};
  useEffect(()=>{if(step>=steps.length)setStep(0)},[step,steps.length]);
- return <form {...props} noValidate ref={formRef} className={"foxa-field-form-wizard "+className} data-step={step} data-last-step={steps.length-1} onSubmit={handleSubmit}>
+ return <form {...props} noValidate={typeof window!=="undefined"&&window.matchMedia("(max-width:650px)").matches} ref={formRef} className={"foxa-field-form-wizard "+className} data-step={step} data-last-step={steps.length-1} onSubmit={handleSubmit}>
   <div className="foxa-field-form-progress"><span>Krok {step+1} / {steps.length} · {steps[step]}</span><div><i style={{width:((step+1)*100/steps.length)+"%"}}/></div></div>
   {groups.slice(0,-1).map((group,i)=><div className="foxa-field-form-step" data-active={step===i} data-step={i} key={i}><h3>{steps[i]}</h3>{group}</div>)}
   <div className="foxa-field-form-step" data-active={step===steps.length-1}><h3>{steps[steps.length-1]}</h3><p className="foxa-field-form-review">Zkontroluj vyplněné údaje. Potvrzením se záznam odešle do FOXA.</p></div>
