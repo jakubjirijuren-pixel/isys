@@ -1,0 +1,50 @@
+.foxa-terminal-home{display:none}
+@media screen and (max-width:650px){
+ .foxa-terminal-home{display:block;color:var(--fx-text,var(--foxa-text));padding-bottom:12px}
+ .foxa-terminal-home *{box-sizing:border-box}
+ .foxa-terminal-home button{cursor:pointer;touch-action:manipulation}
+ .foxa-terminal-home .terminal-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;padding:20px 16px;border:1px solid var(--fx-border,var(--foxa-border));border-radius:14px;background:var(--fx-surface,var(--foxa-surface))}
+ .foxa-terminal-home .terminal-kicker{font-size:10px;font-weight:850;letter-spacing:.14em;color:var(--fx-muted,var(--foxa-muted))}
+ .foxa-terminal-home .terminal-head h1{margin:5px 0;font-size:27px;letter-spacing:-.05em}
+ .foxa-terminal-home .terminal-head h1 span{color:var(--fx-accent,var(--foxa-accent))}
+ .foxa-terminal-home .terminal-head p{font-size:12px;margin:0;color:var(--fx-muted,var(--foxa-muted))}
+ .foxa-terminal-home .terminal-connection{font-size:10px;font-weight:800;padding:7px;border-radius:8px;white-space:nowrap;background:var(--fx-surface-soft,var(--foxa-surface));border:1px solid var(--fx-border,var(--foxa-border))}
+ .foxa-terminal-home .terminal-connection.is-online{color:#14834e}.foxa-terminal-home .terminal-connection.is-offline{color:#d17a20}
+ .foxa-terminal-home .terminal-status{display:grid;grid-template-columns:1fr 1fr;gap:12px;padding:16px;margin-top:10px;border-radius:13px;background:var(--fx-surface,var(--foxa-surface));border:1px solid var(--fx-border,var(--foxa-border))}
+ .foxa-terminal-home .terminal-status>div{display:flex;flex-direction:column;gap:5px;min-width:0}
+ .foxa-terminal-home .terminal-status small{font-size:10px;font-weight:800;letter-spacing:.08em;color:var(--fx-muted,var(--foxa-muted))}
+ .foxa-terminal-home .terminal-status strong{font-size:24px;font-variant-numeric:tabular-nums}
+ .foxa-terminal-home .terminal-status span{font-size:11px;color:var(--fx-muted,var(--foxa-muted))}
+ .foxa-terminal-home .terminal-status-side{padding-left:12px;border-left:1px solid var(--fx-border,var(--foxa-border))}
+ .foxa-terminal-home .terminal-status-side strong{font-size:15px;margin-top:6px}
+ .foxa-terminal-home .terminal-section-title{font-size:13px;font-weight:850;letter-spacing:.025em;margin:19px 3px 10px}
+ .foxa-terminal-home .terminal-action-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
+ .foxa-terminal-home .terminal-action-grid button{min-height:126px;padding:16px 14px;display:flex;flex-direction:column;align-items:flex-start;gap:6px;text-align:left;background:var(--fx-surface,var(--foxa-surface));color:inherit;border:1px solid var(--fx-border,var(--foxa-border));border-radius:13px}
+ .foxa-terminal-home .terminal-action-icon{font-size:28px;color:var(--fx-accent,var(--foxa-accent));line-height:1.1}
+ .foxa-terminal-home .terminal-action-grid strong{font-size:15px;margin-top:auto}
+ .foxa-terminal-home .terminal-action-grid small{font-size:11px;color:var(--fx-muted,var(--foxa-muted))}
+ .foxa-terminal-home .terminal-scan-launch{width:100%;display:flex;align-items:center;gap:14px;padding:16px;margin-top:10px;text-align:left;border-radius:13px;border:1px solid var(--fx-accent,var(--foxa-accent));background:color-mix(in srgb,var(--fx-accent,var(--foxa-accent)) 10%,var(--fx-surface,var(--foxa-surface)));color:inherit}
+ .foxa-terminal-home .terminal-scan-launch>span:first-child{font-size:30px;color:var(--fx-accent,var(--foxa-accent))}
+ .foxa-terminal-home .terminal-scan-launch>span:nth-child(2){display:flex;flex:1;flex-direction:column;gap:4px}
+ .foxa-terminal-home .terminal-scan-launch strong{font-size:14px}.foxa-terminal-home .terminal-scan-launch small{font-size:11px}
+ .foxa-terminal-home .terminal-scan-panel,.foxa-terminal-home .terminal-draft{padding:16px;margin-top:12px;border:1px solid var(--fx-border,var(--foxa-border));border-radius:13px;background:var(--fx-surface,var(--foxa-surface))}
+ .foxa-terminal-home .terminal-scan-panel video{width:100%;max-height:260px;background:#111;border-radius:10px}
+ .foxa-terminal-home :is(.terminal-scan-panel,.terminal-draft) h2{font-size:16px;margin:0 0 6px}
+ .foxa-terminal-home :is(.terminal-scan-panel,.terminal-draft) p{font-size:12px;line-height:1.5;color:var(--fx-muted,var(--foxa-muted))}
+ .foxa-terminal-home :is(.terminal-scan-panel,.terminal-draft) label{display:flex;flex-direction:column;gap:6px;margin:12px 0;font-size:12px;font-weight:750}
+ .foxa-terminal-home :is(input,textarea){width:100%;font-size:16px;min-height:48px;padding:10px;border:1px solid var(--fx-border,var(--foxa-border));border-radius:10px;background:var(--fx-surface-soft,var(--foxa-surface));color:inherit}
+ .foxa-terminal-home textarea{min-height:95px;resize:vertical}
+ .foxa-terminal-home .terminal-scan-panel button,.foxa-terminal-home .terminal-draft-footer button{min-height:44px;padding:9px 12px;border-radius:9px;border:1px solid var(--fx-border,var(--foxa-border));background:var(--fx-surface-soft,var(--foxa-surface));color:inherit}
+ .foxa-terminal-home .terminal-scan-panel button+button{margin-left:6px}
+ .foxa-terminal-home .terminal-draft-heading{display:flex;align-items:center;justify-content:space-between;gap:8px}
+ .foxa-terminal-home .terminal-draft-heading span{font-size:10px;color:var(--fx-muted,var(--foxa-muted))}
+ .foxa-terminal-home .terminal-draft-footer{display:flex;align-items:center;flex-wrap:wrap;gap:7px}
+ .foxa-terminal-home .terminal-draft-footer small{flex:1 1 100%;font-size:11px;color:var(--fx-muted,var(--foxa-muted))}
+ .foxa-terminal-home .terminal-modules{display:grid;gap:7px}
+ .foxa-terminal-home .terminal-modules button{display:flex;align-items:center;gap:12px;min-height:52px;padding:10px 14px;border:1px solid var(--fx-border,var(--foxa-border));border-radius:10px;background:var(--fx-surface,var(--foxa-surface));color:inherit;text-align:left;font-weight:700}
+ .foxa-terminal-home .terminal-modules button span{font-size:22px;color:var(--fx-accent,var(--foxa-accent))}
+ .foxa-terminal-home .terminal-modules button b{margin-left:auto;font-size:22px}
+ .foxa-terminal-home .terminal-updates{width:100%;margin-top:12px;min-height:46px;border:0;background:transparent;color:var(--fx-accent,var(--foxa-accent));font-weight:750}
+ .foxa-terminal-home button:focus-visible{outline:3px solid var(--fx-accent,var(--foxa-accent));outline-offset:2px}
+ .layout .foxa-terminal-home+.foxa-dashboard-desktop{display:none!important}
+}
