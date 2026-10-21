@@ -64,3 +64,6 @@
  .foxa-field-task-wizard .foxa-wizard-controls>button:not(.foxa-wizard-submit){display:none}
  .foxa-field-task-wizard .foxa-wizard-submit{display:inline-flex}
 }
+
+/* Referent controls: no reserved wizard viewport; active step follows content. */
+@media screen and (max-width:650px){.foxa-field-referent-wizard{display:block!important;height:auto!important;min-height:0!important}.foxa-field-referent-wizard>.foxa-field-referent-step.field-step-active{display:block!important;height:auto!important;min-height:0!important;margin-bottom:12px!important}.foxa-field-referent-wizard>.foxa-inspection-wizard-nav{position:relative!important;top:auto!important}.foxa-field-referent-wizard .inspectionheading{height:auto!important;min-height:0!important}.foxa-field-referent-wizard .inspectionactions{margin-top:10px!important}}
