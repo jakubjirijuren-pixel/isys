@@ -1,3 +1,10 @@
+## 2026-10-21 – Sjednocení mobilních modulů FOXA FIELD
+
+- Mobilní zobrazení všech modulů používá jednotné tmavě modré terminálové panely, kontrastní formuláře, větší dotykové akce a stálou spodní navigaci.
+- Sjednocena horní kompaktní lišta bez duplicitního nápisu FOXA a drobečkové navigace také mimo domovskou obrazovku.
+- Úprava je pouze prezentační pro obrazovky do 650 px; existující moduly, role a desktopové rozhraní zůstávají zachovány.
+- **Ověření:** GitHub Actions build a praktické testy všech modulů na telefonu je třeba provést.
+
 # Historie změn FOXA
 
 Tento soubor zaznamenává změny aplikace FOXA nasazené do produkční větve `web-supabase`. Nové funkce, opravy a úpravy uživatelského rozhraní se zapisují při každé další změně aplikace. Záznamy jsou řazeny od nejnovějšího.
