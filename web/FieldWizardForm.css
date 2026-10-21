@@ -15,7 +15,7 @@
  .foxa-field-form-actions{display:flex;gap:9px;margin-top:8px}
  .foxa-field-form-actions button{flex:1;min-height:52px;border-radius:11px}
  .foxa-field-form-submit{display:none}
- .foxa-field-form-wizard[data-step="2"]>.foxa-field-form-submit{display:block}
+  .foxa-field-form-wizard:is([data-step="2"][data-last-step="2"],[data-step="1"][data-last-step="1"])>.foxa-field-form-submit{display:block}
  .foxa-field-form-submit>button{width:100%;min-height:54px!important;border-radius:11px!important}
- .foxa-field-form-wizard[data-step="2"]>.foxa-field-form-actions>button:nth-child(2){display:none}
+  .foxa-field-form-wizard:is([data-step="2"][data-last-step="2"],[data-step="1"][data-last-step="1"])>.foxa-field-form-actions>button:nth-child(2){display:none}
 }
