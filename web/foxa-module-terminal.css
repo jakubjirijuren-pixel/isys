@@ -67,3 +67,25 @@
 
 /* Referent controls: no reserved wizard viewport; active step follows content. */
 @media screen and (max-width:650px){.foxa-field-referent-wizard{display:block!important;height:auto!important;min-height:0!important}.foxa-field-referent-wizard>.foxa-field-referent-step.field-step-active{display:block!important;height:auto!important;min-height:0!important;margin-bottom:12px!important}.foxa-field-referent-wizard>.foxa-inspection-wizard-nav{position:relative!important;top:auto!important}.foxa-field-referent-wizard .inspectionheading{height:auto!important;min-height:0!important}.foxa-field-referent-wizard .inspectionactions{margin-top:10px!important}}
+
+/* Object registry: purpose-built handheld lookup, without bulky cards. */
+.foxa-object-terminal-list{display:none}
+@media screen and (max-width:650px){
+.foxa-terminal-page-objekty .foxa-object-standard-list,.foxa-terminal-page-objekty .viewtoolbar{display:none!important}
+.foxa-terminal-page-objekty .foxa-object-terminal-list{display:flex;flex-direction:column;gap:6px;margin:8px 0 16px}
+.foxa-terminal-page-objekty .filterpanel{position:relative;display:block!important;padding:10px!important;margin:8px 0!important;border-radius:12px!important}
+.foxa-terminal-page-objekty .filterheading{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:9px}
+.foxa-terminal-page-objekty .filtercontrols{display:flex!important;flex-direction:column!important;gap:8px!important}
+.foxa-terminal-page-objekty .filtercontrols .searchbox{order:-2!important;width:100%!important;min-height:56px!important;font-size:17px!important;font-weight:650!important;border:1px solid #3583ad!important;background:#071d31!important;color:#fff!important}
+.foxa-terminal-page-objekty .filtercontrols .searchbox::placeholder{color:#b3ccdd!important}
+.foxa-terminal-page-objekty .filtercontrols .secondarybutton{min-height:42px!important}
+.foxa-terminal-page-objekty .foxa-object-row{display:flex!important;align-items:center!important;gap:12px!important;width:100%!important;min-height:74px!important;padding:12px!important;text-align:left!important;border:1px solid #2c6183!important;border-radius:11px!important;background:#0b2940!important;color:#eaf7ff!important;box-shadow:none!important}
+.foxa-terminal-page-objekty .foxa-object-row:active{background:#164260!important}
+.foxa-terminal-page-objekty .foxa-object-row-number{display:grid;place-items:center;flex:0 0 54px;min-height:43px;padding:5px;border-radius:8px;background:#143e5b;color:#61d5ff;font-size:13px;font-weight:800;overflow-wrap:anywhere}
+.foxa-terminal-page-objekty .foxa-object-row-info{display:flex;flex:1;min-width:0;flex-direction:column;gap:3px}
+.foxa-terminal-page-objekty .foxa-object-row-info strong{font-size:15px!important;line-height:1.25;color:#fff;overflow-wrap:anywhere}
+.foxa-terminal-page-objekty .foxa-object-row-info small{font-size:11px;color:#a8cce1;line-height:1.3;overflow-wrap:anywhere}
+.foxa-terminal-page-objekty .foxa-object-row-arrow{flex:none;font-size:28px;color:#55cfff}
+.foxa-terminal-page-objekty .foxa-object-empty{padding:20px;text-align:center}
+.foxa-terminal-page-objekty .building-update-note{font-size:11px!important}
+}
