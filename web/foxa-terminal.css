@@ -120,11 +120,12 @@
  .foxa-terminal-home .terminal-status-symbol svg{width:22px}
 }
 
-/* FOXA FIELD home behaves like a fixed terminal screen; other modules remain scrollable. */
+/* Allow native pull-to-refresh on the terminal home.
+   Keep horizontal overflow clipped, but never lock vertical page gestures. */
 @media screen and (max-width:650px){
- html:has(.foxa-terminal-home),body:has(.foxa-terminal-home){overflow:hidden!important;overscroll-behavior:none!important}
- .layout:has(.foxa-terminal-home){height:100dvh!important;max-height:100dvh!important;overflow:hidden!important;overscroll-behavior:none!important}
- .layout:has(.foxa-terminal-home) .content{height:100dvh!important;max-height:100dvh!important;overflow:hidden!important}
- .layout:has(.foxa-terminal-home) .body{overflow:hidden!important;overscroll-behavior:none!important;min-height:0!important}
- .foxa-terminal-home{overscroll-behavior:none;overflow:hidden!important;touch-action:pan-x}
+ html:has(.foxa-terminal-home),body:has(.foxa-terminal-home){overflow-y:auto!important;overscroll-behavior-y:auto!important}
+ .layout:has(.foxa-terminal-home){height:auto!important;max-height:none!important;overflow-y:visible!important;overscroll-behavior-y:auto!important}
+ .layout:has(.foxa-terminal-home) .content{height:auto!important;max-height:none!important;overflow-y:visible!important}
+ .layout:has(.foxa-terminal-home) .body{overflow-y:visible!important;overscroll-behavior-y:auto!important;min-height:0!important}
+ .foxa-terminal-home{overflow-y:visible!important;overscroll-behavior-y:auto!important;touch-action:pan-y}
 }
