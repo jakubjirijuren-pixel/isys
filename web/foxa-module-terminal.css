@@ -38,8 +38,8 @@
  .foxa-wizard-controls{display:flex;gap:9px;margin-top:15px;flex-wrap:wrap}
  .foxa-wizard-controls>button{flex:1 1 110px;min-height:50px!important;border-radius:10px}
  .foxa-field-task-wizard .foxa-wizard-submit{display:none}
- .foxa-field-task-wizard:has(.foxa-wizard-step[data-active="true"]:nth-of-type(4)) .foxa-wizard-submit{display:block}
- .foxa-field-task-wizard:has(.foxa-wizard-step[data-active="true"]:nth-of-type(4)) .foxa-wizard-controls>button:nth-child(2){display:none}
+ .foxa-field-task-wizard[data-current-step="2"] .foxa-wizard-submit{display:block}
+ .foxa-field-task-wizard[data-current-step="2"] .foxa-wizard-controls>button:nth-child(2){display:none}
  .foxa-inspection-wizard-nav{display:block;position:sticky;top:0;z-index:12;background:#081c2f;border:1px solid #1b6795;border-radius:12px;padding:12px;margin:10px 0}
  .foxa-inspection-wizard-nav .foxa-wizard-progress{margin:0 0 10px}
  .foxa-inspection-wizard-nav .foxa-wizard-controls{margin:0}
