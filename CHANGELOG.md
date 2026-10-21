@@ -1,3 +1,10 @@
+## 2026-10-21 – Vícekrokové mobilní formuláře FOXA FIELD
+
+- **Úkoly:** Nový mobilní formulář ve třech krocích (objekt a přiřazení, podrobnosti, kontrola a odeslání). Průběžný lokální koncept navázaný na přihlášeného uživatele; odeslání se provede pouze při připojení a výslovném potvrzení.
+- **Technické kontroly:** Šestikrokový mobilní průvodce: uložené reporty, základní údaje, revize, technický stav, fotografie a podpisy. Stávající ukládání konceptů a generování PDF zachováno.
+- **Desktop:** Původní celostránkové formuláře zůstávají zobrazené. Úvodní mobilní obrazovka FOXA FIELD zůstává beze změny.
+- **Omezení:** Lokální koncepty úkolů nejsou automaticky synchronizovány do Supabase; bezpečná fronta s deduplikací a potvrzením zápisu vyžaduje další implementaci a testy. Ostatní formuláře zatím nebyly převedeny na průvodce.
+
 ## 2026-10-21 – FOXA FIELD v jednotlivých modulech
 
 - Nová společná komponenta `FoxaModuleTerminal` pro všechny mobilní pracovní moduly kromě úvodní obrazovky Přehled, která zůstala beze změny.
