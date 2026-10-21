@@ -6,7 +6,7 @@ export default function FieldWizardForm({children,steps=["Údaje","Podrobnosti",
  const [step,setStep]=useState(0);
  const formRef=useRef(null);
  const fields=React.Children.toArray(children);
- const submitIndex=fields.findIndex(child=>React.isValidElement(child)&&child.type==="button"&&(!child.props.type||child.props.type==="submit"));
+ const submitIndex=fields.findIndex(child=>React.isValidElement(child)&&((child.type==="button"&&(!child.props.type||child.props.type==="submit"))||child.props.className==="om-actions"));
  const last=submitIndex>=0?fields[submitIndex]:null;
  const entries=submitIndex>=0?fields.filter((_,i)=>i!==submitIndex):fields;
  const perStep=Math.max(1,Math.ceil(entries.length/Math.max(1,steps.length-1)));
