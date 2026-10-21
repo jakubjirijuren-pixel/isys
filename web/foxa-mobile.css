@@ -86,3 +86,94 @@
  .layout{overflow:visible!important}
  .layout .body{padding:0!important}
 }
+
+/* Mobile field-terminal mode: compact app chrome, tactile controls, scannable cards.
+   Scoped to phone screens so desktop, kiosk and print layouts stay unchanged. */
+@media screen and (max-width:650px){
+ .layout{--foxa-terminal-radius:12px}
+ .layout aside{box-shadow:0 2px 12px color-mix(in srgb,#000 12%,transparent)}
+ .layout aside .mobile-nav-top{
+  min-height:54px;gap:12px;
+  background:var(--fx-surface,var(--foxa-surface));
+  border-bottom:1px solid var(--fx-border,var(--foxa-border));
+ }
+ .layout aside .mobile-nav-title{
+  font-size:16px;font-weight:850;letter-spacing:.095em;
+  color:var(--fx-accent,var(--foxa-accent));
+ }
+ .layout aside .mobile-hamburger{
+  width:44px;height:44px;border-radius:10px;
+  border:1px solid var(--fx-border,var(--foxa-border));
+  background:var(--fx-surface-soft,var(--foxa-surface));
+ }
+ .layout aside.mobile-nav-open .side-navigation{
+  display:flex;flex-direction:column;gap:6px;padding:12px;
+  background:var(--fx-surface,var(--foxa-surface));
+  box-shadow:0 12px 22px color-mix(in srgb,#000 16%,transparent);
+ }
+ .layout aside.mobile-nav-open .side-navigation .nav{
+  width:100%;min-height:50px;text-align:left;padding:12px 14px;
+  border-radius:10px;border:1px solid var(--fx-border,var(--foxa-border));
+  background:var(--fx-surface-soft,var(--foxa-surface));
+  font-weight:700;
+ }
+ .layout aside.mobile-nav-open .side-navigation .nav.selected{
+  border-color:var(--fx-accent,var(--foxa-accent));
+  background:color-mix(in srgb,var(--fx-accent,var(--foxa-accent)) 12%,var(--fx-surface,var(--foxa-surface)));
+  box-shadow:inset 3px 0 var(--fx-accent,var(--foxa-accent));
+ }
+ .layout .content>header{
+  min-height:46px;padding:7px 12px;
+  border-bottom:1px solid var(--fx-border,var(--foxa-border));
+  background:var(--fx-surface,var(--foxa-surface));
+ }
+ .layout .content>header .breadcrumb{font-size:12px}
+ .layout .body{padding:12px 10px calc(26px + env(safe-area-inset-bottom))!important}
+ .layout .body :is(.hero,.pageheading,.technicalhead,.inspectionheading,.tasksheader,.foxa-dashboard-hero){
+  border-radius:var(--foxa-terminal-radius)!important;
+  padding:16px!important;gap:12px;
+  box-shadow:none!important;
+ }
+ .layout .body :is(.hero,.pageheading,.technicalhead,.inspectionheading,.tasksheader) h1{
+  font-size:clamp(22px,6vw,27px)!important;line-height:1.2!important;
+  letter-spacing:-.035em;
+ }
+ .layout .body :is(.hero,.pageheading,.technicalhead,.inspectionheading,.tasksheader) p{
+  font-size:13px;line-height:1.45;
+ }
+ .layout .body :is(.dashboardtiles>article,.buildingcard,.taskitem,.keys-record,.inspectionpanel,.technicalpanel,.keys-panel,.attendance-card,.vacation-panel,.taskform,.tasklist,.wiki-panel,.adminuserrow){
+  border-radius:var(--foxa-terminal-radius)!important;
+  box-shadow:none!important;
+ }
+ .layout .body :is(.dashboardtiles,.buildinggrid,.taskstats){gap:9px}
+ .layout .body :is(.dashboardtiles>article,.buildingcard){padding:14px!important}
+ .layout .body :is(button,.primary,.secondarybutton,[role="button"],.filtertrigger){
+  -webkit-tap-highlight-color:transparent;touch-action:manipulation;
+ }
+ .layout .body :is(.pageactions,.inspectionactions,.technicalbuttons,.technical-extra-actions,.keys-heading-actions,.tasksactions) button{
+  min-height:48px;border-radius:10px;font-size:14px;font-weight:750;
+ }
+ .layout .body :is(input:not([type="checkbox"]):not([type="radio"]),select,textarea){
+  min-height:46px;max-width:100%;box-sizing:border-box;
+  border-radius:10px;font-size:16px;
+ }
+ .layout .body textarea{min-height:90px}
+ .layout .body :is(.filtercontrols,.keys-filters,.technicalfields,.inspectionfields,.formgrid) label{
+  font-size:13px;font-weight:700;
+ }
+ .layout .body :is(.inspection-role-switch,.fleet-calendar-views,.adminusers-tabs){
+  max-width:100%;overflow-x:auto;overscroll-behavior-x:contain;
+ }
+ .layout .body :is(.technical-extra-actions,.keys-heading-actions){gap:8px}
+ .layout .body :is(.technical-extra-actions,.keys-heading-actions)>button{flex:1 1 140px}
+ .layout .body :is(button,input,select,textarea):focus-visible{
+  outline:3px solid var(--fx-accent,var(--foxa-accent));outline-offset:2px;
+ }
+}
+@media screen and (max-width:390px){
+ .layout .body :is(.pageheading,.technicalhead,.inspectionheading,.tasksheader){padding:13px!important}
+ .layout .body :is(.pageheading,.technicalhead,.inspectionheading,.tasksheader) h1{font-size:21px!important}
+}
+@media(prefers-reduced-motion:reduce){
+ .layout aside .side-navigation,.layout .body button{transition:none!important}
+}
