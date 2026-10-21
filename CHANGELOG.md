@@ -1,3 +1,8 @@
+## 2026-10-21 – Dočasné skrytí skeneru v terminálu
+
+- Odstraněno tlačítko NFC/QR skeneru z mobilní úvodní obrazovky FOXA FIELD a z mobilního terminálu Evidence klíčů.
+- Z úvodní komponenty odstraněna i nepoužívaná logika skenování; ostatní funkce evidence klíčů, interní NFC evidence a desktopové funkce zůstávají zachovány.
+
 ## 2026-10-21 – Evidence klíčů jako samostatný mobilní terminál
 
 - Mobilní úvodní obrazovka evidence klíčů nově odpovídá konceptu FOXA FIELD: dvě výrazné akční karty Půjčit klíče / Vrátit klíče, počet aktuálních výpůjček a rychlý vstup do NFC / čárového terminálu.
