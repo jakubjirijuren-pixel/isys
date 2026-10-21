@@ -59,3 +59,8 @@
 .foxa-terminal-page-evidence-klicu .keys-kiosk-launch{display:none!important}
 .foxa-terminal-page-evidence-klicu .keys-panel:has(.keys-kiosk-launch){display:none!important}
 }
+
+/* Hide the redundant key registry heading/actions card on the handheld terminal only. */
+@media screen and (max-width:650px){
+.foxa-terminal-page-evidence-klicu .foxa-keys-field>.pageheading{display:none!important}
+}
