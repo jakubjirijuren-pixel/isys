@@ -177,3 +177,60 @@
 @media(prefers-reduced-motion:reduce){
  .layout aside .side-navigation,.layout .body button{transition:none!important}
 }
+
+/* FOXA field-terminal shell — mobile only. */
+.foxa-terminal-dock{display:none}
+@media screen and (max-width:650px){
+ .layout .body{padding-bottom:calc(105px + env(safe-area-inset-bottom))!important}
+ .foxa-terminal-dock{
+  position:fixed;inset:auto 0 0;z-index:125;
+  display:grid;grid-template-columns:repeat(5,minmax(0,1fr));align-items:stretch;
+  gap:3px;padding:7px max(7px,env(safe-area-inset-right)) calc(7px + env(safe-area-inset-bottom)) max(7px,env(safe-area-inset-left));
+  border-top:1px solid var(--fx-border,var(--foxa-border));
+  background:var(--fx-surface,var(--foxa-surface));
+  box-shadow:0 -5px 22px color-mix(in srgb,#000 15%,transparent);
+ }
+ .foxa-terminal-dock button{
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;
+  min-width:0;min-height:57px;padding:5px 2px;
+  border:1px solid transparent;border-radius:11px;background:transparent;
+  color:var(--fx-muted,var(--foxa-muted));font:inherit;font-size:10px;
+  font-weight:750;line-height:1.2;white-space:nowrap;
+  -webkit-tap-highlight-color:transparent;touch-action:manipulation;cursor:pointer;
+ }
+ .foxa-terminal-dock button.active{
+  color:var(--fx-accent,var(--foxa-accent));
+  background:color-mix(in srgb,var(--fx-accent,var(--foxa-accent)) 11%,var(--fx-surface,var(--foxa-surface)));
+  border-color:color-mix(in srgb,var(--fx-accent,var(--foxa-accent)) 26%,transparent);
+ }
+ .foxa-terminal-dock .terminal-dock-icon{font-size:24px;line-height:1;display:block}
+ .foxa-terminal-dock button:focus-visible{outline:2px solid var(--fx-accent,var(--foxa-accent));outline-offset:1px}
+ .layout aside.mobile-nav-open .side-navigation{
+  position:fixed!important;top:54px!important;bottom:calc(76px + env(safe-area-inset-bottom));left:0;right:0;
+  max-height:none!important;overflow-y:auto;
+  border-bottom:1px solid var(--fx-border,var(--foxa-border));
+  z-index:120;
+ }
+ .layout aside .mobile-nav-top{min-height:54px}
+ .layout .content>header{min-height:42px}
+ .layout .body :is(.dashboardtiles>article,.buildingcard,.taskitem,.keys-record,.adminuserrow){
+  border:1px solid var(--fx-border,var(--foxa-border));
+ }
+ .layout .body :is(.dashboardtiles>article,.buildingcard,.taskitem,.keys-record,.adminuserrow):active{
+  border-color:var(--fx-accent,var(--foxa-accent));
+ }
+ .layout .body :is(.pageactions,.inspectionactions,.technical-extra-actions,.tasksactions) button{
+  min-height:50px;
+ }
+ .layout .body :is(.pageheading,.inspectionheading,.technicalhead,.tasksheader) .inspection-autosave-status{
+  font-size:12px;line-height:1.35;
+ }
+ .layout .body :is(.tablewrap,.table-wrap,.technicaltablewrap,.attendance-table-wrap,.buildingtablewrap){
+  border-radius:10px;border:1px solid var(--fx-border,var(--foxa-border));
+ }
+}
+@media screen and (max-width:360px){
+ .foxa-terminal-dock button{font-size:9px}
+ .foxa-terminal-dock .terminal-dock-icon{font-size:21px}
+}
+@media print{.foxa-terminal-dock{display:none!important}}
