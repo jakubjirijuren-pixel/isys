@@ -17,9 +17,9 @@ const MODULES={
  "Zpětná vazba":{icon:"✎",subtitle:"Nahlášení podnětů a problémů",links:["Wiki"]}
 };
 export default function FoxaModuleTerminal({page,availablePages=[],onNavigate}){
- if(page==="Přehled")return null;
  const [online,setOnline]=useState(()=>typeof navigator==="undefined"||navigator.onLine);
  useEffect(()=>{const update=()=>setOnline(navigator.onLine);window.addEventListener("online",update);window.addEventListener("offline",update);return()=>{window.removeEventListener("online",update);window.removeEventListener("offline",update)}},[]);
+ if(page==="Přehled")return null;
  const info=MODULES[page]||{icon:"▦",subtitle:"Pracovní modul",links:[]};
  const links=info.links.filter(name=>availablePages.includes(name));
  return <div className="foxa-field-module-tools" aria-label={"Terminálové ovládání: "+page}>
