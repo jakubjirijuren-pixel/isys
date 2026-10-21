@@ -54,8 +54,8 @@
 .foxa-terminal-page-evidence-klicu .foxa-keys-mode-home>.foxa-keys-field-home{gap:9px!important}
 }
 
-/* Key terminal landing screen: nothing beneath the current-loans summary. */
+/* Hide only the legacy lending-kiosk control section; keep other key registry sections. */
 @media screen and (max-width:650px){
-.foxa-terminal-page-evidence-klicu .foxa-keys-mode-home>.foxa-keys-field-home~*:not(.foxa-keys-field-back){display:none!important}
-.foxa-terminal-page-evidence-klicu .foxa-keys-mode-home>.foxa-keys-field-back{display:none!important}
+.foxa-terminal-page-evidence-klicu .keys-kiosk-launch{display:none!important}
+.foxa-terminal-page-evidence-klicu .keys-panel:has(.keys-kiosk-launch){display:none!important}
 }
