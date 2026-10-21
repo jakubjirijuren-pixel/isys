@@ -79,3 +79,35 @@
 }
 :root[data-theme="dark"] .attendance-self-card .attendance-current-status strong{background:var(--fx-surface-soft,#1e3447);border-color:var(--fx-border,#35536a);color:var(--fx-text,#e8f1f8)}
 :root[data-theme="dark"] .attendance-records-table tbody tr{background:var(--fx-surface-soft,#1e3447);border-color:var(--fx-border,#35536a)}
+
+/* FOXA FIELD attendance: compact handheld terminal interface, desktop unaffected. */
+@media screen and (max-width:650px){
+.foxa-terminal-page-dochazka>.foxa-field-module-tools .foxa-field-module-topline,.foxa-terminal-page-dochazka>.foxa-field-module-tools .foxa-field-module-links{display:none!important}
+.foxa-terminal-page-dochazka .attendance-terminal-mode{display:flex!important;flex-direction:column!important;gap:11px!important;min-width:0!important}
+.foxa-terminal-page-dochazka .attendance-terminal-mode>.attendance-actions{margin:0!important}
+.foxa-terminal-page-dochazka .attendance-terminal-mode>.attendance-actions button{min-height:45px!important;border-radius:11px!important}
+.foxa-terminal-page-dochazka .attendance-terminal-mode>.attendance-card{margin:0!important;padding:15px!important;background:linear-gradient(150deg,#0d2d46,#091f33)!important;color:#e6f5ff!important;border:1px solid #2b698d!important;border-radius:15px!important;box-shadow:0 7px 20px #00152444!important}
+.foxa-terminal-page-dochazka .attendance-terminal-mode>.attendance-card h2{font-size:19px!important;font-weight:800!important;line-height:1.25!important;color:#fff!important;margin:0 0 13px!important}
+.foxa-terminal-page-dochazka .attendance-terminal-mode .attendance-current-status{display:flex!important;flex-wrap:wrap!important;align-items:center!important;justify-content:space-between!important;gap:8px!important;margin:0 0 12px!important;padding:12px!important;border-radius:11px!important;background:#071d30!important;border:1px solid #2a6283!important;font-size:12px!important;color:#bbd9eb!important}
+.foxa-terminal-page-dochazka .attendance-terminal-mode .attendance-current-status strong{padding:7px 10px!important;border-radius:20px!important;background:#12465f!important;color:#78e6ff!important;font-size:13px!important}
+.foxa-terminal-page-dochazka .attendance-terminal-mode .attendance-mark-actions{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:9px!important;margin:0 0 12px!important}
+.foxa-terminal-page-dochazka .attendance-terminal-mode .attendance-mark-actions button{width:100%!important;min-width:0!important;min-height:70px!important;padding:12px 9px!important;border-radius:12px!important;background:#087bab!important;color:#fff!important;border:1px solid #3ad2ff!important;font-size:14px!important;font-weight:800!important;white-space:normal!important;line-height:1.3!important}
+.foxa-terminal-page-dochazka .attendance-terminal-mode .attendance-mark-actions button:first-child{background:#08795d!important;border-color:#20d8a5!important}
+.foxa-terminal-page-dochazka .attendance-terminal-mode .attendance-gps-info{padding:10px 12px!important;margin:0 0 10px!important;border-radius:10px!important;background:#0a283f!important;border-left:3px solid #249dcb!important;font-size:11px!important;line-height:1.5!important;color:#bbd5e5!important}
+.foxa-terminal-page-dochazka .attendance-terminal-mode .attendance-worked{display:flex!important;flex-direction:column!important;gap:5px!important;margin:0!important;padding:12px!important;border:1px solid #285d7c!important;border-radius:10px!important;background:#103550!important;font-size:12px!important;color:#c4dfed!important}
+.foxa-terminal-page-dochazka .attendance-terminal-mode .attendance-worked strong{font-size:22px!important;color:#fff!important;font-variant-numeric:tabular-nums!important}
+.foxa-terminal-page-dochazka .attendance-terminal-mode .attendance-toolbar{display:grid!important;grid-template-columns:minmax(0,1fr) minmax(0,1fr)!important;align-items:end!important;gap:9px!important;margin:0 0 13px!important}
+.foxa-terminal-page-dochazka .attendance-terminal-mode .attendance-toolbar h2{grid-column:1/-1!important;margin:0!important}
+.foxa-terminal-page-dochazka .attendance-terminal-mode .attendance-toolbar label{display:flex!important;flex-direction:column!important;gap:6px!important;min-width:0!important;color:#c8e3f2!important;font-size:12px!important}
+.foxa-terminal-page-dochazka .attendance-terminal-mode .attendance-toolbar :is(input,select){box-sizing:border-box!important;max-width:100%!important;min-width:0!important;width:100%!important;min-height:49px!important;padding:10px!important;border:1px solid #326b8b!important;border-radius:10px!important;background:#061c2e!important;color:#fff!important;font-size:14px!important;color-scheme:dark!important}
+.foxa-terminal-page-dochazka .attendance-terminal-mode .attendance-toolbar button{min-height:45px!important;border-radius:10px!important}
+.foxa-terminal-page-dochazka .attendance-terminal-mode .attendance-table-wrap{overflow:visible!important}
+.foxa-terminal-page-dochazka .attendance-terminal-mode .attendance-records-table{display:block!important;width:100%!important}
+.foxa-terminal-page-dochazka .attendance-terminal-mode .attendance-records-table thead{display:none!important}
+.foxa-terminal-page-dochazka .attendance-terminal-mode .attendance-records-table tbody{display:flex!important;flex-direction:column!important;gap:9px!important}
+.foxa-terminal-page-dochazka .attendance-terminal-mode .attendance-records-table tr{display:flex!important;flex-direction:column!important;gap:7px!important;padding:13px!important;border:1px solid #295f80!important;border-radius:12px!important;background:#0c304a!important}
+.foxa-terminal-page-dochazka .attendance-terminal-mode .attendance-records-table td{display:flex!important;justify-content:space-between!important;align-items:flex-start!important;gap:10px!important;padding:0!important;border:0!important;font-size:12px!important;overflow-wrap:anywhere!important;color:#f0f8ff!important}
+.foxa-terminal-page-dochazka .attendance-terminal-mode .attendance-records-table td::before{content:attr(data-label);flex:0 0 37%;font-weight:750;color:#8bc9e8}
+.foxa-terminal-page-dochazka .attendance-terminal-mode .attendance-records-table .attendance-empty-row td{display:block!important}
+.foxa-terminal-page-dochazka .attendance-terminal-mode .attendance-records-table .attendance-empty-row td::before{display:none!important}
+}
