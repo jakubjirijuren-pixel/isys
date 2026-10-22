@@ -147,3 +147,13 @@
  .foxa-terminal-home .terminal-action-grid{margin-bottom:0!important}
  .layout:has(.foxa-terminal-home) .content{min-height:0!important}
 }
+
+/* Mobile terminal: dedicated REDPHONE support section. */
+@media screen and (max-width:650px){
+ .foxa-terminal-home .terminal-redphone-section{margin:18px 0 12px;min-width:0}
+ .foxa-terminal-home .terminal-redphone-section .terminal-section-heading{margin:0 0 10px}
+ .foxa-terminal-home .terminal-redphone-label{font-size:10px;font-weight:800;letter-spacing:.12em;color:#ff9aa3}
+ .foxa-terminal-home .terminal-redphone-section .foxa-redphone{margin:0;padding:15px 13px;border-color:rgba(255,117,128,.48);background:linear-gradient(115deg,#352238,#182c41);box-shadow:0 8px 24px rgba(0,0,0,.14)}
+ .foxa-terminal-home .terminal-redphone-section .foxa-redphone-call{background:#a63c4c;border-color:#b84c5b;color:#fff}
+ .foxa-terminal-home .terminal-redphone-section .foxa-redphone-call:active{background:#c25160}
+}
