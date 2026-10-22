@@ -25,11 +25,10 @@ export default function FoxaMobileTerminal({pages=[],onNavigate=()=>{},onOpenIns
   <div className="terminal-action-grid">
    {has("Objekty")&&<button type="button" className="action-objects" onClick={()=>navigate("Objekty")}><span className="terminal-action-icon"><TerminalIcon name="building" size={33}/></span><span className="terminal-action-arrow"><TerminalIcon name="chevron" size={20}/></span><strong>Najít objekt</strong><small>Evidence domů</small></button>}
    {(has("Objekty"))&&<button type="button" className="action-inspection" onClick={onOpenInspections}><span className="terminal-action-icon"><TerminalIcon name="clipboard" size={33}/></span><span className="terminal-action-arrow"><TerminalIcon name="chevron" size={20}/></span><strong>Nová kontrola</strong><small>Kontrolní výkaz</small></button>}
-   {has("Evidence klíčů")&&<button type="button" className="action-keys" onClick={()=>navigate("Evidence klíčů")}><span className="terminal-action-icon"><TerminalIcon name="key" size={33}/></span><span className="terminal-action-arrow"><TerminalIcon name="chevron" size={20}/></span><strong>Evidence klíčů</strong><small>Výpůjčky a vrácení</small></button>}
    {has("Docházka")&&<button type="button" className="action-attendance" onClick={()=>navigate("Docházka")}><span className="terminal-action-icon"><TerminalIcon name="clock" size={33}/></span><span className="terminal-action-arrow"><TerminalIcon name="chevron" size={20}/></span><strong>Docházka</strong><small>Pracovní doba</small></button>}
   </div>
 
-  <RedphoneContact />
+  <div className="terminal-redphone-section"><div className="terminal-section-heading"><h2 className="terminal-section-title">Rychlá pomoc</h2><span className="terminal-redphone-label">PŘÍMÁ LINKA</span></div><RedphoneContact /></div>
   <button type="button" className="terminal-updates" onClick={onOpenChangelog}>Novinky a aktualizace FOXA ›</button>
  </section>
 }
