@@ -1,3 +1,4 @@
+import RedphoneContact from "./RedphoneContact.jsx";
 import React,{useEffect,useState} from "react";
 import "./foxa-terminal.css";
 
@@ -28,6 +29,7 @@ export default function FoxaMobileTerminal({pages=[],onNavigate=()=>{},onOpenIns
    {has("Docházka")&&<button type="button" className="action-attendance" onClick={()=>navigate("Docházka")}><span className="terminal-action-icon"><TerminalIcon name="clock" size={33}/></span><span className="terminal-action-arrow"><TerminalIcon name="chevron" size={20}/></span><strong>Docházka</strong><small>Pracovní doba</small></button>}
   </div>
 
+  <RedphoneContact />
   <button type="button" className="terminal-updates" onClick={onOpenChangelog}>Novinky a aktualizace FOXA ›</button>
  </section>
 }
