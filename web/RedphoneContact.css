@@ -1,0 +1,11 @@
+/* Compact support contact shared by FOXA FIELD terminal and its modules. */
+.foxa-redphone{display:flex;align-items:center;gap:12px;padding:12px 14px;margin:14px 0 0;border:1px solid rgba(236,102,111,.36);border-radius:13px;background:linear-gradient(115deg,rgba(94,28,45,.35),rgba(21,42,63,.95));color:#f6f7fb;min-width:0}
+.foxa-redphone-icon{display:grid;place-items:center;flex:none;width:38px;height:38px;border-radius:11px;background:rgba(240,78,94,.14);color:#ff8590}
+.foxa-redphone-copy{display:flex;flex-direction:column;gap:3px;min-width:0}
+.foxa-redphone-copy strong{font-size:12px;letter-spacing:.12em;font-weight:850;color:#ff9aa3}
+.foxa-redphone-copy small{font-size:11px;color:#c8d8e6}
+.foxa-redphone-call{margin-left:auto;display:inline-flex;align-items:center;justify-content:center;gap:7px;min-height:42px;padding:9px 12px;border-radius:9px;border:1px solid rgba(255,129,140,.45);background:rgba(237,77,91,.13);color:#fff!important;text-decoration:none!important;font-weight:750;font-size:13px;white-space:nowrap}
+.foxa-redphone-call:hover,.foxa-redphone-call:focus-visible{background:rgba(237,77,91,.28);outline-offset:3px}
+@media(max-width:430px){.foxa-redphone{gap:8px;padding:10px}.foxa-redphone-icon{width:34px;height:34px}.foxa-redphone-call{font-size:12px;padding:9px 8px}.foxa-redphone-copy small{font-size:10px}}
+@media(max-width:360px){.foxa-redphone{flex-wrap:wrap}.foxa-redphone-call{flex:1 1 100%;margin-left:0}}
+@media(min-width:651px){.foxa-redphone{display:none}}
