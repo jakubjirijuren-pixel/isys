@@ -1,0 +1,472 @@
+/* FOXA mobile usability pass. Loaded after the theme palette to preserve
+   user-selected widget backgrounds, dark mode and accent colors. */
+@media(max-width:800px){
+ .layout{width:100%;min-width:0;max-width:100%;overflow-x:clip}
+ .layout .content{width:100%;min-width:0;max-width:100%}
+ .layout aside{position:sticky!important;top:0!important;z-index:100!important}
+ .layout aside .mobile-nav-top{min-height:60px;padding-inline:max(12px,env(safe-area-inset-left));padding-right:max(12px,env(safe-area-inset-right))}
+ .layout aside.mobile-nav-open .side-navigation{
+  position:absolute!important;top:100%;left:0;right:0;max-height:calc(100dvh - 60px);
+  overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;
+ }
+ .layout header{min-width:0;min-height:60px;padding:8px 12px;gap:8px;flex-wrap:wrap}
+ .layout header .breadcrumb{min-width:0;max-width:100%;overflow:hidden}
+ .layout header .userbar{margin-left:auto;min-width:0}
+ .layout header :is(.avatarbutton,.logout){min-height:44px}
+ .layout .body{min-width:0;max-width:100%;padding:16px 14px calc(28px + env(safe-area-inset-bottom))!important}
+ .layout .body :is(.hero,.dashboardwidgetheading,.pageheading,.technicalhead,.inspectionheading,.tasksheader){
+  height:auto!important;max-height:none!important;min-height:0!important;overflow:visible!important;
+ }
+ .layout .body :is(.hero,.dashboardwidgetheading,.pageheading,.technicalhead,.inspectionheading,.tasksheader){
+  flex-wrap:wrap;align-items:flex-start;gap:12px;
+ }
+ .layout .body :is(.hero,.dashboardwidgetheading,.pageheading,.technicalhead,.inspectionheading,.tasksheader) :is(h1,h2){
+  max-width:100%;white-space:normal;overflow-wrap:anywhere;line-height:1.25;
+ }
+ .layout .body :is(.hero,.dashboardwidgetheading,.pageheading,.technicalhead,.inspectionheading,.tasksheader) :is(p,small){
+  white-space:normal;overflow-wrap:anywhere;
+ }
+ .layout .body :is(.tiles,.dashboardtiles,.buildinggrid,.taskstats){min-width:0;max-width:100%}
+ .layout .body .dashboardtiles{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+ .layout .body .dashboardtiles>article{min-width:0}
+ .layout .body .dashboardtiles .widgettitle{flex-wrap:wrap}
+ .layout .body .dashboardtiles .widgettitle h3{flex:1 1 120px;min-width:0;white-space:normal}
+ .layout .body .dashboardtiles .widgetbuttons{display:flex;gap:4px;flex:0 0 auto;margin-left:auto}
+ .layout .body .dashboardtiles .widgetbuttons button{min-width:44px;min-height:44px}
+ .layout .body .dashboardtiles .widgetvalue{font-size:clamp(1.6rem,6vw,2.1rem);overflow-wrap:anywhere}
+ .layout .body .dashboardtiles .widgetreorder{display:flex;flex-wrap:wrap;gap:8px}
+ .layout .body .dashboardtiles .widgetreorder button{flex:1 1 125px;white-space:normal;min-width:0}
+ .layout .body :is(.buildinglist article,.buildingcard,.taskitem,.keys-record,.adminuserrow){min-width:0;max-width:100%}
+ .layout .body :is(.buildinglist article,.taskitem,.keys-record,.adminuserrow){overflow-wrap:anywhere}
+ .layout .body :is(.buildinglist article,.taskitem,.keys-record,.adminuserrow) :is(.actions,.buttons){flex-wrap:wrap;gap:8px}
+ .layout .body :is(.buildinglist article,.taskitem,.keys-record,.adminuserrow) :is(button,a){max-width:100%}
+ .layout .body :is(.filtercontrols,.technicalfields,.inspectionfields,.formgrid,.vacation-grid,.keys-layout){min-width:0}
+ .layout .body :is(.filtercontrols,.technicalfields,.inspectionfields,.formgrid,.vacation-grid,.keys-layout)>*{min-width:0}
+ .layout .body :is(.tablewrap,.table-wrap,.technicaltablewrap,.attendance-table-wrap,.buildingtablewrap){
+  max-width:100%;overflow-x:auto;overscroll-behavior-x:contain;-webkit-overflow-scrolling:touch;
+ }
+ .layout .body :is(.tablewrap,.table-wrap,.technicaltablewrap,.attendance-table-wrap,.buildingtablewrap) table{
+  width:max-content;min-width:100%;
+ }
+ .layout .body :is(.technicalphotogrid,.technicalsignatures){grid-template-columns:minmax(0,1fr)}
+ .layout .overlay{padding:12px;align-items:center;overflow-y:auto}
+ .layout .modal{width:min(100%,650px);max-width:100%;max-height:calc(100dvh - 24px);overflow-y:auto;overscroll-behavior:contain}
+ .layout .userdropdown{z-index:110;max-height:calc(100dvh - 75px)}
+ .layout .body :is(input:not([type="checkbox"]):not([type="radio"]),select,textarea){font-size:16px}
+ .layout .body :is(button,[role="button"],.filtertrigger){touch-action:manipulation}
+ .layout .body :is(.pageactions,.inspectionactions,.technicalbuttons,.tasksactions,.attendance-actions){flex-wrap:wrap;gap:8px}
+ .layout .body :is(.pageactions,.inspectionactions,.technicalbuttons,.tasksactions,.attendance-actions)>button{min-height:44px}
+}
+@media(max-width:560px){
+ .layout header{padding:8px 10px}
+ .layout header .breadcrumb .breadcrumblink{max-width:90px}
+ .layout header .breadcrumb strong[aria-current="page"]{max-width:110px;overflow:hidden;text-overflow:ellipsis}
+ .layout .body{padding:12px 10px calc(26px + env(safe-area-inset-bottom))!important}
+ .layout .body .dashboardtiles{grid-template-columns:minmax(0,1fr)}
+ .layout .body .dashboardtiles>article{padding:16px!important}
+ .layout .body :is(.hero,.dashboardwidgetheading,.pageheading,.technicalhead,.inspectionheading,.tasksheader){padding:15px}
+ .layout .body :is(.pageheading,.technicalhead,.inspectionheading,.tasksheader) :is(.actions,.pageactions,.technicalbuttons,.inspectionactions){width:100%;flex-wrap:wrap}
+ .layout .body :is(.pageheading,.technicalhead,.inspectionheading,.tasksheader) :is(.actions,.pageactions,.technicalbuttons,.inspectionactions)>button{flex:1 1 100%}
+ .layout .body :is(.formgrid,.technicalfields,.inspectionfields,.vacation-grid,.keys-layout){grid-template-columns:minmax(0,1fr)}
+ .layout .body :is(.buildinggrid,.taskstats,.widgetchoices){grid-template-columns:minmax(0,1fr)}
+ .layout .body :is(.filtercontrols)>*{flex-basis:100%}
+ .layout .modal{padding:16px;max-height:calc(100dvh - 16px)}
+ .layout .overlay{padding:8px}
+ .layout .body :is(.inspectionpanel,.technicalpanel,.keys-panel,.attendance-card,.vacation-panel,.taskform,.tasklist,.taskdetail,.wiki-panel){padding:14px}
+ .layout .body :is(.technicalbuttons,.inspectionactions,.inspectionbottom,.attendance-actions,.tasksactions,.pageactions)>button{flex:1 1 100%}
+ .layout .body :is(.widgetpicker,.filterpanel){max-width:100%;overflow-wrap:anywhere}
+}
+@media(max-width:360px){
+ .layout .body{padding-inline:8px!important}
+ .layout .body .dashboardtiles>article{padding:12px!important}
+ .layout header .breadcrumb .breadcrumblink{max-width:65px}
+ .layout header .userbar{gap:4px}
+}
+@media print{
+ .layout{overflow:visible!important}
+ .layout .body{padding:0!important}
+}
+
+/* Mobile field-terminal mode: compact app chrome, tactile controls, scannable cards.
+   Scoped to phone screens so desktop, kiosk and print layouts stay unchanged. */
+@media screen and (max-width:650px){
+ .layout{--foxa-terminal-radius:12px}
+ .layout aside{box-shadow:0 2px 12px color-mix(in srgb,#000 12%,transparent)}
+ .layout aside .mobile-nav-top{
+  min-height:54px;gap:12px;
+  background:var(--fx-surface,var(--foxa-surface));
+  border-bottom:1px solid var(--fx-border,var(--foxa-border));
+ }
+ .layout aside .mobile-nav-title{
+  font-size:16px;font-weight:850;letter-spacing:.095em;
+  color:var(--fx-accent,var(--foxa-accent));
+ }
+ .layout aside .mobile-hamburger{
+  width:44px;height:44px;border-radius:10px;
+  border:1px solid var(--fx-border,var(--foxa-border));
+  background:var(--fx-surface-soft,var(--foxa-surface));
+ }
+ .layout aside.mobile-nav-open .side-navigation{
+  display:flex;flex-direction:column;gap:6px;padding:12px;
+  background:var(--fx-surface,var(--foxa-surface));
+  box-shadow:0 12px 22px color-mix(in srgb,#000 16%,transparent);
+ }
+ .layout aside.mobile-nav-open .side-navigation .nav{
+  width:100%;min-height:50px;text-align:left;padding:12px 14px;
+  border-radius:10px;border:1px solid var(--fx-border,var(--foxa-border));
+  background:var(--fx-surface-soft,var(--foxa-surface));
+  font-weight:700;
+ }
+ .layout aside.mobile-nav-open .side-navigation .nav.selected{
+  border-color:var(--fx-accent,var(--foxa-accent));
+  background:color-mix(in srgb,var(--fx-accent,var(--foxa-accent)) 12%,var(--fx-surface,var(--foxa-surface)));
+  box-shadow:inset 3px 0 var(--fx-accent,var(--foxa-accent));
+ }
+ .layout .content>header{
+  min-height:46px;padding:7px 12px;
+  border-bottom:1px solid var(--fx-border,var(--foxa-border));
+  background:var(--fx-surface,var(--foxa-surface));
+ }
+ .layout .content>header .breadcrumb{font-size:12px}
+ .layout .body{padding:12px 10px calc(26px + env(safe-area-inset-bottom))!important}
+ .layout .body :is(.hero,.pageheading,.technicalhead,.inspectionheading,.tasksheader,.foxa-dashboard-hero){
+  border-radius:var(--foxa-terminal-radius)!important;
+  padding:16px!important;gap:12px;
+  box-shadow:none!important;
+ }
+ .layout .body :is(.hero,.pageheading,.technicalhead,.inspectionheading,.tasksheader) h1{
+  font-size:clamp(22px,6vw,27px)!important;line-height:1.2!important;
+  letter-spacing:-.035em;
+ }
+ .layout .body :is(.hero,.pageheading,.technicalhead,.inspectionheading,.tasksheader) p{
+  font-size:13px;line-height:1.45;
+ }
+ .layout .body :is(.dashboardtiles>article,.buildingcard,.taskitem,.keys-record,.inspectionpanel,.technicalpanel,.keys-panel,.attendance-card,.vacation-panel,.taskform,.tasklist,.wiki-panel,.adminuserrow){
+  border-radius:var(--foxa-terminal-radius)!important;
+  box-shadow:none!important;
+ }
+ .layout .body :is(.dashboardtiles,.buildinggrid,.taskstats){gap:9px}
+ .layout .body :is(.dashboardtiles>article,.buildingcard){padding:14px!important}
+ .layout .body :is(button,.primary,.secondarybutton,[role="button"],.filtertrigger){
+  -webkit-tap-highlight-color:transparent;touch-action:manipulation;
+ }
+ .layout .body :is(.pageactions,.inspectionactions,.technicalbuttons,.technical-extra-actions,.keys-heading-actions,.tasksactions) button{
+  min-height:48px;border-radius:10px;font-size:14px;font-weight:750;
+ }
+ .layout .body :is(input:not([type="checkbox"]):not([type="radio"]),select,textarea){
+  min-height:46px;max-width:100%;box-sizing:border-box;
+  border-radius:10px;font-size:16px;
+ }
+ .layout .body textarea{min-height:90px}
+ .layout .body :is(.filtercontrols,.keys-filters,.technicalfields,.inspectionfields,.formgrid) label{
+  font-size:13px;font-weight:700;
+ }
+ .layout .body :is(.inspection-role-switch,.fleet-calendar-views,.adminusers-tabs){
+  max-width:100%;overflow-x:auto;overscroll-behavior-x:contain;
+ }
+ .layout .body :is(.technical-extra-actions,.keys-heading-actions){gap:8px}
+ .layout .body :is(.technical-extra-actions,.keys-heading-actions)>button{flex:1 1 140px}
+ .layout .body :is(button,input,select,textarea):focus-visible{
+  outline:3px solid var(--fx-accent,var(--foxa-accent));outline-offset:2px;
+ }
+}
+@media screen and (max-width:390px){
+ .layout .body :is(.pageheading,.technicalhead,.inspectionheading,.tasksheader){padding:13px!important}
+ .layout .body :is(.pageheading,.technicalhead,.inspectionheading,.tasksheader) h1{font-size:21px!important}
+}
+@media(prefers-reduced-motion:reduce){
+ .layout aside .side-navigation,.layout .body button{transition:none!important}
+}
+
+/* FOXA field-terminal shell — mobile only. */
+.foxa-terminal-dock{display:none}
+@media screen and (max-width:650px){
+ .layout .body{padding-bottom:calc(105px + env(safe-area-inset-bottom))!important}
+ .foxa-terminal-dock{
+  position:fixed;inset:auto 0 0;z-index:125;
+  display:grid;grid-template-columns:repeat(5,minmax(0,1fr));align-items:stretch;
+  gap:3px;padding:7px max(7px,env(safe-area-inset-right)) calc(7px + env(safe-area-inset-bottom)) max(7px,env(safe-area-inset-left));
+  border-top:1px solid var(--fx-border,var(--foxa-border));
+  background:var(--fx-surface,var(--foxa-surface));
+  box-shadow:0 -5px 22px color-mix(in srgb,#000 15%,transparent);
+ }
+ .foxa-terminal-dock button{
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;
+  min-width:0;min-height:57px;padding:5px 2px;
+  border:1px solid transparent;border-radius:11px;background:transparent;
+  color:var(--fx-muted,var(--foxa-muted));font:inherit;font-size:10px;
+  font-weight:750;line-height:1.2;white-space:nowrap;
+  -webkit-tap-highlight-color:transparent;touch-action:manipulation;cursor:pointer;
+ }
+ .foxa-terminal-dock button.active{
+  color:var(--fx-accent,var(--foxa-accent));
+  background:color-mix(in srgb,var(--fx-accent,var(--foxa-accent)) 11%,var(--fx-surface,var(--foxa-surface)));
+  border-color:color-mix(in srgb,var(--fx-accent,var(--foxa-accent)) 26%,transparent);
+ }
+ .foxa-terminal-dock .terminal-dock-icon{font-size:24px;line-height:1;display:block}
+ .foxa-terminal-dock button:focus-visible{outline:2px solid var(--fx-accent,var(--foxa-accent));outline-offset:1px}
+ .layout aside.mobile-nav-open .side-navigation{
+  position:fixed!important;top:54px!important;bottom:calc(76px + env(safe-area-inset-bottom));left:0;right:0;
+  max-height:none!important;overflow-y:auto;
+  border-bottom:1px solid var(--fx-border,var(--foxa-border));
+  z-index:120;
+ }
+ .layout aside .mobile-nav-top{min-height:54px}
+ .layout .content>header{min-height:42px}
+ .layout .body :is(.dashboardtiles>article,.buildingcard,.taskitem,.keys-record,.adminuserrow){
+  border:1px solid var(--fx-border,var(--foxa-border));
+ }
+ .layout .body :is(.dashboardtiles>article,.buildingcard,.taskitem,.keys-record,.adminuserrow):active{
+  border-color:var(--fx-accent,var(--foxa-accent));
+ }
+ .layout .body :is(.pageactions,.inspectionactions,.technical-extra-actions,.tasksactions) button{
+  min-height:50px;
+ }
+ .layout .body :is(.pageheading,.inspectionheading,.technicalhead,.tasksheader) .inspection-autosave-status{
+  font-size:12px;line-height:1.35;
+ }
+ .layout .body :is(.tablewrap,.table-wrap,.technicaltablewrap,.attendance-table-wrap,.buildingtablewrap){
+  border-radius:10px;border:1px solid var(--fx-border,var(--foxa-border));
+ }
+}
+@media screen and (max-width:360px){
+ .foxa-terminal-dock button{font-size:9px}
+ .foxa-terminal-dock .terminal-dock-icon{font-size:21px}
+}
+@media print{.foxa-terminal-dock{display:none!important}}
+
+/* The terminal dock replaces the old top hamburger on phones. */
+@media screen and (max-width:650px){
+ .layout aside .mobile-nav-top .mobile-hamburger{display:none!important}
+ .layout aside .mobile-nav-top{justify-content:center!important}
+ .layout aside .mobile-nav-title{margin-inline:auto}
+}
+
+/* Remove the duplicated mobile FOXA strip and breadcrumb toolbar on terminal home.
+   Keep notifications and account controls accessible in one compact top bar. */
+@media screen and (max-width:650px){
+ .layout:has(.foxa-terminal-home) aside .mobile-nav-top{display:none!important}
+ .layout:has(.foxa-terminal-home) .content>header{
+  min-height:52px!important;display:flex!important;justify-content:flex-end!important;
+  align-items:center!important;flex-wrap:nowrap!important;
+  gap:8px!important;padding:5px 12px!important;
+  border-bottom:1px solid #1a557c!important;
+ }
+ .layout:has(.foxa-terminal-home) .content>header .breadcrumb{display:none!important}
+ .layout:has(.foxa-terminal-home) .content>header .userbar{
+  display:flex!important;align-items:center!important;justify-content:flex-end!important;
+  gap:8px!important;width:100%!important;max-width:100%!important;margin:0!important;
+ }
+ .layout:has(.foxa-terminal-home) .content>header .header-support{display:none!important}
+ .layout:has(.foxa-terminal-home) .content>header .userbar:before{
+  content:"FOXA FIELD";margin-right:auto;white-space:nowrap;
+  font-size:14px;font-weight:850;letter-spacing:.075em;color:#e6f7ff;
+ }
+ .layout:has(.foxa-terminal-home) .content>header .userbar :is(.avatarbutton,.logout){
+  min-height:40px;min-width:40px;
+ }
+ .layout:has(.foxa-terminal-home) .body{padding-top:10px!important}
+}
+
+/* FOXA FIELD — consistent industrial handheld appearance across ALL mobile modules.
+   Presentation-only: do not replace forms, tables, actions or role checks. */
+@media screen and (max-width:650px){
+ .layout{--fx-surface:#0b2942;--fx-surface-soft:#102f4a;--fx-border:#1b638e;--fx-text:#f1f8ff;--fx-muted:#a6cee8;--fx-accent:#09bcfa;--foxa-surface:#0b2942;--foxa-border:#1b638e;--foxa-text:#f1f8ff;--foxa-muted:#a6cee8;--foxa-accent:#09bcfa}
+ .layout,.layout .content,.layout .body{background:#071622!important;color:#f1f8ff!important}
+ .layout .body{background:linear-gradient(180deg,#071622 0%,#0a1c2d 48%,#071622 100%)!important;padding:12px 10px calc(110px + env(safe-area-inset-bottom))!important}
+ /* Compact single-row terminal toolbar instead of the duplicate FOXA and breadcrumb rows. */
+ .layout aside .mobile-nav-top{display:none!important}
+ .layout .content>header{display:flex!important;align-items:center!important;justify-content:flex-end!important;flex-wrap:nowrap!important;gap:7px!important;min-height:52px!important;padding:5px 11px!important;background:#081b2c!important;border-bottom:1px solid #18557b!important;color:#e8f6ff!important}
+ .layout .content>header .breadcrumb{display:none!important}
+ .layout .content>header .userbar{display:flex!important;align-items:center!important;justify-content:flex-end!important;gap:7px!important;width:100%!important;max-width:100%!important;min-width:0!important;margin:0!important}
+ .layout .content>header .userbar:before{content:"FOXA FIELD";margin-right:auto;white-space:nowrap;font-size:13px;font-weight:850;letter-spacing:.08em;color:#e7f6ff}
+ .layout .content>header .header-support{display:none!important}
+ .layout .content>header :is(.avatarbutton,.logout){min-height:39px!important;min-width:39px!important}
+ /* Uniform module banners. */
+ .layout .body :is(.pageheading,.tasksheader,.technicalhead,.inspectionheading,.fleet-hero,.keys-module>.pageheading,.hero,.attendance-module>.pageheading,.dashboardwidgetheading){
+  position:relative;overflow:visible;min-height:0!important;
+  background:linear-gradient(115deg,#0c304e,#0a233b)!important;
+  border:1.5px solid #078dd2!important;border-radius:14px!important;
+  box-shadow:inset 0 1px 0 #285c7b!important;color:#f4faff!important;
+  padding:16px 14px!important;margin-bottom:12px!important;
+ }
+ .layout .body :is(.pageheading,.tasksheader,.technicalhead,.inspectionheading,.fleet-hero,.hero) :is(h1,h2){
+  color:#f7fbff!important;line-height:1.2!important;letter-spacing:-.035em;
+ }
+ .layout .body :is(.pageheading,.tasksheader,.technicalhead,.inspectionheading,.fleet-hero,.hero) :is(p,small){color:#b8d9ee!important}
+ /* Every working surface follows the terminal card treatment. */
+ .layout .body :is(.keys-panel,.keys-record,.keys-catalog,.keys-form,.keys-records,.taskform,.tasklist,.taskstats,.taskitem,.technicalpanel,.inspectionpanel,.attendance-card,.attendance-records-card,.fleet-card,.fleet-form,.fleet-list,.fleet-entry,.buildingcard,.dashboardtiles>article,.wiki-panel,.vacation-panel,.adminuserrow,.taskdetail,.taskhistory,.keys-borrowers-admin,.keys-borrowers-list){
+  background:#0c2a43!important;color:#f1f8ff!important;
+  border:1px solid #1b6696!important;border-radius:12px!important;
+  box-shadow:inset 0 1px 0 #1b4d6b!important;
+ }
+ .layout .body :is(.keys-record,.taskitem,.fleet-entry,.buildingcard,.adminuserrow){margin-bottom:8px}
+ .layout .body :is(.keys-panel,.taskform,.tasklist,.technicalpanel,.inspectionpanel,.attendance-card,.fleet-card,.fleet-form){padding:14px!important}
+ .layout .body :is(h1,h2,h3,h4,strong,label){color:#f2f9ff}
+ .layout .body :is(p,small,.muted,.hint,.description){color:#b6d7ec}
+ /* Readable inputs and native select menus in both light and dark OS modes. */
+ .layout .body :is(input:not([type="checkbox"]):not([type="radio"]),textarea,select){
+  background:#081d30!important;color:#f3faff!important;
+  border:1px solid #31749c!important;border-radius:10px!important;
+  min-height:48px;max-width:100%;font-size:16px!important;
+  color-scheme:dark;
+ }
+ .layout .body :is(input,textarea)::placeholder{color:#91b3cb!important;opacity:1}
+ .layout .body select option{background:#102c43;color:#fff}
+ .layout .body :is(input,textarea,select,button):focus-visible{outline:3px solid #00c7ff!important;outline-offset:2px!important}
+ .layout .body :is(.primary,.fleet-primary,button.primary){
+  background:linear-gradient(130deg,#087fbd,#045e9b)!important;
+  border:1px solid #04b6ff!important;color:#fff!important;
+  box-shadow:inset 0 1px 0 #4db9e9!important;
+ }
+ .layout .body :is(.secondarybutton,button.secondarybutton){
+  background:#123c5b!important;border:1px solid #2a80b4!important;
+  color:#e6f7ff!important;box-shadow:none!important;
+ }
+ .layout .body :is(.pageheading,.tasksheader,.technicalhead,.inspectionheading,.keys-heading-actions,.attendance-actions,.technical-extra-actions,.inspectionactions,.taskactions,.taskreviewbuttons,.keys-record-actions,.keys-modal-actions) button{
+  min-height:48px;border-radius:10px!important;font-weight:750;
+ }
+ .layout .body :is(.keys-heading-actions,.attendance-actions,.technical-extra-actions,.inspectionactions,.taskactions,.taskreviewbuttons,.keys-record-actions,.keys-modal-actions){
+  display:flex;flex-wrap:wrap;gap:8px;
+ }
+ .layout .body :is(.keys-heading-actions,.attendance-actions,.technical-extra-actions,.inspectionactions,.taskactions)>button{flex:1 1 132px}
+ .layout .body :is(.keys-tabs,.fleet-tabs,.inspection-role-switch,.adminusers-tabs,.keys-viewbar,.taskfilters,.attendance-toolbar){
+  max-width:100%;overflow-x:auto;overscroll-behavior-x:contain;-webkit-overflow-scrolling:touch;
+ }
+ .layout .body :is(.keys-tabs,.fleet-tabs,.inspection-role-switch,.adminusers-tabs) button{min-height:44px}
+ .layout .body :is(.technicaltablewrap,.attendance-table-wrap,.tablewrap,.table-wrap,.buildingtablewrap,.keys-records){
+  max-width:100%;overflow-x:auto;overscroll-behavior-x:contain;
+  border:1px solid #1b608c!important;border-radius:11px!important;
+ }
+ .layout .body table{color:#eaf7ff}
+ .layout .body :is(th,thead){background:#10334e!important;color:#bde5ff!important}
+ .layout .body td{border-color:#235574!important}
+ .layout .body :is(.notice,.error){border-radius:10px}
+ .layout .body :is(.technicalphotocard,.technicalsignature,.keys-barcode-label){background:#0d304a;color:#f2faff;border:1px solid #246c99;border-radius:10px}
+ /* Fixed navigation identical to the terminal home. */
+ .foxa-terminal-dock{background:linear-gradient(180deg,#0a253b,#081a2b)!important;border-top:1px solid #235677!important;box-shadow:0 -4px 18px #0007!important}
+ .foxa-terminal-dock button{color:#b2d5ee!important;font-size:11px!important}
+ .foxa-terminal-dock button.active{background:linear-gradient(135deg,#075b91,#07406b)!important;color:#0bd0ff!important;border:1px solid #00a9f6!important}
+ .foxa-terminal-dock .terminal-dock-icon{font-size:26px!important}
+ /* Modal surfaces remain readable over dark terminal shell. */
+ .layout :is(.modal,.userdropdown,.filtermenu,.inspectionbuildingoptions){color:#f1f8ff;background:#0c2b44;border-color:#28719c}
+ .layout .body :is(button,input,select,textarea){touch-action:manipulation}
+}
+@media screen and (max-width:370px){
+ .layout .body :is(.pageheading,.tasksheader,.technicalhead,.inspectionheading,.fleet-hero){padding:12px 10px!important}
+ .layout .body :is(.pageheading,.tasksheader,.technicalhead,.inspectionheading,.fleet-hero) h1{font-size:21px!important}
+}
+@media print{
+ .layout .body :is(.technicalpanel,.inspectionpanel,.attendance-card,.fleet-card,.keys-panel){background:transparent!important;color:#000!important;border:0!important}
+}
+
+/* Field workflow mode: turn module screens into actual handheld task panels. */
+@media screen and (max-width:650px){
+ .layout .foxa-terminal-module:not(.foxa-terminal-page-prehled){
+  --terminal-cyan:#08c4ff;--terminal-line:#176c9d;
+ }
+ .layout .foxa-terminal-module:not(.foxa-terminal-page-prehled)>:first-child:is(.keys-module,.tasks,.attendance-module,.technicalmodule,.foxa-fleet){
+  display:flex;flex-direction:column;gap:11px;min-width:0;
+ }
+ .layout .foxa-terminal-module :is(.pageheading,.tasksheader,.technicalhead,.inspectionheading,.fleet-hero){
+  display:flex!important;flex-direction:column!important;align-items:stretch!important;
+  gap:12px!important;padding:17px 15px!important;
+  background:linear-gradient(120deg,#0d3453,#0a223a)!important;
+  border:1.5px solid #06a9ef!important;border-radius:14px!important;
+ }
+ .layout .foxa-terminal-module :is(.pageheading,.tasksheader,.technicalhead,.inspectionheading,.fleet-hero):before{
+  content:"FOXA / PRACOVNÍ MODUL";display:block;width:100%;
+  color:#28c8ff;font-size:10px;font-weight:850;letter-spacing:.15em;
+ }
+ .layout .foxa-terminal-module :is(.pageheading,.tasksheader,.technicalhead,.inspectionheading,.fleet-hero) h1{
+  font-size:clamp(23px,6.6vw,29px)!important;line-height:1.15!important;
+  font-weight:850!important;color:#fff!important;
+ }
+ .layout .foxa-terminal-module :is(.pageheading,.tasksheader,.technicalhead,.inspectionheading,.fleet-hero) p{
+  font-size:12px!important;color:#acd5f0!important;line-height:1.5!important;
+ }
+ .layout .foxa-terminal-module :is(.keys-top,.keys-tools,.keys-viewbar,.attendance-toolbar,.taskfilters,.fleet-tabs,.inspectionactions,.technical-extra-actions,.attendance-actions){
+  background:#0b2a43!important;border:1px solid #195d89!important;
+  padding:10px!important;border-radius:11px!important;gap:8px!important;
+ }
+ .layout .foxa-terminal-module :is(.taskstats,.keys-layout,.tasklayout,.technicalfields,.taskgrid,.fleet-form){
+  min-width:0!important;max-width:100%!important;
+ }
+ .layout .foxa-terminal-module .taskstats{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:7px!important}
+ .layout .foxa-terminal-module .taskstats>div{
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:5px;min-width:0;padding:12px 5px!important;background:#0c304d!important;
+  border:1px solid #1a719f!important;border-radius:11px!important;
+ }
+ .layout .foxa-terminal-module .taskstats strong{font-size:clamp(20px,6vw,28px)!important;color:#0fc6ff!important;font-variant-numeric:tabular-nums}
+ .layout .foxa-terminal-module .taskstats span{font-size:11px!important;text-align:center;color:#b7d9f0!important}
+ .layout .foxa-terminal-module :is(.keys-record,.taskitem,.buildingcard,.fleet-entry){
+  position:relative;padding:15px!important;border-left:3px solid #0cbcf9!important;
+  background:linear-gradient(115deg,#0d314e,#0b253c)!important;
+  border-radius:11px!important;
+ }
+ .layout .foxa-terminal-module :is(.keys-recordhead,.taskitemtop){
+  display:flex;flex-wrap:wrap;align-items:center;gap:9px;
+ }
+ .layout .foxa-terminal-module :is(.keys-record-actions,.taskactions,.attendance-mark-actions){
+  display:flex!important;flex-wrap:wrap!important;gap:8px!important;
+ }
+ .layout .foxa-terminal-module :is(.keys-record-actions,.taskactions,.attendance-mark-actions)>button{
+  flex:1 1 125px!important;min-height:50px!important;
+ }
+ .layout .foxa-terminal-module :is(.attendance-self-card,.attendance-records-card,.technicalpanel,.keys-panel,.fleet-card,.taskform,.tasklist){
+  border:1px solid #1b6e9f!important;
+  background:linear-gradient(135deg,#0b304d,#0a253c)!important;
+ }
+ .layout .foxa-terminal-module :is(.attendance-self-card,.technicalpanel,.keys-panel,.fleet-card,.taskform) h2{
+  font-size:18px!important;font-weight:800!important;
+  padding-bottom:9px;margin-bottom:12px;
+  border-bottom:1px solid #225b7e;color:#fff!important;
+ }
+ .layout .foxa-terminal-module :is(.technicalfields,.taskgrid,.fleet-form,.keys-form){
+  grid-template-columns:minmax(0,1fr)!important;
+ }
+ .layout .foxa-terminal-module :is(.technicalfields,.taskgrid,.fleet-form,.keys-form)>*{
+  min-width:0!important;max-width:100%!important;
+ }
+ .layout .foxa-terminal-module :is(.technicalfields,.taskgrid,.fleet-form,.keys-form) label{
+  display:flex;flex-direction:column;gap:6px;font-size:12px!important;
+  font-weight:750!important;color:#cceaff!important;
+ }
+ .layout .foxa-terminal-module :is(.technicalfields,.taskgrid,.fleet-form,.keys-form) :is(input,select,textarea){
+  width:100%!important;min-height:50px!important;
+ }
+ .layout .foxa-terminal-module :is(.keys-tabs,.fleet-tabs,.inspection-role-switch) button[aria-selected="true"],
+ .layout .foxa-terminal-module :is(.keys-tabs,.fleet-tabs,.inspection-role-switch) button.active{
+  background:#08649b!important;border-color:#00bfff!important;color:#fff!important;
+ }
+ .layout .foxa-terminal-module :is(.keys-count,.keys-results-count,.attendance-current-status){
+  color:#aee1ff!important;font-weight:750;
+ }
+ .layout .foxa-terminal-module :is(.technicalgroup,.technicalrow,.keys-partial-history){
+  border-color:#245c81!important;
+ }
+ .layout .foxa-terminal-module :is(.technicalgrouphead,.technicalgroup h3){
+  background:#103b5a!important;color:#eaf8ff!important;
+ }
+ .layout .foxa-terminal-module :is(.technicalphotoupload,.technicalphotocard,.technicalsignature){
+  border:1px solid #2c739c!important;border-radius:11px!important;
+ }
+ .layout .foxa-terminal-module :is(.filtertrigger,.technicalcomboboxcontrol){
+  min-height:50px!important;background:#081d30!important;
+  color:#eaf8ff!important;border:1px solid #31749c!important;border-radius:10px!important;
+ }
+ .layout .foxa-terminal-module :is(.filtermenu,.technicalcomboboxlist,.inspectionbuildingmenu){
+  background:#0d2b45!important;color:#fff!important;border:1px solid #3280ad!important;
+ }
+ .layout .foxa-terminal-module :is(.filtermenu,.technicalcomboboxlist,.inspectionbuildingmenu) button{
+  min-height:44px;color:#eef8ff;
+ }
+ .layout .foxa-terminal-module :is(.taskitem,.keys-record,.buildingcard) :is(.taskstatus,.badge){
+  border-radius:8px;padding:4px 8px;
+ }
+ .layout .foxa-terminal-module button:active{filter:brightness(1.18)}
+}
+@media screen and (max-width:650px) and (prefers-reduced-motion:no-preference){
+ .layout .foxa-terminal-module button{transition:filter .12s ease,border-color .12s ease}
+}

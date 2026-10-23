@@ -1,0 +1,205 @@
+/* FOXA 2026 — shared application design layer.
+   Loaded after all module styles. Intentionally excludes kiosks, printable
+   reports and the public login screen. */
+:root{
+ --fx-radius:16px;--fx-radius-lg:20px;--fx-radius-control:11px;
+ --fx-surface:#fff;--fx-surface-soft:#f7fafc;--fx-text:#1c3448;
+ --fx-muted:#637b8e;--fx-border:#dce6ed;--fx-accent:var(--isys-accent,#146c9c);
+ --fx-shadow:0 4px 18px rgba(14,45,66,.045);
+ --fx-shadow-hover:0 12px 32px rgba(14,45,66,.09);
+}
+[data-theme="dark"]{
+ --fx-surface:#17293a;--fx-surface-soft:#1e3447;--fx-text:#e8f1f8;
+ --fx-muted:#a8bbcb;--fx-border:#35536a;
+ --fx-shadow:0 5px 20px rgba(0,0,0,.13);
+ --fx-shadow-hover:0 14px 30px rgba(0,0,0,.22);
+}
+.layout .body{min-width:0;max-width:100%;padding:clamp(16px,2.6vw,34px)}
+.layout .body> :is(h1,h2){line-height:1.2;letter-spacing:-.035em}
+.layout .body :is(.inspectionmodule,.technicalmodule,.keys-module,.tasks,.vacation,.attendance-module,.wiki,.adminusers){
+ width:100%;max-width:1320px;margin-inline:auto;color:var(--fx-text);
+}
+.layout .body :is(.inspectionheading,.technicalhead,.tasksheader,.pageheading,.wikihead){
+ min-height:auto!important;height:auto!important;max-height:none!important;
+ display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;
+ gap:14px;padding:clamp(16px,2vw,24px);margin:0 0 20px;
+ border:1px solid var(--fx-border);border-radius:var(--fx-radius-lg);
+ background:var(--fx-surface);box-shadow:var(--fx-shadow);overflow:visible;
+}
+.layout .body :is(.inspectionheading,.technicalhead,.tasksheader,.pageheading,.wikihead) :is(h1,h2){
+ margin:0;font-size:clamp(1.4rem,2.1vw,2rem);line-height:1.22;letter-spacing:-.035em;
+ color:var(--fx-text);overflow-wrap:anywhere;
+}
+.layout .body :is(.inspectionheading,.technicalhead,.tasksheader,.pageheading,.wikihead) p{
+ margin:6px 0 0;color:var(--fx-muted);line-height:1.5;
+}
+.layout .body :is(.inspectionpanel,.inspectionprogress,.technicalpanel,.keys-panel,.attendance-card,.vacation-panel,.taskform,.tasklist,.taskdetail,.taskstats>div,.wiki-panel,.adminuserrow,.tiles article){
+ min-width:0;max-width:100%;background:var(--fx-surface);color:var(--fx-text);
+ border:1px solid var(--fx-border);border-radius:var(--fx-radius);
+ box-shadow:var(--fx-shadow);
+}
+.layout .body :is(.inspectionpanel,.technicalpanel,.keys-panel,.attendance-card,.vacation-panel,.taskform,.tasklist,.taskdetail,.wiki-panel){
+ padding:clamp(16px,2vw,24px);
+}
+.layout .body :is(.inspectionpanel,.technicalpanel,.keys-panel,.attendance-card,.vacation-panel,.taskform,.tasklist,.taskdetail,.wiki-panel) :is(h2,h3){
+ color:var(--fx-text);line-height:1.3;overflow-wrap:anywhere;
+}
+.layout .body :is(.inspectionmodule,.technicalmodule,.keys-module,.tasks,.vacation,.attendance-module,.wiki,.adminusers) :is(label,small){
+ overflow-wrap:anywhere;
+}
+.layout .body :is(.inspectionmodule,.technicalmodule,.keys-module,.tasks,.vacation,.attendance-module,.wiki,.adminusers) :is(input:not([type="checkbox"]):not([type="radio"]):not([type="file"]):not([type="color"]),select,textarea){
+ box-sizing:border-box;min-width:0;max-width:100%;min-height:44px;
+ background:var(--isys-control-bg,var(--fx-surface-soft));color:var(--fx-text);
+ border:1px solid var(--isys-control-border,var(--fx-border));
+ border-radius:var(--fx-radius-control);font-size:16px;line-height:1.4;
+}
+.layout .body :is(.inspectionmodule,.technicalmodule,.keys-module,.tasks,.vacation,.attendance-module,.wiki,.adminusers) :is(input,select,textarea):focus-visible{
+ outline:2px solid var(--isys-control-focus,#2b91be);outline-offset:2px;
+}
+.layout .body :is(.inspectionmodule,.technicalmodule,.keys-module,.tasks,.vacation,.attendance-module,.wiki,.adminusers) :is(button,.primary,.secondarybutton){
+ border-radius:var(--fx-radius-control);min-height:42px;max-width:100%;
+ overflow-wrap:anywhere;white-space:normal;transition:background-color .16s ease,border-color .16s ease,box-shadow .16s ease,transform .16s ease;
+}
+.layout .body :is(.inspectionmodule,.technicalmodule,.keys-module,.tasks,.vacation,.attendance-module,.wiki,.adminusers) :is(button,.primary,.secondarybutton):not(:disabled):active{transform:translateY(1px)}
+.layout .body :is(.inspectionmodule,.technicalmodule,.keys-module,.tasks,.vacation,.attendance-module,.wiki,.adminusers) :is(button,.primary,.secondarybutton):focus-visible{
+ outline:2px solid var(--isys-control-focus,#2b91be);outline-offset:2px;
+}
+.layout .body :is(.inspectionmodule,.technicalmodule,.keys-module,.tasks,.vacation,.attendance-module,.wiki,.adminusers) :is(table){width:100%;border-collapse:separate;border-spacing:0}
+.layout .body :is(.inspectionmodule,.technicalmodule,.keys-module,.tasks,.vacation,.attendance-module,.wiki,.adminusers) :is(th,td){
+ overflow-wrap:anywhere;vertical-align:middle;
+}
+.layout .body :is(.inspectionmodule,.technicalmodule,.keys-module,.tasks,.vacation,.attendance-module,.wiki,.adminusers) th{
+ color:var(--fx-text);font-weight:700;
+}
+.layout .body :is(.inspectionmodule,.technicalmodule,.keys-module,.tasks,.vacation,.attendance-module,.wiki,.adminusers) :is(.tablewrap,.table-wrap,.technicaltablewrap,.attendance-table-wrap){
+ max-width:100%;overflow-x:auto;overscroll-behavior-x:contain;-webkit-overflow-scrolling:touch;
+}
+.layout .body :is(.inspectionmodule,.technicalmodule,.keys-module,.tasks,.vacation,.attendance-module,.wiki,.adminusers) :is(.notice,.technicalnotice){
+ border-radius:var(--fx-radius-control);line-height:1.5;overflow-wrap:anywhere;
+}
+.layout .body :is(.keys-panel,.inspectionpanel,.technicalpanel,.attendance-card,.vacation-panel,.taskform,.tasklist,.taskdetail) :is(p,li,span){
+ overflow-wrap:break-word;
+}
+.layout .body .vacation-balance .vacation-donut>div{background:#fff!important;color:#15293b!important}
+.layout .body .vacation-balance .vacation-donut strong{color:#15293b!important;opacity:1!important}
+.layout .body .vacation-balance .vacation-donut small{color:#42556b!important;opacity:1!important}
+@media(hover:hover) and (prefers-reduced-motion:no-preference){
+ .layout .body :is(.tiles article,.taskstats>div):hover{box-shadow:var(--fx-shadow-hover);transform:translateY(-2px)}
+ .layout .body :is(.tiles article,.taskstats>div){transition:box-shadow .18s ease,transform .18s ease}
+}
+@media(max-width:850px){
+ .layout .body :is(.inspectionheading,.technicalhead,.tasksheader,.pageheading,.wikihead){align-items:stretch}
+ .layout .body :is(.inspectionactions,.inspectionbottom,.technicalbuttons,.tasksactions,.pageactions,.vacation-actions){flex-wrap:wrap;gap:9px}
+ .layout .body :is(.inspectionactions,.inspectionbottom,.technicalbuttons,.tasksactions,.pageactions)>button{flex:1 1 150px}
+ .layout .body :is(.keys-layout,.dashboardtop){grid-template-columns:minmax(0,1fr)}
+}
+@media(max-width:600px){
+ .layout .body{padding:14px 12px 26px}
+ .layout .body :is(.inspectionheading,.technicalhead,.tasksheader,.pageheading,.wikihead){padding:16px;border-radius:15px}
+ .layout .body :is(.inspectionpanel,.technicalpanel,.keys-panel,.attendance-card,.vacation-panel,.taskform,.tasklist,.taskdetail,.wiki-panel){padding:15px;border-radius:14px}
+ .layout .body :is(.inspectionactions,.inspectionbottom,.technicalbuttons,.tasksactions,.pageactions)>button{flex:1 1 100%}
+ .layout .body :is(.vacation-balance-body){gap:14px}
+ .layout .body :is(.taskstats){grid-template-columns:minmax(0,1fr)}
+ .layout .body :is(.tiles){grid-template-columns:repeat(auto-fit,minmax(min(100%,170px),1fr));gap:12px}
+ .layout .body :is(.keys-panel,.inspectionpanel,.technicalpanel,.attendance-card,.vacation-panel) :is(input,select,textarea){width:100%}
+}
+@media(prefers-reduced-motion:reduce){
+ .layout .body :is(button,.primary,.secondarybutton,.tiles article,.taskstats>div){transition:none!important;transform:none!important}
+}
+@media print{
+ /* The shared app design must not alter printed PDF layouts. */
+ .layout .body :is(.inspectionmodule,.technicalmodule,.keys-module,.tasks,.vacation,.attendance-module,.wiki,.adminusers) :is(button){box-shadow:none}
+}
+
+/* Object cards: make centre numbers easier to scan. */
+.layout .buildinggrid .buildingcard .buildingnumber{display:block;font-size:clamp(16px,1.15vw,19px)!important;font-weight:800!important;line-height:1.3!important;letter-spacing:.035em!important;margin-bottom:7px!important;overflow-wrap:anywhere}
+
+/* Buildings header: inspections shortcut beside administrative actions. */
+.layout .body .building-heading-actions{display:flex;align-items:center;flex-wrap:wrap;gap:10px;min-width:0}
+.layout .body .building-heading-actions>.secondarybutton{min-height:42px;white-space:normal}
+@media(max-width:700px){.layout .body .building-heading-actions{width:100%}.layout .body .building-heading-actions>.secondarybutton{width:100%}}
+
+/* Dashboard hero: changelog shortcut inside the welcome banner. */
+.layout .body .foxa-dashboard-hero{display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap}
+.layout .body .foxa-dashboard-hero>div{min-width:0;flex:1 1 300px}
+.layout .body .foxa-hero-changelog-button{flex:0 0 auto;min-height:44px;padding:11px 18px;border:1px solid rgba(255,255,255,.42);border-radius:var(--fx-radius-control,11px);background:rgba(255,255,255,.13);color:#fff;font:inherit;font-size:14px;font-weight:750;cursor:pointer;white-space:normal}
+.layout .body .foxa-hero-changelog-button:hover{background:rgba(255,255,255,.23)}
+.layout .body .foxa-hero-changelog-button:focus-visible{outline:2px solid #fff;outline-offset:3px}
+@media(max-width:600px){.layout .body .foxa-hero-changelog-button{width:100%}}
+
+/* Attendance controls belong to the dashboard overview on every screen size. */
+.layout .body .foxa-dashboard-attendance{display:block!important;width:100%;margin:18px 0 22px;min-width:0}
+.layout .body .foxa-dashboard-attendance>*{max-width:100%;min-width:0}
+
+/* Building inspections shortcut: compact, clear and consistent with FOXA controls. */
+.layout .body .building-heading-actions>.secondarybutton:first-child{
+ display:inline-flex;align-items:center;justify-content:center;gap:10px;
+ flex:0 0 auto;width:auto;max-width:100%;min-height:46px;
+ padding:11px 18px;border:1px solid var(--fx-accent,#218dc1);
+ border-radius:var(--fx-radius-control,11px);
+ background:var(--fx-accent,#218dc1);color:#fff;
+ font:inherit;font-size:14px;font-weight:750;line-height:1.35;
+ letter-spacing:0;white-space:normal;text-align:center;
+ box-shadow:0 2px 8px color-mix(in srgb,var(--fx-accent,#218dc1) 13%,transparent);
+ transition:background-color .16s,border-color .16s,box-shadow .16s,transform .16s;
+ cursor:pointer
+}
+.layout .body .building-heading-actions>.secondarybutton:first-child:hover{
+ background:color-mix(in srgb,var(--fx-accent,#218dc1) 88%,#000);
+ border-color:color-mix(in srgb,var(--fx-accent,#218dc1) 88%,#000);
+ box-shadow:0 4px 12px color-mix(in srgb,var(--fx-accent,#218dc1) 19%,transparent);
+ transform:translateY(-1px)
+}
+.layout .body .building-heading-actions>.secondarybutton:first-child:active{transform:translateY(0);box-shadow:none}
+.layout .body .building-heading-actions>.secondarybutton:first-child:focus-visible{outline:2px solid var(--fx-accent,#218dc1);outline-offset:3px}
+@media(max-width:700px){
+ .layout .body .building-heading-actions>.secondarybutton:first-child{width:100%;min-height:46px;padding:11px 16px;font-size:14px}
+}
+
+/* Inspection view switch belongs inside each inspection header banner. */
+.layout .body :is(.inspectionheading,.technicalhead)>div:first-child{min-width:0;flex:1 1 330px}
+.layout .body :is(.inspectionheading,.technicalhead) .inspection-role-switch{display:inline-flex;flex-wrap:wrap;gap:6px;margin:14px 0 0;padding:4px;max-width:100%;border:1px solid var(--fx-border);border-radius:12px;background:var(--fx-surface-soft)}
+.layout .body :is(.inspectionheading,.technicalhead) .inspection-role-switch button{min-height:39px;padding:8px 13px;border:0;border-radius:9px;background:transparent;color:var(--fx-text);font:inherit;font-size:13px;font-weight:700;cursor:pointer;box-shadow:none}
+.layout .body :is(.inspectionheading,.technicalhead) .inspection-role-switch button.active{background:var(--fx-accent);color:#fff}
+.layout .body :is(.inspectionheading,.technicalhead) .inspection-role-switch button:focus-visible{outline:2px solid var(--fx-accent);outline-offset:2px}
+@media(max-width:650px){.layout .body :is(.inspectionheading,.technicalhead) .inspection-role-switch{display:flex;width:100%;box-sizing:border-box}.layout .body :is(.inspectionheading,.technicalhead) .inspection-role-switch button{flex:1 1 125px}}
+
+/* Technical inspection actions use the same visual hierarchy as referent inspections. */
+.layout .body .technicalhead{align-items:flex-start;gap:18px}
+.layout .body .technicalhead .technicalbuttons{display:flex;flex:1 1 420px;justify-content:flex-end;align-items:center;align-content:flex-start;flex-wrap:wrap;gap:9px;min-width:0;max-width:100%}
+.layout .body .technicalhead .inspection-autosave-status{flex:1 1 100%;width:100%;min-width:0;max-width:100%;box-sizing:border-box;margin:0 0 3px;text-align:right;font-size:12px;line-height:1.4;color:var(--fx-muted);border:0;background:transparent;padding:0;white-space:normal}
+.layout .body .technicalhead .technicalbuttons>button{display:inline-flex;align-items:center;justify-content:center;min-height:42px;max-width:100%;padding:10px 14px;border:1px solid var(--fx-border);border-radius:var(--fx-radius-control,10px);background:var(--fx-surface-soft);color:var(--fx-text);font:inherit;font-size:13px;font-weight:700;line-height:1.3;text-align:center;white-space:normal;cursor:pointer;box-shadow:none;transition:background-color .16s,border-color .16s}
+.layout .body .technicalhead .technicalbuttons>button:hover{border-color:var(--fx-accent);background:var(--fx-surface)}
+.layout .body .technicalhead .technicalbuttons>button.primary{border-color:var(--fx-accent);background:var(--fx-accent);color:#fff}
+.layout .body .technicalhead .technicalbuttons>button.primary:hover{background:color-mix(in srgb,var(--fx-accent) 88%,#000)}
+.layout .body .technicalhead .technicalbuttons>button:disabled{opacity:.55;cursor:not-allowed}
+@media(max-width:850px){.layout .body .technicalhead .technicalbuttons{justify-content:flex-start;flex-basis:100%}.layout .body .technicalhead .inspection-autosave-status{text-align:left}}
+@media(max-width:600px){.layout .body .technicalhead .technicalbuttons>button{flex:1 1 calc(50% - 9px);min-width:0}.layout .body .technicalhead .technicalbuttons>button.primary{flex-basis:100%}}
+
+/* Technician inspection header now shares referent action layout. */
+.layout .body .technicalhead>.inspectionactions{display:flex;align-items:center;justify-content:flex-end;flex-wrap:wrap;gap:10px;flex:0 1 auto;min-width:0}
+.layout .body .technicalhead>.inspectionactions .inspection-autosave-status{flex:0 1 auto;width:auto;max-width:100%;margin:0;white-space:normal}
+.layout .body .technicalhead>.inspectionactions>button{flex:0 0 auto;min-height:44px;padding:10px 17px;font-size:14px;white-space:normal}
+.layout .body .technical-extra-actions{display:flex;justify-content:flex-end;flex-wrap:wrap;gap:8px;margin:-8px 0 18px}
+.layout .body .technical-extra-actions>button{min-height:38px;padding:8px 14px;border:1px solid var(--fx-border);border-radius:10px;background:var(--fx-surface-soft);color:var(--fx-text);font:inherit;font-size:13px;font-weight:650;cursor:pointer}
+.layout .body .technical-extra-actions>button:hover{border-color:var(--fx-accent)}
+@media(max-width:850px){.layout .body .technicalhead>.inspectionactions{flex:1 1 100%;justify-content:flex-start}.layout .body .technicalhead>.inspectionactions .inspection-autosave-status{flex:1 1 100%}}
+@media(max-width:600px){.layout .body .technicalhead>.inspectionactions>button{flex:1 1 140px}.layout .body .technical-extra-actions{justify-content:stretch}.layout .body .technical-extra-actions>button{flex:1 1 120px}}
+
+/* Compact mobile referent inspection header: avoid flex growth and reserved blank space. */
+@media screen and (max-width:650px){
+.layout .body .inspectionmodule.foxa-field-referent-wizard>.inspectionheading{display:block!important;height:auto!important;min-height:0!important;max-height:none!important;flex:none!important;align-content:start!important;justify-content:start!important;margin:0 0 8px!important;padding:12px!important}
+.layout .body .inspectionmodule.foxa-field-referent-wizard>.inspectionheading>div:first-child{display:block!important;flex:none!important;height:auto!important;min-height:0!important;margin:0!important;padding:0!important}
+.layout .body .inspectionmodule.foxa-field-referent-wizard .inspection-role-switch{margin:8px 0 0!important}
+.layout .body .inspectionmodule.foxa-field-referent-wizard>.inspection-actions-outside{display:flex!important;position:static!important;flex-direction:column!important;justify-content:start!important;align-items:stretch!important;flex:none!important;height:auto!important;min-height:0!important;margin:0 0 10px!important;padding:0!important;gap:7px!important}
+.layout .body .inspectionmodule.foxa-field-referent-wizard>.inspection-actions-outside>*{flex:none!important;margin:0!important}
+}
+
+/* Technical inspections: same compact mobile header as referent inspections. */
+@media screen and (max-width:650px){
+.layout .body .technicalmodule.foxa-field-inspection-wizard>.technicalhead{display:block!important;height:auto!important;min-height:0!important;max-height:none!important;flex:none!important;align-content:start!important;justify-content:start!important;margin:0 0 8px!important;padding:12px!important}
+.layout .body .technicalmodule.foxa-field-inspection-wizard>.technicalhead>div:first-child{display:block!important;flex:none!important;height:auto!important;min-height:0!important;margin:0!important;padding:0!important}
+.layout .body .technicalmodule.foxa-field-inspection-wizard>.technicalhead .inspection-role-switch{margin:8px 0 0!important}
+.layout .body .technicalmodule.foxa-field-inspection-wizard>.technicalhead>.inspectionactions{display:flex!important;position:static!important;flex-direction:column!important;justify-content:start!important;align-items:stretch!important;flex:none!important;width:100%!important;height:auto!important;min-height:0!important;margin:10px 0 0!important;padding:0!important;gap:7px!important}
+.layout .body .technicalmodule.foxa-field-inspection-wizard>.technicalhead>.inspectionactions>*{flex:none!important;margin:0!important}
+}

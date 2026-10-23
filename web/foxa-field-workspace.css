@@ -1,0 +1,51 @@
+/* FOXA FIELD — common professional handheld workspace. No effect on desktop. */
+@media screen and (max-width:650px){
+ .layout .body.foxa-terminal-module:not(.foxa-terminal-page-prehled){
+  --field-bg:#071c2e;--field-panel:#0d2c45;--field-border:#28618a;--field-accent:#0bc8ff;
+  padding:10px 12px calc(98px + env(safe-area-inset-bottom))!important;
+  min-height:calc(100dvh - 125px);
+  background:var(--field-bg)!important;color:#eaf7ff!important;
+  overflow-x:clip;overscroll-behavior-y:contain;
+ }
+ .foxa-terminal-module:not(.foxa-terminal-page-prehled)>.foxa-field-module-tools{display:block!important;margin:0 0 16px!important}
+ .foxa-field-module-topline{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:9px}
+ .foxa-field-module-back{display:flex;align-items:center;justify-content:center;min-height:42px;padding:8px 14px!important;border:1px solid #245c82!important;border-radius:10px!important;background:#102f48!important;color:#d5f3ff!important;font-size:12px!important;font-weight:800!important}
+ .foxa-field-module-network{font-size:11px;font-weight:800;padding:8px 10px;border:1px solid #1f6856;border-radius:8px;background:#103c34;color:#43f3b5}
+ .foxa-field-module-network.is-offline{background:#442c1e;color:#ffc27c;border-color:#a26a38}
+ .foxa-field-module-header{min-height:90px!important;padding:14px!important;border-radius:13px!important}
+ .foxa-field-module-links{scroll-snap-type:x proximity;scrollbar-width:none;gap:8px!important}
+ .foxa-field-module-links::-webkit-scrollbar{display:none}
+ .foxa-field-module-links button{scroll-snap-align:start;min-height:47px!important}
+ .foxa-terminal-module:not(.foxa-terminal-page-prehled) :is(.keys-panel,.attendance-card,.fleet-card,.vacation-panel,.technicalpanel,.inspectionpanel,.taskform,.tasklist,.pf-editor,.pf-preview,.om-panel,.wiki-panel,.adminpanel){
+  max-width:100%;min-width:0;border-radius:13px!important;box-shadow:none!important;
+ }
+ .foxa-terminal-module:not(.foxa-terminal-page-prehled) :is(input:not([type=checkbox]):not([type=radio]),select,textarea){
+  min-height:48px;max-width:100%;font-size:16px!important;border-radius:9px!important;
+ }
+ .foxa-terminal-module:not(.foxa-terminal-page-prehled) textarea{min-height:94px;resize:vertical}
+ .foxa-terminal-module:not(.foxa-terminal-page-prehled) :is(label,.technicalfield,.inspectionfield){min-width:0;max-width:100%}
+ .foxa-terminal-module:not(.foxa-terminal-page-prehled) :is(button,.primary,.secondarybutton){touch-action:manipulation}
+ .foxa-terminal-module:not(.foxa-terminal-page-prehled) :is(button.primary,.primarybutton,.fleet-primary,.keys-record-actions button,.attendance-mark-actions button){min-height:48px}
+ .foxa-terminal-module:not(.foxa-terminal-page-prehled) :is(.keys-record,.taskitem,.vacation-item,.fleet-entry,.technicalgroup,.inspectiongroup){
+  max-width:100%;min-width:0;overflow-wrap:anywhere;border-radius:11px;
+ }
+ .foxa-terminal-module:not(.foxa-terminal-page-prehled) :is(.keys-tabs,.fleet-tabs,.taskfilters,.vacation-tabs,.inspection-role-switch){
+  max-width:100%;overflow-x:auto;overscroll-behavior-x:contain;scrollbar-width:none;
+ }
+ .foxa-terminal-module:not(.foxa-terminal-page-prehled) :is(.keys-tabs,.fleet-tabs,.taskfilters,.vacation-tabs)::-webkit-scrollbar{display:none}
+ .foxa-terminal-module:not(.foxa-terminal-page-prehled) :is(.keys-tabs,.fleet-tabs,.taskfilters,.vacation-tabs) button{min-height:46px}
+ .foxa-terminal-module:not(.foxa-terminal-page-prehled) :is(.tablewrap,.technicaltablewrap,.om-tablewrap,.fleet-tablewrap,.attendance-table-wrap){
+  overflow-x:auto;overscroll-behavior-x:contain;-webkit-overflow-scrolling:touch;max-width:100%;
+ }
+ .foxa-terminal-module:not(.foxa-terminal-page-prehled) :is(.foxa-field-form-actions,.foxa-wizard-controls,.keys-record-actions,.taskactions,.om-actions){
+  gap:9px;flex-wrap:wrap;
+ }
+ .foxa-terminal-module:not(.foxa-terminal-page-prehled) :is(.foxa-field-form-actions,.foxa-wizard-controls) button{min-height:52px!important}
+ .foxa-terminal-module:not(.foxa-terminal-page-prehled) :is(.error,[role=alert]){overflow-wrap:anywhere}
+ .foxa-terminal-module:not(.foxa-terminal-page-prehled) :is(.foxa-field-form-progress,.foxa-wizard-progress){padding:12px;border:1px solid #225d83;border-radius:10px;background:#0b2a41}
+ .foxa-terminal-module:not(.foxa-terminal-page-prehled) :is(.foxa-field-form-step,.foxa-wizard-step)[data-active=true]{animation:foxa-field-enter .16s ease-out}
+ @keyframes foxa-field-enter{from{opacity:.7;transform:translateY(4px)}to{opacity:1;transform:none}}
+}
+@media screen and (max-width:650px) and (prefers-reduced-motion:reduce){
+ .foxa-terminal-module :is(.foxa-field-form-step,.foxa-wizard-step){animation:none!important;transition:none!important}
+}

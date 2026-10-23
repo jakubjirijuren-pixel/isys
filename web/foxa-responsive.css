@@ -1,0 +1,75 @@
+
+/* FOXA — shared visual system. Module-scoped to preserve kiosk/print views. */
+:root{
+ --foxa-radius:14px;--foxa-radius-sm:9px;--foxa-space:18px;
+ --foxa-surface:var(--card-bg,var(--surface,#fff));
+ --foxa-border:var(--border,#dce5ed);
+ --foxa-text:var(--isys-text,var(--text,#20394d));
+ --foxa-muted:var(--muted,#708598);
+ --foxa-accent:var(--accent,#146c9c);
+}
+:is(.body,.content,.inspectionmodule,.technicalmodule,.keys-module,.tasks,.vacation,.attendance-module,.wiki,.adminusers){min-width:0}
+:is(.inspectionmodule,.technicalmodule,.keys-module,.tasks,.vacation,.attendance-module,.wiki,.adminusers){width:100%;max-width:1200px;margin-inline:auto;color:var(--foxa-text)}
+:is(.inspectionheading,.technicalhead,.tasksheader,.pageheading,.wikihead){gap:16px;flex-wrap:wrap;align-items:flex-start}
+:is(.inspectionheading,.technicalhead,.tasksheader,.pageheading,.wikihead) h1{font-size:clamp(1.4rem,2.5vw,1.85rem);line-height:1.22;letter-spacing:-.035em;margin-top:0}
+:is(.inspectionpanel,.technicalpanel,.keys-panel,.attendance-card,.vacation-panel,.tasks-panel,.wiki-panel,.adminuserrow){min-width:0;border-radius:var(--foxa-radius);border-color:var(--foxa-border)}
+:is(.inspectionmodule,.technicalmodule,.keys-module,.tasks,.vacation,.attendance-module,.wiki,.adminusers) :is(input,select,textarea){max-width:100%;min-width:0}
+:is(.inspectionmodule,.technicalmodule,.keys-module,.tasks,.vacation,.attendance-module,.wiki,.adminusers) :is(input:not([type="checkbox"]):not([type="radio"]):not([type="file"]),select,textarea){border-radius:var(--foxa-radius-sm);font-size:16px;line-height:1.35}
+:is(.inspectionmodule,.technicalmodule,.keys-module,.tasks,.vacation,.attendance-module,.wiki,.adminusers) :is(button,[role="button"]){touch-action:manipulation}
+:is(.inspectionmodule,.technicalmodule,.keys-module,.tasks,.vacation,.attendance-module,.wiki,.adminusers) :is(button,input,select,textarea):focus-visible{outline:2px solid var(--foxa-accent);outline-offset:2px}
+:is(.inspectionmodule,.technicalmodule,.keys-module,.tasks,.vacation,.attendance-module,.wiki,.adminusers) :is(p,td,th,label){overflow-wrap:anywhere}
+:is(.inspectionmodule,.technicalmodule,.keys-module,.tasks,.vacation,.attendance-module,.wiki,.adminusers) :is(table){max-width:100%}
+:is(.inspectionmodule,.technicalmodule,.keys-module,.tasks,.vacation,.attendance-module,.wiki,.adminusers) :is(img,svg){max-width:100%}
+:is(.inspectionactions,.inspectionbottom,.technicalbuttons,.attendance-actions,.tasksactions,.pageactions){display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+:is(.inspectionactions,.inspectionbottom,.technicalbuttons,.attendance-actions,.tasksactions,.pageactions) button{min-height:42px}
+:is(.inspectionmodule,.technicalmodule,.keys-module,.tasks,.vacation,.attendance-module,.wiki,.adminusers) :is(.tablewrap,.table-wrap,.technicaltablewrap,.attendance-table-wrap){max-width:100%;overflow-x:auto;overscroll-behavior-x:contain;-webkit-overflow-scrolling:touch}
+:is(.inspectionmodule,.technicalmodule,.keys-module,.tasks,.vacation,.attendance-module,.wiki,.adminusers) :is(.tablewrap,.table-wrap,.technicaltablewrap,.attendance-table-wrap) table{width:100%}
+@media(max-width:900px){
+ .body{padding:20px}
+ :is(.inspectionpanel,.technicalpanel,.keys-panel,.attendance-card,.vacation-panel){padding:18px}
+ :is(.inspectionmodule,.technicalmodule,.keys-module,.tasks,.vacation,.attendance-module,.wiki,.adminusers) :is(.grid,.formgrid,.form-grid){min-width:0}
+}
+@media(max-width:650px){
+ html,body,#root{max-width:100%;overflow-x:clip}
+ .body{padding:14px 12px 28px}
+ :is(.inspectionmodule,.technicalmodule,.keys-module,.tasks,.vacation,.attendance-module,.wiki,.adminusers){max-width:100%}
+ :is(.inspectionheading,.technicalhead,.tasksheader,.pageheading,.wikihead){flex-direction:column;align-items:stretch;gap:12px;margin-bottom:14px}
+ :is(.inspectionheading,.technicalhead,.tasksheader,.pageheading,.wikihead) h1{font-size:1.45rem}
+ :is(.inspectionpanel,.technicalpanel,.keys-panel,.attendance-card,.vacation-panel){padding:14px;border-radius:12px;margin-block:12px}
+ :is(.inspectionactions,.inspectionbottom,.technicalbuttons,.attendance-actions,.tasksactions,.pageactions){width:100%;gap:8px}
+ :is(.inspectionactions,.inspectionbottom,.technicalbuttons,.attendance-actions,.tasksactions,.pageactions)>button{flex:1 1 135px;min-width:0;min-height:44px;white-space:normal}
+ :is(.inspectionmodule,.technicalmodule,.keys-module,.tasks,.vacation,.attendance-module,.wiki,.adminusers) :is(input,select,textarea){width:100%}
+ :is(.inspectionmodule,.technicalmodule,.keys-module,.tasks,.vacation,.attendance-module,.wiki,.adminusers) :is(.technicalfields,.vacation-grid){grid-template-columns:minmax(0,1fr)}
+ :is(.inspectionmodule,.technicalmodule,.keys-module,.tasks,.vacation,.attendance-module,.wiki,.adminusers) :is(.technicaltablewrap,.tablewrap,.table-wrap){margin-inline:-4px}
+ .inspection-role-switch{padding:10px 12px}
+ .inspection-role-switch button{flex:1 1 135px;min-height:44px}
+ .technicalphotogrid,.technicalsignatures{grid-template-columns:minmax(0,1fr)}
+ .technicalrow{grid-template-columns:minmax(0,1fr)}
+ .technicalrow strong{grid-column:auto}
+ .login{padding:24px 18px}
+ .modal{padding:18px;max-height:calc(100dvh - 28px)}
+}
+@media(max-width:390px){
+ .body{padding:12px 9px 24px}
+ :is(.inspectionpanel,.technicalpanel,.keys-panel,.attendance-card,.vacation-panel){padding:12px}
+ :is(.inspectionactions,.inspectionbottom,.technicalbuttons,.attendance-actions,.tasksactions,.pageactions)>button{flex-basis:100%}
+}
+@media(prefers-reduced-motion:reduce){
+ :is(.inspectionmodule,.technicalmodule,.keys-module,.tasks,.vacation,.attendance-module,.wiki,.adminusers) *{scroll-behavior:auto}
+}
+@media print{
+ .inspection-role-switch{display:none!important}
+}
+
+/* Keep headings, labels and controls readable across all FOXA modules. */
+.content,.body,.pageheading,.pageheading>*,.tiles,.tiles>*,.buildinglist,.buildinglist>*,.modal,.modal>*,.technicalmodule,.inspectionmodule,.keys-module,.tasks,.vacation,.attendance-module,.wiki,.adminusers{min-width:0;max-width:100%}
+:is(.content,.body,.pageheading,.modal,.technicalmodule,.inspectionmodule,.keys-module,.tasks,.vacation,.attendance-module,.wiki,.adminusers) :is(h1,h2,h3,h4,p,label,th,td){overflow-wrap:anywhere;word-break:normal}
+:is(.content,.body,.pageheading,.modal,.technicalmodule,.inspectionmodule,.keys-module,.tasks,.vacation,.attendance-module,.wiki,.adminusers) :is(input,select,textarea,button){max-width:100%}
+:is(.content,.body,.pageheading,.modal,.technicalmodule,.inspectionmodule,.keys-module,.tasks,.vacation,.attendance-module,.wiki,.adminusers) :is(button,.primary,.secondarybutton){white-space:normal;overflow-wrap:anywhere}
+:is(.content,.body,.modal,.technicalmodule,.inspectionmodule,.keys-module,.tasks,.vacation,.attendance-module,.wiki,.adminusers) :is(.card,.panel,.formrow,.form-row,.field,.fieldgroup){min-width:0}
+@media(max-width:650px){
+ .pageheading>*{width:100%;min-width:0}
+ .content .body :is(input[type="search"],input[type="text"],input[type="date"],select,textarea){min-width:0;max-width:100%}
+ .content :is(.actions,.pageactions,.technicalbuttons){flex-wrap:wrap;min-width:0}
+ .content :is(.actions,.pageactions,.technicalbuttons)>*{max-width:100%}
+}
