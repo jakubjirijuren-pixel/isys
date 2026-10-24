@@ -1,3 +1,7 @@
+## 2026-10-25 – Zkratka Evidence klíčů na terminálu
+
+- Na úvodní obrazovku mobilního terminálu FOXA FIELD vrácena rychlá akce **Evidence klíčů** pro otevření výpůjček a vrácení. Zobrazuje se pouze uživatelům s přístupem k modulu. [PR #doplnit](https://github.com/jakubjirijuren-pixel/isys/pulls)
+
 ## 2026-10-21 – Sjednocení pracovních modulů FOXA FIELD
 
 - Všechny mobilní pracovní moduly dostaly jednotnou terminálovou navigaci s návratem na hlavní obrazovku a živým indikátorem připojení.
