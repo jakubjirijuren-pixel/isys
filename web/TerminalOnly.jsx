@@ -20,7 +20,7 @@ export default function TerminalOnly({supabase,onLogout}){
  const [clock,setClock]=useState(()=>new Date());
  const adminUnlockedRef=useRef(false);
  adminUnlockedRef.current=adminUnlocked;
- useEffect(()=>{const tick=()=>setClock(new Date());const interval=setInterval(tick,60000);const onFocus=()=>tick();document.addEventListener("visibilitychange",onFocus);return()=>{clearInterval(interval);document.removeEventListener("visibilitychange",onFocus)}},[]);
+ useEffect(()=>{const tick=()=>setClock(new Date());const interval=setInterval(tick,1000);const onFocus=()=>tick();document.addEventListener("visibilitychange",onFocus);return()=>{clearInterval(interval);document.removeEventListener("visibilitychange",onFocus)}},[]);
  const controller=useRef(null);
  const unlockTimer=useRef(null);
  const stopScan=()=>{controller.current?.abort();controller.current=null};
