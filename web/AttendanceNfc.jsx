@@ -16,6 +16,7 @@ export function AttendanceKiosk({supabase,profiles,onClose,onSaved}){
  useEffect(()=>{const refresh=()=>setClock(new Date());const timer=setInterval(refresh,1000);document.addEventListener("visibilitychange",refresh);return()=>{clearInterval(timer);document.removeEventListener("visibilitychange",refresh)}},[]);
  const clockDisplay=<div className="attendance-terminal-clock"><strong>{clock.toLocaleTimeString("cs-CZ",{hour:"2-digit",minute:"2-digit"})}</strong><span>{clock.toLocaleDateString("cs-CZ",{weekday:"long",day:"numeric",month:"long",year:"numeric"})}</span></div>;
  const [scannedName,setScannedName]=useState("");
+ const [pinMode,setPinMode]=useState(false),[pin,setPin]=useState(""),[pinSession,setPinSession]=useState("");
  const controller=useRef(null);
  const resetTimer=useRef(null);
  const startRef=useRef(null);
@@ -23,10 +24,10 @@ export function AttendanceKiosk({supabase,profiles,onClose,onSaved}){
  const clearReset=()=>{if(resetTimer.current)clearTimeout(resetTimer.current);resetTimer.current=null};
  const stop=()=>{controller.current?.abort();controller.current=null};
  useEffect(()=>()=>{stop();clearReset()},[]);
- useEffect(()=>{if(state!=="confirm"&&state!=="done")return;clearReset();setRemaining(15);const deadline=Date.now()+15000;const interval=setInterval(()=>setRemaining(Math.max(0,Math.ceil((deadline-Date.now())/1000))),200);resetTimer.current=setTimeout(()=>{setToken("");setPerson(null);setScannedName("");setError("");setSuccess("");setState("idle")},15000);return()=>{clearInterval(interval);clearReset()}},[state]);
- useEffect(()=>{if(state!=="idle"||!autoScanEnabled)return;const t=setTimeout(()=>startRef.current?.(),350);return()=>clearTimeout(t)},[state,autoScanEnabled]);
+ useEffect(()=>{if(state!=="confirm"&&state!=="done")return;clearReset();setRemaining(15);const deadline=Date.now()+15000;const interval=setInterval(()=>setRemaining(Math.max(0,Math.ceil((deadline-Date.now())/1000))),200);resetTimer.current=setTimeout(()=>{setToken("");setPerson(null);setScannedName("");setPinSession("");setPin("");setPinMode(false);setError("");setSuccess("");setState("idle")},15000);return()=>{clearInterval(interval);clearReset()}},[state]);
+ useEffect(()=>{if(state!=="idle"||!autoScanEnabled||pinMode)return;const t=setTimeout(()=>startRef.current?.(),350);return()=>clearTimeout(t)},[state,autoScanEnabled,pinMode]);
  const start=async()=>{
-  clearReset();stop();setToken("");setPerson(null);setScannedName("");setError("");setSuccess("");
+  clearReset();stop();setToken("");setPerson(null);setScannedName("");setPinSession("");setError("");setSuccess("");
   if(!("NDEFReader" in window)){setAutoScanEnabled(false);setError("NFC čtení vyžaduje Chrome na Androidu a zapnuté NFC.");return}
   const c=new AbortController();controller.current=c;setState("scanning");
   try{
@@ -47,11 +48,19 @@ export function AttendanceKiosk({supabase,profiles,onClose,onSaved}){
   }catch(e){if(!c.signal.aborted){setAutoScanEnabled(false);setError(e.message);setState("idle")}}
  };
  startRef.current=start;
+ const loginPin=async()=>{
+  if(!/^\\d{4}$/.test(pin))return;
+  setError("");setState("loading");
+  const {data,error:e}=await supabase.rpc("foxa_attendance_pin_login",{p_pin:pin});
+  setPin("");
+  if(e||!data?.length){setError(e?.message||"Neplatný PIN.");setState("idle");setPinMode(true);return}
+  setPinSession(data[0].session_token);setPerson(data[0].employee_id);setScannedName(data[0].employee_name);setLast(data[0].last_event||"out");setState("confirm");
+ };
  const mark=async type=>{
   setState("saving");setError("");
-  const {error:e}=await supabase.rpc("isys_attendance_card_mark",{p_token:token,p_type:type});
+  const {error:e}=pinSession?await supabase.rpc("foxa_attendance_pin_mark",{p_session_token:pinSession,p_type:type}):await supabase.rpc("isys_attendance_card_mark",{p_token:token,p_type:type});
   if(e){setError(e.message);setState("confirm");return}
-  setAutoScanEnabled(true);setSuccess("Zaznamenáno: "+names[type]);setState("done");setToken("");onSaved?.();
+  setAutoScanEnabled(true);setSuccess("Zaznamenáno: "+names[type]);setState("done");setToken("");setPinSession("");onSaved?.();
  };
  const label=profiles.find(p=>p.id===person);
  const employeeName=scannedName||label?.display_name||label?.full_name||label?.email||"Jméno se nepodařilo načíst";
@@ -59,10 +68,10 @@ export function AttendanceKiosk({supabase,profiles,onClose,onSaved}){
  return <div className="attendance-terminal" role="dialog" aria-modal="true" aria-label="Docházkový terminál">
  <header className="attendance-terminal-head"><strong><span className="attendance-terminal-brand">FOXA</span> Docházkový terminál</strong><button type="button" className="attendance-terminal-exit" onClick={()=>{stop();onClose()}} aria-label="Zavřít terminál">✕</button></header>
  <main className="attendance-terminal-main">
- {state==="idle"&&<section className="attendance-terminal-panel attendance-terminal-intro"><span className="attendance-terminal-icon" aria-hidden="true">◷</span><h1>Evidence docházky</h1>{clockDisplay}<p>Přiložte svůj NFC čip. Čtečka se spouští automaticky, pokud to zařízení dovolí.</p><button type="button" className="attendance-terminal-primary" onClick={()=>{setAutoScanEnabled(true);start()}}>Spustit čtení NFC</button></section>}
- {state==="scanning"&&<section className="attendance-terminal-panel"><div className="attendance-terminal-scan" role="status"><span aria-hidden="true">◈</span><strong>Přiložte osobní NFC čip</strong>{clockDisplay}<small>Podržte čip u NFC čtečky zařízení.</small></div></section>}
+ {state==="idle"&&<section className="attendance-terminal-panel attendance-terminal-intro"><span className="attendance-terminal-icon" aria-hidden="true">◷</span><h1>Evidence docházky</h1>{clockDisplay}{pinMode?<><p>Zadejte svůj čtyřmístný osobní PIN.</p><form className="attendance-pin-form" onSubmit={e=>{e.preventDefault();loginPin()}}><input aria-label="Čtyřmístný PIN" type="password" inputMode="numeric" pattern="[0-9]{4}" maxLength={4} autoComplete="off" value={pin} onChange={e=>setPin(e.target.value.replace(/\\D/g,"").slice(0,4))} placeholder="••••"/><button type="submit" className="attendance-terminal-primary" disabled={pin.length!==4}>Potvrdit PIN</button></form><button type="button" className="attendance-terminal-secondary" onClick={()=>{setPinMode(false);setPin("");setAutoScanEnabled(true)}}>Použít NFC čip</button></>:<><p>Přiložte svůj NFC čip nebo použijte osobní PIN.</p><button type="button" className="attendance-terminal-primary" onClick={()=>{setAutoScanEnabled(true);start()}}>Spustit čtení NFC</button><button type="button" className="attendance-terminal-secondary" onClick={()=>{stop();setAutoScanEnabled(false);setPinMode(true);setPin("")}}>Přihlásit se PINem</button></>}</section>}
+ {state==="scanning"&&<section className="attendance-terminal-panel"><div className="attendance-terminal-scan" role="status"><span aria-hidden="true">◈</span><strong>Přiložte osobní NFC čip</strong>{clockDisplay}<small>Podržte čip u NFC čtečky zařízení.</small><button type="button" className="attendance-terminal-secondary" onClick={()=>{stop();setAutoScanEnabled(false);setPinMode(true);setState("idle")}}>Použít PIN místo čipu</button></div></section>}
  {(state==="loading"||state==="saving")&&<section className="attendance-terminal-panel attendance-terminal-progress" role="status"><span className="attendance-terminal-icon" aria-hidden="true">◷</span><h1>{state==="loading"?"Načítám zaměstnance…":"Ukládám docházku…"}</h1><p>Počkejte prosím.</p></section>}
- {state==="confirm"&&<section className="attendance-terminal-panel attendance-terminal-confirm"><button type="button" className="attendance-terminal-back" onClick={()=>{setAutoScanEnabled(true);start()}}>← Jiný čip</button><div className="attendance-terminal-identity"><span aria-hidden="true">✓</span><small>Rozpoznaný zaměstnanec</small><h1>{employeeName}</h1></div>{countdown}<h2>Vyberte docházkovou akci</h2><div className="attendance-terminal-actions">{(next[last]||["in"]).map(type=><button type="button" className={"attendance-terminal-action "+(type==="in"?"attendance-terminal-action-in":"")} key={type} onClick={()=>mark(type)}>{names[type]}<span aria-hidden="true">→</span></button>)}</div></section>}
+ {state==="confirm"&&<section className="attendance-terminal-panel attendance-terminal-confirm"><button type="button" className="attendance-terminal-back" onClick={()=>{setPinSession("");setAutoScanEnabled(true);setPinMode(false);start()}}>← Jiný čip</button><div className="attendance-terminal-identity"><span aria-hidden="true">✓</span><small>Rozpoznaný zaměstnanec</small><h1>{employeeName}</h1></div>{countdown}<h2>Vyberte docházkovou akci</h2><div className="attendance-terminal-actions">{(next[last]||["in"]).map(type=><button type="button" className={"attendance-terminal-action "+(type==="in"?"attendance-terminal-action-in":"")} key={type} onClick={()=>mark(type)}>{names[type]}<span aria-hidden="true">→</span></button>)}</div></section>}
  {state==="done"&&<section className="attendance-terminal-panel attendance-terminal-done"><span aria-hidden="true" className="attendance-terminal-check">✓</span><h1>{employeeName}</h1><p>{success}. Docházka byla úspěšně zaznamenána.</p>{countdown}<button type="button" className="attendance-terminal-primary" onClick={()=>{setAutoScanEnabled(true);start()}}>Další zaměstnanec</button></section>}
  {error&&<p className="attendance-terminal-error" role="alert">{error}</p>}
  </main></div>;
