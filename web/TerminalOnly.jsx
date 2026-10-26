@@ -31,6 +31,45 @@ export default function TerminalOnly({supabase,onLogout}){
   });
   return()=>{active=false};
  },[supabase]);
+ useEffect(()=>{
+  // Prevent accidental history navigation while the dedicated terminal account is active.
+  // Browser/system navigation cannot be fully disabled from a website.
+  const guard={foxaTerminalGuard:true};
+  window.history.pushState(guard,"",window.location.href);
+  const onPop=()=>{
+   window.history.pushState(guard,"",window.location.href);
+  };
+  window.addEventListener("popstate",onPop);
+  const onKeyDown=e=>{
+   const key=e.key.toLowerCase();
+   const editing=e.target?.closest?.("input,textarea,select,[contenteditable=true]");
+   if(editing)return;
+   if(key==="f5"||((e.ctrlKey||e.metaKey)&&key==="r")||((e.altKey||e.metaKey)&&key==="arrowleft")||key==="browserback"){
+    e.preventDefault();
+   }
+  };
+  document.addEventListener("keydown",onKeyDown,true);
+  let startX=0,startY=0;
+  const onTouchStart=e=>{if(e.touches.length!==1)return;startX=e.touches[0].clientX;startY=e.touches[0].clientY};
+  const onTouchMove=e=>{
+   if(e.touches.length!==1||!e.cancelable)return;
+   const dx=e.touches[0].clientX-startX,dy=e.touches[0].clientY-startY;
+   const target=e.target;
+   const scrollArea=target?.closest?.(".attendance-terminal-main,.key-kiosk-main,.foxa-terminal-only-active");
+   if((startX<32&&dx>45&&Math.abs(dx)>Math.abs(dy))||(startX>window.innerWidth-32&&dx< -45&&Math.abs(dx)>Math.abs(dy))){
+    e.preventDefault();return;
+   }
+   if(dy>35&&Math.abs(dy)>Math.abs(dx)&&(!scrollArea||scrollArea.scrollTop<=0)&&window.scrollY<=0)e.preventDefault();
+  };
+  document.addEventListener("touchstart",onTouchStart,{passive:true});
+  document.addEventListener("touchmove",onTouchMove,{passive:false});
+  return()=>{
+   window.removeEventListener("popstate",onPop);
+   document.removeEventListener("keydown",onKeyDown,true);
+   document.removeEventListener("touchstart",onTouchStart);
+   document.removeEventListener("touchmove",onTouchMove);
+  };
+ },[]);
  const startAdminScan=async()=>{
   setError("");
   if(!("NDEFReader" in window)){setError("Ověření administrátorského čipu vyžaduje Android s Chrome a Web NFC.");return}
