@@ -46,3 +46,31 @@
 .attendance-terminal-clock strong{font-size:clamp(44px,7vw,70px);line-height:1.05;letter-spacing:-.05em;font-weight:850;font-variant-numeric:tabular-nums;color:#f6fbff}
 .attendance-terminal-clock span{font-size:clamp(14px,2vw,17px);color:#b5d4eb;text-align:center}
 .attendance-terminal-scan .attendance-terminal-clock{padding:3px 10px}
+
+/* Compact NFC employee action panel, matching the administrator 2-column controls. */
+.attendance-terminal-confirm{gap:12px;padding:16px 20px;max-width:650px}
+.attendance-terminal-confirm .attendance-terminal-back{min-height:36px;padding:6px 11px;font-size:13px;border:1px solid #416581}
+.attendance-terminal-confirm .attendance-terminal-identity{padding:11px 14px;gap:3px;grid-template-columns:36px 1fr;grid-template-rows:auto auto;text-align:left;justify-items:start;column-gap:11px}
+.attendance-terminal-confirm .attendance-terminal-identity>span{width:36px;height:36px;font-size:21px;grid-row:1/3;align-self:center}
+.attendance-terminal-confirm .attendance-terminal-identity small{font-size:12px}
+.attendance-terminal-confirm .attendance-terminal-identity h1{font-size:clamp(19px,3vw,27px)}
+.attendance-terminal-confirm .attendance-terminal-countdown{padding:8px 12px;gap:5px 10px}
+.attendance-terminal-confirm .attendance-terminal-countdown>span{font-size:12px}
+.attendance-terminal-confirm .attendance-terminal-countdown>strong{font-size:18px}
+.attendance-terminal-confirm .attendance-terminal-countdown-track{height:4px}
+.attendance-terminal-confirm h2{font-size:15px}
+.attendance-terminal-confirm .attendance-terminal-actions{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
+.attendance-terminal-confirm .attendance-terminal-action{min-height:58px!important;padding:10px 12px;font-size:clamp(12px,2vw,15px);line-height:1.25;gap:7px;border-radius:11px}
+.attendance-terminal-confirm .attendance-terminal-action span{font-size:19px;flex-shrink:0}
+@media(max-width:650px){
+ .attendance-terminal-confirm{padding:12px;gap:10px}
+ .attendance-terminal-confirm .attendance-terminal-actions{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+ .attendance-terminal-confirm .attendance-terminal-action{min-height:54px!important;padding:9px 10px;font-size:12px;overflow-wrap:anywhere}
+ .attendance-terminal-confirm .attendance-terminal-identity{padding:9px 10px}
+}
+@media(max-height:700px){
+ .attendance-terminal-main:has(.attendance-terminal-confirm){padding-top:8px;padding-bottom:8px}
+ .attendance-terminal-confirm{gap:7px;padding:10px 12px}
+ .attendance-terminal-confirm .attendance-terminal-action{min-height:46px!important;padding:7px 9px}
+ .attendance-terminal-confirm .attendance-terminal-countdown{padding:6px 10px}
+}
