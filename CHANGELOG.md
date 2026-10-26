@@ -1,3 +1,11 @@
+## 2026-10-26 – Centrální registr klíčů
+
+- Modul Evidence klíčů přejmenován v uživatelském rozhraní na **Centrální registr klíčů**.
+- U aktivních výpůjček s předávacím protokolem lze potvrdit podpis. Zobrazuje se čas a potvrzující uživatel; výpůjčka se uzamkne proti úpravám a smazání, vrácení zůstává možné.
+- Administrátor může výpůjčku odemknout. Odemčení se eviduje v databázové historii.
+- **Záloha Excel** je dostupná všem uživatelům modulu, v rozsahu jejich databázových oprávnění. Obsahuje výpůjčky, částečná vrácení a svazky klíčů.
+- Wiki doplněna o postupy potvrzení podpisu, odemčení a exportu.
+
 ## 2026-10-26 – Havarijní služby u objektů
 
 - **Bytoservis:** U středisek 320, 327, 335, 337, 355, 366, 373, 397, 398, 431, 442, 443, 445, 446, 449, 450, 452, 453, 454, 528, 530, 536 a 538 se zobrazuje sjednaná havarijní služba **Bytoservis**, tel. **+420 241 414 141**.
