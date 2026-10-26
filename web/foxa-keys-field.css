@@ -100,3 +100,11 @@
 .foxa-terminal-page-evidence-klicu .keys-record{padding:13px!important;border-radius:12px!important;border:1px solid #285c7d!important;background:#0d304b!important;margin-bottom:9px!important;overflow-wrap:anywhere!important}
 .foxa-terminal-page-evidence-klicu .keys-record-actions button{min-height:44px!important;border-radius:9px!important}
 }
+
+/* Export is visible on the handheld terminal home screen for every role. */
+.foxa-keys-export-mobile{display:none}
+@media screen and (max-width:650px){
+ .foxa-keys-export-mobile{display:flex!important;justify-content:flex-end;align-items:center;padding:0 2px}
+ .foxa-keys-export-mobile .secondarybutton{display:inline-flex!important;align-items:center;justify-content:center;min-height:42px;white-space:normal}
+ .foxa-keys-field-back>button:last-child:not(:first-child){display:none!important}
+}
