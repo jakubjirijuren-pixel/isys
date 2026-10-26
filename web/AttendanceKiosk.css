@@ -80,3 +80,20 @@
 .attendance-pin-form button{width:100%}
 .attendance-terminal-intro>.attendance-terminal-secondary{width:min(340px,100%);justify-self:center}
 .attendance-terminal-scan>.attendance-terminal-secondary{min-height:45px;padding:10px 15px;font-size:14px}
+
+/* Integrated touch keypad: never requests the device's software keyboard. */
+.attendance-pin-form{gap:10px;width:min(320px,100%)}
+.attendance-pin-display{display:flex;justify-content:center;gap:20px;align-items:center;min-height:45px;border-radius:12px;background:#0e2339;border:1px solid #6099c6}
+.attendance-pin-display span{font-size:25px;color:#638da9}
+.attendance-pin-display span.filled{color:#eaf7ff}
+.attendance-pin-keypad{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.attendance-terminal-panel .attendance-pin-keypad .attendance-pin-key{min-height:52px;padding:7px;border:1px solid #507e9e;background:#244c6b;color:#fff;border-radius:10px;font-size:24px;font-weight:700;touch-action:manipulation}
+.attendance-terminal-panel .attendance-pin-keypad .attendance-pin-key:active{background:#3c8abd}
+.attendance-terminal-panel .attendance-pin-keypad .attendance-pin-key-special{font-size:19px;background:#183951;color:#b9d8ed}
+.attendance-terminal-intro:has(.attendance-pin-keypad){gap:10px;padding:16px}
+.attendance-terminal-intro:has(.attendance-pin-keypad) .attendance-terminal-icon{font-size:42px}
+.attendance-terminal-intro:has(.attendance-pin-keypad) .attendance-terminal-clock{padding:4px}
+.attendance-terminal-intro:has(.attendance-pin-keypad) .attendance-terminal-clock strong{font-size:clamp(32px,5vw,46px)}
+.attendance-terminal-intro:has(.attendance-pin-keypad) p{font-size:14px}
+.attendance-terminal-intro:has(.attendance-pin-keypad) .attendance-terminal-secondary{min-height:42px;padding:8px 12px;font-size:14px}
+@media(max-height:740px){.attendance-terminal-intro:has(.attendance-pin-keypad){gap:6px;padding:10px}.attendance-terminal-intro:has(.attendance-pin-keypad) .attendance-terminal-icon{display:none}.attendance-terminal-panel .attendance-pin-keypad .attendance-pin-key{min-height:43px}.attendance-pin-display{min-height:37px}}
