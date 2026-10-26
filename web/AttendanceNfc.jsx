@@ -11,6 +11,7 @@ const extract=message=>{
 };
 export function AttendanceKiosk({supabase,profiles,onClose,onSaved}){
  const [token,setToken]=useState(""),[person,setPerson]=useState(null),[last,setLast]=useState("out"),[error,setError]=useState(""),[state,setState]=useState("idle"),[success,setSuccess]=useState("");
+ const [remaining,setRemaining]=useState(15);
  const controller=useRef(null);
  const resetTimer=useRef(null);
  const startRef=useRef(null);
@@ -18,7 +19,7 @@ export function AttendanceKiosk({supabase,profiles,onClose,onSaved}){
  const clearReset=()=>{if(resetTimer.current)clearTimeout(resetTimer.current);resetTimer.current=null};
  const stop=()=>{controller.current?.abort();controller.current=null};
  useEffect(()=>()=>{stop();clearReset()},[]);
- useEffect(()=>{if(state!=="confirm"&&state!=="done")return;clearReset();resetTimer.current=setTimeout(()=>{setToken("");setPerson(null);setError("");setSuccess("");setState("idle")},15000);return clearReset},[state]);
+ useEffect(()=>{if(state!=="confirm"&&state!=="done")return;clearReset();setRemaining(15);const deadline=Date.now()+15000;const interval=setInterval(()=>setRemaining(Math.max(0,Math.ceil((deadline-Date.now())/1000))),200);resetTimer.current=setTimeout(()=>{setToken("");setPerson(null);setError("");setSuccess("");setState("idle")},15000);return()=>{clearInterval(interval);clearReset()}},[state]);
  useEffect(()=>{if(state!=="idle"||!autoScanEnabled)return;const t=setTimeout(()=>startRef.current?.(),350);return()=>clearTimeout(t)},[state,autoScanEnabled]);
  const start=async()=>{
   clearReset();stop();setToken("");setPerson(null);setError("");setSuccess("");
@@ -48,14 +49,16 @@ export function AttendanceKiosk({supabase,profiles,onClose,onSaved}){
   setAutoScanEnabled(true);setSuccess("Zaznamenáno: "+names[type]);setState("done");setToken("");onSaved?.();
  };
  const label=profiles.find(p=>p.id===person);
+ const employeeName=label?.display_name||label?.full_name||label?.email||"Zaměstnanec";
+ const countdown=<div className="attendance-terminal-countdown" role="timer" aria-label={"Automatické odhlášení za "+remaining+" sekund"}><span>Automatický návrat za</span><strong>{remaining} s</strong><div className="attendance-terminal-countdown-track"><span style={{width:(remaining/15*100)+"%"}}/></div></div>;
  return <div className="attendance-terminal" role="dialog" aria-modal="true" aria-label="Docházkový terminál">
  <header className="attendance-terminal-head"><strong><span className="attendance-terminal-brand">FOXA</span> Docházkový terminál</strong><button type="button" className="attendance-terminal-exit" onClick={()=>{stop();onClose()}} aria-label="Zavřít terminál">✕</button></header>
  <main className="attendance-terminal-main">
  {state==="idle"&&<section className="attendance-terminal-panel attendance-terminal-intro"><span className="attendance-terminal-icon" aria-hidden="true">◷</span><h1>Evidence docházky</h1><p>Přiložte svůj NFC čip. Čtečka se spouští automaticky, pokud to zařízení dovolí.</p><button type="button" className="attendance-terminal-primary" onClick={()=>{setAutoScanEnabled(true);start()}}>Spustit čtení NFC</button></section>}
  {state==="scanning"&&<section className="attendance-terminal-panel"><div className="attendance-terminal-scan" role="status"><span aria-hidden="true">◈</span><strong>Přiložte osobní NFC čip</strong><small>Podržte čip u NFC čtečky zařízení.</small></div><button type="button" className="attendance-terminal-secondary" onClick={()=>{stop();setAutoScanEnabled(false);setState("idle")}}>← Zrušit načítání</button></section>}
  {(state==="loading"||state==="saving")&&<section className="attendance-terminal-panel attendance-terminal-progress" role="status"><span className="attendance-terminal-icon" aria-hidden="true">◷</span><h1>{state==="loading"?"Načítám zaměstnance…":"Ukládám docházku…"}</h1><p>Počkejte prosím.</p></section>}
- {state==="confirm"&&<section className="attendance-terminal-panel"><button type="button" className="attendance-terminal-back" onClick={()=>{setAutoScanEnabled(true);start()}}>← Jiný čip</button><div className="attendance-terminal-identity"><span aria-hidden="true">✓</span><small>Rozpoznaný zaměstnanec</small><h1>{label?.display_name||label?.full_name||label?.email||"Zaměstnanec"}</h1></div><h2>Vyberte docházkovou akci</h2><div className="attendance-terminal-actions">{(next[last]||["in"]).map(type=><button type="button" className={"attendance-terminal-action "+(type==="in"?"attendance-terminal-action-in":"")} key={type} onClick={()=>mark(type)}>{names[type]}<span aria-hidden="true">→</span></button>)}</div></section>}
- {state==="done"&&<section className="attendance-terminal-panel attendance-terminal-done"><span aria-hidden="true" className="attendance-terminal-check">✓</span><h1>{success}</h1><p>Docházka byla úspěšně zaznamenána. Za 15 sekund se terminál vrátí k načítání dalšího čipu.</p><button type="button" className="attendance-terminal-primary" onClick={()=>{setAutoScanEnabled(true);start()}}>Další zaměstnanec</button></section>}
+ {state==="confirm"&&<section className="attendance-terminal-panel"><button type="button" className="attendance-terminal-back" onClick={()=>{setAutoScanEnabled(true);start()}}>← Jiný čip</button><div className="attendance-terminal-identity"><span aria-hidden="true">✓</span><small>Rozpoznaný zaměstnanec</small><h1>{employeeName}</h1></div>{countdown}<h2>Vyberte docházkovou akci</h2><div className="attendance-terminal-actions">{(next[last]||["in"]).map(type=><button type="button" className={"attendance-terminal-action "+(type==="in"?"attendance-terminal-action-in":"")} key={type} onClick={()=>mark(type)}>{names[type]}<span aria-hidden="true">→</span></button>)}</div></section>}
+ {state==="done"&&<section className="attendance-terminal-panel attendance-terminal-done"><span aria-hidden="true" className="attendance-terminal-check">✓</span><h1>{employeeName}</h1><p>{success}. Docházka byla úspěšně zaznamenána.</p>{countdown}<button type="button" className="attendance-terminal-primary" onClick={()=>{setAutoScanEnabled(true);start()}}>Další zaměstnanec</button></section>}
  {error&&<p className="attendance-terminal-error" role="alert">{error}</p>}
  </main></div>;
 }
