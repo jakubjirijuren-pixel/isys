@@ -4,3 +4,52 @@
 .foxa-terminal-only-error{max-width:850px;margin:0 auto 12px;padding:12px;border:1px solid #dc7777;border-radius:10px;background:#fff2f2;color:#8a2020}
 .foxa-terminal-only .attendance-terminal-exit,.foxa-terminal-only .key-kiosk-exit{display:none!important}
 .foxa-terminal-only .foxa-terminal-only-active>.foxa-terminal-only-back{display:inline-flex}
+
+/* FOXA kiosk visual system */
+.foxa-terminal-only{--kiosk-ink:#f4f8ff;--kiosk-muted:#a7bed4;--kiosk-line:rgba(155,192,224,.17);min-height:100dvh;background:radial-gradient(ellipse at 85% -10%,rgba(40,128,193,.22),transparent 52%),linear-gradient(155deg,#071421 0%,#0c2033 65%,#091827 100%);color:var(--kiosk-ink);font-family:inherit}
+.foxa-terminal-only>header{max-width:1080px;min-height:76px;margin:0 auto 0;padding:10px 0 18px;border-bottom:1px solid var(--kiosk-line)}
+.foxa-terminal-only-brand{display:flex;align-items:center;gap:13px;min-width:0}
+.foxa-terminal-only-brand>span:last-child{display:grid;gap:3px}
+.foxa-terminal-only-brand strong{font-size:24px;letter-spacing:.08em;line-height:1}
+.foxa-terminal-only-brand small{font-size:10px;letter-spacing:.18em;color:var(--kiosk-muted);font-weight:800}
+.foxa-terminal-only-mark{width:45px;height:45px;display:grid;place-items:center;border-radius:14px;background:linear-gradient(145deg,#56bbff,#126aa9);box-shadow:0 7px 24px rgba(22,129,209,.24);font-size:27px;font-weight:900;color:#071b2b}
+.foxa-terminal-only>header button,.foxa-terminal-only-back{background:rgba(25,54,79,.75);border:1px solid rgba(142,190,225,.3);color:#e5f4ff;font-weight:700}
+.foxa-terminal-only>header button:hover,.foxa-terminal-only-back:hover{background:#214a6b}
+.foxa-terminal-only-menu{max-width:1080px;margin:clamp(35px,9vh,110px) auto 0;text-align:left;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px}
+.foxa-terminal-only-menu>h1,.foxa-terminal-only-menu>p,.foxa-terminal-only-eyebrow{grid-column:1/-1}
+.foxa-terminal-only-eyebrow{color:#72c6ff;font-size:11px;font-weight:850;letter-spacing:.18em}
+.foxa-terminal-only-menu h1{font-size:clamp(30px,5vw,50px);font-weight:850;letter-spacing:-.04em;margin:0;line-height:1.08}
+.foxa-terminal-only-menu p{color:var(--kiosk-muted);margin:-9px 0 13px;font-size:16px;line-height:1.5}
+.foxa-terminal-only-menu>button{display:flex;flex-direction:column;align-items:flex-start;justify-content:space-between;gap:16px;text-align:left;width:100%;min-height:230px;margin:0;padding:26px;border-radius:22px;background:linear-gradient(150deg,#193955,#10263b);border:1px solid rgba(118,183,228,.3);color:#f5faff;box-shadow:0 16px 36px rgba(0,0,0,.13);transition:transform .18s ease,border-color .18s ease,background .18s ease}
+.foxa-terminal-only-menu>button:hover{transform:translateY(-3px);border-color:#75c7ff;background:linear-gradient(150deg,#204c70,#13304b)}
+.foxa-terminal-only-menu>button:focus-visible,.foxa-terminal-only>header button:focus-visible{outline:3px solid #72c6ff;outline-offset:3px}
+.foxa-terminal-only-choice-icon{width:54px;height:54px;display:grid;place-items:center;border-radius:15px;background:rgba(83,180,245,.13);border:1px solid rgba(122,201,253,.2);color:#87d0ff;font-size:32px;line-height:1}
+.foxa-terminal-only-choice-copy{display:grid;gap:6px}
+.foxa-terminal-only-choice-copy b{font-size:clamp(23px,3vw,29px);letter-spacing:-.025em}
+.foxa-terminal-only-choice-copy small{color:#b3cadd;font-size:14px;font-weight:500}
+.foxa-terminal-only-menu>button>strong{display:flex;justify-content:space-between;align-items:center;width:100%;padding-top:15px;border-top:1px solid rgba(166,202,229,.17);font-size:14px;color:#8cd3ff}
+.foxa-terminal-only-menu>button>strong span{font-size:24px}
+.foxa-terminal-only-active{max-width:1080px;padding-top:18px}
+.foxa-terminal-only .attendance-terminal,.foxa-terminal-only .key-kiosk{position:relative;inset:auto;width:100%;min-height:calc(100dvh - 150px);max-height:none;box-sizing:border-box;border:1px solid var(--kiosk-line);border-radius:20px;overflow:hidden;background:rgba(8,26,43,.65)}
+.foxa-terminal-only .attendance-terminal-head,.foxa-terminal-only .key-kiosk-head{padding:16px 22px;background:rgba(17,46,70,.7)}
+.foxa-terminal-only .attendance-terminal-panel,.foxa-terminal-only .key-kiosk-panel{box-shadow:0 14px 42px rgba(0,0,0,.16)}
+.foxa-terminal-only .attendance-terminal-main,.foxa-terminal-only .key-kiosk-main{min-height:400px}
+.foxa-terminal-only .attendance-terminal-exit,.foxa-terminal-only .key-kiosk-exit{display:none!important}
+.foxa-terminal-only-header-actions{align-items:center}
+@media(max-width:700px){
+ .foxa-terminal-only{padding:12px}
+ .foxa-terminal-only>header{min-height:62px;padding:5px 0 13px}
+ .foxa-terminal-only-brand strong{font-size:20px}
+ .foxa-terminal-only-brand small{font-size:8px}
+ .foxa-terminal-only-mark{width:39px;height:39px;font-size:23px;border-radius:11px}
+ .foxa-terminal-only>header button{font-size:12px;min-height:40px;padding:8px 10px}
+ .foxa-terminal-only-menu{margin:28px auto 0;grid-template-columns:1fr;gap:13px}
+ .foxa-terminal-only-menu p{margin:-4px 0 8px}
+ .foxa-terminal-only-menu>button{min-height:150px;padding:19px;gap:12px}
+ .foxa-terminal-only-choice-icon{width:44px;height:44px;font-size:26px}
+ .foxa-terminal-only-choice-copy b{font-size:23px}
+ .foxa-terminal-only-active{padding-top:12px}
+ .foxa-terminal-only .attendance-terminal,.foxa-terminal-only .key-kiosk{min-height:calc(100dvh - 115px);border-radius:14px}
+ .foxa-terminal-only .attendance-terminal-head,.foxa-terminal-only .key-kiosk-head{padding:12px}
+}
+@media(prefers-reduced-motion:reduce){.foxa-terminal-only-menu>button{transition:none}}
