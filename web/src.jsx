@@ -177,16 +177,50 @@ function App(){
  useEffect(()=>{if(!widgetSettingsOpen)return;const close=e=>{if(!e.target.closest(".widgetscope,.widgetconfig"))setWidgetSettingsOpen(null)};const esc=e=>{if(e.key==="Escape")setWidgetSettingsOpen(null)};document.addEventListener("pointerdown",close);document.addEventListener("keydown",esc);return()=>{document.removeEventListener("pointerdown",close);document.removeEventListener("keydown",esc)}},[widgetSettingsOpen]);
  const [widgetColorsById,setWidgetColorsById]=useState({});
  const [draggedWidget,setDraggedWidget]=useState(null);
- const changeWidgetColor=(id,color)=>{const next={...widgetColorsById,[id]:color};setWidgetColorsById(next);if(session?.user?.id)try{localStorage.setItem("isys-widget-colors-"+session.user.id,JSON.stringify(next))}catch{}};
+ const widgetPrefsRef=useRef({widget_ids:[],widget_colors:{},widget_scopes:{}});
+ const widgetPrefsLoadedRef=useRef(false);
+ const saveWidgetPreferences=async patch=>{
+  if(!session?.user?.id||!widgetPrefsLoadedRef.current)return;
+  const next={...widgetPrefsRef.current,...patch};
+  widgetPrefsRef.current=next;
+  const {error}=await supabase.from("foxa_widget_preferences").upsert({user_id:session.user.id,...next,updated_at:new Date().toISOString()},{onConflict:"user_id"});
+  if(error)console.warn("Widget preferences save failed",error.message);
+ };
+ const changeWidgetColor=(id,color)=>{const next={...widgetColorsById,[id]:color};setWidgetColorsById(next);saveWidgetPreferences({widget_colors:next});if(session?.user?.id)try{localStorage.setItem("isys-widget-colors-"+session.user.id,JSON.stringify(next))}catch{}};
  const moveWidget=(from,to)=>{if(from===to)return;const next=[...dashboardWidgets];const a=next.indexOf(from),b=next.indexOf(to);if(a<0||b<0)return;next.splice(a,1);next.splice(b,0,from);changeDashboardWidgets(next)};
 
  useEffect(()=>{if(!session?.user?.id)return;try{setMyTechnician(localStorage.getItem("isys-technician-"+session.user.id)||"");setMyReferent(localStorage.getItem("isys-referent-"+session.user.id)||"");setWidgetScopes(JSON.parse(localStorage.getItem("isys-widget-scopes-"+session.user.id)||"{}"));setWidgetColorsById(JSON.parse(localStorage.getItem("isys-widget-colors-"+session.user.id)||"{}"))}catch{setMyTechnician("");setMyReferent("");setWidgetScopes({});setWidgetColorsById({})}},[session?.user?.id]);
  const changeMyReferent=name=>{setMyReferent(name);if(session?.user?.id)try{localStorage.setItem("isys-referent-"+session.user.id,name)}catch{}};
  const changeMyTechnician=name=>{setMyTechnician(name);if(session?.user?.id)try{localStorage.setItem("isys-technician-"+session.user.id,name)}catch{}};
- const changeWidgetScope=(id,scope)=>{const next={...widgetScopes,[id]:scope};setWidgetScopes(next);if(session?.user?.id)try{localStorage.setItem("isys-widget-scopes-"+session.user.id,JSON.stringify(next))}catch{}};
+ const changeWidgetScope=(id,scope)=>{const next={...widgetScopes,[id]:scope};setWidgetScopes(next);saveWidgetPreferences({widget_scopes:next});if(session?.user?.id)try{localStorage.setItem("isys-widget-scopes-"+session.user.id,JSON.stringify(next))}catch{}};
 
- useEffect(()=>{if(!session?.user?.id)return;try{const saved=JSON.parse(localStorage.getItem("isys-widgets-"+session.user.id)||"null");setDashboardWidgets(Array.isArray(saved)?[...new Set(saved.filter(id=>dashboardWidgetCatalog.some(w=>w[0]===id)))]:defaultDashboardWidgets);}catch{setDashboardWidgets(defaultDashboardWidgets)}},[session?.user?.id]);
- const changeDashboardWidgets=next=>{setDashboardWidgets(next);if(session?.user?.id)try{localStorage.setItem("isys-widgets-"+session.user.id,JSON.stringify(next))}catch{}};
+ useEffect(()=>{
+  const userId=session?.user?.id;
+  widgetPrefsLoadedRef.current=false;
+  if(!userId)return;
+  let active=true;
+  const readLocal=(key,fallback)=>{try{return JSON.parse(localStorage.getItem(key+userId)||"null")??fallback}catch{return fallback}};
+  const localIds=readLocal("isys-widgets-",defaultDashboardWidgets);
+  const localColors=readLocal("isys-widget-colors-",{});
+  const localScopes=readLocal("isys-widget-scopes-",{});
+  const validIds=ids=>Array.isArray(ids)?[...new Set(ids.filter(id=>dashboardWidgetCatalog.some(w=>w[0]===id)))]:defaultDashboardWidgets;
+  const load=async()=>{
+   const {data,error}=await supabase.from("foxa_widget_preferences").select("widget_ids,widget_colors,widget_scopes").eq("user_id",userId).maybeSingle();
+   if(!active)return;
+   if(error)console.warn("Widget preferences load failed",error.message);
+   const prefs=data?{widget_ids:validIds(data.widget_ids),widget_colors:data.widget_colors||{},widget_scopes:data.widget_scopes||{}}:{widget_ids:validIds(localIds),widget_colors:localColors,widget_scopes:localScopes};
+   widgetPrefsRef.current=prefs;
+   setDashboardWidgets(prefs.widget_ids);setWidgetColorsById(prefs.widget_colors);setWidgetScopes(prefs.widget_scopes);
+   widgetPrefsLoadedRef.current=!error;
+   if(!data&&!error){
+    const {error:saveError}=await supabase.from("foxa_widget_preferences").upsert({user_id:userId,...prefs},{onConflict:"user_id"});
+    if(saveError)console.warn("Widget preferences initial sync failed",saveError.message);
+   }
+  };
+  load();
+  return()=>{active=false;widgetPrefsLoadedRef.current=false};
+ },[session?.user?.id]);
+ const changeDashboardWidgets=next=>{setDashboardWidgets(next);saveWidgetPreferences({widget_ids:next});if(session?.user?.id)try{localStorage.setItem("isys-widgets-"+session.user.id,JSON.stringify(next))}catch{}};
  const [filters,setFilters]=useState(initialView.filters||{city:"",manager:"",referent:""});
  const [widgetBuildingFilter,setWidgetBuildingFilter]=useState(null);
  const [accountDirectory,setAccountDirectory]=useState([]);
