@@ -12,7 +12,8 @@ const extractCard=event=>{
  return "";
 };
 export default function TerminalOnly({supabase,onLogout}){
- const [mode,setMode]=useState("");
+ const [mode,setMode]=useState(()=>{try{const saved=window.localStorage.getItem("foxa:work-terminal:mode");return saved==="attendance"||saved==="keys"?saved:""}catch{return ""}});
+ useEffect(()=>{try{if(mode)window.localStorage.setItem("foxa:work-terminal:mode",mode);else window.localStorage.removeItem("foxa:work-terminal:mode")}catch{}},[mode]);
  const [profiles,setProfiles]=useState([]);
  const [error,setError]=useState("");
  const [adminUnlocked,setAdminUnlocked]=useState(false);
