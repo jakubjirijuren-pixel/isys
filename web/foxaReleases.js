@@ -1,6 +1,8 @@
 // Aktualizovat při každé změně aplikace společně s CHANGELOG.md.
 // Nové vydání = nový jedinečný id; přečtená vydání se znovu nezobrazují.
 export const foxaReleases=[
+ {id:"2026-10-26-key-registry-update",date:"2026-10-26",title:"Centrální registr klíčů a zálohování",changes:[{area:"Centrální registr klíčů",description:"Modul Evidence klíčů byl přejmenován na Centrální registr klíčů."},{area:"Předávací protokoly",description:"Po potvrzení podpisu se výpůjčka uzamkne; zobrazí se čas a jméno potvrzujícího zaměstnance. Vrácení zůstává dostupné."},{area:"Odemčení",roles:["admin"],description:"Administrátor může podepsanou výpůjčku odemknout; událost se zaznamená."},{area:"Záloha Excel",description:"Export výpůjček, částečných vrácení a svazků klíčů je dostupný všem uživatelům modulu v rozsahu jejich databázových oprávnění."}]},
+
  {id:"2026-10-26-emergency-services",date:"2026-10-26",title:"Havarijní služby přímo v přehledu objektů",changes:[
   {area:"Evidence objektů",description:"U 23 vybraných středisek je nově přímo na kartách a v seznamu viditelná sjednaná havarijní služba Bytoservis s telefonem +420 241 414 141, bez otevírání detailu objektu."},
   {area:"Objekt 333",description:"U objektu č. 333 je uvedena havarijní služba Cigdus s telefonem +420 733 642 111."},
