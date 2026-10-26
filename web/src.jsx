@@ -9,6 +9,7 @@ import Inspections from "./Inspections.jsx";
 import TechnicalInspections from "./TechnicalInspections.jsx";
 import Keys from "./Keys.jsx";
 import FoxaMobileTerminal from "./FoxaMobileTerminal.jsx";
+import TerminalOnly from "./TerminalOnly.jsx";
 import FoxaModuleTerminal from "./FoxaModuleTerminal.jsx";
 import Attendance from "./Attendance.jsx";
 import Fleet from "./Fleet.jsx";
@@ -240,9 +241,10 @@ function App(){
  const accountName=id=>accountDirectory.find(a=>a.id===id)?.display_name||"";
  const currentAccountName=accountName(session?.user?.id)||session?.user?.email?.split("@")[0]||"";
  useEffect(()=>{if(!session?.user?.id)return;let active=true;supabase.rpc("isys_task_assignees").then(({data,error})=>{if(active&&!error)setAccountDirectory(data||[])});return()=>{active=false}},[session?.user?.id]);
+ const [roleReady,setRoleReady]=useState(false);
  const [page,setPage]=useState(initialView.page||"Přehled"),[buildings,setBuildings]=useState([]),[listLoading,setListLoading]=useState(false),[listError,setListError]=useState(""),[role,setRole]=useState("technician"),[userRoles,setUserRoles]=useState(["technician"]),[editing,setEditing]=useState(null),[form,setForm]=useState(empty),[saving,setSaving]=useState(false),[message,setMessage]=useState("");
  useEffect(()=>{supabase.auth.getSession().then(({data,error})=>{if(error)setError(error.message);setSession(data?.session??null);setLoading(false)});const {data:{subscription}}=supabase.auth.onAuthStateChange((event,s)=>{if(event==="PASSWORD_RECOVERY")setPasswordRecovery(true);setSession(s)});return()=>subscription.unsubscribe()},[]);
- const load=useCallback(async()=>{if(!session)return;setListLoading(true);setListError("");const [{data,error:err},{data:profile}]=await Promise.all([supabase.from("buildings").select("id,name,address,description,created_at,object_number,street,city,manager,referent,manager_user_id,referent_user_id,economist,accountant,legal_entity,company_id,external_id,flats_count,nonresidential_count,garages_count,shared_spaces_count,invoice_approvers_count,manager_flag,economist_flag").order("name"),supabase.rpc("isys_my_roles").then(async result=>result.error?supabase.from("profiles").select("role").eq("id",session.user.id).maybeSingle().then(({data})=>({data:data?.role?[data.role]:["technician"]})):result)]);if(err)setListError("Nepodařilo se načíst objekty: "+err.message);else {setBuildings(data??[]);supabase.from("building_referents").select("building_id,user_id").then(({data:links,error:linkError})=>{if(!linkError)setBuildingReferents(links||[])});setSelectedBuilding(prev=>(data??[]).find(b=>b.id===(prev?.id||initialView.selectedId))??null)}const activeRoles=Array.isArray(profile)&&profile.length?profile:["technician"];setUserRoles(activeRoles);setRole(activeRoles.includes("admin")?"admin":activeRoles.includes("technician")?"technician":"referent");setListLoading(false)},[session]);
+ const load=useCallback(async()=>{if(!session)return;setListLoading(true);setListError("");const [{data,error:err},{data:profile}]=await Promise.all([supabase.from("buildings").select("id,name,address,description,created_at,object_number,street,city,manager,referent,manager_user_id,referent_user_id,economist,accountant,legal_entity,company_id,external_id,flats_count,nonresidential_count,garages_count,shared_spaces_count,invoice_approvers_count,manager_flag,economist_flag").order("name"),supabase.rpc("isys_my_roles").then(async result=>result.error?supabase.from("profiles").select("role").eq("id",session.user.id).maybeSingle().then(({data})=>({data:data?.role?[data.role]:["technician"]})):result)]);if(err)setListError("Nepodařilo se načíst objekty: "+err.message);else {setBuildings(data??[]);supabase.from("building_referents").select("building_id,user_id").then(({data:links,error:linkError})=>{if(!linkError)setBuildingReferents(links||[])});setSelectedBuilding(prev=>(data??[]).find(b=>b.id===(prev?.id||initialView.selectedId))??null)}const activeRoles=Array.isArray(profile)&&profile.length?profile:["technician"];setUserRoles(activeRoles);setRoleReady(true);setRole(activeRoles.includes("admin")?"admin":activeRoles.includes("technician")?"technician":"referent");setListLoading(false)},[session]);
  useEffect(()=>{load()},[load]);
  useEffect(()=>{if(!session)return;try{sessionStorage.setItem("isys-view",JSON.stringify({page,search,filters,selectedId:selectedBuilding?.id||null}))}catch{}},[session,page,search,filters,selectedBuilding]);
  useEffect(()=>{if(!session||listLoading||listError)return;const y=Number(initialView.scrollY)||0;if(!y)return;const id=requestAnimationFrame(()=>window.scrollTo(0,y));return()=>cancelAnimationFrame(id)},[session,listLoading,listError]);
@@ -431,6 +433,8 @@ function App(){
   setPage("Objekty");
   window.scrollTo({top:0,behavior:"smooth"});
  };
+ if(!roleReady)return <main className="center">Načítání oprávnění…</main>;
+ if(userRoles.includes("terminal"))return <TerminalOnly supabase={supabase} onLogout={()=>supabase.auth.signOut()}/>;
  const moduleBlocked=moduleAvailabilityReady&&!userRoles.includes("admin")&&moduleAvailability[page]===false;
  const moduleDisplayName=name=>name==="Evidence klíčů"?"Centrální registr klíčů":name;
  const pages=["Přehled","Objekty","Evidence klíčů","Docházka","Vozidla a kniha jízd","Dovolené","Tiskopisy","Kniha odchozí pošty","Wiki",...(userRoles.includes("admin")?["Správa uživatelů","Zpětná vazba"]:[])];
