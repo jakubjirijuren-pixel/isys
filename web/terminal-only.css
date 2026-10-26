@@ -59,3 +59,23 @@ html:has(.foxa-terminal-only),body:has(.foxa-terminal-only){overscroll-behavior:
 .foxa-terminal-only{overscroll-behavior:none;touch-action:pan-y;overflow-x:hidden}
 .foxa-terminal-only .attendance-terminal-main,.foxa-terminal-only .key-kiosk-main{overscroll-behavior:contain;-webkit-overflow-scrolling:touch}
 .foxa-terminal-only button,.foxa-terminal-only select,.foxa-terminal-only input{touch-action:manipulation}
+
+/* Administrator console */
+.foxa-terminal-admin-panel{max-width:1080px;margin:18px auto 10px;padding:19px 22px;display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:18px;background:linear-gradient(120deg,#173c4c,#102c43);border:1px solid rgba(112,217,190,.45);border-radius:18px;box-shadow:0 10px 28px rgba(0,0,0,.15)}
+.foxa-terminal-admin-panel-title{display:flex;align-items:center;gap:14px;min-width:240px;flex:1}
+.foxa-terminal-admin-panel-icon{width:43px;height:43px;border-radius:13px;display:grid;place-items:center;background:#1c755f;color:#c9ffe9;font-size:23px}
+.foxa-terminal-admin-panel-title>span:last-child{display:grid;gap:5px}
+.foxa-terminal-admin-panel-title strong{font-size:17px;color:#eafff5}
+.foxa-terminal-admin-panel-title small{font-size:12px;color:#b9d7d5;line-height:1.4}
+.foxa-terminal-admin-panel-actions{display:flex;flex-wrap:wrap;gap:9px}
+.foxa-terminal-admin-panel-actions button{border:1px solid #4b8195;background:#224b61;color:#f3faff;padding:11px 15px;font-weight:750}
+.foxa-terminal-admin-panel-actions button:hover{background:#316981}
+.foxa-terminal-admin-panel-actions button:last-child{border-color:#70c5a8;background:#1c624e}
+.foxa-terminal-admin-status{padding:9px 12px;border:1px solid #4f9f84;border-radius:99px;color:#a8f1d2;background:#163e39;font-size:12px;font-weight:800}
+.foxa-terminal-clock{grid-column:1/-1;display:grid;justify-items:center;gap:4px;padding:24px;border:1px solid rgba(124,193,238,.25);border-radius:20px;background:rgba(20,57,85,.75)}
+.foxa-terminal-clock strong{font-size:clamp(50px,9vw,84px);line-height:1.05;font-weight:850;letter-spacing:-.055em;font-variant-numeric:tabular-nums;color:#f4faff}
+.foxa-terminal-clock span{font-size:clamp(14px,2vw,18px);color:#b8d6e9}
+html:has(.foxa-terminal-only-admin-unlocked),body:has(.foxa-terminal-only-admin-unlocked){overscroll-behavior:auto}
+.foxa-terminal-only-admin-unlocked{overscroll-behavior:auto}
+.foxa-terminal-only-admin-unlocked .attendance-terminal-main,.foxa-terminal-only-admin-unlocked .key-kiosk-main{overscroll-behavior:auto}
+@media(max-width:700px){.foxa-terminal-admin-panel{padding:15px}.foxa-terminal-admin-panel-actions{width:100%;display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}.foxa-terminal-admin-panel-actions button{font-size:12px;padding:10px 8px}.foxa-terminal-admin-status{display:none}}
