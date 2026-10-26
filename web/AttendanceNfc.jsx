@@ -13,7 +13,7 @@ export function AttendanceKiosk({supabase,profiles,onClose,onSaved}){
  const [token,setToken]=useState(""),[person,setPerson]=useState(null),[last,setLast]=useState("out"),[error,setError]=useState(""),[state,setState]=useState("idle"),[success,setSuccess]=useState("");
  const [remaining,setRemaining]=useState(15);
  const [clock,setClock]=useState(()=>new Date());
- useEffect(()=>{const refresh=()=>setClock(new Date());const timer=setInterval(refresh,60000);document.addEventListener("visibilitychange",refresh);return()=>{clearInterval(timer);document.removeEventListener("visibilitychange",refresh)}},[]);
+ useEffect(()=>{const refresh=()=>setClock(new Date());const timer=setInterval(refresh,1000);document.addEventListener("visibilitychange",refresh);return()=>{clearInterval(timer);document.removeEventListener("visibilitychange",refresh)}},[]);
  const clockDisplay=<div className="attendance-terminal-clock"><strong>{clock.toLocaleTimeString("cs-CZ",{hour:"2-digit",minute:"2-digit"})}</strong><span>{clock.toLocaleDateString("cs-CZ",{weekday:"long",day:"numeric",month:"long",year:"numeric"})}</span></div>;
  const [scannedName,setScannedName]=useState("");
  const controller=useRef(null);
