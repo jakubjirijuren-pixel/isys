@@ -1,3 +1,11 @@
+## 2026-10-26 – Havarijní služby u objektů
+
+- **Bytoservis:** U středisek 320, 327, 335, 337, 355, 366, 373, 397, 398, 431, 442, 443, 445, 446, 449, 450, 452, 453, 454, 528, 530, 536 a 538 se zobrazuje sjednaná havarijní služba **Bytoservis**, tel. **+420 241 414 141**.
+- **Cigdus:** U objektu č. **333** se zobrazuje havarijní služba **Cigdus**, tel. **+420 733 642 111**.
+- **Web i mobil:** Označení je viditelné bez rozkliknutí detailu – v kartách objektů, tabulkovém seznamu i rychlém seznamu mobilního terminálu; zůstává i v detailu.
+- **Zvýraznění:** Kontrastní oranžový panel, větší písmo a výrazně označené telefonní číslo.
+- Změny jsou přiřazovány podle čísla střediska a nemění ostatní objekty.
+
 ## 2026-10-25 – Zkratka Evidence klíčů na terminálu
 
 - Na úvodní obrazovku mobilního terminálu FOXA FIELD vrácena rychlá akce **Evidence klíčů** pro otevření výpůjček a vrácení. Zobrazuje se pouze uživatelům s přístupem k modulu. [PR #103](https://github.com/jakubjirijuren-pixel/isys/pull/103)
