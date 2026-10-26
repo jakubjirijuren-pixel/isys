@@ -1,4 +1,3 @@
-import RedphoneContact from "./RedphoneContact.jsx";
 import React,{useEffect,useState} from "react";
 import "./foxa-module-terminal.css";
 
@@ -31,6 +30,5 @@ export default function FoxaModuleTerminal({page,availablePages=[],onNavigate}){
    <span className="foxa-field-module-ready" aria-label="Pracovní modul">●</span>
   </div>
   {links.length>0&&<div className="foxa-field-module-links" aria-label="Související moduly">{links.slice(0,3).map(name=><button type="button" key={name} onClick={()=>onNavigate(name)}><span>{name}</span><span aria-hidden="true">›</span></button>)}</div>}
-  <RedphoneContact compact />
  </div>
 }
