@@ -53,3 +53,9 @@
  .foxa-terminal-only .attendance-terminal-head,.foxa-terminal-only .key-kiosk-head{padding:12px}
 }
 @media(prefers-reduced-motion:reduce){.foxa-terminal-only-menu>button{transition:none}}
+
+/* Restrict browser touch gestures on dedicated FOXA workstations. */
+html:has(.foxa-terminal-only),body:has(.foxa-terminal-only){overscroll-behavior:none}
+.foxa-terminal-only{overscroll-behavior:none;touch-action:pan-y;overflow-x:hidden}
+.foxa-terminal-only .attendance-terminal-main,.foxa-terminal-only .key-kiosk-main{overscroll-behavior:contain;-webkit-overflow-scrolling:touch}
+.foxa-terminal-only button,.foxa-terminal-only select,.foxa-terminal-only input{touch-action:manipulation}
