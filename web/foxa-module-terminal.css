@@ -107,3 +107,26 @@
 
 /* Hide duplicated legacy object heading in handheld terminal only. */
 @media(max-width:650px){.layout .body.foxa-terminal-page-objekty>.pageheading,.layout .body.foxa-terminal-page-objekty>div>.pageheading{display:none!important}}
+
+/* FOXA FIELD: compact and consistent shared mobile module presentation. */
+@media screen and (max-width:650px){
+ .foxa-terminal-module:not(.foxa-terminal-page-prehled)>.foxa-field-module-tools{margin-bottom:10px}
+ .foxa-field-module-topline{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:7px}
+ .foxa-field-module-topline .foxa-field-module-back{min-height:40px;padding:7px 13px;border-radius:10px;font-weight:750}
+ .foxa-field-module-header{min-height:0;padding:12px 13px;gap:11px;box-shadow:none}
+ .foxa-field-module-icon{width:40px;height:40px;font-size:23px}
+ .foxa-field-module-title h1{margin:0 0 3px!important;font-size:clamp(17px,5vw,22px)!important;overflow-wrap:normal;word-break:normal;hyphens:none}
+ .foxa-field-module-title p{font-size:12px!important;line-height:1.35}
+ .foxa-field-module-links{gap:6px;padding:8px 0 0;scrollbar-width:none}
+ .foxa-field-module-links button{min-height:40px;max-width:210px;padding:8px 11px;font-size:12px}
+ .foxa-terminal-module:not(.foxa-terminal-page-prehled) :is(.attendance-module,.vacation,.foxa-fleet,.inspectionmodule,.technicalmodule,.keys-module,.tasks,.printforms,.outgoing-mail){width:100%;max-width:100%;min-width:0}
+ .foxa-terminal-module:not(.foxa-terminal-page-prehled) :is(.attendance-card,.vacation-panel,.fleet-card,.inspectionpanel,.technicalpanel,.keys-panel,.taskcard){box-sizing:border-box;min-width:0;max-width:100%;border-radius:13px}
+ .foxa-terminal-module:not(.foxa-terminal-page-prehled) :is(.attendance-card,.vacation-panel,.inspectionpanel,.technicalpanel){padding:14px}
+ .foxa-terminal-module:not(.foxa-terminal-page-prehled) :is(.attendance-module,.vacation,.foxa-fleet,.inspectionmodule,.technicalmodule,.keys-module,.tasks) :is(input,select,textarea){max-width:100%;min-width:0;box-sizing:border-box;font-size:16px}
+ .foxa-terminal-module:not(.foxa-terminal-page-prehled) :is(.attendance-module,.vacation,.foxa-fleet,.inspectionmodule,.technicalmodule,.keys-module,.tasks) :is(button,[role="button"]){touch-action:manipulation}
+ .foxa-terminal-module:not(.foxa-terminal-page-prehled) :is(.attendance-actions,.inspectionactions,.inspectionbottom,.technicalbuttons,.technicalbottom){gap:8px}
+ .foxa-terminal-module:not(.foxa-terminal-page-prehled) :is(.attendance-actions,.inspectionactions,.inspectionbottom,.technicalbuttons,.technicalbottom)>button{min-height:44px;white-space:normal}
+ .foxa-terminal-module:not(.foxa-terminal-page-prehled) :is(.attendance-toolbar,.inspectionheading,.technicalhead,.fleet-hero){gap:10px}
+ .foxa-terminal-module:not(.foxa-terminal-page-prehled) :is(.attendance-module,.vacation,.foxa-fleet,.inspectionmodule,.technicalmodule,.keys-module,.tasks) :is(h2,h3){overflow-wrap:normal;word-break:normal;hyphens:none}
+ .foxa-terminal-module:not(.foxa-terminal-page-prehled) :is(.attendance-module,.vacation,.foxa-fleet,.inspectionmodule,.technicalmodule,.keys-module,.tasks) :is(table){display:block;max-width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch}
+}
