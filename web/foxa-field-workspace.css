@@ -49,3 +49,9 @@
 @media screen and (max-width:650px) and (prefers-reduced-motion:reduce){
  .foxa-terminal-module :is(.foxa-field-form-step,.foxa-wizard-step){animation:none!important;transition:none!important}
 }
+
+/* Havarijní služba Bytoservis – karty, tabulka i mobilní terminál */
+.bytoservis-badge{display:inline-flex;flex-wrap:wrap;align-items:center;gap:5px;margin-top:7px;padding:6px 9px;border-radius:9px;border:1px solid #6fa7cf;background:rgba(35,112,163,.12);color:inherit;font-size:12px;font-weight:650;line-height:1.4;max-width:100%;width:fit-content;text-align:left;white-space:normal}
+.bytoservis-badge .bytoservis-phone{font-weight:750;white-space:nowrap}
+.bytoservis-badge-detail{font-size:14px;margin-bottom:12px}
+.foxa-object-row .bytoservis-badge{display:inline-flex}
