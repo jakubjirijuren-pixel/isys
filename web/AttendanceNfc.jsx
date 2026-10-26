@@ -49,7 +49,7 @@ export function AttendanceKiosk({supabase,profiles,onClose,onSaved}){
  };
  startRef.current=start;
  const loginPin=async()=>{
-  if(!/^\\d{4}$/.test(pin))return;
+  if(pin.length!==4||pin.split("").some(c=>c<"0"||c>"9"))return;
   setError("");setState("loading");
   const {data,error:e}=await supabase.rpc("foxa_attendance_pin_login",{p_pin:pin});
   setPin("");
