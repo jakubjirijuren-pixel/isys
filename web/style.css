@@ -468,3 +468,12 @@ button,select,input,textarea{max-width:100%}
  border-color:#7fc5ec;
  box-shadow:0 7px 20px #0007;
 }
+
+/* Per-module test-operation banner, managed by administrators. */
+.foxa-test-banner-wrap{display:flex;flex-direction:column;gap:8px;margin:0 0 16px}
+.foxa-test-banner{display:flex;flex-wrap:wrap;align-items:center;gap:12px;padding:15px 19px;background:#ffdc57!important;border:2px solid #b78300!important;border-radius:12px;color:#3a2a00!important;box-shadow:0 3px 12px #0002;font-size:14px;line-height:1.5}
+.foxa-test-banner strong{font-size:15px;font-weight:850;letter-spacing:.025em;color:#302100!important}
+.foxa-test-banner span{color:#392b00!important}
+.foxa-test-banner-toggle{align-self:flex-end;padding:7px 12px;border-radius:8px;border:1px solid #b78300;background:transparent;color:inherit;font-size:12px;cursor:pointer}
+.foxa-test-banner-toggle:disabled{opacity:.5;cursor:wait}
+@media(max-width:640px){.foxa-test-banner{padding:12px;gap:5px;flex-direction:column;align-items:flex-start}.foxa-test-banner-toggle{align-self:stretch}}
