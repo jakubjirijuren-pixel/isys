@@ -12,6 +12,7 @@ const extract=message=>{
 export function AttendanceKiosk({supabase,profiles,onClose,onSaved}){
  const [token,setToken]=useState(""),[person,setPerson]=useState(null),[last,setLast]=useState("out"),[error,setError]=useState(""),[state,setState]=useState("idle"),[success,setSuccess]=useState("");
  const [remaining,setRemaining]=useState(15);
+ const [scannedName,setScannedName]=useState("");
  const controller=useRef(null);
  const resetTimer=useRef(null);
  const startRef=useRef(null);
@@ -19,10 +20,10 @@ export function AttendanceKiosk({supabase,profiles,onClose,onSaved}){
  const clearReset=()=>{if(resetTimer.current)clearTimeout(resetTimer.current);resetTimer.current=null};
  const stop=()=>{controller.current?.abort();controller.current=null};
  useEffect(()=>()=>{stop();clearReset()},[]);
- useEffect(()=>{if(state!=="confirm"&&state!=="done")return;clearReset();setRemaining(15);const deadline=Date.now()+15000;const interval=setInterval(()=>setRemaining(Math.max(0,Math.ceil((deadline-Date.now())/1000))),200);resetTimer.current=setTimeout(()=>{setToken("");setPerson(null);setError("");setSuccess("");setState("idle")},15000);return()=>{clearInterval(interval);clearReset()}},[state]);
+ useEffect(()=>{if(state!=="confirm"&&state!=="done")return;clearReset();setRemaining(15);const deadline=Date.now()+15000;const interval=setInterval(()=>setRemaining(Math.max(0,Math.ceil((deadline-Date.now())/1000))),200);resetTimer.current=setTimeout(()=>{setToken("");setPerson(null);setScannedName("");setError("");setSuccess("");setState("idle")},15000);return()=>{clearInterval(interval);clearReset()}},[state]);
  useEffect(()=>{if(state!=="idle"||!autoScanEnabled)return;const t=setTimeout(()=>startRef.current?.(),350);return()=>clearTimeout(t)},[state,autoScanEnabled]);
  const start=async()=>{
-  clearReset();stop();setToken("");setPerson(null);setError("");setSuccess("");
+  clearReset();stop();setToken("");setPerson(null);setScannedName("");setError("");setSuccess("");
   if(!("NDEFReader" in window)){setAutoScanEnabled(false);setError("NFC čtení vyžaduje Chrome na Androidu a zapnuté NFC.");return}
   const c=new AbortController();controller.current=c;setState("scanning");
   try{
@@ -35,7 +36,8 @@ export function AttendanceKiosk({supabase,profiles,onClose,onSaved}){
     if(!value){setAutoScanEnabled(false);setError("Nelze přečíst sériové číslo čipu. Web NFC podporuje jen některé typy NFC čipů; zkuste jiný čip nebo Android s Chrome.");setState("idle");return}
     const {data,error:e}=await supabase.rpc("isys_attendance_card_status",{p_token:value});
     if(e||!data?.length){setAutoScanEnabled(false);setError(e?.message||"Čip není přiřazen zaměstnanci.");setState("idle");return}
-    setToken(value);setPerson(data[0].user_id);setLast(data[0].last_event||"out");setState("confirm");
+    const {data:cardName}=await supabase.rpc("foxa_terminal_employee_name",{p_token:value});
+    setScannedName(typeof cardName==="string"?cardName:"");setToken(value);setPerson(data[0].user_id);setLast(data[0].last_event||"out");setState("confirm");
    };
    reader.onreadingerror=()=>{setAutoScanEnabled(false);setError("NFC čip nelze přečíst. Zkuste to znovu.")};
    await reader.scan({signal:c.signal});
@@ -49,7 +51,7 @@ export function AttendanceKiosk({supabase,profiles,onClose,onSaved}){
   setAutoScanEnabled(true);setSuccess("Zaznamenáno: "+names[type]);setState("done");setToken("");onSaved?.();
  };
  const label=profiles.find(p=>p.id===person);
- const employeeName=label?.display_name||label?.full_name||label?.email||"Zaměstnanec";
+ const employeeName=scannedName||label?.display_name||label?.full_name||label?.email||"Jméno se nepodařilo načíst";
  const countdown=<div className="attendance-terminal-countdown" role="timer" aria-label={"Automatické odhlášení za "+remaining+" sekund"}><span>Automatický návrat za</span><strong>{remaining} s</strong><div className="attendance-terminal-countdown-track"><span style={{width:(remaining/15*100)+"%"}}/></div></div>;
  return <div className="attendance-terminal" role="dialog" aria-modal="true" aria-label="Docházkový terminál">
  <header className="attendance-terminal-head"><strong><span className="attendance-terminal-brand">FOXA</span> Docházkový terminál</strong><button type="button" className="attendance-terminal-exit" onClick={()=>{stop();onClose()}} aria-label="Zavřít terminál">✕</button></header>
