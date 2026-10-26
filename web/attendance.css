@@ -125,3 +125,8 @@
 .attendance-delete-actions{display:flex;justify-content:flex-end;gap:10px;flex-wrap:wrap}
 .attendance-delete-confirm{border:0;border-radius:10px;padding:12px 16px;background:#a82d3c;color:#fff;font-weight:750;cursor:pointer}
 .attendance-delete-confirm:disabled{opacity:.5;cursor:not-allowed}
+
+.attendance-pin-admin-fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;margin:16px 0}
+.attendance-pin-admin-fields label{display:grid;gap:8px;font-weight:650}
+.attendance-pin-admin-fields select,.attendance-pin-admin-fields input{width:100%;box-sizing:border-box;min-height:44px;padding:9px 12px;border:1px solid #91a4b5;border-radius:9px;background:var(--fx-surface,#fff);color:var(--fx-text,#1b2c3d)}
+@media(max-width:650px){.attendance-pin-admin-fields{grid-template-columns:1fr}}
