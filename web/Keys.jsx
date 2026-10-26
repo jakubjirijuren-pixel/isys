@@ -26,8 +26,8 @@ function KeyBuildingPicker({buildings,value,onChange}){
 }
 export default function Keys({supabase,buildings,userId,isAdmin=false,initialFilter="active",currentAccountName="",reportSignature,accountDirectory=[],terminalMode=false,delegation=null}){
  const representedName=delegation?accountDirectory.find(a=>String(a.id)===String(delegation.represented_user_id))?.display_name?.trim()||"":"";
- const [officeOptions,setOfficeOptions]=useState([]);
- useEffect(()=>{let alive=true;supabase.rpc("foxa_list_return_offices").then(({data,error})=>{if(alive&&!error)setOfficeOptions((data||[]).map(x=>x.office_number))});return()=>{alive=false}},[supabase]);
+ const [officeOptions,setOfficeOptions]=useState(["312","313","314","315","316","317"]);
+ useEffect(()=>{let alive=true;supabase.rpc("foxa_list_return_offices").then(({data,error})=>{if(alive&&!error)setOfficeOptions([...new Set(["312","313","314","315","316","317",...(data||[]).map(x=>x.office_number)])].sort((a,b)=>a.localeCompare(b,"cs",{numeric:true})))});return()=>{alive=false}},[supabase]);
  const [defaultOffice,setDefaultOffice]=useState("");
  const [officeOverridden,setOfficeOverridden]=useState(false);
  const effectiveOfficeUser=delegation?.represented_user_id||userId;
