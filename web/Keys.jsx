@@ -110,7 +110,7 @@ export default function Keys({supabase,buildings,userId,isAdmin=false,initialFil
   const {data:created,error:e}=delegation?await supabase.rpc("foxa_delegated_key_loan_create",{p_payload:payload}):await supabase.from("key_loans").insert(payload).select("*").single();
   if(e)setError("Výpůjčku se nepodařilo uložit: "+e.message);
   else{
-   setForm(empty());setNotice(loanVariant==="handover"?"Výpůjčka byla uložena. Nyní lze vytisknout předávací protokol.":"Výpůjčka klíčů byla zapsána.");
+   setForm({...empty(),return_office:defaultOffice});setOfficeOverridden(false);setNotice(loanVariant==="handover"?"Výpůjčka byla uložena. Nyní lze vytisknout předávací protokol.":"Výpůjčka klíčů byla zapsána.");
    await load();
    if(loanVariant==="handover"&&created)await exportProtocol(created);
   }
