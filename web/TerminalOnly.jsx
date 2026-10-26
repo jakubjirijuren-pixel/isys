@@ -17,6 +17,10 @@ export default function TerminalOnly({supabase,onLogout}){
  const [error,setError]=useState("");
  const [adminUnlocked,setAdminUnlocked]=useState(false);
  const [scanningAdmin,setScanningAdmin]=useState(false);
+ const [clock,setClock]=useState(()=>new Date());
+ const adminUnlockedRef=useRef(false);
+ adminUnlockedRef.current=adminUnlocked;
+ useEffect(()=>{const tick=()=>setClock(new Date());const interval=setInterval(tick,60000);const onFocus=()=>tick();document.addEventListener("visibilitychange",onFocus);return()=>{clearInterval(interval);document.removeEventListener("visibilitychange",onFocus)}},[]);
  const controller=useRef(null);
  const unlockTimer=useRef(null);
  const stopScan=()=>{controller.current?.abort();controller.current=null};
@@ -43,7 +47,7 @@ export default function TerminalOnly({supabase,onLogout}){
   const onKeyDown=e=>{
    const key=e.key.toLowerCase();
    const editing=e.target?.closest?.("input,textarea,select,[contenteditable=true]");
-   if(editing)return;
+   if(editing||adminUnlockedRef.current)return;
    if(key==="f5"||((e.ctrlKey||e.metaKey)&&key==="r")||((e.altKey||e.metaKey)&&key==="arrowleft")||key==="browserback"){
     e.preventDefault();
    }
@@ -52,7 +56,7 @@ export default function TerminalOnly({supabase,onLogout}){
   let startX=0,startY=0;
   const onTouchStart=e=>{if(e.touches.length!==1)return;startX=e.touches[0].clientX;startY=e.touches[0].clientY};
   const onTouchMove=e=>{
-   if(e.touches.length!==1||!e.cancelable)return;
+   if(e.touches.length!==1||!e.cancelable||adminUnlockedRef.current)return;
    const dx=e.touches[0].clientX-startX,dy=e.touches[0].clientY-startY;
    const target=e.target;
    const scrollArea=target?.closest?.(".attendance-terminal-main,.key-kiosk-main,.foxa-terminal-only-active");
@@ -91,9 +95,10 @@ export default function TerminalOnly({supabase,onLogout}){
    await reader.scan({signal:c.signal});
   }catch(e){if(!c.signal.aborted)setError(e.message);setScanningAdmin(false)}
  };
- return <main className="foxa-terminal-only">
-  <header><div className="foxa-terminal-only-brand"><span className="foxa-terminal-only-mark" aria-hidden="true">F</span><span><strong>FOXA</strong><small>PRACOVNÍ TERMINÁL</small></span></div><div className="foxa-terminal-only-header-actions">{adminUnlocked&&<><button type="button" onClick={lock}>Zamknout správu</button><button type="button" onClick={onLogout}>Odhlásit</button></>}<button type="button" onClick={()=>{if(scanningAdmin){stopScan();setScanningAdmin(false)}else startAdminScan()}}>{scanningAdmin?"Zrušit ověření":"Správa čipem"}</button></div></header>
+ return <main className={"foxa-terminal-only"+(adminUnlocked?" foxa-terminal-only-admin-unlocked":"")}>
+  <header><div className="foxa-terminal-only-brand"><span className="foxa-terminal-only-mark" aria-hidden="true">F</span><span><strong>FOXA</strong><small>PRACOVNÍ TERMINÁL</small></span></div><div className="foxa-terminal-only-header-actions">{adminUnlocked&&<span className="foxa-terminal-admin-status">Správa odemčena · 60 s</span>}<button type="button" onClick={()=>{if(scanningAdmin){stopScan();setScanningAdmin(false)}else startAdminScan()}}>{scanningAdmin?"Zrušit ověření":"Správa čipem"}</button></div></header>
+  {adminUnlocked&&<nav className="foxa-terminal-admin-panel" aria-label="Správa terminálu"><div className="foxa-terminal-admin-panel-title"><span className="foxa-terminal-admin-panel-icon" aria-hidden="true">✓</span><span><strong>Administrátorský režim</strong><small>Ověření čipem bylo úspěšné. Oprávnění se automaticky uzamkne po 60 sekundách.</small></span></div><div className="foxa-terminal-admin-panel-actions">{mode&&<button type="button" onClick={()=>{lock();setMode("")}}>Výběr terminálu</button>}<button type="button" onClick={()=>window.location.reload()}>Obnovit terminál</button><button type="button" onClick={onLogout}>Odhlásit se</button><button type="button" onClick={lock}>Zamknout správu</button></div></nav>}
   {error&&<p role="alert" className="foxa-terminal-only-error">{error}</p>}
-  {scanningAdmin?<section className="foxa-terminal-only-menu"><h1>Přiložte čip administrátora</h1><p>Po ověření se na 60 sekund zpřístupní správa terminálu.</p></section>:!mode?<section className="foxa-terminal-only-menu"><span className="foxa-terminal-only-eyebrow">PRACOVNÍ STANICE</span><h1>Vyberte terminál</h1><p>Pro pokračování zvolte požadovanou pracovní činnost.</p><button type="button" onClick={()=>{lock();setMode("attendance")}}><span className="foxa-terminal-only-choice-icon" aria-hidden="true">◷</span><span className="foxa-terminal-only-choice-copy"><b>Docházka</b><small>Příchod, odchod a pracovní doba</small></span><strong>Spustit <span aria-hidden="true">→</span></strong></button><button type="button" onClick={()=>{lock();setMode("keys")}}><span className="foxa-terminal-only-choice-icon" aria-hidden="true">⚿</span><span className="foxa-terminal-only-choice-copy"><b>Evidence klíčů</b><small>Výpůjčky a vracení svazků</small></span><strong>Spustit <span aria-hidden="true">→</span></strong></button></section>:<section className="foxa-terminal-only-active">{adminUnlocked&&<button type="button" className="foxa-terminal-only-back" onClick={()=>{lock();setMode("")}}>‹ Výběr terminálu</button>}{mode==="attendance"?<AttendanceKiosk supabase={supabase} profiles={profiles} onClose={()=>{lock();setMode("")}}/>:<KeyKiosk supabase={supabase} onExit={()=>{lock();setMode("")}}/>}</section>}
+  {scanningAdmin?<section className="foxa-terminal-only-menu"><h1>Přiložte čip administrátora</h1><p>Po ověření se na 60 sekund zpřístupní správa terminálu.</p><div className="foxa-terminal-clock"><strong>{clock.toLocaleTimeString("cs-CZ",{hour:"2-digit",minute:"2-digit"})}</strong><span>{clock.toLocaleDateString("cs-CZ",{weekday:"long",day:"numeric",month:"long",year:"numeric"})}</span></div></section>:!mode?<section className="foxa-terminal-only-menu"><span className="foxa-terminal-only-eyebrow">PRACOVNÍ STANICE</span><h1>Vyberte terminál</h1><p>Pro pokračování zvolte požadovanou pracovní činnost.</p><button type="button" onClick={()=>{lock();setMode("attendance")}}><span className="foxa-terminal-only-choice-icon" aria-hidden="true">◷</span><span className="foxa-terminal-only-choice-copy"><b>Docházka</b><small>Příchod, odchod a pracovní doba</small></span><strong>Spustit <span aria-hidden="true">→</span></strong></button><button type="button" onClick={()=>{lock();setMode("keys")}}><span className="foxa-terminal-only-choice-icon" aria-hidden="true">⚿</span><span className="foxa-terminal-only-choice-copy"><b>Evidence klíčů</b><small>Výpůjčky a vracení svazků</small></span><strong>Spustit <span aria-hidden="true">→</span></strong></button></section>:<section className="foxa-terminal-only-active">{mode==="attendance"?<AttendanceKiosk supabase={supabase} profiles={profiles} onClose={()=>{lock();setMode("")}}/>:<KeyKiosk supabase={supabase} onExit={()=>{lock();setMode("")}}/>}</section>}
  </main>;
 }
