@@ -74,3 +74,9 @@
  .attendance-terminal-confirm .attendance-terminal-action{min-height:46px!important;padding:7px 9px}
  .attendance-terminal-confirm .attendance-terminal-countdown{padding:6px 10px}
 }
+
+.attendance-pin-form{display:grid;gap:12px;width:min(340px,100%);justify-self:center}
+.attendance-pin-form input{width:100%;box-sizing:border-box;border:1px solid #6099c6;border-radius:12px;background:#0e2339;color:#fff;text-align:center;font-size:30px;letter-spacing:.55em;padding:14px 10px;font-variant-numeric:tabular-nums}
+.attendance-pin-form button{width:100%}
+.attendance-terminal-intro>.attendance-terminal-secondary{width:min(340px,100%);justify-self:center}
+.attendance-terminal-scan>.attendance-terminal-secondary{min-height:45px;padding:10px 15px;font-size:14px}
