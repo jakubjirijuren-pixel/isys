@@ -12,11 +12,17 @@ const extract=message=>{
 export function AttendanceKiosk({supabase,profiles,onClose,onSaved}){
  const [token,setToken]=useState(""),[person,setPerson]=useState(null),[last,setLast]=useState("out"),[error,setError]=useState(""),[state,setState]=useState("idle"),[success,setSuccess]=useState("");
  const controller=useRef(null);
+ const resetTimer=useRef(null);
+ const startRef=useRef(null);
+ const [autoScanEnabled,setAutoScanEnabled]=useState(true);
+ const clearReset=()=>{if(resetTimer.current)clearTimeout(resetTimer.current);resetTimer.current=null};
  const stop=()=>{controller.current?.abort();controller.current=null};
- useEffect(()=>()=>stop(),[]);
+ useEffect(()=>()=>{stop();clearReset()},[]);
+ useEffect(()=>{if(state!=="confirm"&&state!=="done")return;clearReset();resetTimer.current=setTimeout(()=>{setToken("");setPerson(null);setError("");setSuccess("");setState("idle")},15000);return clearReset},[state]);
+ useEffect(()=>{if(state!=="idle"||!autoScanEnabled)return;const t=setTimeout(()=>startRef.current?.(),350);return()=>clearTimeout(t)},[state,autoScanEnabled]);
  const start=async()=>{
-  stop();setToken("");setPerson(null);setError("");setSuccess("");
-  if(!("NDEFReader" in window)){setError("NFC čtení vyžaduje Chrome na Androidu a zapnuté NFC.");return}
+  clearReset();stop();setToken("");setPerson(null);setError("");setSuccess("");
+  if(!("NDEFReader" in window)){setAutoScanEnabled(false);setError("NFC čtení vyžaduje Chrome na Androidu a zapnuté NFC.");return}
   const c=new AbortController();controller.current=c;setState("scanning");
   try{
    const reader=new window.NDEFReader();
@@ -25,30 +31,31 @@ export function AttendanceKiosk({supabase,profiles,onClose,onSaved}){
     const serial=String(event.serialNumber||"").replace(/[^0-9a-f]/gi,"").toUpperCase();
     const value=serial.length>=8&&serial.length<=32&&serial.length%2===0?"UID:"+serial:extract(event.message);
     stop();setState("loading");
-    if(!value){setError("Nelze přečíst sériové číslo čipu. Web NFC podporuje jen některé typy NFC čipů; zkuste jiný čip nebo Android s Chrome.");setState("idle");return}
+    if(!value){setAutoScanEnabled(false);setError("Nelze přečíst sériové číslo čipu. Web NFC podporuje jen některé typy NFC čipů; zkuste jiný čip nebo Android s Chrome.");setState("idle");return}
     const {data,error:e}=await supabase.rpc("isys_attendance_card_status",{p_token:value});
-    if(e||!data?.length){setError(e?.message||"Čip není přiřazen zaměstnanci.");setState("idle");return}
+    if(e||!data?.length){setAutoScanEnabled(false);setError(e?.message||"Čip není přiřazen zaměstnanci.");setState("idle");return}
     setToken(value);setPerson(data[0].user_id);setLast(data[0].last_event||"out");setState("confirm");
    };
-   reader.onreadingerror=()=>setError("NFC čip nelze přečíst. Zkuste to znovu.");
+   reader.onreadingerror=()=>{setAutoScanEnabled(false);setError("NFC čip nelze přečíst. Zkuste to znovu.")};
    await reader.scan({signal:c.signal});
-  }catch(e){if(!c.signal.aborted){setError(e.message);setState("idle")}}
+  }catch(e){if(!c.signal.aborted){setAutoScanEnabled(false);setError(e.message);setState("idle")}}
  };
+ startRef.current=start;
  const mark=async type=>{
   setState("saving");setError("");
   const {error:e}=await supabase.rpc("isys_attendance_card_mark",{p_token:token,p_type:type});
   if(e){setError(e.message);setState("confirm");return}
-  setSuccess("Zaznamenáno: "+names[type]);setState("done");setToken("");onSaved?.();
+  setAutoScanEnabled(true);setSuccess("Zaznamenáno: "+names[type]);setState("done");setToken("");onSaved?.();
  };
  const label=profiles.find(p=>p.id===person);
  return <div className="attendance-terminal" role="dialog" aria-modal="true" aria-label="Docházkový terminál">
  <header className="attendance-terminal-head"><strong><span className="attendance-terminal-brand">FOXA</span> Docházkový terminál</strong><button type="button" className="attendance-terminal-exit" onClick={()=>{stop();onClose()}} aria-label="Zavřít terminál">✕</button></header>
  <main className="attendance-terminal-main">
- {state==="idle"&&<section className="attendance-terminal-panel attendance-terminal-intro"><span className="attendance-terminal-icon" aria-hidden="true">◷</span><h1>Evidence docházky</h1><p>Pro zaznamenání příchodu, odchodu nebo přestávky použijte svůj NFC čip.</p><button type="button" className="attendance-terminal-primary" onClick={start}>Načíst NFC čip</button></section>}
- {state==="scanning"&&<section className="attendance-terminal-panel"><div className="attendance-terminal-scan" role="status"><span aria-hidden="true">◈</span><strong>Přiložte osobní NFC čip</strong><small>Podržte čip u NFC čtečky zařízení.</small></div><button type="button" className="attendance-terminal-secondary" onClick={()=>{stop();setState("idle")}}>← Zrušit načítání</button></section>}
+ {state==="idle"&&<section className="attendance-terminal-panel attendance-terminal-intro"><span className="attendance-terminal-icon" aria-hidden="true">◷</span><h1>Evidence docházky</h1><p>Přiložte svůj NFC čip. Čtečka se spouští automaticky, pokud to zařízení dovolí.</p><button type="button" className="attendance-terminal-primary" onClick={()=>{setAutoScanEnabled(true);start()}}>Spustit čtení NFC</button></section>}
+ {state==="scanning"&&<section className="attendance-terminal-panel"><div className="attendance-terminal-scan" role="status"><span aria-hidden="true">◈</span><strong>Přiložte osobní NFC čip</strong><small>Podržte čip u NFC čtečky zařízení.</small></div><button type="button" className="attendance-terminal-secondary" onClick={()=>{stop();setAutoScanEnabled(false);setState("idle")}}>← Zrušit načítání</button></section>}
  {(state==="loading"||state==="saving")&&<section className="attendance-terminal-panel attendance-terminal-progress" role="status"><span className="attendance-terminal-icon" aria-hidden="true">◷</span><h1>{state==="loading"?"Načítám zaměstnance…":"Ukládám docházku…"}</h1><p>Počkejte prosím.</p></section>}
- {state==="confirm"&&<section className="attendance-terminal-panel"><button type="button" className="attendance-terminal-back" onClick={start}>← Jiný čip</button><div className="attendance-terminal-identity"><span aria-hidden="true">✓</span><small>Rozpoznaný zaměstnanec</small><h1>{label?.display_name||label?.full_name||label?.email||"Zaměstnanec"}</h1></div><h2>Vyberte docházkovou akci</h2><div className="attendance-terminal-actions">{(next[last]||["in"]).map(type=><button type="button" className={"attendance-terminal-action "+(type==="in"?"attendance-terminal-action-in":"")} key={type} onClick={()=>mark(type)}>{names[type]}<span aria-hidden="true">→</span></button>)}</div></section>}
- {state==="done"&&<section className="attendance-terminal-panel attendance-terminal-done"><span aria-hidden="true" className="attendance-terminal-check">✓</span><h1>{success}</h1><p>Docházka byla úspěšně zaznamenána.</p><button type="button" className="attendance-terminal-primary" onClick={start}>Další zaměstnanec</button></section>}
+ {state==="confirm"&&<section className="attendance-terminal-panel"><button type="button" className="attendance-terminal-back" onClick={()=>{setAutoScanEnabled(true);start()}}>← Jiný čip</button><div className="attendance-terminal-identity"><span aria-hidden="true">✓</span><small>Rozpoznaný zaměstnanec</small><h1>{label?.display_name||label?.full_name||label?.email||"Zaměstnanec"}</h1></div><h2>Vyberte docházkovou akci</h2><div className="attendance-terminal-actions">{(next[last]||["in"]).map(type=><button type="button" className={"attendance-terminal-action "+(type==="in"?"attendance-terminal-action-in":"")} key={type} onClick={()=>mark(type)}>{names[type]}<span aria-hidden="true">→</span></button>)}</div></section>}
+ {state==="done"&&<section className="attendance-terminal-panel attendance-terminal-done"><span aria-hidden="true" className="attendance-terminal-check">✓</span><h1>{success}</h1><p>Docházka byla úspěšně zaznamenána. Za 15 sekund se terminál vrátí k načítání dalšího čipu.</p><button type="button" className="attendance-terminal-primary" onClick={()=>{setAutoScanEnabled(true);start()}}>Další zaměstnanec</button></section>}
  {error&&<p className="attendance-terminal-error" role="alert">{error}</p>}
  </main></div>;
 }
