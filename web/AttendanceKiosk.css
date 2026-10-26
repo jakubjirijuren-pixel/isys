@@ -41,3 +41,8 @@
 .attendance-terminal-countdown-track{grid-column:1/-1;height:7px;border-radius:99px;overflow:hidden;background:#294c68}
 .attendance-terminal-countdown-track>span{display:block;height:100%;background:#6ac5ff;transition:width .2s linear;border-radius:99px}
 .attendance-terminal-done .attendance-terminal-countdown{text-align:left}
+
+.attendance-terminal-clock{display:grid;justify-items:center;gap:5px;width:100%;padding:14px 10px;box-sizing:border-box}
+.attendance-terminal-clock strong{font-size:clamp(44px,7vw,70px);line-height:1.05;letter-spacing:-.05em;font-weight:850;font-variant-numeric:tabular-nums;color:#f6fbff}
+.attendance-terminal-clock span{font-size:clamp(14px,2vw,17px);color:#b5d4eb;text-align:center}
+.attendance-terminal-scan .attendance-terminal-clock{padding:3px 10px}
