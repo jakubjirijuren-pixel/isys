@@ -50,8 +50,10 @@
  .foxa-terminal-module :is(.foxa-field-form-step,.foxa-wizard-step){animation:none!important;transition:none!important}
 }
 
-/* Havarijní služba Bytoservis – karty, tabulka i mobilní terminál */
-.bytoservis-badge{display:inline-flex;flex-wrap:wrap;align-items:center;gap:5px;margin-top:7px;padding:6px 9px;border-radius:9px;border:1px solid #6fa7cf;background:rgba(35,112,163,.12);color:inherit;font-size:12px;font-weight:650;line-height:1.4;max-width:100%;width:fit-content;text-align:left;white-space:normal}
-.bytoservis-badge .bytoservis-phone{font-weight:750;white-space:nowrap}
-.bytoservis-badge-detail{font-size:14px;margin-bottom:12px}
-.foxa-object-row .bytoservis-badge{display:inline-flex}
+/* Výrazné a přístupné označení sjednané havarijní služby na všech přehledech */
+.bytoservis-badge{display:flex;flex-wrap:wrap;align-items:center;gap:6px 9px;margin:11px 0 7px;padding:11px 13px;border-radius:11px;border:2px solid #ef9b20;background:#fff0d3;color:#713800;font-size:14px;font-weight:800;line-height:1.45;max-width:100%;width:100%;box-sizing:border-box;text-align:left;white-space:normal;box-shadow:0 2px 8px rgba(125,65,0,.12)}
+.bytoservis-badge>span:first-child{display:inline-grid;place-items:center;background:#a54b00;color:#fff;border-radius:50%;width:25px;height:25px;font-size:17px;flex-shrink:0}
+.bytoservis-badge .bytoservis-phone{display:inline-flex;align-items:center;background:#7d3b00;color:#fff;border-radius:7px;padding:4px 8px;font-size:15px;font-weight:850;white-space:nowrap;letter-spacing:.15px}
+.bytoservis-badge-detail{font-size:16px;margin:12px 0 15px}
+.foxa-object-row .bytoservis-badge,.buildingtable .bytoservis-badge,.buildingcard .bytoservis-badge{display:flex}
+@media(max-width:600px){.bytoservis-badge{font-size:13px;padding:10px 11px;margin-top:9px}.bytoservis-badge .bytoservis-phone{font-size:14px}}
