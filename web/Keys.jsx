@@ -16,7 +16,7 @@ const fmt=v=>v?new Date(v).toLocaleString("cs-CZ",{dateStyle:"short",timeStyle:"
 function KeyBuildingPicker({buildings,value,onChange}){
  const [open,setOpen]=useState(false),[query,setQuery]=useState("");
  const root=useRef(null),searchRef=useRef(null);
- const label=b=>[b.object_number?"Objekt "+b.object_number:null,b.street||b.name||b.address,b.city].filter(Boolean).join(" – ");
+ const label=b=>{const number=String(b.object_number||"").trim();const raw=String(b.street||b.name||b.address||"").trim();const detail=number?raw.replace(new RegExp("^(?:objekt\\s*)?"+number.replace(/[.*+?^${}()|[\]\\]/g,"\\const label=b=>[b.object_number?"Objekt "+b.object_number:null,b.street||b.name||b.address,b.city].filter(Boolean).join(" – ");")+"(?:\\s*[-–—:]\\s*|\\s+|$)","i"),"").trim():raw;return [number?"Objekt "+number:null,detail,b.city].filter(Boolean).join(" – ")};
  const selected=buildings.find(b=>String(b.id)===String(value));
  const options=[...buildings].filter(b=>label(b).toLocaleLowerCase("cs").includes(query.trim().toLocaleLowerCase("cs"))).sort((a,b)=>String(a.object_number||"").localeCompare(String(b.object_number||""),"cs",{numeric:true}));
  useEffect(()=>{if(!open)return;const outside=e=>{if(!root.current?.contains(e.target))setOpen(false)};const escape=e=>{if(e.key==="Escape")setOpen(false)};document.addEventListener("pointerdown",outside);document.addEventListener("keydown",escape);return()=>{document.removeEventListener("pointerdown",outside);document.removeEventListener("keydown",escape)}},[open]);
