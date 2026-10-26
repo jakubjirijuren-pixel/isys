@@ -3,7 +3,7 @@ import QRCode from "qrcode";
 import html2pdf from "html2pdf.js";
 import "./admin-users.css";
 import ModuleAvailability from "./ModuleAvailability.jsx";
-const roleLabels={admin:"Administrátor",technician:"Technik",referent:"Referent"};
+const roleLabels={admin:"Administrátor",technician:"Technik",referent:"Referent",terminal:"Terminál"};
 export default function AdminUsers({supabase,currentUserId}){
  const [bulkOpen,setBulkOpen]=useState(false),[bulkRecipients,setBulkRecipients]=useState([]),[bulkTitle,setBulkTitle]=useState("Oznámení FOXA"),[bulkBody,setBulkBody]=useState(""),[bulkRole,setBulkRole]=useState("all");
  const [notifyUser,setNotifyUser]=useState(null),[notifyTitle,setNotifyTitle]=useState("Zpráva od správce FOXA"),[notifyBody,setNotifyBody]=useState("");
