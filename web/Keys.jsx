@@ -13,10 +13,11 @@ const localTime=()=>{const d=new Date();return new Date(d.getTime()-d.getTimezon
 const empty=()=>({building_id:"",borrower:"",phone:"",company:"",email:"",key_description:"",borrowed_at:"",note:""});
 const esc=v=>String(v??"").replace(/[&<>"\x27]/g,ch=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","\x27":"&#39;"}[ch]));
 const fmt=v=>v?new Date(v).toLocaleString("cs-CZ",{dateStyle:"short",timeStyle:"short"}):"—";
+const buildingDisplay=(b,prefix="Objekt")=>{const number=String(b?.object_number??"").trim();const raw=String(b?.street||b?.name||b?.address||"").trim();let detail=raw;if(number){const normalized=raw.replace(/^objekt\s+/i,"").trim();if(normalized===number)detail="";else if(normalized.startsWith(number)&&[" ","-","–","—",":"].includes(normalized.charAt(number.length))){detail=normalized.slice(number.length).replace(/^[\s–—:-]+/,"").trim();}}return [number?prefix+" "+number:null,detail,b?.city].filter(Boolean).join(" – ")};
 function KeyBuildingPicker({buildings,value,onChange}){
  const [open,setOpen]=useState(false),[query,setQuery]=useState("");
  const root=useRef(null),searchRef=useRef(null);
- const label=b=>{const number=String(b.object_number||"").trim();const raw=String(b.street||b.name||b.address||"").trim();const prefix=number?"Objekt "+number:"";const detail=number&&(raw===number||raw.toLocaleLowerCase("cs")===prefix.toLocaleLowerCase("cs"))?"":raw;return [prefix||null,detail,b.city].filter(Boolean).join(" – ")};
+ const label=b=>buildingDisplay(b);
  const selected=buildings.find(b=>String(b.id)===String(value));
  const options=[...buildings].filter(b=>label(b).toLocaleLowerCase("cs").includes(query.trim().toLocaleLowerCase("cs"))).sort((a,b)=>String(a.object_number||"").localeCompare(String(b.object_number||""),"cs",{numeric:true}));
  useEffect(()=>{if(!open)return;const outside=e=>{if(!root.current?.contains(e.target))setOpen(false)};const escape=e=>{if(e.key==="Escape")setOpen(false)};document.addEventListener("pointerdown",outside);document.addEventListener("keydown",escape);return()=>{document.removeEventListener("pointerdown",outside);document.removeEventListener("keydown",escape)}},[open]);
@@ -44,7 +45,7 @@ export default function Keys({supabase,buildings,userId,isAdmin=false,initialFil
  if(e2)setError("Svazek se nepodařilo uložit: "+e2.message);else{setNewKey({building_id:"",label:"",identifier:""});setNotice("Svazek byl založen. Čárový kód se vytvoří automaticky.");await load()}setCatalogBusy(false)};
  const printBarcodes=()=>{window.print()};
  const sorted=[...buildings].sort((a,b)=>String(a.object_number||a.name||"").localeCompare(String(b.object_number||b.name||""),"cs",{numeric:true}));
- const names=Object.fromEntries(buildings.map(b=>[b.id,[b.object_number&&"Objekt "+b.object_number,b.name||b.address].filter(Boolean).join(" – ")]));
+ const names=Object.fromEntries(buildings.map(b=>[b.id,buildingDisplay({...b,street:"",city:""})]));
  const downloadExcelBackup=async()=>{
   if(!isAdmin||backupBusy)return;
   setBackupBusy(true);setError("");setNotice("");
@@ -115,7 +116,7 @@ export default function Keys({supabase,buildings,userId,isAdmin=false,initialFil
   if(pdfBusy)return;
   setPdfBusy(true);
   const building=buildings.find(b=>String(b.id)===String(loan.building_id));
-  const objectLabel=[building?.object_number&&"Středisko "+building.object_number,building?.name||building?.address||building?.street,building?.city].filter(Boolean).join(" – ")||"Neuvedený objekt";
+  const objectLabel=buildingDisplay(building,"Středisko")||"Neuvedený objekt";
   const filename="FOXA_predavaci_protokol_klice_"+String(building?.object_number||"objekt").replace(/[^a-zA-Z0-9_-]/g,"_")+"_"+String(loan.id).slice(0,8)+".pdf";
   const logoSrc="data:image/svg+xml;charset=utf-8,"+encodeURIComponent(SBD_LOGO);
   const handoverDate=new Date(loan.loaned_at).toLocaleDateString("cs-CZ");
