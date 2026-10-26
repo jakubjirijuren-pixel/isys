@@ -1,6 +1,12 @@
 // Aktualizovat při každé změně aplikace společně s CHANGELOG.md.
 // Nové vydání = nový jedinečný id; přečtená vydání se znovu nezobrazují.
 export const foxaReleases=[
+ {id:"2026-10-26-emergency-services",date:"2026-10-26",title:"Havarijní služby přímo v přehledu objektů",changes:[
+  {area:"Evidence objektů",description:"U 23 vybraných středisek je nově přímo na kartách a v seznamu viditelná sjednaná havarijní služba Bytoservis s telefonem +420 241 414 141, bez otevírání detailu objektu."},
+  {area:"Objekt 333",description:"U objektu č. 333 je uvedena havarijní služba Cigdus s telefonem +420 733 642 111."},
+  {area:"Mobilní terminál",description:"Havarijní kontakty jsou viditelné také v rychlém seznamu objektů na telefonu."},
+  {area:"Vzhled",description:"Havarijní služba má výrazné oranžové označení s kontrastně zvýrazněným telefonním číslem."}
+ ]},
  {id:"2026-10-21-mobile-terminal",date:"2026-10-21",title:"Nové mobilní pracovní prostředí FOXA",changes:[{area:"Mobilní terminál",description:"Nová domovská obrazovka s rychlými pracovními akcemi, přehledem připojení a velkými dotykovými prvky."},{area:"NFC a QR",description:"Mobilní skener identifikátorů s možností ručního zadání, podle podpory zařízení a prohlížeče."},{area:"Terénní koncepty",description:"Poznámky lze uchovávat lokálně i bez internetu. Automatická cloudová synchronizace těchto konceptů zatím není dostupná."},{area:"Oprávnění",description:"Mobilní terminál respektuje dostupnost modulů a uživatelské role; desktopový přehled zůstává zachován."}]},
  {id:"2026-10-21-keys-excel-backup",date:"2026-10-21",title:"Excelová záloha evidence klíčů",changes:[{area:"Evidence klíčů",roles:["admin"],description:"Administrátor může stáhnout kompletní Excelovou zálohu výpůjček, historie částečných vrácení a svazků klíčů, nezávisle na nastavených filtrech."}]},
  {id:"2026-10-20-fleet-forms-inspections",date:"2026-10-20",title:"Vozidla, tiskopisy a přehlednější kontroly",changes:[
