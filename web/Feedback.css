@@ -52,3 +52,17 @@
 .feedback-my-ticket p{white-space:pre-wrap;font-size:13px;line-height:1.5;margin:9px 0}
 .feedback-my-ticket small{opacity:.7;font-size:11px}
 @media(max-width:550px){.feedback-my-ticket-title{flex-wrap:wrap}}
+
+/* Ticketing uses explicit theme-aware surfaces so light mode remains legible. */
+.feedback-ticketing{color:var(--text,#172b40)}
+.feedback-ticketing .ticket-stats>div,.feedback-ticketing .ticket-detail,.feedback-ticketing .ticket-list-item,.feedback-ticketing .ticket-intake{background:var(--surface,#fff);background:var(--card,#fff);color:var(--text,#172b40);border-color:var(--border,#d5e0ea)}
+.feedback-ticketing .ticket-stats strong,.feedback-ticketing .ticket-stats span,.feedback-ticketing .ticket-empty,.feedback-ticketing .ticket-detail-heading{color:inherit}
+.feedback-ticketing .ticket-stats span,.feedback-ticketing .ticket-empty{opacity:.8}
+.feedback-ticketing input,.feedback-ticketing select,.feedback-ticketing textarea{background:var(--input-bg,#fff);color:var(--text,#172b40);border-color:var(--border,#b8c9d9)}
+.feedback-ticketing .ticket-intake{border:1px solid var(--border,#d5e0ea);border-radius:14px;padding:20px;display:grid;gap:12px}
+.feedback-ticketing .ticket-intake h2{font-size:19px;margin:0}.feedback-ticketing .ticket-intake p{margin:0}
+.feedback-ticketing .ticket-intake label{display:grid;gap:6px;font-size:13px;font-weight:650}
+.ticket-intake-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.ticket-header-actions{display:flex;gap:10px;flex-wrap:wrap}
+.feedback-ticketing .ticket-intake>button{justify-self:start}
+@media(max-width:600px){.ticket-intake-grid{grid-template-columns:1fr}.ticket-header-actions{width:100%}}
