@@ -79,3 +79,16 @@ html:has(.foxa-terminal-only-admin-unlocked),body:has(.foxa-terminal-only-admin-
 .foxa-terminal-only-admin-unlocked{overscroll-behavior:auto}
 .foxa-terminal-only-admin-unlocked .attendance-terminal-main,.foxa-terminal-only-admin-unlocked .key-kiosk-main{overscroll-behavior:auto}
 @media(max-width:700px){.foxa-terminal-admin-panel{padding:15px}.foxa-terminal-admin-panel-actions{width:100%;display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}.foxa-terminal-admin-panel-actions button{font-size:12px;padding:10px 8px}.foxa-terminal-admin-status{display:none}}
+
+/* Administrator PIN unlock on the shared terminal, using the same touch keypad pattern as attendance. */
+.foxa-terminal-only-menu.foxa-terminal-admin-pin{max-width:380px;display:grid;grid-template-columns:1fr;gap:12px;margin:clamp(18px,4vh,45px) auto 0;text-align:center}
+.foxa-terminal-admin-pin>h1,.foxa-terminal-admin-pin>p{grid-column:1}
+.foxa-terminal-admin-pin>h1{font-size:clamp(23px,4vw,30px)}
+.foxa-terminal-admin-pin>p{margin:0;font-size:14px}
+.foxa-terminal-admin-pin-dots{display:flex;justify-content:center;gap:20px;padding:12px;border:1px solid #426f91;background:#0c263b;border-radius:12px;font-size:24px}
+.foxa-terminal-admin-pin-keys{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px}
+.foxa-terminal-only .foxa-terminal-admin-pin-keys button{min-height:55px;padding:8px;background:#224969;border:1px solid #4a7898;color:#fff;font-size:23px;font-weight:800}
+.foxa-terminal-only .foxa-terminal-admin-pin-keys button:active{background:#337eaf}
+.foxa-terminal-only-menu.foxa-terminal-admin-pin>.foxa-terminal-admin-pin-submit{min-height:52px;padding:12px;display:block;text-align:center;border-radius:12px;background:#237fbd;font-size:17px}
+.foxa-terminal-only-menu.foxa-terminal-admin-pin>.foxa-terminal-admin-pin-submit:disabled{opacity:.5;cursor:not-allowed}
+@media(max-height:720px){.foxa-terminal-only-menu.foxa-terminal-admin-pin{gap:7px;margin:12px auto}.foxa-terminal-only .foxa-terminal-admin-pin-keys button{min-height:43px}.foxa-terminal-admin-pin-dots{padding:6px}}
