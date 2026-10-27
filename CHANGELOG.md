@@ -1,4 +1,4 @@
-## 2026-10-26 – Centrální registr klíčů
+## 2026-10-28 – Postupné doplňování kontaktů na výbory\n\n- V evidenci objektů probíhá **postupné doplňování kontaktů na členy výborů SVJ a bytových družstev**. Kontaktní údaje proto zatím nemusí být vyplněné u všech objektů.\n- U jednotlivých kontaktů se eviduje jméno, funkce, telefon a e-mail. Telefonní čísla a e-mailové adresy jsou v detailu objektu proklikávací.\n\n## 2026-10-26 – Centrální registr klíčů
 
 - Modul Evidence klíčů přejmenován v uživatelském rozhraní na **Centrální registr klíčů**.
 - U aktivních výpůjček s předávacím protokolem lze potvrdit podpis. Zobrazuje se čas a potvrzující uživatel; výpůjčka se uzamkne proti úpravám a smazání, vrácení zůstává možné.
