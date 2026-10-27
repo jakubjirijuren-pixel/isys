@@ -299,10 +299,10 @@ function App(){
    setSelectedBuilding(prev=>prev?.id===savedId?{...prev,...payload}:prev);
    const existingContacts=isNew?[]:committeeContacts;
    const removed=existingContacts.filter(x=>!committeeDraft.some(d=>d.id===x.id));
-   const valid=committeeDraft.filter(x=>x.full_name.trim());
+   const valid=committeeDraft.filter(x=>String(x.full_name??"").trim());
    const contactResults=await Promise.all([
     ...removed.map(x=>supabase.from("foxa_building_committee_contacts").delete().eq("id",x.id).eq("building_id",savedId)),
-    ...valid.map(x=>{const row={building_id:savedId,full_name:x.full_name.trim(),position:x.position.trim()||null,phone:x.phone.trim()||null,email:x.email.trim()||null};return x.id?supabase.from("foxa_building_committee_contacts").update(row).eq("id",x.id).eq("building_id",savedId):supabase.from("foxa_building_committee_contacts").insert(row)})]);
+    ...valid.map(x=>{const row={building_id:savedId,full_name:String(x.full_name??"").trim(),position:String(x.position??"").trim()||null,phone:String(x.phone??"").trim()||null,email:String(x.email??"").trim()||null};return x.id?supabase.from("foxa_building_committee_contacts").update(row).eq("id",x.id).eq("building_id",savedId):supabase.from("foxa_building_committee_contacts").insert(row)})]);
    const contactFailure=contactResults.find(x=>x.error);
    if(contactFailure)throw Error("Objekt byl uložen, ale kontakty výboru se nepodařilo uložit: "+contactFailure.error.message);
    const {data:updatedContacts}=await supabase.from("foxa_building_committee_contacts").select("id,building_id,full_name,position,phone,email").eq("building_id",savedId).order("created_at");
