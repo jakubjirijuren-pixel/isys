@@ -18,6 +18,7 @@ export default function TerminalOnly({supabase,onLogout}){
  const [error,setError]=useState("");
  const [adminUnlocked,setAdminUnlocked]=useState(false);
  const [scanningAdmin,setScanningAdmin]=useState(false);
+ const [adminPinOpen,setAdminPinOpen]=useState(false),[adminPin,setAdminPin]=useState(""),[adminPinBusy,setAdminPinBusy]=useState(false);
  const [clock,setClock]=useState(()=>new Date());
  const adminUnlockedRef=useRef(false);
  adminUnlockedRef.current=adminUnlocked;
@@ -75,8 +76,17 @@ export default function TerminalOnly({supabase,onLogout}){
    document.removeEventListener("touchmove",onTouchMove);
   };
  },[]);
+ const unlockAdmin=()=>{setAdminUnlocked(true);setAdminPinOpen(false);setAdminPin("");if(unlockTimer.current)clearTimeout(unlockTimer.current);unlockTimer.current=setTimeout(()=>setAdminUnlocked(false),60000)};
+ const submitAdminPin=async()=>{
+  if(adminPin.length!==4||adminPinBusy)return;
+  setAdminPinBusy(true);setError("");
+  const {data,error:e}=await supabase.rpc("foxa_terminal_admin_pin",{p_pin:adminPin});
+  setAdminPinBusy(false);setAdminPin("");
+  if(e||data!==true){setError(e?.message||"Neplatný administrátorský PIN.");return}
+  unlockAdmin();
+ };
  const startAdminScan=async()=>{
-  setError("");
+  setError("");setAdminPinOpen(false);setAdminPin("");
   if(!("NDEFReader" in window)){setError("Ověření administrátorského čipu vyžaduje Android s Chrome a Web NFC.");return}
   stopScan();const c=new AbortController();controller.current=c;setScanningAdmin(true);
   try{
@@ -88,18 +98,17 @@ export default function TerminalOnly({supabase,onLogout}){
     if(!token){setError("Čip se nepodařilo přečíst.");return}
     const {data,error:e}=await supabase.rpc("foxa_terminal_admin_card",{p_token:token});
     if(e||data!==true){setError(e?.message||"Tento čip nemá administrátorské oprávnění.");return}
-    setAdminUnlocked(true);
-    if(unlockTimer.current)clearTimeout(unlockTimer.current);
-    unlockTimer.current=setTimeout(()=>setAdminUnlocked(false),60000);
+    unlockAdmin();
    };
    reader.onreadingerror=()=>setError("NFC čip nelze přečíst.");
    await reader.scan({signal:c.signal});
   }catch(e){if(!c.signal.aborted)setError(e.message);setScanningAdmin(false)}
  };
  return <main className={"foxa-terminal-only"+(adminUnlocked?" foxa-terminal-only-admin-unlocked":"")}>
-  <header><div className="foxa-terminal-only-brand"><span className="foxa-terminal-only-mark" aria-hidden="true">F</span><span><strong>FOXA</strong><small>PRACOVNÍ TERMINÁL</small></span></div><div className="foxa-terminal-only-header-actions">{adminUnlocked&&<span className="foxa-terminal-admin-status">Správa odemčena · 60 s</span>}<button type="button" onClick={()=>{if(scanningAdmin){stopScan();setScanningAdmin(false)}else startAdminScan()}}>{scanningAdmin?"Zrušit ověření":"Správa čipem"}</button></div></header>
-  {adminUnlocked&&<nav className="foxa-terminal-admin-panel" aria-label="Správa terminálu"><div className="foxa-terminal-admin-panel-title"><span className="foxa-terminal-admin-panel-icon" aria-hidden="true">✓</span><span><strong>Administrátorský režim</strong><small>Ověření čipem bylo úspěšné. Oprávnění se automaticky uzamkne po 60 sekundách.</small></span></div><div className="foxa-terminal-admin-panel-actions">{mode&&<button type="button" onClick={()=>{lock();setMode("")}}>Výběr terminálu</button>}<button type="button" onClick={()=>window.location.reload()}>Obnovit terminál</button><button type="button" onClick={onLogout}>Odhlásit se</button><button type="button" onClick={lock}>Zamknout správu</button></div></nav>}
+  <header><div className="foxa-terminal-only-brand"><span className="foxa-terminal-only-mark" aria-hidden="true">F</span><span><strong>FOXA</strong><small>PRACOVNÍ TERMINÁL</small></span></div><div className="foxa-terminal-only-header-actions">{adminUnlocked&&<span className="foxa-terminal-admin-status">Správa odemčena · 60 s</span>}<button type="button" onClick={()=>{if(scanningAdmin){stopScan();setScanningAdmin(false)}else startAdminScan()}}>{scanningAdmin?"Zrušit ověření":"Správa čipem"}</button><button type="button" onClick={()=>{stopScan();setScanningAdmin(false);setAdminPinOpen(v=>!v);setAdminPin("");setError("")}}>{adminPinOpen?"Zrušit PIN":"Správa PINem"}</button></div></header>
+  {adminUnlocked&&<nav className="foxa-terminal-admin-panel" aria-label="Správa terminálu"><div className="foxa-terminal-admin-panel-title"><span className="foxa-terminal-admin-panel-icon" aria-hidden="true">✓</span><span><strong>Administrátorský režim</strong><small>Ověření administrátora bylo úspěšné. Oprávnění se automaticky uzamkne po 60 sekundách.</small></span></div><div className="foxa-terminal-admin-panel-actions">{mode&&<button type="button" onClick={()=>{lock();setMode("")}}>Výběr terminálu</button>}<button type="button" onClick={()=>window.location.reload()}>Obnovit terminál</button><button type="button" onClick={onLogout}>Odhlásit se</button><button type="button" onClick={lock}>Zamknout správu</button></div></nav>}
   {error&&<p role="alert" className="foxa-terminal-only-error">{error}</p>}
-  {scanningAdmin?<section className="foxa-terminal-only-menu"><h1>Přiložte čip administrátora</h1><p>Po ověření se na 60 sekund zpřístupní správa terminálu.</p><div className="foxa-terminal-clock"><strong>{clock.toLocaleTimeString("cs-CZ",{hour:"2-digit",minute:"2-digit"})}</strong><span>{clock.toLocaleDateString("cs-CZ",{weekday:"long",day:"numeric",month:"long",year:"numeric"})}</span></div></section>:!mode?<section className="foxa-terminal-only-menu"><span className="foxa-terminal-only-eyebrow">PRACOVNÍ STANICE</span><h1>Vyberte terminál</h1><p>Pro pokračování zvolte požadovanou pracovní činnost.</p><button type="button" onClick={()=>{lock();setMode("attendance")}}><span className="foxa-terminal-only-choice-icon" aria-hidden="true">◷</span><span className="foxa-terminal-only-choice-copy"><b>Docházka</b><small>Příchod, odchod a pracovní doba</small></span><strong>Spustit <span aria-hidden="true">→</span></strong></button><button type="button" onClick={()=>{lock();setMode("keys")}}><span className="foxa-terminal-only-choice-icon" aria-hidden="true">⚿</span><span className="foxa-terminal-only-choice-copy"><b>Evidence klíčů</b><small>Výpůjčky a vracení svazků</small></span><strong>Spustit <span aria-hidden="true">→</span></strong></button></section>:<section className="foxa-terminal-only-active">{mode==="attendance"?<AttendanceKiosk supabase={supabase} profiles={profiles} onClose={()=>{lock();setMode("")}}/>:<KeyKiosk supabase={supabase} onExit={()=>{lock();setMode("")}}/>}</section>}
+  {adminPinOpen&&!adminUnlocked&&<section className="foxa-terminal-only-menu foxa-terminal-admin-pin"><h1>Ověření administrátora</h1><p>Zadejte čtyřmístný PIN administrátora. Po ověření se správa odemkne na 60 sekund.</p><div className="foxa-terminal-admin-pin-dots" role="status" aria-label={"Zadáno "+adminPin.length+" ze 4 číslic"}>{[0,1,2,3].map(i=><span key={i}>{i<adminPin.length?"●":"○"}</span>)}</div><div className="foxa-terminal-admin-pin-keys">{["1","2","3","4","5","6","7","8","9","C","0","⌫"].map(key=><button key={key} type="button" disabled={adminPinBusy} onClick={()=>setAdminPin(v=>key==="C"?"":key==="⌫"?v.slice(0,-1):(v+key).slice(0,4))}>{key}</button>)}</div><button type="button" className="foxa-terminal-admin-pin-submit" disabled={adminPin.length!==4||adminPinBusy} onClick={submitAdminPin}>{adminPinBusy?"Ověřuji…":"Odemknout správu"}</button></section>}
+  {!adminPinOpen&&(scanningAdmin?<section className="foxa-terminal-only-menu"><h1>Přiložte čip administrátora</h1><p>Po ověření se na 60 sekund zpřístupní správa terminálu.</p><div className="foxa-terminal-clock"><strong>{clock.toLocaleTimeString("cs-CZ",{hour:"2-digit",minute:"2-digit"})}</strong><span>{clock.toLocaleDateString("cs-CZ",{weekday:"long",day:"numeric",month:"long",year:"numeric"})}</span></div></section>:!mode?<section className="foxa-terminal-only-menu"><span className="foxa-terminal-only-eyebrow">PRACOVNÍ STANICE</span><h1>Vyberte terminál</h1><p>Pro pokračování zvolte požadovanou pracovní činnost.</p><button type="button" onClick={()=>{lock();setMode("attendance")}}><span className="foxa-terminal-only-choice-icon" aria-hidden="true">◷</span><span className="foxa-terminal-only-choice-copy"><b>Docházka</b><small>Příchod, odchod a pracovní doba</small></span><strong>Spustit <span aria-hidden="true">→</span></strong></button><button type="button" onClick={()=>{lock();setMode("keys")}}><span className="foxa-terminal-only-choice-icon" aria-hidden="true">⚿</span><span className="foxa-terminal-only-choice-copy"><b>Evidence klíčů</b><small>Výpůjčky a vracení svazků</small></span><strong>Spustit <span aria-hidden="true">→</span></strong></button></section>:<section className="foxa-terminal-only-active">{mode==="attendance"?<AttendanceKiosk supabase={supabase} profiles={profiles} onClose={()=>{lock();setMode("")}}/>:<KeyKiosk supabase={supabase} onExit={()=>{lock();setMode("")}}/>}</section>)}
  </main>;
 }
