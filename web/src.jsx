@@ -274,7 +274,7 @@ function App(){
   if(role!=="admin"||saving)return;
   setSaving(true);setMessage("");
   try{
-   const payload={name:form.name.trim(),address:form.address.trim(),description:form.description.trim()||null,...Object.fromEntries(extraFields.map(([k])=>[k,numericFields.includes(k)?(form[k]===""||form[k]==null?null:Number(form[k])):(String(form[k]??"").trim()||null)])),manager_user_id:form.manager_user_id||null,referent_user_id:form.referent_user_id||null};
+   const payload={name:String(form.name??"").trim(),address:String(form.address??"").trim(),description:String(form.description??"").trim()||null,...Object.fromEntries(extraFields.map(([k])=>[k,numericFields.includes(k)?(form[k]===""||form[k]==null?null:Number(form[k])):(String(form[k]??"").trim()||null)])),manager_user_id:form.manager_user_id||null,referent_user_id:form.referent_user_id||null};
    if(!payload.name||!payload.address){setMessage("Vyplň název a adresu.");return}
    const ids=[...new Set((form.referent_user_ids||[]).filter(Boolean))];
    payload.referent_user_id=ids[0]||null;
