@@ -265,8 +265,39 @@ function App(){
  }
  async function login(e){e.preventDefault();setError("");setBusy(true);const {error}=await supabase.auth.signInWithPassword({email,password});if(error)setError("Přihlášení se nezdařilo. Zkontroluj e-mail, heslo a potvrzení účtu.");setBusy(false)}
  function openForm(item=null){setEditing(item?.id??"new");setForm(item?{...empty,...item,referent_user_ids:referentIdsFor(item.id).length?referentIdsFor(item.id):item.referent_user_id?[item.referent_user_id]:[]}: {...empty,referent_user_ids:[]});setMessage("")}
- async function save(e){e.preventDefault();if(role!=="admin")return;setSaving(true);setMessage("");const payload={name:form.name.trim(),address:form.address.trim(),description:form.description.trim()||null,...Object.fromEntries(extraFields.map(([k])=>[k,numericFields.includes(k)?(form[k]===""||form[k]==null?null:Number(form[k])):(String(form[k]??"").trim()||null)])),manager_user_id:form.manager_user_id||null,referent_user_id:form.referent_user_id||null};if(!payload.name||!payload.address){setMessage("Vyplň název a adresu.");setSaving(false);return}const selectedReferentIds=[...new Set(form.referent_user_ids||[])];payload.referent_user_id=selectedReferentIds[0]||null;payload.referent=accountName(selectedReferentIds[0])||null;const result=editing==="new"?await supabase.from("buildings").insert(payload).select("id").single():await supabase.from("buildings").update(payload).eq("id",editing);if(result.error)setMessage("Uložení selhalo: "+result.error.message);else{const savedId=editing==="new"?result.data?.id:editing;const ids=[...new Set(form.referent_user_ids||[])];if(savedId){const {error:deleteError}=await supabase.from("building_referents").delete().eq("building_id",savedId);if(deleteError){setMessage("Objekt uložen, ale referenty nelze aktualizovat: "+deleteError.message);setSaving(false);return}if(ids.length){const {error:insertError}=await supabase.from("building_referents").insert(ids.map(user_id=>({building_id:savedId,user_id})));if(insertError){setMessage("Objekt uložen, ale referenty nelze přiřadit: "+insertError.message);setSaving(false);return}}}setEditing(null);await load()}setSaving(false)}
-
+ async function save(e){
+  e.preventDefault();
+  if(role!=="admin"||saving)return;
+  setSaving(true);setMessage("");
+  try{
+   const payload={name:form.name.trim(),address:form.address.trim(),description:form.description.trim()||null,...Object.fromEntries(extraFields.map(([k])=>[k,numericFields.includes(k)?(form[k]===""||form[k]==null?null:Number(form[k])):(String(form[k]??"").trim()||null)])),manager_user_id:form.manager_user_id||null,referent_user_id:form.referent_user_id||null};
+   if(!payload.name||!payload.address){setMessage("Vyplň název a adresu.");return}
+   const ids=[...new Set((form.referent_user_ids||[]).filter(Boolean))];
+   payload.referent_user_id=ids[0]||null;
+   payload.referent=accountName(ids[0])||null;
+   const isNew=editing==="new";
+   const result=isNew?await supabase.from("buildings").insert(payload).select("id").single():await supabase.from("buildings").update(payload).eq("id",editing).select("id").single();
+   if(result.error)throw Error("Uložení objektu selhalo: "+result.error.message);
+   const savedId=result.data?.id||editing;
+   const previousIds=isNew?[]:referentIdsFor(savedId);
+   const toRemove=previousIds.filter(id=>!ids.includes(id));
+   const toAdd=ids.filter(id=>!previousIds.includes(id));
+   const changes=[];
+   if(toRemove.length)changes.push(supabase.from("building_referents").delete().eq("building_id",savedId).in("user_id",toRemove));
+   if(toAdd.length)changes.push(supabase.from("building_referents").upsert(toAdd.map(user_id=>({building_id:savedId,user_id})),{onConflict:"building_id,user_id"}));
+   if(changes.length){
+    const results=await Promise.all(changes);
+    const failure=results.find(x=>x.error);
+    if(failure)throw Error("Objekt byl uložen, ale přiřazení referentů selhalo: "+failure.error.message);
+   }
+   setBuildings(prev=>isNew?[...prev,{...payload,id:savedId}]:prev.map(b=>b.id===savedId?{...b,...payload}:b));
+   setBuildingReferents(prev=>[...prev.filter(x=>String(x.building_id)!==String(savedId)),...ids.map(user_id=>({building_id:savedId,user_id}))]);
+   setSelectedBuilding(prev=>prev?.id===savedId?{...prev,...payload}:prev);
+   setEditing(null);
+   setMessage("Změny objektu byly uloženy.");
+  }catch(err){setMessage(err?.message||"Uložení objektu se nezdařilo.")}
+  finally{setSaving(false)}
+ }
 
  const normHeader=x=>String(x??"").trim().toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/[^a-z0-9]/g,"");
  const importColumns={object_number:["objekt","cisloobjektu","objectnumber"],street:["ulice","street"],city:["mesto","city"],manager:["spravce","technik","manager"],referent:["referent"],economist:["ekonom"],accountant:["ucetni"],legal_entity:["hlavniucetnisubjekt"],company_id:["ico"],external_id:["unikatnicislo"],flats_count:["pocetbytu"],nonresidential_count:["pocetnebytu"],garages_count:["pocetgarazi"],shared_spaces_count:["pocetspolprostor"],invoice_approvers_count:["pocetschvalovatelufaktur"],manager_flag:["pspravce"],economist_flag:["pekon"],name:["nazev","nazevobjektu","name"],address:["adresa","adresaobjektu","address"],description:["poznamka","popis","description","note"]};
