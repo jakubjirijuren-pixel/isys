@@ -470,3 +470,24 @@
 @media screen and (max-width:650px) and (prefers-reduced-motion:no-preference){
  .layout .foxa-terminal-module button{transition:filter .12s ease,border-color .12s ease}
 }
+
+/* iOS installed PWA: prevent translucent/blurred compositing above FOXA FIELD toolbar. */
+@media screen and (max-width:650px){
+  html,body,#root{background-color:#071622}
+  .layout .content>header{
+    background:#081b2c!important;
+    background-image:none!important;
+    -webkit-backdrop-filter:none!important;
+    backdrop-filter:none!important;
+    filter:none!important;
+    box-shadow:none!important;
+    isolation:isolate;
+  }
+  .layout .content>header::before,
+  .layout .content>header::after{
+    -webkit-backdrop-filter:none!important;
+    backdrop-filter:none!important;
+    filter:none!important;
+    box-shadow:none!important;
+  }
+}
