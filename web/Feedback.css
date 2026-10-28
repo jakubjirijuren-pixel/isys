@@ -66,3 +66,42 @@
 .ticket-header-actions{display:flex;gap:10px;flex-wrap:wrap}
 .feedback-ticketing .ticket-intake>button{justify-self:start}
 @media(max-width:600px){.ticket-intake-grid{grid-template-columns:1fr}.ticket-header-actions{width:100%}}
+
+/* Ticketing: consistent dark-mode cards, filters and detail surfaces. */
+[data-theme="dark"] .feedback-ticketing{color:#e3edf6}
+[data-theme="dark"] .feedback-ticketing .ticket-stats>div,
+[data-theme="dark"] .feedback-ticketing .ticket-list-item,
+[data-theme="dark"] .feedback-ticketing .ticket-detail,
+[data-theme="dark"] .feedback-ticketing .ticket-intake{
+ background:#172b3e;color:#e3edf6;border:1px solid #35516a;box-shadow:0 2px 12px #00000018
+}
+[data-theme="dark"] .feedback-ticketing .ticket-stats strong,
+[data-theme="dark"] .feedback-ticketing .ticket-list-item b,
+[data-theme="dark"] .feedback-ticketing .ticket-detail h2,
+[data-theme="dark"] .feedback-ticketing .ticket-detail h3{color:#f0f6fc}
+[data-theme="dark"] .feedback-ticketing .ticket-stats span,
+[data-theme="dark"] .feedback-ticketing .ticket-list-item small,
+[data-theme="dark"] .feedback-ticketing .ticket-empty,
+[data-theme="dark"] .feedback-ticketing .ticket-hint{color:#a9bfd1;opacity:1}
+[data-theme="dark"] .feedback-ticketing .ticket-filters label,
+[data-theme="dark"] .feedback-ticketing .ticket-edit-grid label,
+[data-theme="dark"] .feedback-ticketing .ticket-comments form label{color:#c8d9e8}
+[data-theme="dark"] .feedback-ticketing input,
+[data-theme="dark"] .feedback-ticketing select,
+[data-theme="dark"] .feedback-ticketing textarea{
+ background:#1d354a;color:#f0f6fc;border-color:#486780
+}
+[data-theme="dark"] .feedback-ticketing input::placeholder,
+[data-theme="dark"] .feedback-ticketing textarea::placeholder{color:#a9bfd1}
+[data-theme="dark"] .feedback-ticketing input:focus-visible,
+[data-theme="dark"] .feedback-ticketing select:focus-visible,
+[data-theme="dark"] .feedback-ticketing textarea:focus-visible{outline:2px solid #67b9e6;outline-offset:1px}
+[data-theme="dark"] .feedback-ticketing .ticket-list-item:hover{background:#203c53;border-color:#65b7e5}
+[data-theme="dark"] .feedback-ticketing .ticket-list-item.selected{background:#23435a;border-color:#65b7e5;box-shadow:inset 4px 0 #65b7e5}
+[data-theme="dark"] .feedback-ticketing .ticket-comment{background:#1b3348;border-color:#3c5871}
+[data-theme="dark"] .feedback-ticketing .ticket-priority,
+[data-theme="dark"] .feedback-ticketing .ticket-status{color:#dceaf6;background:#31475c}
+[data-theme="dark"] .feedback-ticketing .ticket-priority.urgent{color:#ff9a9e;background:#5a2d39}
+[data-theme="dark"] .feedback-ticketing .ticket-priority.high{color:#ffcf83;background:#56402b}
+[data-theme="dark"] .feedback-ticketing .ticket-status.resolved,
+[data-theme="dark"] .feedback-ticketing .ticket-status.closed{color:#83e2b5;background:#1c493d}
