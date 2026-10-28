@@ -23,8 +23,8 @@ export default function DomusCommitteeImport({supabase,buildings,onImported}){
    const planned=[],skipped=[],seen=new Set();
    rows.forEach((r,i)=>{
     const position=norm(r["Funkce"]),full_name=[r["Titul"],r["Jméno"],r["Příjmení"]].map(norm).filter(Boolean).join(" ");
-    const organization=[r["Firma"],r["Příjmení"],r["Jméno"]].map(norm).join(" ").normalize("NFD").replace(/[\\u0300-\\u036f]/g,"").toLowerCase();
-    const isSbdPraha8=/stavebni\\s+bytove\\s+druzstvo\\s+praha\\s*8/.test(organization);
+    const organization=[r["Firma"],r["Příjmení"],r["Jméno"]].map(norm).join(" ").normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase();
+    const isSbdPraha8=/stavebni\s+bytove\s+druzstvo\s+praha\s*8/.test(organization);
     const excludedRole=/referent|spravce|správce/i.test(position);
     if(excludedRole||isSbdPraha8){skipped.push({row:i+2,reason:isSbdPraha8?"Správce Stavební bytové družstvo Praha 8 – neimportuje se":"Referent nebo správce objektu – neimportuje se"});return}
     if(!/výbor|předseda svj|předseda družstva/i.test(position)||!norm(r["Jméno"])||!norm(r["Příjmení"])){skipped.push({row:i+2,reason:"Jiná funkce nebo neúplné jméno"});return}
