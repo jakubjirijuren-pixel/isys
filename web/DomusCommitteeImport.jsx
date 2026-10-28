@@ -27,7 +27,7 @@ export default function DomusCommitteeImport({supabase,buildings,onImported}){
     const isSbdPraha8=/stavebni\s+bytove\s+druzstvo\s+praha\s*8/.test(organization);
     const excludedRole=/referent|spravce|správce/i.test(position);
     if(excludedRole||isSbdPraha8){skipped.push({row:i+2,reason:isSbdPraha8?"Správce Stavební bytové družstvo Praha 8 – neimportuje se":"Referent nebo správce objektu – neimportuje se"});return}
-    if(!/výbor|předseda svj|předseda družstva/i.test(position)||!norm(r["Jméno"])||!norm(r["Příjmení"])){skipped.push({row:i+2,reason:"Jiná funkce nebo neúplné jméno"});return}
+    if(!/výbor|předsed|kontrolní komise|kontrolni komise|domovník|domovnik|bytové družstvo|bytove druzstvo|\\bBD\\b|družstv/i.test(position)||!norm(r["Jméno"])||!norm(r["Příjmení"])){skipped.push({row:i+2,reason:"Nepodporovaná funkce nebo neúplné jméno"});return}
     const matches=lookup.get(code(r["Kód objektu"]))||[];
     if(matches.length!==1){skipped.push({row:i+2,reason:matches.length?"Nejednoznačný kód objektu":"Objekt nenalezen: "+norm(r["Kód objektu"])});return}
     const phone=norm(r["Mobil"]||r["Telefon"]||r["Mobil (portál)"]||r["Telefon (portál)"]);
@@ -68,7 +68,7 @@ export default function DomusCommitteeImport({supabase,buildings,onImported}){
   <label className="secondarybutton filebutton">↑ Kontakty z Domusu<input type="file" accept=".xlsx,.xls" onChange={readFile}/></label>
   {error&&<p className="error" role="alert">{error}</p>}
   {notice&&<p className="notice" role="status">{notice}</p>}
-  {preview&&<div className="importpanel"><h3>Import kontaktů výboru – {preview.filename}</h3>
+  {preview&&<div className="importpanel"><h3>Import domovních funkcionářů – {preview.filename}</h3>
    <p>Připraveno {preview.planned.length} kontaktů, přeskočeno {preview.skipped.length} řádků. Stávající záznamy nebudou přepsány. Referenti a správci objektů se ignorují; pole Technik/Správce a Referent ve FOXA se nemění.</p>
    <p>{preview.planned.slice(0,8).map(x=>x.object_number+" – "+x.full_name+" ("+x.position+")").join("; ")}</p>
    {preview.skipped.length>0&&<details><summary>Přeskočené řádky</summary>{preview.skipped.map((x,i)=><p key={i}>Řádek {x.row}: {x.reason}</p>)}</details>}
