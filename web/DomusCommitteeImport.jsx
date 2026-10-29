@@ -25,9 +25,9 @@ export default function DomusCommitteeImport({supabase,buildings,onImported}){
     const position=norm(r["Funkce"]),full_name=[r["Titul"],r["Jméno"],r["Příjmení"]].map(norm).filter(Boolean).join(" ");
     const organization=[r["Firma"],r["Příjmení"],r["Jméno"]].map(norm).join(" ").normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase();
     const isSbdPraha8=/stavebni\s+bytove\s+druzstvo\s+praha\s*8/.test(organization);
-    const excludedRole=/referent|spravce|správce/i.test(position);
-    if(excludedRole||isSbdPraha8){skipped.push({row:i+2,reason:isSbdPraha8?"Správce Stavební bytové družstvo Praha 8 – neimportuje se":"Referent nebo správce objektu – neimportuje se"});return}
-    if(!/výbor|předsed|kontrolní komise|kontrolni komise|domovník|domovnik|bytové družstvo|bytove druzstvo|\\bBD\\b|družstv/i.test(position)||!norm(r["Jméno"])||!norm(r["Příjmení"])){skipped.push({row:i+2,reason:"Nepodporovaná funkce nebo neúplné jméno"});return}
+    const excludedRole=/spravce|správce/i.test(position);
+    if(excludedRole||(isSbdPraha8&&!/referent/i.test(position))){skipped.push({row:i+2,reason:isSbdPraha8?"Správce Stavební bytové družstvo Praha 8 – neimportuje se":"Správce objektu – neimportuje se"});return}
+    if(!/referent|výbor|předsed|kontrolní komise|kontrolni komise|domovník|domovnik|bytové družstvo|bytove druzstvo|\\bBD\\b|družstv/i.test(position)||!norm(r["Jméno"])||!norm(r["Příjmení"])){skipped.push({row:i+2,reason:"Nepodporovaná funkce nebo neúplné jméno"});return}
     const matches=lookup.get(code(r["Kód objektu"]))||[];
     if(matches.length!==1){skipped.push({row:i+2,reason:matches.length?"Nejednoznačný kód objektu":"Objekt nenalezen: "+norm(r["Kód objektu"])});return}
     const phone=norm(r["Mobil"]||r["Telefon"]||r["Mobil (portál)"]||r["Telefon (portál)"]);
@@ -69,7 +69,7 @@ export default function DomusCommitteeImport({supabase,buildings,onImported}){
   {error&&<p className="error" role="alert">{error}</p>}
   {notice&&<p className="notice" role="status">{notice}</p>}
   {preview&&<div className="importpanel"><h3>Import domovních funkcionářů – {preview.filename}</h3>
-   <p>Připraveno {preview.planned.length} kontaktů, přeskočeno {preview.skipped.length} řádků. Stávající záznamy nebudou přepsány. Referenti a správci objektů se ignorují; pole Technik/Správce a Referent ve FOXA se nemění.</p>
+   <p>Připraveno {preview.planned.length} kontaktů, přeskočeno {preview.skipped.length} řádků. Stávající záznamy nebudou přepsány. Importují se i kontaktní údaje referentů pro export. Přiřazení referentů a techniků k objektům se nemění.</p>
    <p>{preview.planned.slice(0,8).map(x=>x.object_number+" – "+x.full_name+" ("+x.position+")").join("; ")}</p>
    {preview.skipped.length>0&&<details><summary>Přeskočené řádky</summary>{preview.skipped.map((x,i)=><p key={i}>Řádek {x.row}: {x.reason}</p>)}</details>}
    <div className="actions"><button type="button" className="secondarybutton" onClick={()=>setPreview(null)}>Zrušit</button><button type="button" className="primary" disabled={busy||!preview.planned.length} onClick={confirm}>{busy?"Importuji…":"Potvrdit import kontaktů"}</button></div>
