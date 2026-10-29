@@ -72,9 +72,9 @@ export default function PhoneDirectory({supabase,staff=[] ,buildings=[],isAdmin=
    const full=col("prijmeni a jmeno","jmeno a prijmeni","cele jmeno","zamestnanec","pracovnik","kontaktni osoba");
    const first=col("jmeno"),last=col("prijmeni");
    const phone=col("mobil","telefon","linka"),email=col("e-mail","email"),position=col("funkce","pozice","pracovni zarazeni"),department=col("oddeleni","utvar","usek");
-   const isName=s=>/^[\\p{L}][\\p{L} .'-]{3,}$/u.test(clean(s))&&!/telefon|email|e-mail|mobil|ustredna|seznam|zamestnanc|oddeleni|referat/i.test(clean(s));
-   const emailPattern=/[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,}/i;
-   const phonePattern=/(?:\\+420\\s*)?(?:\\d[\\s-]*){9,}/;
+   const isName=s=>/^[\p{L}][\p{L} .'-]{3,}$/u.test(clean(s))&&!/telefon|email|e-mail|mobil|ustredna|seznam|zamestnanc|oddeleni|referat/i.test(clean(s));
+   const emailPattern=/[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}/i;
+   const phonePattern=/(?:\+420\s*)?(?:\d[\s-]*){9,}/;
    const rows=[];
    for(const row of grid.slice(headerIndex>=0?headerIndex+1:0)){
     const cells=row.map(clean);
@@ -82,7 +82,7 @@ export default function PhoneDirectory({supabase,staff=[] ,buildings=[],isAdmin=
     const foundPhone=cells.find(v=>phonePattern.test(v)&&!emailPattern.test(v))||"";
     const name=full>=0?cells[full]:first>=0&&last>=0&&first!==last?[cells[last],cells[first]].filter(Boolean).join(" "):first>=0?cells[first]:last>=0?cells[last]:"";
     const candidates=cells.filter(v=>isName(v)&&!emailPattern.test(v)&&!phonePattern.test(v));
-    const inferred=name||candidates.find(v=>v.split(/\\s+/).length>=2)||"";
+    const inferred=name||candidates.find(v=>v.split(/\s+/).length>=2)||"";
     if(!isName(inferred))continue;
     // U starších tiskových telefonních seznamů nemusí existovat řádek s hlavičkami.
     if(headerIndex<0&&!foundEmail&&!foundPhone)continue;
@@ -114,7 +114,8 @@ export default function PhoneDirectory({supabase,staff=[] ,buildings=[],isAdmin=
  }
  return <section className="foxa-phonebook">
   <div className="foxa-phonebook-head"><div><h2>Telefonní seznam</h2><p>Zaměstnanci SBD Praha 8 a kontakty spravovaných objektů.</p></div></div>
-  <div className="foxa-phonebook-body">\n   {isAdmin&&<div className="foxa-phonebook-import"><label className="secondarybutton filebutton">Importovat zaměstnance SBD (.xls, .xlsx)<input type="file" accept=".xls,.xlsx" onChange={readImport}/></label>{importRows&&<div className="importpanel"><p>Připraveno {importRows.length} kontaktů. Existující jména se aktualizují, nové kontakty se přidají.</p><button type="button" className="primary" disabled={importBusy} onClick={saveImport}>{importBusy?"Importuji…":"Potvrdit import"}</button><button type="button" className="secondarybutton" onClick={()=>setImportRows(null)}>Zrušit</button></div>}</div>}
+  <div className="foxa-phonebook-body">
+   {isAdmin&&<div className="foxa-phonebook-import"><label className="secondarybutton filebutton">Importovat zaměstnance SBD (.xls, .xlsx)<input type="file" accept=".xls,.xlsx" onChange={readImport}/></label>{importRows&&<div className="importpanel"><p>Připraveno {importRows.length} kontaktů. Existující jména se aktualizují, nové kontakty se přidají.</p><button type="button" className="primary" disabled={importBusy} onClick={saveImport}>{importBusy?"Importuji…":"Potvrdit import"}</button><button type="button" className="secondarybutton" onClick={()=>setImportRows(null)}>Zrušit</button></div>}</div>}
    <div className="foxa-phonebook-controls"><input type="search" aria-label="Hledat kontakt" placeholder="Hledat podle jména, telefonního čísla nebo e-mailu…" value={search} onChange={e=>setSearch(e.target.value)}/></div>
    {error&&<p role="alert" className="error">Kontakty se nepodařilo načíst: {error}</p>}
    {loading?<p>Načítám kontakty…</p>:<div className="foxa-phonebook-list">{entries.length?entries.map(p=><article className="foxa-phonebook-person" key={p.id}><div><strong>{p.name}</strong><small>{[p.position,p.object].filter(Boolean).join(" · ")}</small></div><div className="foxa-phonebook-links">{p.phone&&<a href={"tel:"+dial(p.phone)}>{p.phone}</a>}{p.email&&<a href={"mailto:"+p.email}>{p.email}</a>}{!p.phone&&!p.email&&<small>Kontaktní údaje nejsou vyplněny</small>}</div></article>):<p>Žádné odpovídající kontakty.</p>}</div>}
