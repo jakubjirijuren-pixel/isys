@@ -378,15 +378,36 @@ function App(){
   setMessage("Aktualizováno "+updated+" objektů. Přeskočeno "+skipped+" řádků. Nebyl vytvořen žádný nový objekt.");
  }
  function exportBuildingsWithReferents(){
-  const rows=[["Číslo objektu","Název objektu","Adresa","Město","Referenti"]];
-  for(const b of [...buildings].sort((a,b)=>String(a.object_number||"").localeCompare(String(b.object_number||""),"cs",{numeric:true}))){
-   rows.push([b.object_number||"",b.name||"",b.address||"",b.city||"",referentNamesFor(b).join(", ")]);
+  const rows=[
+   ["Stavební bytové družstvo Praha 8"],
+   ["PŘEHLED REFERENTŮ OBJEKTŮ"],
+   ["SVJ","Příjmení, jméno","Mobil","e-mail","ulice"]
+  ];
+  const sorted=[...buildings].sort((a,b)=>String(a.object_number||"").localeCompare(String(b.object_number||""),"cs",{numeric:true}));
+  for(const b of sorted){
+   const ids=referentIdsFor(b.id);
+   const people=ids.length?ids.map(id=>accountDirectory.find(a=>String(a.id)===String(id))).filter(Boolean):[];
+   if(people.length){
+    for(const person of people){
+     rows.push([b.object_number||"",person.display_name||"",person.phone||person.phone_number||person.mobile||"",person.email||"",b.street||b.address||""]);
+    }
+   }else{
+    const names=referentNamesFor(b);
+    if(names.length){for(const name of names)rows.push([b.object_number||"",name,"","",b.street||b.address||""])}
+    else rows.push([b.object_number||"","","","",b.street||b.address||""]);
+   }
   }
   const ws=XLSX.utils.aoa_to_sheet(rows);
-  ws["!cols"]=[{wch:18},{wch:38},{wch:46},{wch:24},{wch:48}];
+  ws["!merges"]=[{s:{r:0,c:0},e:{r:0,c:4}},{s:{r:1,c:0},e:{r:1,c:4}}];
+  ws["!cols"]=[{wch:11},{wch:33},{wch:19},{wch:35},{wch:43}];
+  ws["!rows"]=[{hpt:29},{hpt:27},{hpt:24}];
+  ws["!autofilter"]={ref:"A3:E"+rows.length};
+  ws["!printHeader"]="&CStavební bytové družstvo Praha 8";
+  ws["!pageSetup"]={orientation:"landscape",paperSize:9,fitToWidth:1,fitToHeight:0};
+  ws["!margins"]={left:0.3,right:0.3,top:0.45,bottom:0.45,header:0.2,footer:0.2};
   const wb=XLSX.utils.book_new();
-  XLSX.utils.book_append_sheet(wb,ws,"Objekty a referenti");
-  XLSX.writeFile(wb,"FOXA_objekty_a_referenti.xlsx");
+  XLSX.utils.book_append_sheet(wb,ws,"Referenti objektů");
+  XLSX.writeFile(wb,"FOXA_prehled_referentu_objektu.xlsx");
  }
  function downloadTemplate(){
   const wb=XLSX.utils.book_new();const ws=XLSX.utils.aoa_to_sheet([["Objekt","Ulice","Město","Správce","Ekonom","Účetní","Hlavní účetní subjekt","IČO","Unikátní číslo","Počet bytů","Počet nebytů","Počet garáží","Počet spol. prostor","Počet schvalovatelů faktur","Poznámka","P. Správce","P. Ekon"],["001","Ukázková 123","Praha 8","Jan Novák","","","SVJ Ukázková","12345678","abc123",24,0,4,2,1,"Ukázkový objekt",1,1]]);
