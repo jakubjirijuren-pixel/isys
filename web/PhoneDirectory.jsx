@@ -63,14 +63,31 @@ export default function PhoneDirectory({supabase,staff=[] ,buildings=[],isAdmin=
    const sheet=wb.Sheets[wb.SheetNames[0]];
    const grid=XLSX.utils.sheet_to_json(sheet,{header:1,defval:"",raw:false});
    const normalize=s=>clean(s).normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase();
-   const headerIndex=grid.findIndex(row=>row.some(v=>/prijmeni|jmeno|zamestnanec|pracovnik|telefon|mobil|email|e-mail/.test(normalize(v))));
-   if(headerIndex<0)throw Error("Nepodařilo se najít hlavičku tabulky.");
-   const headers=grid[headerIndex].map(normalize);
+   const headerIndex=grid.findIndex(row=>{
+    const h=row.map(normalize);
+    return h.some(v=>/jmeno|prijmeni|zamestnanec|pracovnik|kontaktni osoba/.test(v));
+   });
+   const headers=headerIndex>=0?grid[headerIndex].map(normalize):[];
    const col=(...names)=>headers.findIndex(h=>names.some(n=>h.includes(n)));
-   const first=col("jmeno"),last=col("prijmeni"),full=col("zamestnanec","pracovnik","jmeno a prijmeni","prijmeni a jmeno");
+   const full=col("prijmeni a jmeno","jmeno a prijmeni","cele jmeno","zamestnanec","pracovnik","kontaktni osoba");
+   const first=col("jmeno"),last=col("prijmeni");
    const phone=col("mobil","telefon","linka"),email=col("e-mail","email"),position=col("funkce","pozice","pracovni zarazeni"),department=col("oddeleni","utvar","usek");
-   if(first<0&&last<0&&full<0)throw Error("V souboru chybí sloupec se jménem.");
-   const rows=grid.slice(headerIndex+1).map(row=>({full_name:clean(full>=0?row[full]:[last>=0?row[last]:"",first>=0?row[first]:""].filter(Boolean).join(" ")),phone:clean(phone>=0?row[phone]:""),email:clean(email>=0?row[email]:""),position:clean(position>=0?row[position]:""),department:clean(department>=0?row[department]:"")})).filter(x=>x.full_name&&x.full_name.length>3);
+   const isName=s=>/^[\\p{L}][\\p{L} .'-]{3,}$/u.test(clean(s))&&!/telefon|email|e-mail|mobil|ustredna|seznam|zamestnanc|oddeleni|referat/i.test(clean(s));
+   const emailPattern=/[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,}/i;
+   const phonePattern=/(?:\\+420\\s*)?(?:\\d[\\s-]*){9,}/;
+   const rows=[];
+   for(const row of grid.slice(headerIndex>=0?headerIndex+1:0)){
+    const cells=row.map(clean);
+    const foundEmail=cells.find(v=>emailPattern.test(v))||"";
+    const foundPhone=cells.find(v=>phonePattern.test(v)&&!emailPattern.test(v))||"";
+    const name=full>=0?cells[full]:first>=0&&last>=0&&first!==last?[cells[last],cells[first]].filter(Boolean).join(" "):first>=0?cells[first]:last>=0?cells[last]:"";
+    const candidates=cells.filter(v=>isName(v)&&!emailPattern.test(v)&&!phonePattern.test(v));
+    const inferred=name||candidates.find(v=>v.split(/\\s+/).length>=2)||"";
+    if(!isName(inferred))continue;
+    // U starších tiskových telefonních seznamů nemusí existovat řádek s hlavičkami.
+    if(headerIndex<0&&!foundEmail&&!foundPhone)continue;
+    rows.push({full_name:inferred,phone:phone>=0?cells[phone]||foundPhone:foundPhone,email:email>=0?cells[email]||foundEmail:foundEmail,position:position>=0?cells[position]||"":"",department:department>=0?cells[department]||"":""});
+   }
    if(!rows.length)throw Error("Nebyly nalezeny žádné kontakty.");
    setImportRows(rows);
   }catch(err){setError("Import kontaktů: "+err.message)}
