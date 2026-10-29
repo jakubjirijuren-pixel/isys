@@ -62,7 +62,7 @@ export default function PhoneDirectory({supabase,staff=[] ,buildings=[],isAdmin=
    const wb=XLSX.read(await file.arrayBuffer(),{type:"array"});
    const sheet=wb.Sheets[wb.SheetNames[0]];
    const grid=XLSX.utils.sheet_to_json(sheet,{header:1,defval:"",raw:false});
-   const normalize=s=>clean(s).normalize("NFD").replace(/[\\u0300-\\u036f]/g,"").toLowerCase();
+   const normalize=s=>clean(s).normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase();
    const headerIndex=grid.findIndex(row=>row.some(v=>/prijmeni|jmeno|zamestnanec|pracovnik|telefon|mobil|email|e-mail/.test(normalize(v))));
    if(headerIndex<0)throw Error("Nepodařilo se najít hlavičku tabulky.");
    const headers=grid[headerIndex].map(normalize);
@@ -78,7 +78,7 @@ export default function PhoneDirectory({supabase,staff=[] ,buildings=[],isAdmin=
  async function saveImport(){
   if(!importRows||importBusy)return;setImportBusy(true);setError("");
   try{
-   const normalize=s=>clean(s).normalize("NFD").replace(/[\\u0300-\\u036f]/g,"").toLowerCase().split(/\\s+/).filter(Boolean).sort().join(" ");
+   const normalize=s=>clean(s).normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase().split(/\s+/).filter(Boolean).sort().join(" ");
    const existing=new Map(staffContacts.map(x=>[normalize(x.full_name),x]));
    let created=0,updated=0;
    for(const item of importRows){
