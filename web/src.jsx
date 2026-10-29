@@ -377,7 +377,19 @@ function App(){
   setImportRows(null);setImportBusy(false);await load();
   setMessage("Aktualizováno "+updated+" objektů. Přeskočeno "+skipped+" řádků. Nebyl vytvořen žádný nový objekt.");
  }
- function exportBuildingsWithReferents(){
+ async function exportBuildingsWithReferents(){
+  const contactRows=[];
+  for(let from=0;;from+=1000){
+   const {data,error}=await supabase.from("foxa_building_committee_contacts").select("building_id,full_name,position,phone,email").range(from,from+999);
+   if(error){setListError("Nepodařilo se načíst kontakty pro export: "+error.message);return}
+   contactRows.push(...(data||[]));
+   if(!data||data.length<1000)break;
+  }
+  const normalizePerson=s=>String(s||"").normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLocaleLowerCase("cs").replace(/\b(mgr|ing|bc|mudr|judr|phdr|phd)\b\.?/g," ").replace(/[^a-z ]/g," ").split(/\s+/).filter(Boolean).sort().join(" ");
+  const contactFor=(buildingId,name)=>{
+   const wanted=normalizePerson(name);
+   return contactRows.find(x=>String(x.building_id)===String(buildingId)&&/referent/i.test(x.position||"")&&normalizePerson(x.full_name)===wanted);
+  };
   const rows=[
    ["Stavební bytové družstvo Praha 8"],
    ["PŘEHLED REFERENTŮ OBJEKTŮ"],
@@ -389,11 +401,12 @@ function App(){
    const people=ids.length?ids.map(id=>accountDirectory.find(a=>String(a.id)===String(id))).filter(Boolean):[];
    if(people.length){
     for(const person of people){
-     rows.push([b.object_number||"",person.display_name||"",person.phone||person.phone_number||person.mobile||"",person.email||"",b.street||b.address||""]);
+     const contact=contactFor(b.id,person.display_name);
+     rows.push([b.object_number||"",person.display_name||"",contact?.phone||person.phone||person.phone_number||person.mobile||"",contact?.email||person.email||"",b.street||b.address||""]);
     }
    }else{
     const names=referentNamesFor(b);
-    if(names.length){for(const name of names)rows.push([b.object_number||"",name,"","",b.street||b.address||""])}
+    if(names.length){for(const name of names){const contact=contactFor(b.id,name);rows.push([b.object_number||"",name,contact?.phone||"",contact?.email||"",b.street||b.address||""])}}
     else rows.push([b.object_number||"","","","",b.street||b.address||""]);
    }
   }
