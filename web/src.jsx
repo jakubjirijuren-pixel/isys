@@ -407,7 +407,7 @@ function App(){
    }else{
     const names=referentNamesFor(b);
     if(names.length){for(const name of names){const contact=contactFor(b.id,name);rows.push([b.object_number||"",name,contact?.phone||"",contact?.email||"",b.street||b.address||""])}}
-    else rows.push([b.object_number||"","","","",b.street||b.address||""]);
+    // Objekty bez přiřazeného referenta se do přehledu nezařazují.
    }
   }
   const ws=XLSX.utils.aoa_to_sheet(rows);
