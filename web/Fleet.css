@@ -1,0 +1,34 @@
+/* FOXA fleet: use the shared app design system, including responsive header sizing. */
+.layout .body .foxa-fleet{width:100%;max-width:1320px;margin-inline:auto;display:grid;gap:20px;min-width:0;color:var(--fx-text)}
+.layout .body .foxa-fleet .fleet-hero,.layout .body .foxa-fleet .fleet-card{box-sizing:border-box;min-width:0;width:100%;height:auto!important;min-height:0!important;max-height:none!important;overflow:visible;border:1px solid var(--fx-border);border-radius:var(--fx-radius-lg);background:var(--fx-surface);box-shadow:var(--fx-shadow);padding:clamp(18px,2.4vw,28px)}
+.layout .body .foxa-fleet .fleet-hero{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:16px}
+.layout .body .foxa-fleet .fleet-hero>div{min-width:0;flex:1 1 260px}
+.layout .body .foxa-fleet .fleet-hero h1{font-size:clamp(24px,2.6vw,34px);line-height:1.18;letter-spacing:-.035em;margin:7px 0 9px;color:var(--fx-text);overflow-wrap:anywhere}
+.layout .body .foxa-fleet .fleet-hero p{color:var(--fx-muted);font-size:15px;line-height:1.5;margin:0}
+.layout .body .foxa-fleet .fleet-eyebrow{display:block;color:var(--fx-accent);font-size:11px;font-weight:800;letter-spacing:.12em;line-height:1.4}
+.layout .body .foxa-fleet .fleet-tabs{display:flex;align-items:center;flex-wrap:wrap;gap:8px;padding:0 0 11px;border-bottom:1px solid var(--fx-border)}
+.layout .body .foxa-fleet :is(.fleet-tabs button,.fleet-hero button,.fleet-entry button){box-sizing:border-box;min-height:43px;border:1px solid var(--fx-border);border-radius:var(--fx-radius-control);padding:10px 16px;background:var(--fx-surface);color:var(--fx-text);font:inherit;font-size:14px;font-weight:700;cursor:pointer;white-space:normal;transition:background-color .16s,box-shadow .16s}
+.layout .body .foxa-fleet .fleet-tabs button{background:transparent;color:var(--fx-muted);border-color:transparent}
+.layout .body .foxa-fleet .fleet-tabs button.active{background:var(--fx-surface);border-color:var(--fx-border);color:var(--fx-accent);box-shadow:var(--fx-shadow)}
+.layout .body .foxa-fleet :is(.fleet-tabs button,.fleet-hero button,.fleet-entry button):hover{border-color:var(--fx-accent)}
+.layout .body .foxa-fleet :is(.fleet-tabs button,.fleet-hero button,.fleet-entry button,.fleet-primary):focus-visible{outline:2px solid var(--fx-accent);outline-offset:3px}
+.layout .body .foxa-fleet .fleet-card h2{margin:0 0 20px;font-size:20px;line-height:1.3;letter-spacing:-.02em;color:var(--fx-text)}
+.layout .body .foxa-fleet .fleet-form{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;align-items:end}
+.layout .body .foxa-fleet .fleet-form label{display:grid;gap:7px;min-width:0;color:var(--fx-text);font-size:13px;font-weight:700}
+.layout .body .foxa-fleet .fleet-form :is(input,select){box-sizing:border-box;display:block;width:100%;min-width:0;max-width:100%;min-height:46px;padding:10px 12px;border:1px solid var(--isys-control-border,var(--fx-border));border-radius:var(--fx-radius-control);background:var(--isys-control-bg,var(--fx-surface-soft));color:var(--fx-text);font:inherit;font-size:16px;line-height:1.4;color-scheme:light}
+[data-theme="dark"] .layout .body .foxa-fleet .fleet-form :is(input,select){color-scheme:dark}
+.layout .body .foxa-fleet .fleet-form :is(input,select):focus-visible{outline:2px solid var(--fx-accent);outline-offset:2px}
+.layout .body .foxa-fleet .fleet-wide{grid-column:span 2}
+.layout .body .foxa-fleet .fleet-primary{box-sizing:border-box;min-height:46px;width:100%;padding:11px 18px;border:1px solid var(--fx-accent);border-radius:var(--fx-radius-control);background:var(--fx-accent);color:#fff;font:inherit;font-size:15px;font-weight:750;cursor:pointer}
+.layout .body .foxa-fleet .fleet-primary:hover:not(:disabled){filter:brightness(1.08)}
+.layout .body .foxa-fleet button:disabled{opacity:.55;cursor:not-allowed}
+.layout .body .foxa-fleet .fleet-list{display:grid;gap:10px}
+.layout .body .foxa-fleet .fleet-entry{display:flex;align-items:center;justify-content:space-between;gap:14px;min-width:0;padding:16px;border:1px solid var(--fx-border);border-radius:var(--fx-radius);background:var(--fx-surface-soft)}
+.layout .body .foxa-fleet .fleet-entry>div{min-width:0;overflow-wrap:anywhere}
+.layout .body .foxa-fleet .fleet-entry strong{font-size:15px;color:var(--fx-text)}
+.layout .body .foxa-fleet .fleet-entry p{margin:6px 0;color:var(--fx-muted)}
+.layout .body .foxa-fleet .fleet-entry small{color:var(--fx-muted);line-height:1.5}
+.layout .body .foxa-fleet .fleet-error{color:#e66d6d}
+.layout .body .foxa-fleet .fleet-success{color:var(--fx-accent)}
+@media(max-width:900px){.layout .body .foxa-fleet .fleet-form{grid-template-columns:repeat(2,minmax(0,1fr))}.layout .body .foxa-fleet .fleet-wide{grid-column:1/-1}}
+@media(max-width:600px){.layout .body .foxa-fleet{gap:15px}.layout .body .foxa-fleet .fleet-hero,.layout .body .foxa-fleet .fleet-card{padding:16px;border-radius:15px}.layout .body .foxa-fleet .fleet-hero>button{width:100%}.layout .body .foxa-fleet .fleet-tabs button{flex:1 1 125px;font-size:13px;padding:10px}.layout .body .foxa-fleet .fleet-form{grid-template-columns:minmax(0,1fr);gap:13px}.layout .body .foxa-fleet .fleet-wide{grid-column:auto}.layout .body .foxa-fleet .fleet-entry{flex-direction:column;align-items:stretch}.layout .body .foxa-fleet .fleet-entry button{width:100%}}

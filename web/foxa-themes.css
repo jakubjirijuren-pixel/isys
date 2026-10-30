@@ -1,0 +1,213 @@
+/* FOXA theme compatibility: one semantic palette for 2 modes x 6 accents.
+   Loaded last; affects app surfaces, not kiosk, signatures or printable PDFs. */
+:root{
+ color-scheme:light;
+ --fx-accent-contrast:#fff;
+ --fx-accent-link:var(--isys-accent-strong,#176d98);
+ --fx-accent-tint:var(--isys-accent-soft,#e6f1f7);
+ --fx-accent-tint-text:var(--isys-accent-strong,#176d98);
+ --fx-field-bg:#fff;--fx-field-text:#213b50;
+ --fx-placeholder:#667f92;--fx-divider:#dce6ed;
+}
+:root[data-theme="dark"]{
+ color-scheme:dark;
+ --fx-accent-tint:color-mix(in srgb,var(--isys-accent) 22%,#17293a);
+ --fx-accent-tint-text:#e9f4fa;
+ --fx-field-bg:#1e3447;--fx-field-text:#edf5fc;
+ --fx-placeholder:#b1c4d4;--fx-divider:#3a5469;
+ --isys-accent-soft:color-mix(in srgb,var(--isys-accent) 22%,#17293a);
+}
+:root[data-theme="dark"][data-accent="blue"]{--isys-accent:#63b5e1;--isys-accent-strong:#78c6ed;--isys-accent-hover:#84d0f2;--fx-accent-contrast:#092234}
+:root[data-theme="dark"][data-accent="green"]{--isys-accent:#65c89a;--isys-accent-strong:#85dfb0;--isys-accent-hover:#9ae8be;--fx-accent-contrast:#092c1c}
+:root[data-theme="dark"][data-accent="purple"]{--isys-accent:#ba9af1;--isys-accent-strong:#cdb2f7;--isys-accent-hover:#d8c1fc;--fx-accent-contrast:#2b1943}
+:root[data-theme="dark"][data-accent="orange"]{--isys-accent:#e8aa69;--isys-accent-strong:#f3bd85;--isys-accent-hover:#f6c998;--fx-accent-contrast:#3a210c}
+:root[data-theme="dark"][data-accent="red"]{--isys-accent:#f0959e;--isys-accent-strong:#f9b0b8;--isys-accent-hover:#ffc3c9;--fx-accent-contrast:#431b22}
+:root[data-theme="dark"][data-accent="teal"]{--isys-accent:#64cbc6;--isys-accent-strong:#85e0db;--isys-accent-hover:#a0ece7;--fx-accent-contrast:#073230}
+:root[data-theme="light"][data-accent="blue"]{--fx-accent-contrast:#fff}
+:root[data-theme="light"][data-accent="green"]{--fx-accent-contrast:#fff}
+:root[data-theme="light"][data-accent="purple"]{--fx-accent-contrast:#fff}
+:root[data-theme="light"][data-accent="orange"]{--fx-accent-contrast:#fff}
+:root[data-theme="light"][data-accent="red"]{--fx-accent-contrast:#fff}
+:root[data-theme="light"][data-accent="teal"]{--fx-accent-contrast:#fff}
+:root[data-theme="dark"] .layout{background:#0b1521;color:var(--fx-text)}
+:root[data-theme="dark"] .layout .body{background:#0b1521;color:var(--fx-text)}
+:root[data-theme="dark"] .layout :is(.content,aside){color:var(--fx-text)}
+:root[data-theme="dark"] .layout aside{background:var(--isys-sidebar,#10263b)}
+:root[data-theme="dark"] .layout .body :is(.inspectionheading,.technicalhead,.tasksheader,.pageheading,.wikihead,.inspectionpanel,.inspectionprogress,.technicalpanel,.keys-panel,.attendance-card,.vacation-panel,.taskform,.tasklist,.taskdetail,.taskstats>div,.tiles article){
+ background:var(--fx-surface);color:var(--fx-text);border-color:var(--fx-border);
+}
+:root[data-theme="dark"] .layout .body :is(.inspectionheading,.technicalhead,.tasksheader,.pageheading,.wikihead) :is(h1,h2,h3,p),
+:root[data-theme="dark"] .layout .body :is(.inspectionpanel,.technicalpanel,.keys-panel,.attendance-card,.vacation-panel,.taskform,.tasklist,.taskdetail,.wiki-panel) :is(h2,h3){
+ color:var(--fx-text);
+}
+:root[data-theme="dark"] .layout .body :is(.inspectionheading,.technicalhead,.tasksheader,.pageheading,.wikihead) p{color:var(--fx-muted)}
+.layout .body :is(.inspectionmodule,.technicalmodule,.keys-module,.tasks,.vacation,.attendance-module,.wiki,.adminusers) :is(input:not([type="checkbox"]):not([type="radio"]):not([type="file"]):not([type="color"]),select,textarea){
+ background:var(--fx-field-bg);color:var(--fx-field-text);border-color:var(--isys-control-border,var(--fx-border));
+}
+.layout .body :is(.inspectionmodule,.technicalmodule,.keys-module,.tasks,.vacation,.attendance-module,.wiki,.adminusers) :is(input,textarea)::placeholder{color:var(--fx-placeholder);opacity:1}
+.layout .body :is(.inspectionmodule,.technicalmodule,.keys-module,.tasks,.vacation,.attendance-module,.wiki,.adminusers) select option{background:var(--fx-field-bg);color:var(--fx-field-text)}
+.layout .body :is(.inspectionmodule,.technicalmodule,.keys-module,.tasks,.vacation,.attendance-module,.wiki,.adminusers) :is(input,select,textarea):disabled{opacity:.65;cursor:not-allowed}
+:root[data-theme="dark"] .layout .body :is(.keys-module,.tasks,.technicalmodule,.inspectionmodule,.vacation,.attendance-module,.wiki,.adminusers) :is(.secondarybutton,.logout){
+ background:var(--fx-surface-soft);border-color:var(--fx-border);color:var(--fx-text);
+}
+/* Accent follows the chosen theme throughout the main application. */
+.layout .body :is(.inspectionmodule,.technicalmodule,.keys-module,.tasks,.vacation,.attendance-module,.wiki,.adminusers) :is(button.primary,.primary,button[type="submit"]:not(.logout):not(.secondarybutton)),
+.layout .body :is(.technicalbuttons button:not(.technicalclear),.keys-loan-variants button.active,.inspection-role-switch button.active){
+ background:var(--isys-accent);border-color:var(--isys-accent);color:var(--fx-accent-contrast);
+}
+.layout .body :is(.inspectionmodule,.technicalmodule,.keys-module,.tasks,.vacation,.attendance-module,.wiki,.adminusers) :is(button.primary,.primary,button[type="submit"]:not(.logout):not(.secondarybutton)):not(:disabled):hover,
+.layout .body :is(.technicalbuttons button:not(.technicalclear),.keys-loan-variants button.active,.inspection-role-switch button.active):not(:disabled):hover{
+ background:var(--isys-accent-hover);border-color:var(--isys-accent-hover);color:var(--fx-accent-contrast);
+}
+.layout .body :is(.inspectionmodule,.technicalmodule,.keys-module,.tasks,.vacation,.attendance-module,.wiki,.adminusers) :is(a:not(.nav),.filtertrigger):focus-visible{
+ outline:2px solid var(--isys-accent);outline-offset:3px;
+}
+:root[data-theme="dark"] .layout .body :is(.inspectionmodule,.technicalmodule,.keys-module,.tasks,.vacation,.attendance-module,.wiki,.adminusers) :is(a:not(.nav)){color:var(--isys-accent-strong)}
+:root[data-theme="dark"] .layout .body :is(.vacation-balance .vacation-donut>div){background:#fff!important;color:#15293b!important}
+:root[data-theme="dark"] .layout .body :is(.vacation-balance .vacation-donut strong){color:#15293b!important}
+:root[data-theme="dark"] .layout .body :is(.vacation-balance .vacation-donut small){color:#42556b!important}
+:root[data-theme="dark"] .layout .body :is(.technicaltablewrap,.tablewrap,.table-wrap,.attendance-table-wrap){border-color:var(--fx-border)}
+:root[data-theme="dark"] .layout .body :is(.technicaltable,.attendance-table-wrap table,.buildingtable) :is(td,th){border-color:var(--fx-divider);color:var(--fx-text)}
+:root[data-theme="dark"] .layout .body :is(.keys-status,.taskstatus,.wikicount){color:var(--fx-text)}
+:root[data-theme="dark"] .layout .body :is(.taskstats span,.taskitem small,.taskhistory small,.keys-module .pageheading p,.wikihead p){color:var(--fx-muted)}
+:root[data-theme="dark"] .layout .body :is(.filtermenu,.inspectionbuildingmenu,.technicalcomboboxlist){background:var(--fx-surface);border-color:var(--fx-border);color:var(--fx-text)}
+:root[data-theme="dark"] .layout .body :is(.filtermenu button.chosen,.inspectionbuildingoptions button.chosen,.technicalcomboboxoption.is-active){background:var(--fx-accent-tint);color:var(--fx-accent-tint-text)}
+:root[data-theme="dark"] .layout .body :is(.technicalnotice,.notice){background:var(--fx-surface-soft);color:var(--fx-text)}
+:root[data-theme="dark"] .layout .body :is(.keys-tabs button.active,.keys-view-switch button.active){background:var(--fx-accent-tint);color:var(--fx-accent-tint-text);border-color:var(--isys-accent)}
+:root[data-theme="dark"] .layout .body :is(.vacation-year label,.vacation-panel label){color:var(--fx-text)}
+:root[data-theme="dark"] .layout .body :is(.vacation-year select,.vacation-panel select){background:var(--fx-field-bg);color:var(--fx-field-text)}
+/* Profile theme switch and menu should also respond to all accent colors. */
+:root[data-theme="dark"] .profilethemebuttons button.active,
+:root[data-theme="dark"] .profileaccent .accentchoice.selected{border-color:var(--isys-accent)}
+:root[data-theme="dark"] .profilethemebuttons button.active{background:var(--isys-accent);color:var(--fx-accent-contrast)}
+:root[data-theme="dark"] .accentchoice{color:var(--fx-text)}
+:root[data-theme="dark"] .accentchoice.selected{box-shadow:0 0 0 1px var(--isys-accent)}
+:root[data-theme="dark"] .layout .body .inspectionbar>div{background:var(--isys-accent)}
+@media(prefers-reduced-motion:reduce){.layout .body *{transition:none!important;animation-duration:.01ms!important}}
+@media print{ :root{color-scheme:light} }
+
+
+/* Dashboard widgets: explicitly override generic card surfaces from foxa-modern.
+   Each widget color remains user-selected independently of the global accent. */
+:root{
+ --fx-widget-default-bg:var(--fx-surface);
+ --fx-widget-default-border:var(--fx-border);
+ --fx-widget-default-text:var(--fx-text);
+ --fx-widget-default-muted:var(--fx-muted);
+}
+:root[data-theme="dark"]{
+ --fx-widget-default-bg:#17293a;
+ --fx-widget-default-border:#35536a;
+ --fx-widget-default-text:#e8f1f8;
+ --fx-widget-default-muted:#a8bbcb;
+}
+.layout .body .dashboardtiles article.widgetcard{
+ --widget-bg:var(--fx-widget-default-bg);
+ --widget-border:var(--fx-widget-default-border);
+ --widget-ink:var(--fx-widget-default-text);
+ --widget-muted:var(--fx-widget-default-muted);
+ background:var(--widget-bg);
+ border:1px solid var(--widget-border);
+ color:var(--widget-ink);
+ border-radius:var(--fx-radius,16px);
+ min-width:0;
+}
+.layout .body .dashboardtiles article.widgetcard.widgetcolor-blue{--widget-bg:#dcefff;--widget-border:#9bc8ee;--widget-ink:#16384f;--widget-muted:#3d5e74}
+.layout .body .dashboardtiles article.widgetcard.widgetcolor-green{--widget-bg:#e1f5e7;--widget-border:#a6dabb;--widget-ink:#1c4934;--widget-muted:#3d6652}
+.layout .body .dashboardtiles article.widgetcard.widgetcolor-orange{--widget-bg:#ffebd5;--widget-border:#eac49b;--widget-ink:#583719;--widget-muted:#765338}
+.layout .body .dashboardtiles article.widgetcard.widgetcolor-purple{--widget-bg:#ede3ff;--widget-border:#c6acec;--widget-ink:#3e2b60;--widget-muted:#64517e}
+.layout .body .dashboardtiles article.widgetcard.widgetcolor-red{--widget-bg:#ffe3e5;--widget-border:#edb4ba;--widget-ink:#622a35;--widget-muted:#86525c}
+.layout .body .dashboardtiles article.widgetcard.widgetcolor-teal{--widget-bg:#d8f6f1;--widget-border:#9ddbd2;--widget-ink:#164e4a;--widget-muted:#3a6964}
+:root[data-theme="dark"] .layout .body .dashboardtiles article.widgetcard.widgetcolor-blue{--widget-bg:#173c5b;--widget-border:#316c97;--widget-ink:#f0f8ff;--widget-muted:#c2d9eb}
+:root[data-theme="dark"] .layout .body .dashboardtiles article.widgetcard.widgetcolor-green{--widget-bg:#194634;--widget-border:#317a58;--widget-ink:#ecfff4;--widget-muted:#b8e4cc}
+:root[data-theme="dark"] .layout .body .dashboardtiles article.widgetcard.widgetcolor-orange{--widget-bg:#573920;--widget-border:#93603c;--widget-ink:#fff6e9;--widget-muted:#f2d2ad}
+:root[data-theme="dark"] .layout .body .dashboardtiles article.widgetcard.widgetcolor-purple{--widget-bg:#392854;--widget-border:#715399;--widget-ink:#f8f2ff;--widget-muted:#d8c5f2}
+:root[data-theme="dark"] .layout .body .dashboardtiles article.widgetcard.widgetcolor-red{--widget-bg:#542b35;--widget-border:#99505d;--widget-ink:#fff2f3;--widget-muted:#f1c3cb}
+:root[data-theme="dark"] .layout .body .dashboardtiles article.widgetcard.widgetcolor-teal{--widget-bg:#194745;--widget-border:#327c75;--widget-ink:#ebfffb;--widget-muted:#b8e5de}
+.layout .body .dashboardtiles article.widgetcard :is(h3,.widgetvalue,.widgettitle,.widgetscope,.widgetcoloroptions,.widgetreorder,.widgetreorder>strong,.widgetcoloroptions>strong){
+ color:var(--widget-ink);
+}
+.layout .body .dashboardtiles article.widgetcard :is(.widgettitle small,.widgetscope label){
+ color:var(--widget-muted);
+}
+.layout .body .dashboardtiles article.widgetcard>small{color:var(--widget-muted)}
+.layout .body .dashboardtiles article.widgetcard .widgetbuttons :is(.widgetconfig,.widgetremove){
+ color:var(--widget-ink);border:0;background:transparent;opacity:.85;
+}
+.layout .body .dashboardtiles article.widgetcard .widgetbuttons :is(.widgetconfig,.widgetremove):hover{
+ background:color-mix(in srgb,var(--widget-ink) 12%,transparent);color:var(--widget-ink);opacity:1;
+}
+.layout .body .dashboardtiles article.widgetcard .widgetbuttons :is(.widgetconfig,.widgetremove):focus-visible{
+ outline:2px solid var(--widget-ink);outline-offset:2px;
+}
+.layout .body .dashboardtiles article.widgetcard .widgetreorder button{
+ color:var(--widget-ink);border-color:var(--widget-border);background:color-mix(in srgb,var(--widget-ink) 6%,transparent);
+}
+.layout .body .dashboardtiles article.widgetcard .widgetreorder button:not(:disabled):hover{
+ background:color-mix(in srgb,var(--widget-ink) 13%,transparent);
+}
+.layout .body .dashboardtiles article.widgetcard .widgetscope :is(input,select){
+ background:var(--fx-field-bg);color:var(--fx-field-text);border:1px solid var(--fx-border);
+}
+.layout .body .dashboardtiles article.widgetcard .widgetscope .filtertrigger{
+ background:var(--fx-field-bg);color:var(--fx-field-text);border-color:var(--fx-border);
+}
+.layout .body .dashboardtiles article.widgetcard .widgetscope .filtermenu{
+ background:var(--fx-surface);color:var(--fx-text);border-color:var(--fx-border);
+}
+.layout .body .dashboardtiles article.widgetcard .widgetscope .filtermenu button{color:var(--fx-text)}
+.layout .body .dashboardtiles article.widgetcard .widgetscope .filtermenu button.chosen{
+ background:var(--fx-accent-tint);color:var(--fx-accent-tint-text);
+}
+.layout .body .dashboardtiles article.widgetcard .widgetswatch{
+ width:28px;height:28px;min-height:28px;min-width:28px;padding:0;border-radius:50%;
+ border:2px solid color-mix(in srgb,var(--widget-ink) 35%,transparent);
+}
+.layout .body .dashboardtiles article.widgetcard .widgetswatch.selected{
+ outline:2px solid var(--widget-ink);outline-offset:3px;
+}
+.layout .body .dashboardtiles article.widgetcard .swatch-default{background:var(--fx-widget-default-bg)}
+.layout .body .dashboardtiles article.widgetcard .swatch-blue{background:#8fc8f5}
+.layout .body .dashboardtiles article.widgetcard .swatch-green{background:#8dd7aa}
+.layout .body .dashboardtiles article.widgetcard .swatch-orange{background:#f3b477}
+.layout .body .dashboardtiles article.widgetcard .swatch-purple{background:#bea1ee}
+.layout .body .dashboardtiles article.widgetcard .swatch-red{background:#f0a1aa}
+.layout .body .dashboardtiles article.widgetcard .swatch-teal{background:#81d9cc}
+:root[data-theme="dark"] .layout .body .dashboardtiles article.widgetcard .swatch-default{background:#17293a}
+:root[data-theme="dark"] .layout .body .dashboardtiles article.widgetcard .swatch-blue{background:#24628e}
+:root[data-theme="dark"] .layout .body .dashboardtiles article.widgetcard .swatch-green{background:#26744d}
+:root[data-theme="dark"] .layout .body .dashboardtiles article.widgetcard .swatch-orange{background:#926039}
+:root[data-theme="dark"] .layout .body .dashboardtiles article.widgetcard .swatch-purple{background:#694797}
+:root[data-theme="dark"] .layout .body .dashboardtiles article.widgetcard .swatch-red{background:#934450}
+:root[data-theme="dark"] .layout .body .dashboardtiles article.widgetcard .swatch-teal{background:#287e77}
+@media(max-width:600px){
+ .layout .body .dashboardtiles article.widgetcard{padding:16px}
+ .layout .body .dashboardtiles article.widgetcard .widgettitle{gap:8px;min-width:0}
+ .layout .body .dashboardtiles article.widgetcard .widgettitle h3{min-width:0;overflow-wrap:anywhere}
+}
+
+
+/* Critical: paint the WHOLE tile, not just its typography. Theme selectors
+   elsewhere can override inherited card surfaces; these explicit background
+   declarations win for each chosen widget color. */
+.layout .body .tiles.dashboardtiles > article.widgetcard.widgetcolor-default{
+ background-color:var(--fx-widget-default-bg)!important;
+ border-color:var(--fx-widget-default-border)!important;
+}
+.layout .body .tiles.dashboardtiles > article.widgetcard.widgetcolor-blue{background-color:#dcefff!important;border-color:#9bc8ee!important}
+.layout .body .tiles.dashboardtiles > article.widgetcard.widgetcolor-green{background-color:#e1f5e7!important;border-color:#a6dabb!important}
+.layout .body .tiles.dashboardtiles > article.widgetcard.widgetcolor-orange{background-color:#ffebd5!important;border-color:#eac49b!important}
+.layout .body .tiles.dashboardtiles > article.widgetcard.widgetcolor-purple{background-color:#ede3ff!important;border-color:#c6acec!important}
+.layout .body .tiles.dashboardtiles > article.widgetcard.widgetcolor-red{background-color:#ffe3e5!important;border-color:#edb4ba!important}
+.layout .body .tiles.dashboardtiles > article.widgetcard.widgetcolor-teal{background-color:#d8f6f1!important;border-color:#9ddbd2!important}
+:root[data-theme="dark"] .layout .body .tiles.dashboardtiles > article.widgetcard.widgetcolor-blue{background-color:#173c5b!important;border-color:#316c97!important}
+:root[data-theme="dark"] .layout .body .tiles.dashboardtiles > article.widgetcard.widgetcolor-green{background-color:#194634!important;border-color:#317a58!important}
+:root[data-theme="dark"] .layout .body .tiles.dashboardtiles > article.widgetcard.widgetcolor-orange{background-color:#573920!important;border-color:#93603c!important}
+:root[data-theme="dark"] .layout .body .tiles.dashboardtiles > article.widgetcard.widgetcolor-purple{background-color:#392854!important;border-color:#715399!important}
+:root[data-theme="dark"] .layout .body .tiles.dashboardtiles > article.widgetcard.widgetcolor-red{background-color:#542b35!important;border-color:#99505d!important}
+:root[data-theme="dark"] .layout .body .tiles.dashboardtiles > article.widgetcard.widgetcolor-teal{background-color:#194745!important;border-color:#327c75!important}
+/* The color selection is a card background setting. Text stays legible but
+   is not tinted with the selected palette as a substitute for card coloring. */
+.layout .body .tiles.dashboardtiles > article.widgetcard.widgetcolor-default :is(h3,.widgetvalue){color:var(--fx-widget-default-text)!important}
+.layout .body .tiles.dashboardtiles > article.widgetcard:not(.widgetcolor-default) :is(h3,.widgetvalue){color:var(--widget-ink)!important}
+.layout .body .tiles.dashboardtiles > article.widgetcard:not(.widgetcolor-default)>small{color:var(--widget-muted)!important}

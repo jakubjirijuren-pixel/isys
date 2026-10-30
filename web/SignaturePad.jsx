@@ -1,0 +1,12 @@
+import React,{useEffect,useRef,useState} from "react";
+export default function SignaturePad({onSave,disabled}){
+ const canvasRef=useRef(null),drawing=useRef(false),last=useRef(null),[hasInk,setHasInk]=useState(false);
+ const clear=()=>{const c=canvasRef.current;if(!c)return;const ctx=c.getContext("2d");ctx.clearRect(0,0,c.width,c.height);setHasInk(false)};
+ useEffect(()=>{const c=canvasRef.current;if(!c)return;const ctx=c.getContext("2d");const rect=c.getBoundingClientRect();const scale=window.devicePixelRatio||1;c.width=Math.max(1,Math.round(rect.width*scale));c.height=Math.max(1,Math.round(rect.height*scale));ctx.setTransform(scale,0,0,scale,0,0);ctx.strokeStyle="#152b3a";ctx.fillStyle="#152b3a";ctx.lineWidth=2.6;ctx.lineCap="round";ctx.lineJoin="round"},[]);
+ const position=e=>{const r=canvasRef.current.getBoundingClientRect();return {x:e.clientX-r.left,y:e.clientY-r.top}};
+ const down=e=>{if(disabled)return;e.preventDefault();const c=canvasRef.current;c.setPointerCapture(e.pointerId);drawing.current=true;last.current=position(e);const ctx=c.getContext("2d");ctx.beginPath();ctx.arc(last.current.x,last.current.y,1.3,0,Math.PI*2);ctx.fill();setHasInk(true)};
+ const move=e=>{if(!drawing.current)return;e.preventDefault();const p=position(e),ctx=canvasRef.current.getContext("2d");ctx.beginPath();ctx.moveTo(last.current.x,last.current.y);ctx.lineTo(p.x,p.y);ctx.stroke();last.current=p};
+ const up=e=>{drawing.current=false;last.current=null;if(canvasRef.current?.hasPointerCapture(e.pointerId))canvasRef.current.releasePointerCapture(e.pointerId)};
+ const save=()=>{const c=canvasRef.current;if(!c||!hasInk||disabled)return;c.toBlob(blob=>{if(blob)onSave(new File([blob],"podpis.png",{type:"image/png"}))},"image/png")};
+ return <div className="signaturepad"><strong>Nakreslit podpis</strong><small>Podpis nakresli myší, prstem nebo dotykovým perem.</small><canvas ref={canvasRef} onPointerDown={down} onPointerMove={move} onPointerUp={up} onPointerCancel={up} style={{display:"block",width:"100%",height:170,touchAction:"none",background:"#fff",border:"1px solid #a8b6c4",borderRadius:8,cursor:"crosshair"}} aria-label="Plocha pro nakreslení podpisu"/><div style={{display:"flex",gap:8,flexWrap:"wrap",marginTop:8}}><button type="button" disabled={!hasInk||disabled} onClick={clear}>Vymazat kresbu</button><button type="button" disabled={!hasInk||disabled} onClick={save}>Uložit nakreslený podpis</button></div></div>
+}

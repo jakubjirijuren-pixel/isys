@@ -1,0 +1,31 @@
+{
+  "id": "/isys/",
+  "name": "FOXA – Správa objektů",
+  "short_name": "FOXA",
+  "description": "Evidence objektů a pravidelné kontroly domů",
+  "lang": "cs",
+  "start_url": "/isys/",
+  "scope": "/isys/",
+  "display": "standalone",
+  "display_override": [
+    "standalone",
+    "minimal-ui"
+  ],
+  "background_color": "#f3f6f9",
+  "theme_color": "#102b43",
+  "orientation": "any",
+  "icons": [
+    {
+      "src": "./icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "./icon-maskable.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "maskable"
+    }
+  ]
+}

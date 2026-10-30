@@ -1,0 +1,43 @@
+name: Deploy iSYS Web to GitHub Pages
+on:
+  push:
+    branches: [web-supabase]
+    paths:
+      - 'web/**'
+      - '.github/workflows/web-pages.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+concurrency:
+  group: pages-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Cache installed dependencies
+        uses: actions/cache@v4
+        with:
+          path: web/node_modules
+          key: foxa-web-node22-${{ runner.os }}-${{ hashFiles('web/package.json') }}
+      - name: Install dependencies
+        working-directory: web
+        run: npm install --prefer-offline --no-audit --no-fund
+      - name: Build
+        working-directory: web
+        run: npm run build
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: web/dist
+      - id: deployment
+        uses: actions/deploy-pages@v4

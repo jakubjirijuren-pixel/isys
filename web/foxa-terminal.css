@@ -1,0 +1,158 @@
+.foxa-terminal-home{display:none}
+@media screen and (max-width:650px){
+ .foxa-terminal-home{display:block;color:var(--fx-text,var(--foxa-text));padding-bottom:12px}
+ .foxa-terminal-home *{box-sizing:border-box}
+ .foxa-terminal-home button{cursor:pointer;touch-action:manipulation}
+ .foxa-terminal-home .terminal-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;padding:20px 16px;border:1px solid var(--fx-border,var(--foxa-border));border-radius:14px;background:var(--fx-surface,var(--foxa-surface))}
+ .foxa-terminal-home .terminal-kicker{font-size:10px;font-weight:850;letter-spacing:.14em;color:var(--fx-muted,var(--foxa-muted))}
+ .foxa-terminal-home .terminal-head h1{margin:5px 0;font-size:27px;letter-spacing:-.05em}
+ .foxa-terminal-home .terminal-head h1 span{color:var(--fx-accent,var(--foxa-accent))}
+ .foxa-terminal-home .terminal-head p{font-size:12px;margin:0;color:var(--fx-muted,var(--foxa-muted))}
+ .foxa-terminal-home .terminal-connection{font-size:10px;font-weight:800;padding:7px;border-radius:8px;white-space:nowrap;background:var(--fx-surface-soft,var(--foxa-surface));border:1px solid var(--fx-border,var(--foxa-border))}
+ .foxa-terminal-home .terminal-connection.is-online{color:#14834e}.foxa-terminal-home .terminal-connection.is-offline{color:#d17a20}
+ .foxa-terminal-home .terminal-status{display:grid;grid-template-columns:1fr 1fr;gap:12px;padding:16px;margin-top:10px;border-radius:13px;background:var(--fx-surface,var(--foxa-surface));border:1px solid var(--fx-border,var(--foxa-border))}
+ .foxa-terminal-home .terminal-status>div{display:flex;flex-direction:column;gap:5px;min-width:0}
+ .foxa-terminal-home .terminal-status small{font-size:10px;font-weight:800;letter-spacing:.08em;color:var(--fx-muted,var(--foxa-muted))}
+ .foxa-terminal-home .terminal-status strong{font-size:24px;font-variant-numeric:tabular-nums}
+ .foxa-terminal-home .terminal-status span{font-size:11px;color:var(--fx-muted,var(--foxa-muted))}
+ .foxa-terminal-home .terminal-status-side{padding-left:12px;border-left:1px solid var(--fx-border,var(--foxa-border))}
+ .foxa-terminal-home .terminal-status-side strong{font-size:15px;margin-top:6px}
+ .foxa-terminal-home .terminal-section-title{font-size:13px;font-weight:850;letter-spacing:.025em;margin:19px 3px 10px}
+ .foxa-terminal-home .terminal-action-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
+ .foxa-terminal-home .terminal-action-grid button{min-height:126px;padding:16px 14px;display:flex;flex-direction:column;align-items:flex-start;gap:6px;text-align:left;background:var(--fx-surface,var(--foxa-surface));color:inherit;border:1px solid var(--fx-border,var(--foxa-border));border-radius:13px}
+ .foxa-terminal-home .terminal-action-icon{font-size:28px;color:var(--fx-accent,var(--foxa-accent));line-height:1.1}
+ .foxa-terminal-home .terminal-action-grid strong{font-size:15px;margin-top:auto}
+ .foxa-terminal-home .terminal-action-grid small{font-size:11px;color:var(--fx-muted,var(--foxa-muted))}
+ .foxa-terminal-home .terminal-scan-launch{width:100%;display:flex;align-items:center;gap:14px;padding:16px;margin-top:10px;text-align:left;border-radius:13px;border:1px solid var(--fx-accent,var(--foxa-accent));background:color-mix(in srgb,var(--fx-accent,var(--foxa-accent)) 10%,var(--fx-surface,var(--foxa-surface)));color:inherit}
+ .foxa-terminal-home .terminal-scan-launch>span:first-child{font-size:30px;color:var(--fx-accent,var(--foxa-accent))}
+ .foxa-terminal-home .terminal-scan-launch>span:nth-child(2){display:flex;flex:1;flex-direction:column;gap:4px}
+ .foxa-terminal-home .terminal-scan-launch strong{font-size:14px}.foxa-terminal-home .terminal-scan-launch small{font-size:11px}
+ .foxa-terminal-home .terminal-scan-panel,.foxa-terminal-home .terminal-draft{padding:16px;margin-top:12px;border:1px solid var(--fx-border,var(--foxa-border));border-radius:13px;background:var(--fx-surface,var(--foxa-surface))}
+ .foxa-terminal-home .terminal-scan-panel video{width:100%;max-height:260px;background:#111;border-radius:10px}
+ .foxa-terminal-home :is(.terminal-scan-panel,.terminal-draft) h2{font-size:16px;margin:0 0 6px}
+ .foxa-terminal-home :is(.terminal-scan-panel,.terminal-draft) p{font-size:12px;line-height:1.5;color:var(--fx-muted,var(--foxa-muted))}
+ .foxa-terminal-home :is(.terminal-scan-panel,.terminal-draft) label{display:flex;flex-direction:column;gap:6px;margin:12px 0;font-size:12px;font-weight:750}
+ .foxa-terminal-home :is(input,textarea){width:100%;font-size:16px;min-height:48px;padding:10px;border:1px solid var(--fx-border,var(--foxa-border));border-radius:10px;background:var(--fx-surface-soft,var(--foxa-surface));color:inherit}
+ .foxa-terminal-home textarea{min-height:95px;resize:vertical}
+ .foxa-terminal-home .terminal-scan-panel button,.foxa-terminal-home .terminal-draft-footer button{min-height:44px;padding:9px 12px;border-radius:9px;border:1px solid var(--fx-border,var(--foxa-border));background:var(--fx-surface-soft,var(--foxa-surface));color:inherit}
+ .foxa-terminal-home .terminal-scan-panel button+button{margin-left:6px}
+ .foxa-terminal-home .terminal-draft-heading{display:flex;align-items:center;justify-content:space-between;gap:8px}
+ .foxa-terminal-home .terminal-draft-heading span{font-size:10px;color:var(--fx-muted,var(--foxa-muted))}
+ .foxa-terminal-home .terminal-draft-footer{display:flex;align-items:center;flex-wrap:wrap;gap:7px}
+ .foxa-terminal-home .terminal-draft-footer small{flex:1 1 100%;font-size:11px;color:var(--fx-muted,var(--foxa-muted))}
+ .foxa-terminal-home .terminal-modules{display:grid;gap:7px}
+ .foxa-terminal-home .terminal-modules button{display:flex;align-items:center;gap:12px;min-height:52px;padding:10px 14px;border:1px solid var(--fx-border,var(--foxa-border));border-radius:10px;background:var(--fx-surface,var(--foxa-surface));color:inherit;text-align:left;font-weight:700}
+ .foxa-terminal-home .terminal-modules button span{font-size:22px;color:var(--fx-accent,var(--foxa-accent))}
+ .foxa-terminal-home .terminal-modules button b{margin-left:auto;font-size:22px}
+ .foxa-terminal-home .terminal-updates{width:100%;margin-top:12px;min-height:46px;border:0;background:transparent;color:var(--fx-accent,var(--foxa-accent));font-weight:750}
+ .foxa-terminal-home button:focus-visible{outline:3px solid var(--fx-accent,var(--foxa-accent));outline-offset:2px}
+ .layout .foxa-terminal-home+.foxa-dashboard-desktop{display:none!important}
+}
+
+/* FOXA FIELD: high-contrast industrial terminal visual language, based on the supplied reference. */
+@media screen and (max-width:650px){
+ .layout:has(.foxa-terminal-home){background:#071622!important}
+ .layout:has(.foxa-terminal-home) .content{background:#071622!important}
+ .layout:has(.foxa-terminal-home) .body{background:linear-gradient(180deg,#071622,#081a28 65%,#071622)!important}
+ .layout:has(.foxa-terminal-home) .content>header{background:#081a2a!important;border-color:#1b4d6d!important;color:#dcefff!important}
+ .layout:has(.foxa-terminal-home) aside .mobile-nav-top{background:#081a2a!important;border-color:#1b4d6d!important}
+ .layout:has(.foxa-terminal-home) aside .mobile-nav-title{color:#eaf7ff!important}
+ .foxa-terminal-home{color:#f2f8ff!important;--terminal-blue:#08baff;--terminal-border:#11649b;--terminal-muted:#a4d3f3;font-family:inherit}
+ .foxa-terminal-home .terminal-head{position:relative;overflow:hidden;min-height:128px;align-items:center;justify-content:flex-start;gap:14px;padding:19px 15px;border:1.5px solid #079de5;border-radius:15px;background:linear-gradient(120deg,#0c2b45,#0b304d 60%,#0b2137)!important;box-shadow:inset 0 1px 0 #2c6484}
+ .foxa-terminal-home .terminal-head:after{content:"";position:absolute;right:12px;bottom:-18px;width:95px;height:105px;opacity:.11;background:repeating-linear-gradient(90deg,transparent 0 14px,#20baff 14px 24px,transparent 24px 30px);transform:skewY(-15deg);pointer-events:none}
+ .foxa-terminal-home .terminal-building-symbol{flex:none;color:#159de4}
+ .foxa-terminal-home .terminal-head-copy{flex:1;min-width:0;position:relative;z-index:1}
+ .foxa-terminal-home .terminal-kicker{color:#c1e1f7;font-size:10px;letter-spacing:.17em}
+ .foxa-terminal-home .terminal-head h1{font-size:clamp(25px,8vw,38px);white-space:nowrap;line-height:1.1;letter-spacing:-.05em;margin:8px 0}
+ .foxa-terminal-home .terminal-head h1 span{color:#00baff}
+ .foxa-terminal-home .terminal-head p{color:#e2f2ff;font-size:13px}
+ .foxa-terminal-home .terminal-connection{align-self:flex-start;z-index:1;background:#074735!important;border:1px solid #0fa773!important;color:#1bf6a0!important;font-size:10px;padding:7px 9px}
+ .foxa-terminal-home .terminal-connection.is-offline{background:#4b2713!important;border-color:#e88831!important;color:#ffb765!important}
+ .foxa-terminal-home .terminal-status{margin-top:11px;gap:0;padding:19px 13px;background:linear-gradient(120deg,#0b2b45,#09253e)!important;border:1.5px solid #116ca5;border-radius:15px}
+ .foxa-terminal-home .terminal-status>div{position:relative;padding-left:40px;gap:7px}
+ .foxa-terminal-home .terminal-status-side{padding-left:44px;border-left:1px solid #138cce}
+ .foxa-terminal-home .terminal-status-symbol{position:absolute;left:0;top:0;color:#03c1ff}
+ .foxa-terminal-home .terminal-status-side .terminal-status-symbol{left:12px}
+ .foxa-terminal-home .terminal-status small{color:#a8d9fa;font-size:10px}
+ .foxa-terminal-home .terminal-status strong{color:#fff;font-size:clamp(24px,7vw,33px);line-height:1.12}
+ .foxa-terminal-home .terminal-status-side strong{font-size:clamp(13px,4vw,18px);margin-top:4px}
+ .foxa-terminal-home .terminal-status span:not(.terminal-status-symbol){color:#29c7ff;font-size:11px}
+ .foxa-terminal-home .terminal-section-heading{display:flex;align-items:center;justify-content:space-between;margin:17px 3px 11px;color:#a8cce6}
+ .foxa-terminal-home .terminal-section-heading .terminal-section-title{margin:0;color:#f6fbff;font-size:18px;letter-spacing:-.03em}
+ .foxa-terminal-home .terminal-section-title{color:#eff8ff}
+ .foxa-terminal-home .terminal-action-grid{gap:10px}
+ .foxa-terminal-home .terminal-action-grid button{position:relative;min-height:140px;padding:18px 15px;border:1.5px solid #04aeef;background:linear-gradient(140deg,#073b5c,#09243d)!important;color:#fff;border-radius:14px;box-shadow:inset 0 1px 0 #285d7c}
+ .foxa-terminal-home .terminal-action-grid .action-inspection{border-color:#05db8b;background:linear-gradient(135deg,#064b3d,#092d2c)!important}
+ .foxa-terminal-home .terminal-action-grid .action-keys{border-color:#ff921e;background:linear-gradient(135deg,#443020,#28252a)!important}
+ .foxa-terminal-home .terminal-action-grid .action-attendance{border-color:#9964f8;background:linear-gradient(135deg,#28264c,#171f3b)!important}
+ .foxa-terminal-home .terminal-action-icon{display:flex;color:#00c2ff}
+ .foxa-terminal-home .action-inspection .terminal-action-icon{color:#02f5b2}
+ .foxa-terminal-home .action-keys .terminal-action-icon{color:#ff901c}
+ .foxa-terminal-home .action-attendance .terminal-action-icon{color:#21b9ff}
+ .foxa-terminal-home .terminal-action-grid strong{font-size:clamp(16px,4.8vw,21px);margin-top:auto;line-height:1.2}
+ .foxa-terminal-home .terminal-action-grid small{font-size:12px;color:#a8d8f4}
+ .foxa-terminal-home .terminal-action-arrow{position:absolute;right:11px;top:44%;color:#b5d7ef}
+ .foxa-terminal-home .terminal-scan-launch{min-height:86px;margin-top:11px;background:linear-gradient(115deg,#083c5d,#092d4b)!important;border:1.5px solid #00b9f5;color:#f3faff;border-radius:12px}
+ .foxa-terminal-home .terminal-scan-launch>span:first-child{color:#03c5ff}
+ .foxa-terminal-home .terminal-scan-launch strong{font-size:15px;color:#f6faff}
+ .foxa-terminal-home .terminal-scan-launch small{font-size:12px;color:#afd9f5}
+ .foxa-terminal-home .terminal-scan-launch>span:last-child{color:#afd9f5}
+ .foxa-terminal-home :is(.terminal-scan-panel,.terminal-draft){background:#0b253c!important;border:1px solid #1b6795;color:#f2f9ff}
+ .foxa-terminal-home :is(.terminal-scan-panel,.terminal-draft) p,.foxa-terminal-home .terminal-draft-heading span{color:#b2d4e9}
+ .foxa-terminal-home :is(input,textarea){background:#081a2b!important;color:#f5fbff!important;border:1px solid #28709b!important}
+ .foxa-terminal-home :is(input,textarea)::placeholder{color:#87a7bc}
+ .foxa-terminal-home :is(.terminal-scan-panel,.terminal-draft-footer) button{background:#123b59!important;color:#f4faff!important;border:1px solid #227eb5!important}
+ .foxa-terminal-home .terminal-modules button{background:#0b2942!important;border:1px solid #1b618c!important;color:#f4faff}
+ .foxa-terminal-home .terminal-modules button span,.foxa-terminal-home .terminal-updates{color:#11c1ff}
+ .layout:has(.foxa-terminal-home) .foxa-terminal-dock{background:linear-gradient(180deg,#0a253b,#081a2b)!important;border-top:1px solid #235677!important;box-shadow:0 -4px 18px #0007}
+ .layout:has(.foxa-terminal-home) .foxa-terminal-dock button{color:#b2d5ee!important;font-size:11px}
+ .layout:has(.foxa-terminal-home) .foxa-terminal-dock button.active{background:linear-gradient(135deg,#075b91,#07406b)!important;color:#0bd0ff!important;border:1px solid #00a9f6!important}
+ .layout:has(.foxa-terminal-home) .foxa-terminal-dock .terminal-dock-icon{font-size:26px}
+}
+@media screen and (max-width:380px){
+ .foxa-terminal-home .terminal-head{gap:9px;padding:15px 10px}
+ .foxa-terminal-home .terminal-building-symbol svg{width:32px}
+ .foxa-terminal-home .terminal-connection{font-size:9px;padding:6px}
+ .foxa-terminal-home .terminal-status{padding:15px 9px}
+ .foxa-terminal-home .terminal-status>div{padding-left:30px}
+ .foxa-terminal-home .terminal-status-side{padding-left:34px}
+ .foxa-terminal-home .terminal-status-side .terminal-status-symbol{left:7px}
+ .foxa-terminal-home .terminal-status-symbol svg{width:22px}
+}
+
+/* Allow native pull-to-refresh on the terminal home.
+   Keep horizontal overflow clipped, but never lock vertical page gestures. */
+@media screen and (max-width:650px){
+ html:has(.foxa-terminal-home),body:has(.foxa-terminal-home){overflow-y:auto!important;overscroll-behavior-y:auto!important}
+ .layout:has(.foxa-terminal-home){height:auto!important;max-height:none!important;overflow-y:visible!important;overscroll-behavior-y:auto!important}
+ .layout:has(.foxa-terminal-home) .content{height:auto!important;max-height:none!important;overflow-y:visible!important}
+ .layout:has(.foxa-terminal-home) .body{overflow-y:visible!important;overscroll-behavior-y:auto!important;min-height:0!important}
+ .foxa-terminal-home{overflow-y:visible!important;overscroll-behavior-y:auto!important;touch-action:pan-y}
+}
+
+/* Compact FOXA FIELD landing page after removal of draft and module directory. */
+@media screen and (max-width:650px){
+ .layout:has(.foxa-terminal-home) .body{
+  padding-top:6px!important;
+  padding-bottom:calc(84px + env(safe-area-inset-bottom))!important;
+ }
+ .foxa-terminal-home{
+  padding-bottom:0!important;
+  margin-bottom:0!important;
+  min-height:0!important;
+ }
+ .foxa-terminal-home .terminal-section-heading{margin-top:8px!important}
+ .foxa-terminal-home .terminal-section-title{margin-top:10px!important;margin-bottom:9px!important}
+ .foxa-terminal-home .terminal-updates{margin-top:12px!important;margin-bottom:0!important}
+ .foxa-terminal-home .terminal-action-grid{margin-bottom:0!important}
+ .layout:has(.foxa-terminal-home) .content{min-height:0!important}
+}
+
+/* Mobile terminal: dedicated REDPHONE support section. */
+@media screen and (max-width:650px){
+ .foxa-terminal-home .terminal-redphone-section{margin:18px 0 12px;min-width:0}
+ .foxa-terminal-home .terminal-redphone-section .terminal-section-heading{margin:0 0 10px}
+ .foxa-terminal-home .terminal-redphone-label{font-size:10px;font-weight:800;letter-spacing:.12em;color:#ff9aa3}
+ .foxa-terminal-home .terminal-redphone-section .foxa-redphone{margin:0}
+ .foxa-terminal-home .terminal-redphone-section .foxa-redphone-call:active{background:#293b50}
+}

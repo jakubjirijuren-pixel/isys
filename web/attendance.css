@@ -1,0 +1,132 @@
+.attendance-module{display:grid;gap:20px}.attendance-card{background:var(--card-bg,#fff);border:1px solid #dce6ed;border-radius:16px;padding:24px;min-width:0}.attendance-card h2{margin:0 0 16px}.attendance-actions{display:flex;flex-wrap:wrap;gap:12px;margin:18px 0}.attendance-actions button{min-height:56px;font-size:16px}.attendance-toolbar{display:flex;align-items:end;gap:12px;flex-wrap:wrap;margin-bottom:16px}.attendance-toolbar h2{margin-right:auto}.attendance-toolbar label{display:grid;gap:5px}.attendance-toolbar input,.attendance-toolbar select{min-height:42px;border:1px solid #bacbd8;border-radius:9px;padding:8px}.attendance-table-wrap{overflow-x:auto}.attendance-table-wrap table{border-collapse:collapse;width:100%}.attendance-table-wrap th,.attendance-table-wrap td{text-align:left;border-bottom:1px solid #e1e9ee;padding:12px 10px}@media(max-width:600px){.attendance-card{padding:16px}.attendance-actions button{width:100%}}
+.attendance-kiosk-overlay{position:fixed;inset:0;z-index:30000;background:#061424df;display:grid;place-items:center;padding:14px}.attendance-kiosk{background:#fff;color:#18334a;border-radius:22px;width:min(620px,100%);max-height:95dvh;overflow:auto;box-sizing:border-box;padding:clamp(20px,4vw,40px)}.attendance-kiosk-head{display:flex;justify-content:space-between;align-items:center;gap:12px}.attendance-kiosk-head h2{font-size:25px;margin:0}.attendance-kiosk-head button{min-height:42px}.attendance-kiosk-prompt{border:2px dashed #62a7c8;border-radius:18px;padding:45px 20px;text-align:center;margin:22px 0;background:#eff9ff}.attendance-kiosk-prompt strong{font-size:26px}.attendance-kiosk h3{font-size:27px}.attendance-card>label{display:grid;gap:8px;max-width:440px}.attendance-card>label select{min-height:46px;border:1px solid #c2d1db;border-radius:9px;padding:8px}
+
+.attendance-admin-form{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;align-items:end}.attendance-admin-form label{display:grid;gap:7px;font-weight:600}.attendance-admin-form input,.attendance-admin-form select{width:100%;box-sizing:border-box;min-height:44px;border:1px solid #bacbd8;border-radius:9px;padding:8px;background:var(--card-bg,#fff);color:inherit}.attendance-admin-form button{min-height:44px}@media(max-width:650px){.attendance-admin-form{grid-template-columns:1fr}}
+
+
+/* Attendance: follow the iSYS theme on every card, form, table and NFC dialog. */
+.attendance-module{color:inherit}
+.attendance-card{color:inherit}
+.attendance-module .attendance-card button:not(.primary),.attendance-module .attendance-kiosk button:not(.primary){color:inherit}
+.attendance-module input,.attendance-module select,.attendance-module textarea{background:var(--card-bg,#fff);color:inherit;color-scheme:inherit}
+.attendance-module input::placeholder{opacity:.7}
+.attendance-module .attendance-table-wrap th,.attendance-module .attendance-table-wrap td{color:inherit}
+[data-theme="dark"] .attendance-module{color:#e3edf6}
+[data-theme="dark"] .attendance-card{background:#142334;color:#e3edf6;border-color:#294158;box-shadow:0 5px 18px #0002}
+[data-theme="dark"] .attendance-card h2,[data-theme="dark"] .attendance-card h3,[data-theme="dark"] .attendance-toolbar h2{color:#f0f6fc}
+[data-theme="dark"] .attendance-card p,[data-theme="dark"] .attendance-card label{color:#d1dfeb}
+[data-theme="dark"] .attendance-module input,[data-theme="dark"] .attendance-module select,[data-theme="dark"] .attendance-module textarea{background:#1a3043!important;color:#e3edf6!important;border:1px solid #3a5870!important;color-scheme:dark}
+[data-theme="dark"] .attendance-module input:focus-visible,[data-theme="dark"] .attendance-module select:focus-visible,[data-theme="dark"] .attendance-module button:focus-visible{outline:2px solid #72b9ef;outline-offset:2px}
+[data-theme="dark"] .attendance-module input::placeholder{color:#a2b7c9}
+[data-theme="dark"] .attendance-module input[type="month"],[data-theme="dark"] .attendance-module input[type="datetime-local"]{color-scheme:dark}
+[data-theme="dark"] .attendance-table-wrap th,[data-theme="dark"] .attendance-table-wrap td{border-bottom-color:#294158;color:#e3edf6}
+[data-theme="dark"] .attendance-table-wrap thead{background:#1a3043}
+[data-theme="dark"] .attendance-table-wrap tbody tr:hover{background:#1b354b}
+[data-theme="dark"] .attendance-module .secondarybutton{background:#1a3043;color:#e3edf6;border-color:#3a5870}
+[data-theme="dark"] .attendance-module .secondarybutton:hover{background:#264760}
+[data-theme="dark"] .attendance-kiosk{background:#142334;color:#e3edf6;border:1px solid #36516a;box-shadow:0 24px 70px #0008}
+[data-theme="dark"] .attendance-kiosk h2,[data-theme="dark"] .attendance-kiosk h3{color:#f0f6fc}
+[data-theme="dark"] .attendance-kiosk-head button{background:#1a3043;color:#e3edf6;border:1px solid #36516a;border-radius:9px}
+[data-theme="dark"] .attendance-kiosk-prompt{background:#1a3043;border-color:#4b9cc3;color:#e3edf6}
+[data-theme="dark"] .attendance-kiosk-overlay{background:#020b14e8}
+
+.attendance-gps-info{font-size:13px;line-height:1.55;opacity:.82;margin:12px 0}.attendance-gps-cell{display:flex;flex-direction:column;gap:3px;min-width:145px}.attendance-gps-cell a{color:var(--accent,#3998ce);text-decoration:underline;text-underline-offset:2px}.attendance-gps-cell small{font-size:12px;opacity:.75;white-space:normal}
+
+
+/* Attendance phone controls — a primary action first, readable records below. */
+.attendance-self-card .attendance-current-status{display:flex;flex-wrap:wrap;align-items:center;gap:7px;margin:0 0 14px}
+.attendance-self-card .attendance-current-status strong{display:inline-flex;align-items:center;border:1px solid var(--fx-border,#dce6ed);border-radius:999px;background:var(--fx-surface-soft,#f4f8fb);color:var(--fx-text,#20394d);padding:6px 12px;font-weight:750}
+.attendance-self-card .attendance-worked{border-top:1px solid var(--fx-border,#dce6ed);padding-top:15px;line-height:1.5}
+.attendance-self-card .attendance-worked strong{font-size:1.15em}
+.attendance-mark-actions button{flex:1 1 170px;min-height:58px;font-weight:750;line-height:1.3;white-space:normal}
+.attendance-mark-actions button:disabled{opacity:.65;cursor:progress}
+@media(max-width:700px){
+ .attendance-module{gap:14px}
+ .attendance-module>.attendance-actions{margin:0;display:flex}
+ .attendance-module>.attendance-actions>button{min-height:48px;width:100%;white-space:normal}
+ .attendance-self-card{order:0}
+ .attendance-self-card h2{font-size:1.22rem;margin-bottom:12px}
+ .attendance-self-card .attendance-current-status{font-size:14px}
+ .attendance-self-card .attendance-current-status strong{font-size:14px}
+ .attendance-mark-actions{display:grid;grid-template-columns:minmax(0,1fr);gap:10px;margin:14px 0}
+ .attendance-mark-actions button{width:100%;min-height:64px;padding:14px 16px;font-size:17px;border-radius:13px}
+ .attendance-mark-actions button:first-child{min-height:68px}
+ .attendance-gps-info{margin:12px 0;font-size:12px;line-height:1.55;opacity:.9}
+ .attendance-worked{margin-bottom:0;font-size:13px}
+ .attendance-toolbar{display:grid;grid-template-columns:minmax(0,1fr);gap:12px;align-items:stretch}
+ .attendance-toolbar h2{margin:0;font-size:1.2rem}
+ .attendance-toolbar label{width:100%;min-width:0;font-size:13px}
+ .attendance-toolbar :is(input,select){width:100%;min-width:0;min-height:48px;font-size:16px}
+ .attendance-toolbar button{width:100%;min-height:46px}
+ .attendance-records-card .attendance-table-wrap{overflow:visible}
+ .attendance-records-table,.attendance-records-table tbody{display:block;width:100%!important;min-width:0!important}
+ .attendance-records-table thead{display:none}
+ .attendance-records-table tbody tr{display:block;margin:0 0 12px;padding:8px 12px;border:1px solid var(--fx-border,#dce6ed);border-radius:13px;background:var(--fx-surface-soft,#f7fafc);overflow:hidden}
+ .attendance-records-table tbody tr:last-child{margin-bottom:0}
+ .attendance-records-table tbody td{display:grid;grid-template-columns:minmax(95px,38%) minmax(0,1fr);gap:10px;align-items:start;min-width:0;width:100%;padding:9px 0;border-bottom:1px solid var(--fx-border,#dce6ed);font-size:13px;line-height:1.4;overflow-wrap:anywhere}
+ .attendance-records-table tbody td:last-child{border-bottom:0}
+ .attendance-records-table tbody td::before{content:attr(data-label);font-size:12px;font-weight:750;color:var(--fx-muted,#637b8e)}
+ .attendance-records-table tbody .attendance-empty-row td{display:block;text-align:center}
+ .attendance-records-table tbody .attendance-empty-row td::before{content:none}
+ .attendance-records-table .attendance-gps-cell{min-width:0;max-width:100%;overflow-wrap:anywhere}
+ .attendance-records-table .attendance-gps-cell a{font-weight:650}
+ .attendance-records-table .attendance-gps-cell small{font-size:11px}
+}
+@media(max-width:390px){
+ .attendance-records-table tbody td{grid-template-columns:minmax(80px,35%) minmax(0,1fr);gap:8px}
+ .attendance-self-card .attendance-current-status{display:block}
+ .attendance-self-card .attendance-current-status strong{margin-top:6px}
+}
+:root[data-theme="dark"] .attendance-self-card .attendance-current-status strong{background:var(--fx-surface-soft,#1e3447);border-color:var(--fx-border,#35536a);color:var(--fx-text,#e8f1f8)}
+:root[data-theme="dark"] .attendance-records-table tbody tr{background:var(--fx-surface-soft,#1e3447);border-color:var(--fx-border,#35536a)}
+
+/* FOXA FIELD attendance: compact handheld terminal interface, desktop unaffected. */
+@media screen and (max-width:650px){
+.foxa-terminal-page-dochazka>.foxa-field-module-tools .foxa-field-module-topline,.foxa-terminal-page-dochazka>.foxa-field-module-tools .foxa-field-module-links{display:none!important}
+.foxa-terminal-page-dochazka .attendance-terminal-mode{display:flex!important;flex-direction:column!important;gap:11px!important;min-width:0!important}
+.foxa-terminal-page-dochazka .attendance-terminal-mode>.attendance-actions{margin:0!important}
+.foxa-terminal-page-dochazka .attendance-terminal-mode>.attendance-actions button{min-height:45px!important;border-radius:11px!important}
+.foxa-terminal-page-dochazka .attendance-terminal-mode>.attendance-card{margin:0!important;padding:15px!important;background:linear-gradient(150deg,#0d2d46,#091f33)!important;color:#e6f5ff!important;border:1px solid #2b698d!important;border-radius:15px!important;box-shadow:0 7px 20px #00152444!important}
+.foxa-terminal-page-dochazka .attendance-terminal-mode>.attendance-card h2{font-size:19px!important;font-weight:800!important;line-height:1.25!important;color:#fff!important;margin:0 0 13px!important}
+.foxa-terminal-page-dochazka .attendance-terminal-mode .attendance-current-status{display:flex!important;flex-wrap:wrap!important;align-items:center!important;justify-content:space-between!important;gap:8px!important;margin:0 0 12px!important;padding:12px!important;border-radius:11px!important;background:#071d30!important;border:1px solid #2a6283!important;font-size:12px!important;color:#bbd9eb!important}
+.foxa-terminal-page-dochazka .attendance-terminal-mode .attendance-current-status strong{padding:7px 10px!important;border-radius:20px!important;background:#12465f!important;color:#78e6ff!important;font-size:13px!important}
+.foxa-terminal-page-dochazka .attendance-terminal-mode .attendance-mark-actions{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:9px!important;margin:0 0 12px!important}
+.foxa-terminal-page-dochazka .attendance-terminal-mode .attendance-mark-actions button{width:100%!important;min-width:0!important;min-height:70px!important;padding:12px 9px!important;border-radius:12px!important;background:#087bab!important;color:#fff!important;border:1px solid #3ad2ff!important;font-size:14px!important;font-weight:800!important;white-space:normal!important;line-height:1.3!important}
+.foxa-terminal-page-dochazka .attendance-terminal-mode .attendance-mark-actions button:first-child{background:#08795d!important;border-color:#20d8a5!important}
+.foxa-terminal-page-dochazka .attendance-terminal-mode .attendance-gps-info{padding:10px 12px!important;margin:0 0 10px!important;border-radius:10px!important;background:#0a283f!important;border-left:3px solid #249dcb!important;font-size:11px!important;line-height:1.5!important;color:#bbd5e5!important}
+.foxa-terminal-page-dochazka .attendance-terminal-mode .attendance-worked{display:flex!important;flex-direction:column!important;gap:5px!important;margin:0!important;padding:12px!important;border:1px solid #285d7c!important;border-radius:10px!important;background:#103550!important;font-size:12px!important;color:#c4dfed!important}
+.foxa-terminal-page-dochazka .attendance-terminal-mode .attendance-worked strong{font-size:22px!important;color:#fff!important;font-variant-numeric:tabular-nums!important}
+.foxa-terminal-page-dochazka .attendance-terminal-mode .attendance-toolbar{display:grid!important;grid-template-columns:minmax(0,1fr) minmax(0,1fr)!important;align-items:end!important;gap:9px!important;margin:0 0 13px!important}
+.foxa-terminal-page-dochazka .attendance-terminal-mode .attendance-toolbar h2{grid-column:1/-1!important;margin:0!important}
+.foxa-terminal-page-dochazka .attendance-terminal-mode .attendance-toolbar label{display:flex!important;flex-direction:column!important;gap:6px!important;min-width:0!important;color:#c8e3f2!important;font-size:12px!important}
+.foxa-terminal-page-dochazka .attendance-terminal-mode .attendance-toolbar :is(input,select){box-sizing:border-box!important;max-width:100%!important;min-width:0!important;width:100%!important;min-height:49px!important;padding:10px!important;border:1px solid #326b8b!important;border-radius:10px!important;background:#061c2e!important;color:#fff!important;font-size:14px!important;color-scheme:dark!important}
+.foxa-terminal-page-dochazka .attendance-terminal-mode .attendance-toolbar button{min-height:45px!important;border-radius:10px!important}
+.foxa-terminal-page-dochazka .attendance-terminal-mode .attendance-table-wrap{overflow:visible!important}
+.foxa-terminal-page-dochazka .attendance-terminal-mode .attendance-records-table{display:block!important;width:100%!important}
+.foxa-terminal-page-dochazka .attendance-terminal-mode .attendance-records-table thead{display:none!important}
+.foxa-terminal-page-dochazka .attendance-terminal-mode .attendance-records-table tbody{display:flex!important;flex-direction:column!important;gap:9px!important}
+.foxa-terminal-page-dochazka .attendance-terminal-mode .attendance-records-table tr{display:flex!important;flex-direction:column!important;gap:7px!important;padding:13px!important;border:1px solid #295f80!important;border-radius:12px!important;background:#0c304a!important}
+.foxa-terminal-page-dochazka .attendance-terminal-mode .attendance-records-table td{display:flex!important;justify-content:space-between!important;align-items:flex-start!important;gap:10px!important;padding:0!important;border:0!important;font-size:12px!important;overflow-wrap:anywhere!important;color:#f0f8ff!important}
+.foxa-terminal-page-dochazka .attendance-terminal-mode .attendance-records-table td::before{content:attr(data-label);flex:0 0 37%;font-weight:750;color:#8bc9e8}
+.foxa-terminal-page-dochazka .attendance-terminal-mode .attendance-records-table .attendance-empty-row td{display:block!important}
+.foxa-terminal-page-dochazka .attendance-terminal-mode .attendance-records-table .attendance-empty-row td::before{display:none!important}
+}
+
+/* Admin-only attendance deletion and immutable audit history */
+.attendance-delete-button{border:1px solid #b94b54;border-radius:9px;background:transparent;color:#d45460;padding:8px 12px;font-weight:750;cursor:pointer}
+.attendance-delete-button:hover{background:rgba(197,56,70,.12)}
+.attendance-audit-card .attendance-toolbar p{margin:7px 0 0;opacity:.75;font-size:13px;line-height:1.5}
+.attendance-delete-overlay{position:fixed;inset:0;z-index:40000;display:grid;place-items:center;background:rgba(3,12,24,.72);padding:16px}
+.attendance-delete-dialog{width:min(480px,100%);box-sizing:border-box;background:var(--fx-surface,#fff);color:var(--fx-text,#1b2c3d);border:1px solid var(--fx-border,#cbd5e1);border-radius:18px;padding:24px;box-shadow:0 22px 65px rgba(0,0,0,.3)}
+.attendance-delete-dialog h2{margin:0 0 12px;font-size:23px}
+.attendance-delete-dialog p{font-size:14px;line-height:1.5}
+.attendance-delete-dialog label{display:grid;gap:8px;font-weight:700;margin:18px 0}
+.attendance-delete-dialog textarea{box-sizing:border-box;width:100%;padding:12px;border-radius:10px;border:1px solid #98aabc;background:var(--fx-surface,#fff);color:inherit;font:inherit;resize:vertical}
+.attendance-delete-actions{display:flex;justify-content:flex-end;gap:10px;flex-wrap:wrap}
+.attendance-delete-confirm{border:0;border-radius:10px;padding:12px 16px;background:#a82d3c;color:#fff;font-weight:750;cursor:pointer}
+.attendance-delete-confirm:disabled{opacity:.5;cursor:not-allowed}
+
+.attendance-pin-admin-fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;margin:16px 0}
+.attendance-pin-admin-fields label{display:grid;gap:8px;font-weight:650}
+.attendance-pin-admin-fields select,.attendance-pin-admin-fields input{width:100%;box-sizing:border-box;min-height:44px;padding:9px 12px;border:1px solid #91a4b5;border-radius:9px;background:var(--fx-surface,#fff);color:var(--fx-text,#1b2c3d)}
+@media(max-width:650px){.attendance-pin-admin-fields{grid-template-columns:1fr}}
