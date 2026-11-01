@@ -1,6 +1,16 @@
 // Aktualizovat při každé změně aplikace společně s CHANGELOG.md.
 // Nové vydání = nový jedinečný id; přečtená vydání se znovu nezobrazují.
 export const foxaReleases=[
+ {id:"2026-11-01-phone-directory-and-dashboard",date:"2026-11-01",title:"Telefonní seznam, docházka a přehlednější úvodní stránka",changes:[
+  {area:"Telefonní seznam",description:"Samostatný modul spojuje kontakty zaměstnanců SBD Praha 8 a kontakty na výbory a domovní funkcionáře. Vyhledávat lze podle jména, telefonního čísla a e-mailu; kontakty lze filtrovat na všechny, zaměstnance nebo výbory."},
+  {area:"Telefonní seznam",description:"Stejné osoby se v přehledu slučují podle jména; zobrazují se dostupné telefonní kontakty a všechny rozpoznané e-mailové adresy. Interní linky se nezobrazují."},
+  {area:"Docházka",description:"U zaměstnanců propojených s účtem FOXA se v telefonním seznamu zobrazuje orientační stav Přítomen, Nepřítomen nebo Dovolená. Údaje se automaticky obnovují; při nedostupném stavu se zobrazí upozornění."},
+  {area:"Telefonní seznam",roles:["admin"],description:"Administrátor může importovat kontakty SBD z Excelu, upravit jednotlivé kontakty, skrýt je z telefonního seznamu, obnovit jejich zobrazení a ručně sloučit či rozdělit záznamy. Původní zdrojové kontakty se sloučením nemažou."},
+  {area:"Docházka",roles:["admin"],description:"Načítání historie odstraněných docházkových událostí bylo převedeno na administrátorsky chráněnou databázovou funkci; chyby načítání se zobrazují."},
+  {area:"Evidence objektů",description:"Export referentů do Excelu obsahuje pouze objekty s přiřazeným referentem a využívá dostupné kontaktní údaje importované z Domusu."},
+  {area:"Přehled",description:"Uvítací banner Vítej v FOXA je kompaktnější na počítači i mobilu."}
+ ]},
+
  {id:"2026-10-28-committee-contacts-rollout",date:"2026-10-28",title:"Postupné doplňování kontaktů na výbory",changes:[{area:"Evidence objektů",description:"Probíhá postupné doplňování kontaktů na členy výborů SVJ a bytových družstev u jednotlivých objektů. Kontakty zatím nemusí být uvedeny u všech objektů."},{area:"Kontaktní údaje",description:"V detailu objektu budou dostupná jména, funkce, telefonní čísla a e-maily. Klepnutím na telefonní číslo lze zahájit volání, klepnutím na e-mail otevřít e-mailovou aplikaci."}]},
  {id:"2026-10-26-key-registry-update",date:"2026-10-26",title:"Centrální registr klíčů a zálohování",changes:[{area:"Centrální registr klíčů",description:"Modul Evidence klíčů byl přejmenován na Centrální registr klíčů."},{area:"Předávací protokoly",description:"Po potvrzení podpisu se výpůjčka uzamkne; zobrazí se čas a jméno potvrzujícího zaměstnance. Vrácení zůstává dostupné."},{area:"Odemčení",roles:["admin"],description:"Administrátor může podepsanou výpůjčku odemknout; událost se zaznamená."},{area:"Záloha Excel",description:"Export výpůjček, částečných vrácení a svazků klíčů je dostupný všem uživatelům modulu v rozsahu jejich databázových oprávnění."}]},
 
