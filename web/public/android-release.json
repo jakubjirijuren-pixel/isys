@@ -5,8 +5,8 @@
     {
       "version": "1.0.1",
       "versionCode": 2,
-      "status": "artifact",
-      "runUrl": "https://github.com/jakubjirijuren-pixel/isys/actions/runs/41335341794"
+      "status": "release",
+      "apkUrl": "https://github.com/jakubjirijuren-pixel/isys/releases/download/android-v1.0.1/app-release.apk"
     }
   ]
 }
