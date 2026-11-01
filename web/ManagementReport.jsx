@@ -1,0 +1,11 @@
+import React,{useEffect,useState} from "react";
+import * as XLSX from "xlsx";
+export default function ManagementReport({supabase}){
+ const [rows,setRows]=useState([]),[error,setError]=useState(""),[loading,setLoading]=useState(true);
+ const load=async()=>{setLoading(true);setError("");const {data,error}=await supabase.rpc("foxa_management_report");if(error)setError(error.message);else setRows(data||[]);setLoading(false)};
+ useEffect(()=>{load()},[]);
+ const exportExcel=()=>{const values=rows.map(r=>({"Zaměstnanec":r.employee_name,"Docházkové události tento měsíc":Number(r.attendance_events),"Žádosti o dovolenou letos":Number(r.vacation_requests),"Schválené dny dovolené letos":Number(r.approved_vacation_days),"Kontroly letos":Number(r.inspections)}));const ws=XLSX.utils.json_to_sheet(values);ws["!cols"]=[{wch:34},{wch:32},{wch:28},{wch:34},{wch:20}];const wb=XLSX.utils.book_new();XLSX.utils.book_append_sheet(wb,ws,"Přehled");XLSX.writeFile(wb,"FOXA_manazersky_prehled.xlsx")};
+ return <section className="panel"><div className="sectionheading"><div><h2>Manažerský přehled</h2><p>Souhrn zaměstnanců v rozsahu vašich oprávnění. Vedoucí vidí své podřízené podle nastavení schvalovatele dovolené, ředitel celou organizaci.</p></div><div className="toolbar"><button type="button" className="secondarybutton" onClick={load}>Obnovit</button><button type="button" className="primary" disabled={!rows.length} onClick={exportExcel}>Export Excel</button></div></div>
+ {error&&<div className="error" role="alert">{error}</div>}{loading?<p>Načítání přehledu…</p>:<div style={{overflowX:"auto"}}><table className="table"><thead><tr><th>Zaměstnanec</th><th>Docházka tento měsíc (události)</th><th>Žádosti o dovolenou letos</th><th>Schválené dny dovolené letos</th><th>Kontroly letos</th></tr></thead><tbody>{rows.map(r=><tr key={r.employee_id}><td>{r.employee_name}</td><td>{r.attendance_events}</td><td>{r.vacation_requests}</td><td>{r.approved_vacation_days}</td><td>{r.inspections}</td></tr>)}</tbody></table>{!rows.length&&<p>V rozsahu vašich oprávnění nejsou přiřazeni žádní zaměstnanci.</p>}</div>}
+ <p style={{fontSize:12,opacity:.75}}>Pouze čtení. Přehled neumožňuje měnit ani mazat záznamy. Schvalování dovolených zůstává v modulu Dovolené podle přiřazeného schvalovatele.</p></section>;
+}
