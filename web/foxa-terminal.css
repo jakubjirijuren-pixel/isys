@@ -156,3 +156,26 @@
  .foxa-terminal-home .terminal-redphone-section .foxa-redphone{margin:0}
  .foxa-terminal-home .terminal-redphone-section .foxa-redphone-call:active{background:#293b50}
 }
+
+/* Android-first responsive field terminal: safe-area, accessible touch targets and compact layout. */
+@media screen and (max-width:650px){
+ .foxa-terminal-home{padding:0 max(0px,env(safe-area-inset-right)) calc(24px + env(safe-area-inset-bottom)) max(0px,env(safe-area-inset-left));max-width:620px;margin:0 auto}
+ .foxa-terminal-home .terminal-head{gap:10px;min-height:110px;padding:16px 12px}
+ .foxa-terminal-home .terminal-building-symbol svg{width:32px;height:32px}
+ .foxa-terminal-home .terminal-head h1{font-size:clamp(23px,7vw,32px)}
+ .foxa-terminal-home .terminal-connection{font-size:10px;padding:7px}
+ .foxa-terminal-home .terminal-status{padding:14px 10px}
+ .foxa-terminal-home .terminal-status>div{padding-left:31px}
+ .foxa-terminal-home .terminal-status-side{padding-left:36px}
+ .foxa-terminal-home .terminal-status-symbol svg{width:23px;height:23px}
+ .foxa-terminal-home .terminal-action-grid button{min-height:132px;min-width:0;gap:7px;padding:15px 12px;touch-action:manipulation}
+ .foxa-terminal-home .terminal-action-grid strong{font-size:clamp(13px,3.8vw,16px);line-height:1.3}
+ .foxa-terminal-home .terminal-action-grid small{line-height:1.4}
+ .foxa-terminal-home .terminal-updates{min-height:52px}
+}
+@media screen and (max-width:355px){
+ .foxa-terminal-home .terminal-head{flex-wrap:wrap}
+ .foxa-terminal-home .terminal-connection{margin-left:auto}
+ .foxa-terminal-home .terminal-action-grid{gap:7px}
+ .foxa-terminal-home .terminal-status strong{font-size:21px}
+}
