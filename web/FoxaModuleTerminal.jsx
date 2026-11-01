@@ -24,12 +24,11 @@ export default function FoxaModuleTerminal({page,availablePages=[],onNavigate}){
  const links=info.links.filter(name=>availablePages.includes(name));
  const displayName=name=>name==="Evidence klíčů"?"Centrální registr klíčů":name;
  return <div className="foxa-field-module-tools" aria-label={"Terminálové ovládání: "+page}>
-  <div className="foxa-field-module-topline"><button type="button" className="foxa-field-module-back" onClick={()=>onNavigate("Přehled")} aria-label="Zpět na úvodní terminál">‹ Terminál</button><span className={"foxa-field-module-network "+(online?"is-online":"is-offline")} role="status"><span aria-hidden="true">●</span> {online?"Připojeno":"Bez připojení"}</span></div>
   <div className="foxa-field-module-header">
    <div className="foxa-field-module-icon" aria-hidden="true">{info.icon}</div>
    <div className="foxa-field-module-title"><h1>{displayName(page)}</h1><p>{info.subtitle}</p></div>
 
   </div>
-  {links.length>0&&<nav className="foxa-field-module-links" aria-label="Související moduly">{links.slice(0,3).map(name=><button type="button" key={name} onClick={()=>onNavigate(name)}><span>{displayName(name)}</span><span aria-hidden="true">›</span></button>)}</nav>}
+
  </div>
 }
