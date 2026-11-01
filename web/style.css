@@ -515,3 +515,28 @@ button,select,input,textarea{max-width:100%}
  .layout .modal{max-height:calc(100dvh - 16px)}
  .layout .body{padding-bottom:calc(72px + env(safe-area-inset-bottom))}
 }
+
+/* FOXA FIELD: prevent Android status bar from painting over app header. */
+@media screen and (max-width:650px){
+ .layout:has(.foxa-terminal-home) .foxa-app-header{
+  box-sizing:border-box!important;
+  position:relative!important;
+  height:auto!important;
+  min-height:64px!important;
+  padding:12px max(12px,env(safe-area-inset-right)) 12px max(12px,env(safe-area-inset-left))!important;
+  display:grid!important;
+  grid-template-columns:minmax(0,1fr) auto!important;
+  align-items:center!important;
+  gap:8px!important;
+ }
+ .layout:has(.foxa-terminal-home) .foxa-app-header .breadcrumb{min-width:0!important;overflow:hidden!important;white-space:nowrap!important;text-overflow:ellipsis!important}
+ .layout:has(.foxa-terminal-home) .foxa-app-header .userbar{min-width:0!important;max-width:100%!important;display:flex!important;align-items:center!important;justify-content:flex-end!important;gap:7px!important;flex-wrap:nowrap!important}
+ .layout:has(.foxa-terminal-home) .foxa-app-header .userbar>*{flex-shrink:0}
+ .layout:has(.foxa-terminal-home) .foxa-app-header .header-support{display:none!important}
+ .layout:has(.foxa-terminal-home) .foxa-app-header .avatar{width:38px!important;height:38px!important;flex-shrink:0}
+}
+@media screen and (max-width:430px){
+ .layout:has(.foxa-terminal-home) .foxa-app-header{grid-template-columns:minmax(0,1fr) auto!important;padding:9px 10px!important;gap:5px!important}
+ .layout:has(.foxa-terminal-home) .foxa-app-header .breadcrumb{font-size:12px!important}
+ .layout:has(.foxa-terminal-home) .foxa-app-header .userbar{gap:5px!important}
+}
