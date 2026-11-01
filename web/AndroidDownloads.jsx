@@ -4,7 +4,9 @@ const FALLBACK={version:"1.0.1",versionCode:2,releases:[{version:"1.0.1",version
 export default function AndroidDownloads(){
  const [release,setRelease]=useState(FALLBACK);
  useEffect(()=>{let alive=true;fetch(import.meta.env.BASE_URL+"android-release.json",{cache:"no-store"}).then(r=>{if(!r.ok)throw Error("Metadata unavailable");return r.json()}).then(v=>{if(alive&&v?.version)setRelease(v)}).catch(()=>{});return()=>{alive=false}},[]);
- const releases=Array.isArray(release.releases)&&release.releases.length?release.releases:[release];
+ const [githubReleases,setGithubReleases]=useState([]);
+ useEffect(()=>{let alive=true;fetch("https://api.github.com/repos/jakubjirijuren-pixel/isys/releases?per_page=20",{headers:{"Accept":"application/vnd.github+json"}}).then(r=>{if(!r.ok)throw Error("GitHub Releases unavailable");return r.json()}).then(items=>{if(!alive||!Array.isArray(items))return;setGithubReleases(items.filter(x=>!x.draft&&x.tag_name?.startsWith("android-v")).map(x=>{const apk=x.assets?.find(a=>/^FOXA-Android-.*\\.apk$/i.test(a.name));return {version:x.tag_name.replace(/^android-v/,""),versionCode:null,status:"release",apkUrl:apk?.browser_download_url,runUrl:x.html_url}}).filter(x=>x.apkUrl))}).catch(()=>{});return()=>{alive=false}},[]);
+ const releases=githubReleases.length?githubReleases:Array.isArray(release.releases)&&release.releases.length?release.releases:[release];
  const isApk=url=>typeof url==="string"&&/^https:\/\/[^\s]+\.apk(?:\?[^\s]*)?$/i.test(url);
  return <div className="foxa-downloads">
   <h2>FOXA pro Android</h2>
