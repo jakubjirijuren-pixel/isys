@@ -1,4 +1,12 @@
 {
-  "version": null,
-  "apkUrl": null
+  "version": "1.0.1",
+  "versionCode": 2,
+  "releases": [
+    {
+      "version": "1.0.1",
+      "versionCode": 2,
+      "status": "artifact",
+      "runUrl": "https://github.com/jakubjirijuren-pixel/isys/actions/runs/41335341794"
+    }
+  ]
 }
