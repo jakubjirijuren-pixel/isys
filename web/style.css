@@ -540,3 +540,11 @@ button,select,input,textarea{max-width:100%}
  .layout:has(.foxa-terminal-home) .foxa-app-header .breadcrumb{font-size:12px!important}
  .layout:has(.foxa-terminal-home) .foxa-app-header .userbar{gap:5px!important}
 }
+
+/* Android / Capacitor: respect system navigation bar and display cutouts. */
+html{min-height:100%;}
+body{min-height:100%;padding-left:env(safe-area-inset-left,0px);padding-right:env(safe-area-inset-right,0px);}
+@media screen and (max-width:650px){
+ .layout{min-height:100dvh;}
+ .layout:has(.foxa-terminal-home) .foxa-terminal-dock{padding-bottom:max(8px,env(safe-area-inset-bottom,0px))!important;}
+}
