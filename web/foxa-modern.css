@@ -203,3 +203,11 @@
 .layout .body .technicalmodule.foxa-field-inspection-wizard>.technicalhead>.inspectionactions{display:flex!important;position:static!important;flex-direction:column!important;justify-content:start!important;align-items:stretch!important;flex:none!important;width:100%!important;height:auto!important;min-height:0!important;margin:10px 0 0!important;padding:0!important;gap:7px!important}
 .layout .body .technicalmodule.foxa-field-inspection-wizard>.technicalhead>.inspectionactions>*{flex:none!important;margin:0!important}
 }
+
+/* Compact overview welcome banner */
+.layout .body .hero.foxa-dashboard-hero{padding:20px 28px;gap:16px;border-radius:16px;min-height:0}
+.layout .body .foxa-dashboard-hero .eyebrow{font-size:10px;letter-spacing:1.6px}
+.layout .body .foxa-dashboard-hero h1{font-size:clamp(23px,2.1vw,28px);margin:5px 0 3px;line-height:1.2}
+.layout .body .foxa-dashboard-hero p{font-size:14px;margin:5px 0 0;line-height:1.45}
+.layout .body .foxa-dashboard-hero .foxa-hero-changelog-button{min-height:38px;padding:8px 14px;font-size:13px}
+@media(max-width:600px){.layout .body .hero.foxa-dashboard-hero{padding:17px 18px;gap:12px}.layout .body .foxa-dashboard-hero h1{font-size:23px}}
