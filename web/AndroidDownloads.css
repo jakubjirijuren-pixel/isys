@@ -11,3 +11,10 @@
 :root[data-theme="dark"] .foxa-downloads{--download-surface:var(--fx-surface,#1b3043);--download-text:var(--fx-text,#eef5fc);--download-muted:var(--fx-muted,#b4c6d5);--download-border:var(--fx-border,#405a70)}
 :root[data-theme="dark"] .foxa-downloads-notice{background:color-mix(in srgb,var(--download-surface) 90%,#c58b25)}
 @media(max-width:650px){.foxa-downloads{padding:12px 4px}.foxa-downloads-notice,.foxa-downloads-panel{padding:16px}}
+
+.foxa-download-release{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:14px;padding:16px 0;border-top:1px solid var(--download-border)}
+.foxa-download-release:first-of-type{margin-top:12px}
+.foxa-download-release>div{min-width:0;flex:1 1 210px}
+.foxa-download-release p{font-size:13px;color:var(--download-muted)!important;margin:6px 0 0}
+.foxa-download-release .foxa-downloads-action{min-height:44px;display:inline-flex;align-items:center;justify-content:center;text-align:center}
+@media(max-width:480px){.foxa-download-release .foxa-downloads-action{width:100%}}
