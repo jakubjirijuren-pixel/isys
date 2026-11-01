@@ -19,7 +19,7 @@ const MODULES={
 export default function FoxaModuleTerminal({page,availablePages=[],onNavigate}){
  const [online,setOnline]=useState(()=>typeof navigator==="undefined"||navigator.onLine);
  useEffect(()=>{const update=()=>setOnline(navigator.onLine);window.addEventListener("online",update);window.addEventListener("offline",update);return()=>{window.removeEventListener("online",update);window.removeEventListener("offline",update)}},[]);
- if(page==="Přehled")return null;
+ if(page==="Přehled"||page==="Kontroly")return null;
  const info=MODULES[page]||{icon:"▦",subtitle:"Pracovní modul",links:[]};
  const links=info.links.filter(name=>availablePages.includes(name));
  const displayName=name=>name==="Evidence klíčů"?"Centrální registr klíčů":name;
