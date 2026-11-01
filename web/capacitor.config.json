@@ -1,0 +1,13 @@
+{
+  "appId": "cz.kubisoft.foxa",
+  "appName": "FOXA",
+  "webDir": "dist",
+  "android": {
+    "allowMixedContent": false
+  },
+  "plugins": {
+    "SplashScreen": {
+      "launchShowDuration": 0
+    }
+  }
+}
