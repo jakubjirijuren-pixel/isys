@@ -8,7 +8,11 @@
     "build": "vite build",
     "preview": "vite preview",
     "build:android": "vite build --base ./",
-    "android:sync": "npm run build:android && npx cap sync android"
+    "android:sync": "npm run android:prepare && npx cap sync android",
+    "android:prepare": "npm run build:android && node scripts/prepare-android.mjs",
+    "android:studio:init": "npm run android:prepare && npx cap add android && npx cap open android",
+    "android:studio": "npx cap open android",
+    "android:run": "npm run android:sync && npx cap run android"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.57.0",
