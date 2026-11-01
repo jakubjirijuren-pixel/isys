@@ -20,7 +20,11 @@ jobs:
         with:
           distribution: temurin
           java-version: '21'
-      - uses: android-actions/setup-android@v3
+      - name: Use Android SDK preinstalled on GitHub runner
+        run: |
+          echo "ANDROID_HOME=$ANDROID_HOME"
+          test -d "$ANDROID_HOME/platform-tools"
+          "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" --version
       - name: Install web dependencies
         working-directory: web
         run: npm install --no-audit --no-fund
