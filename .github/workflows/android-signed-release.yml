@@ -1,15 +1,18 @@
 name: FOXA signed Android release
 on:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/android-signed-release.yml']
   workflow_dispatch:
     inputs:
       version_name:
         description: "Release version (e.g. 1.0.1)"
         required: true
-        default: "1.0.1"
+        default: "1.0.2"
       version_code:
         description: "Android versionCode (must increase for every update)"
         required: true
-        default: "2"
+        default: "3"
 permissions:
   contents: write
 jobs:
@@ -51,8 +54,8 @@ jobs:
       - name: Prepare signed release
         working-directory: web
         env:
-          FOXA_VERSION_NAME: ${{ inputs.version_name }}
-          FOXA_VERSION_CODE: ${{ inputs.version_code }}
+          FOXA_VERSION_NAME: ${{ inputs.version_name || '1.0.2' }}
+          FOXA_VERSION_CODE: ${{ inputs.version_code || '3' }}
           ANDROID_KEYSTORE_BASE64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
           ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
           ANDROID_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
@@ -85,7 +88,7 @@ jobs:
       - name: Publish signed Android APK as GitHub Release
         env:
           GH_TOKEN: ${{ github.token }}
-          VERSION_NAME: ${{ inputs.version_name }}
+          VERSION_NAME: ${{ inputs.version_name || '1.0.2' }}
         run: |
           set -euo pipefail
           tag="android-v${VERSION_NAME}"
@@ -101,7 +104,7 @@ jobs:
       - name: Upload signed APK and AAB
         uses: actions/upload-artifact@v4
         with:
-          name: FOXA-signed-${{ inputs.version_name }}
+          name: FOXA-signed-${{ inputs.version_name || '1.0.2' }}
           path: |
             web/android/app/build/outputs/apk/release/app-release.apk
             web/android/app/build/outputs/bundle/release/app-release.aab
