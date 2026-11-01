@@ -4,6 +4,7 @@ import "./foxa-terminal.css";
 const TerminalIcon=({name,size=26})=>{const paths={
  building:<><path d="M4 21V5l8-3 8 3v16M4 9h16M9 5v16M15 5v16M2 21h20"/></>,
  clipboard:<><rect x="5" y="4" width="14" height="18" rx="2"/><path d="M9 4V2h6v2M8 13l3 3 5-6"/></>,
+ phone:<><path d="M22 16.92v3a2 2 0 0 1-2.18 2A19.79 19.79 0 0 1 3.09 5.18 2 2 0 0 1 5.08 3h3a2 2 0 0 1 2 1.72l.5 3a2 2 0 0 1-.57 1.73l-1.3 1.3a16 16 0 0 0 4.54 4.54l1.3-1.3a2 2 0 0 1 1.73-.57l3 .5A2 2 0 0 1 22 16.92Z"/></>,
  key:<><circle cx="8" cy="8" r="5"/><path d="m12 12 9 9m-4-4 3-3m-5 1 3-3"/></>,
  clock:<><circle cx="12" cy="12" r="9"/><path d="M12 6v6l4 3"/></>,
  cloud:<><path d="M6 19h12a4 4 0 0 0 0-8h-1a6 6 0 0 0-11-1 4.5 4.5 0 0 0 0 9Z"/></>,
@@ -24,7 +25,7 @@ export default function FoxaMobileTerminal({pages=[],onNavigate=()=>{},onOpenIns
   <div className="terminal-action-grid">
    {has("Objekty")&&<button type="button" className="action-objects" onClick={()=>navigate("Objekty")}><span className="terminal-action-icon"><TerminalIcon name="building" size={33}/></span><span className="terminal-action-arrow"><TerminalIcon name="chevron" size={20}/></span><strong>Najít objekt</strong><small>Evidence domů</small></button>}
    {(has("Objekty"))&&<button type="button" className="action-inspection" onClick={onOpenInspections}><span className="terminal-action-icon"><TerminalIcon name="clipboard" size={33}/></span><span className="terminal-action-arrow"><TerminalIcon name="chevron" size={20}/></span><strong>Nová kontrola</strong><small>Kontrolní výkaz</small></button>}
-   {has("Evidence klíčů")&&<button type="button" className="action-keys" onClick={()=>navigate("Evidence klíčů")}><span className="terminal-action-icon"><TerminalIcon name="key" size={33}/></span><span className="terminal-action-arrow"><TerminalIcon name="chevron" size={20}/></span><strong>Centrální registr klíčů</strong><small>Výpůjčky a vrácení</small></button>}
+   {has("Telefonní seznam")&&<button type="button" className="action-keys" onClick={()=>navigate("Telefonní seznam")}><span className="terminal-action-icon"><TerminalIcon name="phone" size={33}/></span><span className="terminal-action-arrow"><TerminalIcon name="chevron" size={20}/></span><strong>Telefonní seznam</strong><small>Kontakty a vyhledávání</small></button>}
    {has("Docházka")&&<button type="button" className="action-attendance" onClick={()=>navigate("Docházka")}><span className="terminal-action-icon"><TerminalIcon name="clock" size={33}/></span><span className="terminal-action-arrow"><TerminalIcon name="chevron" size={20}/></span><strong>Docházka</strong><small>Pracovní doba</small></button>}
   </div>
   <button type="button" className="terminal-updates" onClick={onOpenChangelog}>Novinky a aktualizace FOXA ›</button>
