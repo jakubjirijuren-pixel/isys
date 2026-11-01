@@ -187,3 +187,40 @@
  .foxa-terminal-home .terminal-app-update button{flex:none;min-height:42px;border:1px solid #34baff;border-radius:9px;background:#075b88;color:white;padding:8px 10px;font-weight:750}
  .foxa-terminal-home .terminal-app-update button:disabled{opacity:.5}
 }
+
+
+/* Device-independent terminal sizing: Samsung Galaxy XCover 7 and other Android handsets. */
+@media screen and (max-width:650px){
+ .foxa-terminal-home{width:100%;min-width:0;max-width:620px}
+ .foxa-terminal-home :is(.terminal-head,.terminal-status,.terminal-action-grid,.terminal-app-update){min-width:0;max-width:100%}
+ .foxa-terminal-home .terminal-head{flex-wrap:wrap;align-items:center}
+ .foxa-terminal-home .terminal-head-copy{min-width:0;flex:1 1 140px}
+ .foxa-terminal-home .terminal-head h1{font-size:clamp(22px,6.6vw,32px);white-space:normal;overflow-wrap:anywhere}
+ .foxa-terminal-home .terminal-connection{max-width:100%;overflow-wrap:anywhere;white-space:normal}
+ .foxa-terminal-home .terminal-status{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .foxa-terminal-home .terminal-status>div{min-width:0}
+ .foxa-terminal-home .terminal-status strong{overflow-wrap:anywhere;font-size:clamp(20px,6vw,30px)}
+ .foxa-terminal-home .terminal-status-side strong{font-size:clamp(12px,3.5vw,17px)}
+ .foxa-terminal-home .terminal-action-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .foxa-terminal-home .terminal-action-grid button{min-width:0;min-height:120px;height:auto;overflow-wrap:anywhere}
+ .foxa-terminal-home .terminal-action-grid strong{font-size:clamp(13px,3.7vw,16px)}
+ .foxa-terminal-home .terminal-action-grid small{overflow-wrap:anywhere}
+ .foxa-terminal-home .terminal-app-update{flex-wrap:wrap}
+ .foxa-terminal-home .terminal-app-update span{min-width:0;flex:1 1 160px}
+ .foxa-terminal-home .terminal-app-update button{min-height:44px}
+ .foxa-terminal-home .terminal-updates{min-height:48px}
+}
+@media screen and (max-width:360px){
+ .foxa-terminal-home .terminal-action-grid{gap:7px}
+ .foxa-terminal-home .terminal-action-grid button{padding:12px 9px;min-height:116px}
+ .foxa-terminal-home .terminal-status{padding:12px 8px}
+ .foxa-terminal-home .terminal-status>div{padding-left:26px}
+ .foxa-terminal-home .terminal-status-side{padding-left:30px}
+ .foxa-terminal-home .terminal-status-side .terminal-status-symbol{left:6px}
+ .foxa-terminal-home .terminal-status-symbol svg{width:20px;height:20px}
+}
+@media screen and (max-width:650px) and (orientation:landscape) and (max-height:500px){
+ .foxa-terminal-home .terminal-head{min-height:0}
+ .foxa-terminal-home .terminal-action-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
+ .foxa-terminal-home .terminal-action-grid button{min-height:106px}
+}
