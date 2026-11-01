@@ -1,0 +1,13 @@
+import {readFileSync,writeFileSync,readdirSync} from "node:fs";
+import {join,relative} from "node:path";
+import {createHash} from "node:crypto";
+const root=new URL("../dist/",import.meta.url).pathname;
+const walk=(dir)=>readdirSync(dir,{withFileTypes:true}).flatMap(entry=>entry.isDirectory()?walk(join(dir,entry.name)):[join(dir,entry.name)]);
+const files=walk(root).map(p=>relative(root,p).replaceAll("\\","/")).filter(p=>p!=="sw.js"&&!p.endsWith(".map"));
+const precache=[...new Set(["/isys/",...files.map(p=>"/isys/"+p)])];
+const swPath=join(root,"sw.js");
+const sw=readFileSync(swPath,"utf8");
+const version=createHash("sha256").update(files.sort().map(p=>p+":"+createHash("sha256").update(readFileSync(join(root,p))).digest("hex")).join("|")).digest("hex").slice(0,16);
+if(!sw.includes("__FOXA_PRECACHE__")||!sw.includes("__FOXA_VERSION__"))throw Error("Offline cache placeholders missing");
+writeFileSync(swPath,sw.replace("__FOXA_PRECACHE__",JSON.stringify(precache)).replace("__FOXA_VERSION__",version));
+console.log("FOXA offline cache:",precache.length,"resources; version",version);

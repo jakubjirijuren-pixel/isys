@@ -1,0 +1,120 @@
+/* iSYS unified form controls, dropdowns and autocomplete across all modules. */
+:root{
+ --isys-control-bg:#fff;
+ --isys-control-text:#23465c;
+ --isys-control-border:#cbd8e0;
+ --isys-control-hover:#69a9c8;
+ --isys-control-focus:#2b91be;
+ --isys-control-option-hover:#e8f3f9;
+ --isys-control-option-selected:#d8ecf7;
+ --isys-control-shadow:0 14px 36px #0a2a4129;
+}
+[data-theme="dark"]{
+ --isys-control-bg:#1a3043;
+ --isys-control-text:#e3edf6;
+ --isys-control-border:#36546a;
+ --isys-control-hover:#75b9d7;
+ --isys-control-focus:#79c7eb;
+ --isys-control-option-hover:#294b62;
+ --isys-control-option-selected:#245574;
+ --isys-control-shadow:0 16px 38px #020c18a6;
+}
+:is(.layout,.adminusers,.inspectionmodule,.keys-module,.tasks,.wiki-module,.notificationpreferences,.moduleavailability)
+ :is(select,input:not([type="checkbox"]):not([type="radio"]):not([type="file"]):not([type="color"]),textarea),
+.filtertrigger{
+ box-sizing:border-box;
+ min-height:44px;
+ border:1px solid var(--isys-control-border);
+ border-radius:10px;
+ background:var(--isys-control-bg);
+ color:var(--isys-control-text);
+ font:inherit;
+ font-size:14px;
+ padding:10px 12px;
+ transition:border-color .16s ease,box-shadow .16s ease,background .16s ease;
+}
+:is(.layout,.adminusers,.inspectionmodule,.keys-module,.tasks,.wiki-module,.notificationpreferences,.moduleavailability)
+ :is(select,input:not([type="checkbox"]):not([type="radio"]):not([type="file"]):not([type="color"]),textarea):hover,
+.filtertrigger:hover{border-color:var(--isys-control-hover)}
+:is(.layout,.adminusers,.inspectionmodule,.keys-module,.tasks,.wiki-module,.notificationpreferences,.moduleavailability)
+ :is(select,input:not([type="checkbox"]):not([type="radio"]):not([type="file"]):not([type="color"]),textarea):focus-visible,
+.filtertrigger:focus-visible,
+.filterdropdown.isopen .filtertrigger{
+ outline:0;
+ border-color:var(--isys-control-focus);
+ box-shadow:0 0 0 3px color-mix(in srgb,var(--isys-control-focus) 19%,transparent);
+}
+:is(.layout,.adminusers,.inspectionmodule,.keys-module,.tasks,.wiki-module,.notificationpreferences,.moduleavailability)
+ :is(input,textarea)::placeholder{color:#8297a7;opacity:1}
+[data-theme="dark"] :is(.layout,.adminusers,.inspectionmodule,.keys-module,.tasks,.wiki-module,.notificationpreferences,.moduleavailability)
+ :is(input,textarea)::placeholder{color:#9ab0c1}
+:is(.layout,.adminusers,.inspectionmodule,.keys-module,.tasks,.wiki-module,.notificationpreferences,.moduleavailability) select{
+ cursor:pointer;
+ accent-color:var(--isys-accent,#146c9c);
+}
+:is(.layout,.adminusers,.inspectionmodule,.keys-module,.tasks,.wiki-module,.notificationpreferences,.moduleavailability)
+ :is(select,input,textarea):disabled,.filtertrigger:disabled{opacity:.55;cursor:not-allowed}
+.filterdropdown{position:relative;min-width:0}
+.filtertrigger{display:flex;align-items:center;justify-content:space-between;gap:10px;width:100%;text-align:left;cursor:pointer}
+.filtertrigger>span:first-child{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.filterchevron{flex-shrink:0;color:var(--isys-control-text)}
+.filtermenu{
+ z-index:100;
+ position:absolute;
+ top:calc(100% + 6px);
+ left:0;
+ right:0;
+ min-width:min(100%,260px);
+ max-height:300px;
+ overflow-y:auto;
+ overscroll-behavior:contain;
+ padding:6px;
+ border:1px solid var(--isys-control-border);
+ border-radius:12px;
+ background:var(--isys-control-bg);
+ box-shadow:var(--isys-control-shadow);
+ color:var(--isys-control-text);
+}
+.filtermenu button,.inspectionbuildingoptions button{
+ display:block;width:100%;min-height:38px;padding:9px 12px;
+ border:0;border-radius:8px;background:transparent;
+ color:var(--isys-control-text);font:inherit;font-size:13px;
+ text-align:left;cursor:pointer;overflow-wrap:anywhere;
+}
+.filtermenu button:hover,.filtermenu button:focus-visible,
+.inspectionbuildingoptions button:hover,.inspectionbuildingoptions button:focus-visible{
+ outline:0;background:var(--isys-control-option-hover);
+}
+.filtermenu button.chosen,.inspectionbuildingoptions button.chosen{
+ background:var(--isys-control-option-selected);font-weight:700;
+}
+.inspectionbuildingmenu,.keys-building-field .filtermenu{
+ max-height:none;overflow:visible;padding:8px;
+}
+.inspectionbuildingmenu input,.keys-building-field .filtermenu input{
+ width:100%;min-height:42px;background:var(--isys-control-bg);
+ color:var(--isys-control-text);border:1px solid var(--isys-control-border);
+ border-radius:9px;padding:10px 12px;font-size:13px;
+}
+.inspectionbuildingoptions,.keys-building-field .inspectionbuildingoptions{
+ max-height:260px;overflow-y:auto;overscroll-behavior:contain;margin-top:6px;
+}
+@media(max-width:600px){
+ .filtermenu{min-width:100%;max-width:min(92vw,440px)}
+ .inspectionbuildingoptions,.keys-building-field .inspectionbuildingoptions{max-height:210px}
+}
+@media(prefers-reduced-motion:reduce){
+ .filtertrigger,.filtermenu{transition:none}
+}
+
+/* Searchable multi-referent dropdown in building editor */
+.referentpicker{width:100%;flex:1 1 auto}
+.referentpickermenu{max-height:none;overflow:visible;min-width:100%;padding:8px}
+.referentpickermenu>input{display:block;width:100%;min-height:42px;border:1px solid var(--isys-control-border);border-radius:9px;padding:10px 12px;background:var(--isys-control-bg);color:var(--isys-control-text)}
+.referentpickeroptions{max-height:235px;overflow-y:auto;overscroll-behavior:contain;margin:6px 0}
+.referentpickeroption{display:flex!important;align-items:center;flex-direction:row!important;gap:10px;padding:9px 10px;border-radius:8px;cursor:pointer;color:var(--isys-control-text);font-size:13px}
+.referentpickeroption:hover{background:var(--isys-control-option-hover)}
+.referentpickeroption.chosen{background:var(--isys-control-option-selected)}
+.referentpickeroption input[type="checkbox"]{width:17px!important;height:17px!important;min-height:0!important;flex-shrink:0;accent-color:var(--isys-accent,#146c9c)}
+.referentpickermenu .referentpickerdone{background:var(--isys-accent,#146c9c);color:white;text-align:center;font-weight:700}
+.referentpickermenu .referentpickerdone:hover{filter:brightness(1.1);background:var(--isys-accent,#146c9c)}

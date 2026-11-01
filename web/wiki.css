@@ -1,0 +1,36 @@
+/* Wiki uses the same visual language as the iSYS dashboard, cards and forms. */
+.wiki{width:100%;padding-bottom:32px;color:inherit}
+.wikihead{display:flex;justify-content:space-between;align-items:center;gap:16px;margin-bottom:24px;min-height:auto;background:transparent;border:0;padding:0}
+.wikihead h1{font-size:29px;letter-spacing:-.7px;margin:0 0 8px;color:#152d42}
+.wikihead p{margin:0;color:#64788b;font-size:14px}
+.wikieyebrow{display:block;margin-bottom:9px;font-size:10px;font-weight:750;letter-spacing:1.5px;text-transform:uppercase;color:#2b799e}
+.wikicount{font-size:12px;font-weight:700;white-space:nowrap;color:#246c90;background:#e7f3f7;border:1px solid #d6e9f1;border-radius:9px;padding:9px 12px}
+.wikitools{margin-bottom:22px}
+.wikitools input{display:block;width:min(100%,460px);padding:13px 16px;border:1px solid #dbe5ec;border-radius:10px;background:#fff;color:#19364a;font:inherit;outline-offset:2px}
+.wikicategories{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+.wikicategories button{background:#fff;color:#23465c;border:1px solid #d7e1e9;border-radius:9px;padding:10px 14px;cursor:pointer;font:inherit;font-size:13px;font-weight:600}
+.wikicategories button:hover{border-color:#70afcd}
+.wikicategories button.selected{background:#146c9c;border-color:#146c9c;color:#fff}
+.wikigrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(235px,1fr));gap:14px}
+.wikicard{text-align:left;display:flex;flex-direction:column;align-items:flex-start;gap:10px;min-height:175px;padding:19px;background:#fff;color:#19364a;border:1px solid #e1e8ef;border-radius:13px;cursor:pointer;font:inherit;box-shadow:0 3px 14px #18394c09;transition:transform .15s,border-color .15s,box-shadow .15s}
+.wikicard:hover,.wikicard:focus-visible{transform:translateY(-2px);border-color:#70afcd;box-shadow:0 9px 22px #18394c18}
+.wikilabel{font-size:10px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:#2b799e}
+.wikicard strong{font-size:16px;line-height:1.35}
+.wikicard>span:nth-last-child(2){font-size:12px;color:#687f91}
+.wikimore{margin-top:auto;color:#14729c;font-weight:700;font-size:12px}
+.wikiarticle{max-width:950px;background:#fff;border:1px solid #e2e9ef;border-radius:14px;padding:clamp(20px,3vw,30px)}
+.wikiback{background:#fff;color:#23465c;border:1px solid #d7e1e9;border-radius:9px;padding:10px 14px;font:inherit;font-size:13px;font-weight:600;cursor:pointer;margin-bottom:24px}
+.wikiarticle h2{font-size:25px;color:#19364a;margin:12px 0 24px;letter-spacing:-.4px}
+.wikiarticle ol{padding-left:25px;line-height:1.65;color:#344e61}
+.wikiarticle li{padding-left:7px;margin-bottom:16px}
+.wikitip{background:#e7f3f7;color:#24566c;border:1px solid #d6e9f1;border-radius:11px;padding:18px 20px;margin:24px 0}
+.wikitip p{margin:7px 0 0;line-height:1.6}
+.wikiarticle small,.wikinoresults{color:#64788b}
+.wikinoresults{background:#fff;border:1px solid #e2e9ef;border-radius:12px;padding:22px}
+[data-theme="dark"] .wikihead h1,[data-theme="dark"] .wikiarticle h2,[data-theme="dark"] .wikicard strong{color:#e3edf6}
+[data-theme="dark"] .wikihead p,[data-theme="dark"] .wikicard>span:nth-last-child(2),[data-theme="dark"] .wikiarticle small,[data-theme="dark"] .wikinoresults{color:#a2b7c9}
+[data-theme="dark"] .wikicard,[data-theme="dark"] .wikiarticle,[data-theme="dark"] .wikitools input,[data-theme="dark"] .wikicategories button:not(.selected),[data-theme="dark"] .wikiback,[data-theme="dark"] .wikinoresults{background:#142334;color:#e3edf6;border-color:#294158}
+[data-theme="dark"] .wikiarticle ol{color:#d1deea}
+[data-theme="dark"] .wikicount,[data-theme="dark"] .wikitip{background:#17394b;color:#b7dce9;border-color:#28536b}
+[data-theme="dark"] .wikicategories button.selected{background:#23779d;border-color:#23779d}
+@media(max-width:700px){.wikihead{align-items:flex-start}.wikihead h1{font-size:26px}.wikicount{font-size:11px}.wikigrid{grid-template-columns:1fr}.wikitools input{width:100%}}

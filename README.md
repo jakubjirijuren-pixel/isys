@@ -1,4 +1,4 @@
-# iSYS — interní systém techniků
+# FOXA — interní systém techniků
 
 Vývojový základ samostatné aplikace pro správu bytových domů. Next.js, TypeScript, Prisma, PostgreSQL.
 
@@ -28,7 +28,7 @@ Otevřete http://localhost:3000.
 ```bash
 git init
 git add .
-git commit -m "Initial iSYS starter"
+git commit -m "Initial FOXA starter"
 git branch -M main
 git remote add origin https://github.com/VASE-ORGANIZACE/isys.git
 git push -u origin main

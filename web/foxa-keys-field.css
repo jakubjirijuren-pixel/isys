@@ -1,0 +1,110 @@
+/* FOXA FIELD: dedicated handheld key workflow, desktop intentionally unchanged */
+.foxa-keys-field-home,.foxa-keys-field-back{display:none}
+@media screen and (max-width:650px){
+ .foxa-terminal-page-evidence-klicu>.foxa-field-module-tools{display:none!important}
+ .foxa-keys-field{display:flex;flex-direction:column;gap:12px;min-width:0}
+ .foxa-keys-field-home{display:flex;flex-direction:column;gap:13px}
+ .foxa-keys-field-banner{padding:17px 15px;border-radius:14px;border:1.5px solid #0aaef0;background:linear-gradient(125deg,#0e3655,#09243c);box-shadow:inset 0 1px 0 #276486}
+ .foxa-keys-field-eyebrow{font-size:10px;font-weight:850;letter-spacing:.13em;color:#34d0ff;margin-bottom:13px}
+ .foxa-keys-field-banner-main{display:flex;align-items:center;gap:13px}
+ .foxa-keys-field-emblem{display:grid;place-items:center;width:52px;height:52px;flex:none;border:1px solid #d9973d;background:#3a2c20;border-radius:12px;font-size:31px;color:#ffb44d}
+ .foxa-keys-field-banner h2{margin:0 0 4px!important;font-size:24px!important;line-height:1.1;color:#fff!important}
+ .foxa-keys-field-banner p{margin:0!important;font-size:12px;color:#b9d8eb!important}
+ .foxa-keys-field-actions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
+ .foxa-keys-action{min-width:0;min-height:165px;display:flex;flex-direction:column;align-items:flex-start;text-align:left;gap:6px;padding:14px!important;border-radius:13px!important}
+ .foxa-keys-action-loan{border:1px solid #13d8a0!important;background:#103b35!important;color:#fff!important}
+ .foxa-keys-action-return{border:1px solid #f3a045!important;background:#3b2d21!important;color:#fff!important}
+ .foxa-keys-action-icon{font-size:30px;line-height:1;color:#3af1bd}
+ .foxa-keys-action-return .foxa-keys-action-icon{color:#ffb54f}
+ .foxa-keys-action strong{font-size:15px;color:#fff!important}
+ .foxa-keys-action small{font-size:11px;color:#c3e4df!important}
+ .foxa-keys-arrow{align-self:flex-end;margin-top:auto;font-size:22px;color:#27efb6}
+ .foxa-keys-action-return .foxa-keys-arrow{color:#ffb54f}
+ .foxa-keys-field-summary{display:flex;flex-direction:column;gap:7px;padding:16px;background:#0d2c45;border:1px solid #226d99;border-radius:13px}
+ .foxa-keys-field-summary-title{color:#b9e5ff;font-size:11px;font-weight:850;letter-spacing:.09em}
+ .foxa-keys-field-summary>strong{color:#fff!important;font-size:38px;line-height:1;font-variant-numeric:tabular-nums}
+ .foxa-keys-field-summary>span{font-size:12px;color:#b4d8ee}
+ .foxa-keys-field-summary button{display:flex;align-items:center;justify-content:space-between;width:100%;margin-top:6px;padding:12px 0 0!important;border:0!important;border-top:1px solid #2a5d7f!important;background:transparent!important;color:#e6f7ff!important;text-align:left;font-weight:750}
+ .foxa-keys-field-scan{display:flex;align-items:center;gap:12px;text-align:left;width:100%;padding:15px!important;background:#103954!important;border:1px solid #0da7df!important;border-radius:12px!important;color:#fff!important}
+ .foxa-keys-field-scan>span:first-child{font-size:27px;color:#28d0ff}
+ .foxa-keys-field-scan>span:nth-child(2){display:flex;flex:1;flex-direction:column;gap:3px}
+ .foxa-keys-field-scan strong{font-size:13px;color:#fff!important}
+ .foxa-keys-field-scan small{font-size:11px;color:#bbdbee}
+ .foxa-keys-field-scan>span:last-child{font-size:24px;color:#28d0ff}
+ .foxa-keys-field-back{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 12px;background:#0c2d46;border:1px solid #23678d;border-radius:11px}
+ .foxa-keys-field-back button{background:transparent!important;border:0!important;color:#2dd2ff!important;font-size:12px;font-weight:750;text-align:left}
+ .foxa-keys-field-back>span{font-size:11px;color:#c6e4f5}
+ .foxa-keys-mode-home>.foxa-keys-field-back,.foxa-keys-mode-home>.pageheading,.foxa-keys-mode-home>.keys-panel,.foxa-keys-mode-home>.keys-panel.keys-records{display:none!important}
+ .foxa-keys-mode-loan>.foxa-keys-field-home,.foxa-keys-mode-return>.foxa-keys-field-home,.foxa-keys-mode-records>.foxa-keys-field-home{display:none!important}
+ .foxa-keys-mode-loan>.pageheading,.foxa-keys-mode-return>.pageheading,.foxa-keys-mode-records>.pageheading{display:none!important}
+ .foxa-keys-mode-loan>.keys-panel:not(.foxa-keys-loan-panel),.foxa-keys-mode-loan>.foxa-keys-records-panel{display:none!important}
+ .foxa-keys-mode-return>.keys-panel:not(.foxa-keys-records-panel),.foxa-keys-mode-records>.keys-panel:not(.foxa-keys-records-panel){display:none!important}
+ .foxa-keys-mode-return .keys-filters,.foxa-keys-mode-return .keys-viewbar{display:none!important}
+ .foxa-keys-mode-loan .foxa-keys-loan-panel{padding:14px!important}
+ .foxa-keys-mode-loan .keys-loan-variants{display:flex;gap:8px;flex-wrap:wrap}
+ .foxa-keys-mode-loan .keys-loan-variants button{flex:1 1 120px;min-height:49px}
+ .foxa-keys-mode-return .keys-record:not(:has(.keys-record-actions button)){opacity:.8}
+}
+
+/* Streamlined key terminal home: keep active loans, remove duplicated hero and action tiles. */
+@media screen and (max-width:650px){
+.foxa-terminal-page-evidence-klicu .foxa-field-module-topline,.foxa-terminal-page-evidence-klicu .foxa-field-module-links{display:none!important}
+.foxa-terminal-page-evidence-klicu>.foxa-field-module-tools{display:block!important}
+.foxa-terminal-page-evidence-klicu .foxa-keys-mode-home>.foxa-keys-field-home>.foxa-keys-field-banner,.foxa-terminal-page-evidence-klicu .foxa-keys-mode-home>.foxa-keys-field-home>.foxa-keys-field-actions{display:none!important}
+.foxa-terminal-page-evidence-klicu .foxa-keys-mode-home>.foxa-keys-field-home{gap:9px!important}
+}
+
+/* Hide only the legacy lending-kiosk control section; keep other key registry sections. */
+@media screen and (max-width:650px){
+.foxa-terminal-page-evidence-klicu .keys-kiosk-launch{display:none!important}
+.foxa-terminal-page-evidence-klicu .keys-panel:has(.keys-kiosk-launch){display:none!important}
+}
+
+/* Hide the redundant key registry heading/actions card on the handheld terminal only. */
+@media screen and (max-width:650px){
+.foxa-terminal-page-evidence-klicu .foxa-keys-field>.pageheading{display:none!important}
+}
+
+/* FOXA FIELD / KEY WORKFLOWS V2 — handheld-first form and searchable records */
+@media screen and (max-width:650px){
+.foxa-terminal-page-evidence-klicu .foxa-keys-field{gap:10px!important}
+.foxa-terminal-page-evidence-klicu .keys-layout{display:block!important;margin:0!important}
+.foxa-terminal-page-evidence-klicu .keys-panel.foxa-keys-loan-panel,.foxa-terminal-page-evidence-klicu .keys-panel.foxa-keys-records-panel{padding:14px!important;margin:0!important;border:1px solid #28698d!important;border-radius:16px!important;background:linear-gradient(155deg,#0d2d46,#091f34)!important;box-shadow:0 8px 22px #04142455!important;color:#e7f5ff!important}
+.foxa-terminal-page-evidence-klicu .keys-panel.foxa-keys-loan-panel>h2,.foxa-terminal-page-evidence-klicu .keys-panel.foxa-keys-records-panel h2{font-size:19px!important;line-height:1.3!important;font-weight:800!important;color:#fff!important;margin:0 0 13px!important}
+.foxa-terminal-page-evidence-klicu .keys-loan-variants{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:7px!important;margin:0 0 15px!important;padding:5px!important;border-radius:12px!important;background:#071b2d!important;border:1px solid #244e6b!important}
+.foxa-terminal-page-evidence-klicu .keys-loan-variants button{min-width:0!important;min-height:57px!important;padding:9px 7px!important;border-radius:9px!important;border:1px solid transparent!important;background:transparent!important;color:#a7c9dd!important;font-size:12px!important;line-height:1.25!important;font-weight:750!important;white-space:normal!important}
+.foxa-terminal-page-evidence-klicu .keys-loan-variants button.active{background:#0878aa!important;border-color:#34c5ff!important;color:white!important;box-shadow:0 2px 9px #00182766!important}
+.foxa-terminal-page-evidence-klicu .foxa-field-form-wizard{display:flex!important;flex-direction:column!important;gap:12px!important}
+.foxa-terminal-page-evidence-klicu .foxa-field-form-progress{padding:12px!important;border:1px solid #285b7a!important;border-radius:12px!important;background:#10344e!important;color:#d9f4ff!important}
+.foxa-terminal-page-evidence-klicu .foxa-field-form-progress span{font-size:12px!important;font-weight:800!important}
+.foxa-terminal-page-evidence-klicu .foxa-field-form-step[data-active="true"]{display:flex!important;flex-direction:column!important;gap:13px!important;padding:14px!important;margin:0!important;border-radius:12px!important;border:1px solid #244d69!important;background:#0a253b!important}
+.foxa-terminal-page-evidence-klicu .foxa-field-form-step h3{margin:0 0 2px!important;font-size:14px!important;color:#74dfff!important}
+.foxa-terminal-page-evidence-klicu .foxa-field-form-step label,.foxa-terminal-page-evidence-klicu .keys-building-field>label{display:flex!important;flex-direction:column!important;gap:7px!important;font-size:12px!important;font-weight:750!important;color:#d2e8f7!important}
+.foxa-terminal-page-evidence-klicu .foxa-field-form-step input,.foxa-terminal-page-evidence-klicu .foxa-field-form-step select,.foxa-terminal-page-evidence-klicu .foxa-field-form-step textarea,.foxa-terminal-page-evidence-klicu .keys-building-field input{box-sizing:border-box!important;width:100%!important;min-width:0!important;min-height:51px!important;padding:12px 13px!important;border-radius:10px!important;border:1px solid #3b6a86!important;background:#061b2c!important;color:#fff!important;font-size:16px!important;box-shadow:none!important}
+.foxa-terminal-page-evidence-klicu .foxa-field-form-step input:focus,.foxa-terminal-page-evidence-klicu .foxa-field-form-step select:focus,.foxa-terminal-page-evidence-klicu .foxa-field-form-step textarea:focus{outline:2px solid #29c8ff!important;outline-offset:1px!important}
+.foxa-terminal-page-evidence-klicu .foxa-field-form-actions{display:grid!important;grid-template-columns:1fr 1.5fr!important;gap:9px!important;margin:0!important}
+.foxa-terminal-page-evidence-klicu .foxa-field-form-actions button,.foxa-terminal-page-evidence-klicu .foxa-field-form-submit button{min-height:53px!important;border-radius:11px!important;font-weight:800!important}
+.foxa-terminal-page-evidence-klicu .foxa-field-form-submit{margin:0!important}
+.foxa-terminal-page-evidence-klicu .keys-top{display:flex!important;align-items:center!important;flex-wrap:wrap!important;gap:8px!important;margin-bottom:12px!important}
+.foxa-terminal-page-evidence-klicu .keys-top h2{margin:0!important;flex:1 1 140px!important}
+.foxa-terminal-page-evidence-klicu .keys-count{border-radius:20px!important;background:#12435f!important;color:#9beaff!important;font-size:11px!important;white-space:normal!important}
+.foxa-terminal-page-evidence-klicu .keys-tools{display:flex!important;flex-direction:column!important;align-items:stretch!important;gap:11px!important;margin:0 0 12px!important}
+.foxa-terminal-page-evidence-klicu .keys-tabs{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;width:100%!important;gap:4px!important;padding:4px!important;border:1px solid #295b78!important;border-radius:12px!important;background:#061c2f!important}
+.foxa-terminal-page-evidence-klicu .keys-tabs button{min-width:0!important;min-height:44px!important;padding:9px 4px!important;border-radius:9px!important;font-size:12px!important;color:#a7ccdf!important}
+.foxa-terminal-page-evidence-klicu .keys-tabs button.active{background:#087aaa!important;color:#fff!important}
+.foxa-terminal-page-evidence-klicu .keys-tools>input[type="search"]{box-sizing:border-box!important;width:100%!important;max-width:none!important;min-width:0!important;min-height:54px!important;padding:13px!important;border:1px solid #387b9f!important;border-radius:11px!important;background:#071d31!important;color:#fff!important;font-size:16px!important}
+.foxa-terminal-page-evidence-klicu .keys-tools>input[type="search"]::placeholder{color:#9cbfd4!important}
+.foxa-terminal-page-evidence-klicu .keys-viewbar{display:flex!important;flex-direction:column!important;align-items:stretch!important;gap:7px!important;padding:9px 0!important;border-top:1px solid #23506b!important}
+.foxa-terminal-page-evidence-klicu .keys-sort-control{display:flex!important;flex-direction:column!important;gap:6px!important;font-size:12px!important;color:#c2dfef!important}
+.foxa-terminal-page-evidence-klicu .keys-sort-control select{width:100%!important;min-height:46px!important;border-radius:10px!important;background:#071d31!important;color:#fff!important;border:1px solid #326c8e!important}
+.foxa-terminal-page-evidence-klicu .keys-record{padding:13px!important;border-radius:12px!important;border:1px solid #285c7d!important;background:#0d304b!important;margin-bottom:9px!important;overflow-wrap:anywhere!important}
+.foxa-terminal-page-evidence-klicu .keys-record-actions button{min-height:44px!important;border-radius:9px!important}
+}
+
+/* Export is visible on the handheld terminal home screen for every role. */
+.foxa-keys-export-mobile{display:none}
+@media screen and (max-width:650px){
+ .foxa-keys-export-mobile{display:flex!important;justify-content:flex-end;align-items:center;padding:0 2px}
+ .foxa-keys-export-mobile .secondarybutton{display:inline-flex!important;align-items:center;justify-content:center;min-height:42px;white-space:normal}
+ .foxa-keys-field-back>button:last-child:not(:first-child){display:none!important}
+}

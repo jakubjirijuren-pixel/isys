@@ -1,0 +1,134 @@
+/* FOXA quick attendance — one compact, coherent control on every device. */
+.attendance-header{display:flex;align-items:center;gap:7px;flex-wrap:wrap;min-width:0}
+.attendance-header-time{display:flex;align-items:center;gap:9px;min-height:43px;padding:6px 12px;border:1px solid var(--fx-border,var(--border,#c7d6df));border-radius:12px;background:var(--fx-surface,var(--card-bg,#fff));color:var(--fx-text,inherit);cursor:pointer;min-width:0}
+.attendance-header-time>span:last-child{display:flex;flex-direction:column;align-items:flex-start;gap:1px;min-width:0}
+.attendance-header-time strong{font-size:15px;line-height:1.1;font-weight:750;font-variant-numeric:tabular-nums;white-space:nowrap}
+.attendance-header-time small{font-size:11px;color:var(--fx-muted,#637b8e);line-height:1.25;white-space:nowrap}
+.attendance-header-clock{font-size:25px;line-height:1;flex:none}
+.attendance-header-action{display:inline-flex;align-items:center;justify-content:center;gap:7px;min-height:43px;padding:8px 12px;border:1px solid var(--fx-border,var(--border,#c7d6df));border-radius:12px;background:var(--fx-surface,var(--card-bg,#fff));color:var(--fx-text,inherit);font-size:13px;font-weight:700;line-height:1.2;cursor:pointer;transition:background-color .15s,border-color .15s;white-space:nowrap}
+.attendance-header-action:hover,.attendance-header-time:hover{background:var(--fx-surface-soft,#edf4f8)}
+.attendance-header-start{border-color:var(--isys-accent,#2b91be)}
+.attendance-action-emoji{display:none}
+.attendance-header-action:disabled{opacity:.6;cursor:wait}
+.attendance-header-error{flex-basis:100%;color:#b63c43;font-size:12px;line-height:1.45;overflow-wrap:anywhere}
+.attendance-header button:focus-visible{outline:2px solid var(--isys-accent,#2b91be);outline-offset:2px}
+:root[data-theme="dark"] .attendance-header-error{color:#ffb7bb}
+/* A single low-height status/action strip rather than stacked oversized boxes. */
+@media(max-width:800px){
+ .layout header .userbar{display:flex;flex-wrap:wrap;align-items:center;justify-content:flex-end;width:100%;min-width:0;max-width:100%;gap:8px}
+ .layout header .userbar .attendance-header{
+  order:10;flex:0 0 100%;display:grid;grid-template-columns:minmax(0,1.35fr) repeat(2,minmax(0,1fr));
+  align-items:stretch;gap:7px;width:100%;min-width:0;max-width:100%;
+  padding:7px;border:1px solid var(--fx-border,#35536a);
+  border-radius:16px;background:var(--fx-surface,#17293a);box-sizing:border-box;
+ }
+ .layout header .userbar .attendance-header-time{
+  grid-column:auto;min-width:0;min-height:57px;width:100%;padding:7px 8px;
+  border:0;border-radius:10px;background:var(--fx-surface-soft,#1e3447);
+  justify-content:flex-start;gap:7px;box-sizing:border-box;
+ }
+ .layout header .userbar .attendance-header-clock{font-size:20px;display:inline-flex}
+ .layout header .userbar .attendance-header-time strong{font-size:clamp(13px,3.8vw,17px);white-space:nowrap}
+ .layout header .userbar .attendance-header-time small{font-size:10px;max-width:100%;white-space:normal;line-height:1.2}
+ .layout header .userbar .attendance-header-action{
+  grid-column:auto;min-width:0;width:100%;min-height:57px;padding:6px 3px;
+  border:1px solid var(--fx-border,#35536a);border-radius:10px;
+  background:var(--fx-surface-soft,#1e3447);color:var(--fx-text,#e8f1f8);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;
+  font-size:11px;line-height:1.1;white-space:normal;text-align:center;
+ }
+ .layout header .userbar .attendance-header-action:nth-child(2):last-of-type{grid-column:2/-1}
+ .layout header .userbar .attendance-action-emoji{display:block;font-size:23px;line-height:1.1;font-weight:400}
+ .layout header .userbar .attendance-action-label{display:block;max-width:100%;font-size:10px;line-height:1.2;overflow-wrap:anywhere}
+ .layout header .userbar .attendance-header-action[data-action="out"]{border-color:color-mix(in srgb,var(--fx-border,#35536a) 80%,#e1a2a2)}
+ .layout header .userbar .attendance-header-action[data-action="in"]{border-color:var(--isys-accent,#2b91be)}
+ .layout header .userbar .attendance-header-error{grid-column:1/-1;max-width:100%;margin:0;padding:6px 9px;border-radius:8px;background:color-mix(in srgb,#b63c43 10%,transparent)}
+}
+@media(max-width:390px){
+ .layout header .userbar .attendance-header{grid-template-columns:minmax(0,1.25fr) repeat(2,minmax(0,1fr));gap:5px;padding:5px}
+ .layout header .userbar .attendance-header-time{padding:5px;gap:5px}
+ .layout header .userbar .attendance-header-clock{font-size:18px}
+ .layout header .userbar .attendance-header-time strong{font-size:13px}
+ .layout header .userbar .attendance-header-time small{font-size:9px}
+ .layout header .userbar .attendance-header-action{padding:5px 2px}
+ .layout header .userbar .attendance-action-emoji{font-size:21px}
+}
+@media(prefers-reduced-motion:reduce){.attendance-header-action{transition:none}}
+
+
+/* Dashboard attendance — modern FOXA panel with clear status and actions. */
+.layout .body .foxa-dashboard-attendance{margin:20px 0 24px}
+.layout .body .foxa-dashboard-attendance .attendance-header{
+ display:grid;grid-template-columns:minmax(220px,1.3fr) repeat(4,minmax(120px,1fr));
+ gap:12px;align-items:stretch;padding:16px;box-sizing:border-box;width:100%;
+ border:1px solid var(--fx-border);border-radius:var(--fx-radius-lg,20px);
+ background:var(--fx-surface);box-shadow:var(--fx-shadow);color:var(--fx-text)
+}
+.layout .body .foxa-dashboard-attendance .attendance-header-time{
+ display:flex;align-items:center;justify-content:flex-start;gap:14px;min-height:84px;
+ padding:14px 18px;border:1px solid var(--fx-border);border-radius:var(--fx-radius,16px);
+ background:var(--fx-surface-soft);color:var(--fx-text);text-align:left
+}
+.layout .body .foxa-dashboard-attendance .attendance-header-clock{
+ display:grid;place-items:center;width:42px;height:42px;flex:none;border-radius:12px;
+ background:color-mix(in srgb,var(--fx-accent) 12%,var(--fx-surface));
+ color:var(--fx-accent);font-size:28px
+}
+.layout .body .foxa-dashboard-attendance .attendance-header-time strong{font-size:clamp(19px,2vw,25px);line-height:1.2;font-weight:800;letter-spacing:-.025em}
+.layout .body .foxa-dashboard-attendance .attendance-header-time small{font-size:12px;line-height:1.5;color:var(--fx-muted);white-space:normal}
+.layout .body .foxa-dashboard-attendance .attendance-header-action{
+ min-height:84px;min-width:0;padding:12px 10px;display:flex;flex-direction:column;
+ align-items:center;justify-content:center;gap:8px;text-align:center;
+ border:1px solid var(--fx-border);border-radius:var(--fx-radius,16px);
+ background:var(--fx-surface-soft);color:var(--fx-text);
+ font:inherit;font-size:14px;font-weight:750;line-height:1.3;white-space:normal
+}
+.layout .body .foxa-dashboard-attendance .attendance-action-emoji{display:block;font-size:22px;line-height:1}
+.layout .body .foxa-dashboard-attendance .attendance-header-start{
+ background:var(--fx-accent);color:#fff;border-color:var(--fx-accent)
+}
+.layout .body .foxa-dashboard-attendance .attendance-header-action:hover:not(:disabled){
+ border-color:var(--fx-accent);box-shadow:var(--fx-shadow-hover)
+}
+.layout .body .foxa-dashboard-attendance .attendance-header-start:hover:not(:disabled){
+ background:color-mix(in srgb,var(--fx-accent) 86%,#000)
+}
+.layout .body .foxa-dashboard-attendance .attendance-header-error{grid-column:1/-1;padding:8px 12px}
+@media(max-width:1150px){
+ .layout .body .foxa-dashboard-attendance .attendance-header{grid-template-columns:repeat(4,minmax(0,1fr))}
+ .layout .body .foxa-dashboard-attendance .attendance-header-time{grid-column:1/-1;min-height:72px}
+}
+@media(max-width:650px){
+ .layout .body .foxa-dashboard-attendance .attendance-header{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;padding:12px}
+ .layout .body .foxa-dashboard-attendance .attendance-header-time{grid-column:1/-1}
+ .layout .body .foxa-dashboard-attendance .attendance-header-action{min-height:76px;padding:10px 6px;font-size:12px}
+ .layout .body .foxa-dashboard-attendance .attendance-action-emoji{font-size:21px}
+}
+
+/* Responsive FOXA dashboard attendance: same controls on desktop, tablet and phone. */
+.layout .body .foxa-dashboard-attendance{min-width:0;max-width:100%;overflow:visible}
+.layout .body .foxa-dashboard-attendance .attendance-header{min-width:0;max-width:100%;box-sizing:border-box}
+.layout .body .foxa-dashboard-attendance .attendance-header-action{width:100%;box-sizing:border-box}
+.layout .body .foxa-dashboard-attendance .attendance-header-time{width:100%;box-sizing:border-box}
+.layout .body .foxa-dashboard-attendance .attendance-header-time>span:last-child{min-width:0}
+.layout .body .foxa-dashboard-attendance .attendance-action-emoji{display:block}
+.layout .body .foxa-dashboard-attendance .attendance-action-label{display:block;overflow-wrap:anywhere}
+@media(max-width:1150px) and (min-width:651px){
+ .layout .body .foxa-dashboard-attendance .attendance-header{grid-template-columns:repeat(4,minmax(0,1fr))}
+ .layout .body .foxa-dashboard-attendance .attendance-header-time{grid-column:1/-1}
+}
+@media(max-width:650px){
+ .layout .body .foxa-dashboard-attendance{margin:14px 0 20px!important}
+ .layout .body .foxa-dashboard-attendance .attendance-header{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;padding:12px}
+ .layout .body .foxa-dashboard-attendance .attendance-header-time{grid-column:1/-1;min-height:76px}
+ .layout .body .foxa-dashboard-attendance .attendance-header-action{min-height:76px;touch-action:manipulation}
+ .layout .body .foxa-dashboard-attendance .attendance-header-time strong{white-space:normal;font-size:21px}
+ .layout .body .foxa-dashboard-attendance .attendance-header-time small{white-space:normal;font-size:12px}
+}
+@media(max-width:360px){
+ .layout .body .foxa-dashboard-attendance .attendance-header{gap:8px;padding:9px}
+ .layout .body .foxa-dashboard-attendance .attendance-header-action{font-size:11px;padding:9px 5px}
+ .layout .body .foxa-dashboard-attendance .attendance-header-time{padding:11px}
+}
+
+/* Responsive attendance styles are included in the current GitHub Pages release. */

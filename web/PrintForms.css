@@ -1,0 +1,277 @@
+.pf-workspace{display:grid;grid-template-columns:minmax(320px,.95fr) minmax(360px,1.1fr);gap:20px;align-items:start}.pf-editor,.pf-preview{padding:20px;border:1px solid var(--fx-border,#d4e0e8);border-radius:16px;background:var(--fx-surface,#fff);color:var(--fx-text,inherit);min-width:0}.pf-editor h2,.pf-preview h2{margin:0 0 18px;font-size:19px}.pf-editor{display:flex;flex-direction:column;gap:13px}.pf-editor label{display:flex;flex-direction:column;gap:6px;font-size:12px;font-weight:700}.pf-editor :is(input,select,textarea){width:100%;box-sizing:border-box;padding:10px 12px;border:1px solid var(--fx-border,#bdcdd8);border-radius:9px;background:var(--fx-surface-soft,#f8fbfd);color:var(--fx-text,inherit);font:inherit;font-size:13px}.pf-editor textarea{resize:vertical;line-height:1.5}.pf-two{display:grid;grid-template-columns:1fr 1fr;gap:12px}.pf-editor small{line-height:1.5;color:var(--fx-muted,#718393)}.pf-preview{position:sticky;top:15px}.pf-preview-scroll{overflow:auto;max-height:75vh;background:#dfe6ec;padding:16px;border-radius:12px}.pf-preview-paper{width:210mm;min-height:297mm;transform-origin:top left;zoom:.65;box-shadow:0 3px 16px #0002}.pf-paper{width:210mm;min-height:297mm;padding:20mm 20mm 18mm;box-sizing:border-box;position:relative;background:#fff;color:#16222b;font-family:Arial,Helvetica,sans-serif}.pf-paper .sbd-header{display:flex;align-items:center;gap:10px;margin-bottom:12px;padding-bottom:9px;border-bottom:1px solid #999;background:#fff!important;color:#000!important}.pf-paper .sbd-logo{flex:0 0 49px;width:49px}.pf-paper .sbd-logo svg{display:block;width:49px;height:65px}.pf-paper .sbd-info{flex:1;min-width:0;font-size:8px;line-height:1.3;color:#000!important}.pf-paper .sbd-name{font-weight:800;font-size:11px;line-height:1.2;margin-bottom:3px;color:#000!important}.pf-paper .sbd-info>div{overflow-wrap:anywhere}.pf-top{display:flex;justify-content:space-between;align-items:flex-end;gap:12px;margin-top:25mm;min-height:23mm}.pf-recipient{font-size:12px;line-height:1.6}.pf-dateline{font-size:11px;white-space:nowrap}.pf-reference{font-size:11px;margin:8mm 0 0}.pf-subject{font-size:14px;margin:15mm 0 10mm;line-height:1.4}.pf-letterbody{font-size:12px;line-height:1.6}.pf-letterbody p{margin:0 0 10mm}.pf-bodytext{min-height:32mm;overflow-wrap:anywhere}.pf-placeholder{color:#aaa}.pf-signature{margin-top:18mm;display:flex;flex-direction:column;font-weight:bold}.pf-signature small{font-size:11px;font-weight:normal}.pf-footer{position:absolute;bottom:15mm;left:20mm;right:20mm;border-top:1px solid #b5c4cf;padding-top:3mm;color:#506575;font-size:9px}@media(max-width:1200px){.pf-workspace{grid-template-columns:1fr}.pf-preview{position:static}.pf-preview-scroll{max-height:550px}}@media(max-width:650px){.pf-editor,.pf-preview{padding:14px}.pf-two{grid-template-columns:1fr}.pf-preview-paper{zoom:.4}.pf-preview-scroll{padding:8px}}
+
+
+/* Layout based on the SBD Praha 8 notice Word template. */
+.pf-preview-paper .pf-paper{padding:18mm 20mm 18mm;color:#222}
+.pf-preview-paper .sbd-header{border-bottom:0;padding-bottom:8px}
+.pf-preview-paper .pf-top{display:grid;grid-template-columns:1fr 45%;gap:18px;margin-top:13mm;align-items:start;min-height:34mm}
+.pf-preview-paper .pf-meta{font-size:10px;line-height:1.65}
+.pf-preview-paper .pf-recipient{border:1px solid #111;padding:7px 8px;min-height:32mm;box-sizing:border-box;font-size:11px;line-height:1.5}
+.pf-preview-paper .pf-recipient strong{display:block;font-weight:400;margin-bottom:4px}
+.pf-preview-paper .pf-subject{font-size:12px;font-weight:700;margin:10mm 0 5mm;line-height:1.4}
+.pf-preview-paper .pf-letterbody{font-size:11px;line-height:1.6}
+.pf-preview-paper .pf-letterbody p{margin:0 0 9mm}
+.pf-preview-paper .pf-bodytext{min-height:20mm}
+.pf-preview-paper .pf-signature{margin:15mm 0 0 auto;width:55mm;text-align:center;display:flex;flex-direction:column;font-weight:400}
+.pf-preview-paper .pf-signature-line{font-size:10px}
+.pf-preview-paper .pf-signature strong{font-weight:400}
+.pf-preview-paper .pf-signature small{font-size:11px}
+.pf-preview-paper .pf-footer{bottom:12mm;border-top:1px solid #555;padding-top:3mm;color:#444;font-size:9px}
+.pf-preview-paper .pf-footer strong{display:block;font-size:10px;margin-bottom:2mm}
+.pf-preview-paper .pf-footer>div{display:flex;justify-content:space-between;gap:10px}
+
+.pf-preview-paper .pf-signature-image{display:block;max-width:55mm;max-height:25mm;object-fit:contain;margin:0 auto 1mm}
+
+.pf-preview-paper .pf-signature{position:relative;padding-top:14mm}
+.pf-preview-paper .pf-stamp-image{position:absolute;width:48mm;max-height:21mm;object-fit:contain;top:-7mm;left:4mm;opacity:.9}
+.pf-preview-paper .pf-signature-image{position:relative;z-index:1}
+
+
+/* Shared FOXA-style searchable building selector. */
+.pf-editor .pf-building-search{position:relative;display:flex;flex-direction:column;gap:6px}
+.pf-editor .pf-building-options{position:absolute;z-index:100;left:0;right:0;top:100%;max-height:260px;overflow:auto;border:1px solid var(--border,#b9cbd9);border-radius:12px;background:var(--card-bg,#fff);box-shadow:0 12px 28px #091c2d25;padding:5px}
+.pf-editor .pf-building-options button{width:100%;display:flex;align-items:center;gap:10px;text-align:left;background:transparent;color:inherit;border:0;border-radius:8px;padding:10px 12px;cursor:pointer;font:inherit}
+.pf-editor .pf-building-options button:hover,.pf-editor .pf-building-options button:focus-visible{background:var(--hover-bg,#eaf3fb)}
+.pf-editor .pf-building-options button strong{white-space:nowrap;font-size:12px}
+.pf-editor .pf-building-options button span{font-size:12px;opacity:.8}
+.pf-editor .pf-building-empty{padding:12px;font-size:12px;opacity:.7}
+[data-theme="dark"] .pf-editor .pf-building-options{background:#192f43;border-color:#3b5970;color:#e6f1fb}
+[data-theme="dark"] .pf-editor .pf-building-options button:hover{background:#28475f}
+
+.pf-signer-settings{display:grid;gap:12px;padding:14px;border:1px solid var(--border,#cbd8e2);border-radius:12px;margin:12px 0}.pf-signer-toggle{display:flex!important;flex-direction:row!important;align-items:center;gap:10px;font-weight:700}.pf-signer-toggle input{width:18px!important;height:18px;flex:0 0 18px;accent-color:#2678a5}.pf-signer-settings small{font-size:12px;opacity:.75}
+
+
+/* Optional outgoing mail registration from printable forms. */
+.pf-editor .pf-outmail{margin:14px 0;padding:15px;border:1px solid var(--border,#cbd8e2);border-radius:12px;background:var(--card-bg,transparent)}
+.pf-editor .pf-outmail-toggle{display:flex;flex-direction:row;align-items:center;gap:10px;font-weight:700}
+.pf-editor .pf-outmail-toggle input{width:18px;height:18px;flex:0 0 18px;accent-color:#2678a5}
+.pf-editor .pf-outmail-details{display:grid;gap:12px;margin-top:15px}
+.pf-editor .pf-outmail-details>label{display:flex;flex-direction:column;gap:6px}
+.pf-editor .pf-outmail-details small{opacity:.75;font-size:12px;line-height:1.5}
+.pf-editor .pf-outmail-details button{justify-self:start}
+.pf-editor .pf-outmail-success{border:1px solid #67ad85;color:#17613d;background:#e7f7ed;border-radius:10px;padding:12px;font-size:13px}
+[data-theme="dark"] .pf-editor .pf-outmail{background:#172d40;border-color:#38556c}
+[data-theme="dark"] .pf-editor .pf-outmail-success{background:#163a2d;border-color:#41865d;color:#b6f4cb}
+
+/* Long glazing conditions template may span more than one A4 page. */
+.pf-preview-paper .pf-glazing{height:auto;min-height:297mm}
+.pf-preview-paper .pf-glazing .pf-bodytext{line-height:1.42}
+.pf-preview-paper .pf-glazing .pf-signature{break-inside:avoid}
+.pf-preview-paper .pf-glazing .pf-footer{position:relative;left:auto;right:auto;bottom:auto;margin-top:18mm}
+
+/* Variables taken from the supplied glazing conditions document. */
+.pf-editor .pf-glazing-fields{border:1px solid var(--border,#c6d7e3);border-radius:12px;padding:14px;margin:12px 0;min-width:0}
+.pf-editor .pf-glazing-fields legend{font-weight:750;padding:0 8px}
+.pf-editor .pf-glazing-fields p{font-size:12px;opacity:.78;margin:0 0 12px}
+[data-theme="dark"] .pf-editor .pf-glazing-fields{border-color:#395970}
+
+
+/* Offscreen A4 PDF source: content is paginated with space reserved for
+   repeating the official letterhead and footer on every PDF page. */
+.pf-pdf-staging{font-family:Arial,Helvetica,sans-serif;font-size:11px;line-height:1.55}
+.pf-pdf-staging .pf-pdf-letterhead{display:flex;align-items:center;gap:10px;width:170mm;box-sizing:border-box;padding:0 0 7px;background:#fff;color:#000;border:0}
+.pf-pdf-staging .pf-pdf-letterhead .sbd-logo{width:49px;flex:0 0 49px}
+.pf-pdf-staging .pf-pdf-letterhead .sbd-logo svg{display:block;width:49px;height:65px}
+.pf-pdf-staging .pf-pdf-letterhead .sbd-info{flex:1;min-width:0;font-size:8px;line-height:1.3}
+.pf-pdf-staging .pf-pdf-letterhead .sbd-name{font-size:11px;font-weight:800;margin-bottom:3px}
+.pf-pdf-staging .pf-pdf-footer{width:170mm;box-sizing:border-box;border-top:1px solid #555;padding-top:3mm;font-size:9px;color:#444;background:#fff}
+.pf-pdf-staging .pf-pdf-footer strong{display:block;font-size:10px;margin-bottom:2mm}
+.pf-pdf-staging .pf-pdf-footer>div{display:flex;justify-content:space-between;gap:10px}
+.pf-pdf-staging .pf-pdf-content{width:170mm;box-sizing:border-box;background:#fff;color:#222;font-size:11px;line-height:1.6}
+.pf-pdf-staging .pf-top{display:grid;grid-template-columns:1fr 45%;gap:18px;margin-top:0;min-height:34mm;align-items:start}
+.pf-pdf-staging .pf-meta{font-size:10px;line-height:1.65}
+.pf-pdf-staging .pf-recipient{border:1px solid #111;padding:7px 8px;min-height:32mm;box-sizing:border-box;font-size:11px;line-height:1.5}
+.pf-pdf-staging .pf-recipient strong{display:block;font-weight:400;margin-bottom:4px}
+.pf-pdf-staging .pf-subject{font-size:12px;font-weight:700;margin:10mm 0 5mm;line-height:1.4}
+.pf-pdf-staging .pf-letterbody{font-size:11px;line-height:1.6}
+.pf-pdf-staging .pf-letterbody p{margin:0 0 9mm}
+.pf-pdf-staging .pf-bodytext{min-height:20mm;overflow-wrap:anywhere}
+.pf-pdf-staging .pf-signature{margin:15mm 0 0 auto;width:55mm;text-align:center;display:flex;flex-direction:column;font-weight:400;position:relative;padding-top:14mm;break-inside:avoid}
+.pf-pdf-staging .pf-stamp-image{position:absolute;width:48mm;max-height:21mm;object-fit:contain;top:-7mm;left:4mm;opacity:.9}
+.pf-pdf-staging .pf-signature-image{display:block;max-width:55mm;max-height:25mm;object-fit:contain;margin:0 auto 1mm;position:relative;z-index:1}
+.pf-pdf-staging .pf-signature-line{font-size:10px}
+.pf-pdf-staging .pf-signature strong{font-weight:400}
+.pf-pdf-staging .pf-signature small{font-size:11px}
+.pf-pdf-staging .pf-placeholder{display:none}
+
+
+/* Professional letter layout: keep compact official heading, readable body and signature.
+   Overrides older general preview styles only inside the PDF renderer. */
+.pf-pdf-staging,.pf-pdf-staging *{box-sizing:border-box}
+.pf-pdf-staging .pf-pdf-letterhead{width:174mm!important;height:22mm!important;min-height:22mm!important;max-height:22mm!important;display:flex!important;align-items:center!important;justify-content:flex-start!important;gap:4mm!important;margin:0!important;padding:1mm 0 2mm!important;overflow:visible!important;border-bottom:0!important;position:static!important;transform:none!important}
+.pf-pdf-staging .pf-pdf-letterhead .sbd-logo{flex:0 0 15mm!important;width:15mm!important;height:19mm!important;display:flex!important;align-items:center!important;overflow:visible!important}
+.pf-pdf-staging .pf-pdf-letterhead .sbd-logo svg{display:block!important;width:14mm!important;height:19mm!important;max-height:19mm!important}
+.pf-pdf-staging .pf-pdf-letterhead .sbd-info{flex:1!important;font-size:8px!important;line-height:1.35!important;align-self:center!important;overflow:visible!important}
+.pf-pdf-staging .pf-pdf-letterhead .sbd-name{font-size:11px!important;font-weight:800!important;margin:0 0 2px!important;line-height:1.25!important}
+.pf-pdf-staging .pf-pdf-content{width:174mm!important;font-family:Arial,Helvetica,sans-serif!important;font-size:10.5px!important;line-height:1.43!important}
+.pf-pdf-staging .pf-top{display:grid!important;grid-template-columns:minmax(0,1fr) minmax(0,43%)!important;gap:8mm!important;min-height:25mm!important;margin:0 0 5mm!important;align-items:start!important}
+.pf-pdf-staging .pf-meta{font-size:10px!important;line-height:1.48!important}
+.pf-pdf-staging .pf-recipient{font-size:10.5px!important;line-height:1.45!important;min-height:25mm!important;padding:3mm!important;border:1px solid #7d8991!important}
+.pf-pdf-staging .pf-recipient strong{font-size:10px!important;margin:0 0 2mm!important}
+.pf-pdf-staging .pf-subject{font-size:12px!important;line-height:1.3!important;font-weight:700!important;margin:5mm 0 4mm!important}
+.pf-pdf-staging .pf-letterbody{font-size:10.5px!important;line-height:1.45!important}
+.pf-pdf-staging .pf-letterbody p{margin:0 0 4mm!important}
+.pf-pdf-staging .pf-bodytext{min-height:0!important;font-size:10.5px!important;line-height:1.45!important;overflow-wrap:break-word!important}
+.pf-pdf-staging .pf-signature{margin:6mm 0 0 auto!important;width:55mm!important;min-height:15mm!important;padding-top:9mm!important;line-height:1.3!important;break-inside:avoid!important;page-break-inside:avoid!important}
+.pf-pdf-staging .pf-stamp-image{top:-4mm!important}
+.pf-pdf-staging .pf-pdf-footer{width:174mm!important;border-top:1px solid #a8b3bb!important;padding-top:2mm!important;font-size:9px!important;line-height:1.35!important}
+.pf-pdf-staging .pf-pdf-footer strong{font-size:9px!important;margin-bottom:1mm!important}
+.pf-pdf-staging .pf-pdf-footer>div{display:flex!important;justify-content:space-between!important;gap:4mm!important}
+
+
+/* Trvalé předání klíčů: samostatný jednostránkový A4 protokol. */
+.pf-key-fields{display:flex;flex-direction:column;gap:12px;padding:16px;border:1px solid var(--fx-border,#c5d4df);border-radius:12px;background:var(--fx-surface-soft,#f8fbfd)}
+.pf-key-fields h3{font-size:16px;margin:0}.pf-key-fields>p{font-size:12px;line-height:1.5;margin:0;color:var(--fx-muted,#526878)}
+.pf-preview-paper .pf-key-handover h1{text-align:center;font-size:18px;letter-spacing:.3px;margin:15mm 0 2mm}
+.pf-preview-paper .pf-key-handover .pf-handover-subtitle{text-align:center;font-size:11px;color:#596572;margin:0 0 12mm}
+.pf-preview-paper .pf-key-handover .pf-handover-grid{display:grid;grid-template-columns:1fr 1fr;gap:12mm;margin-bottom:9mm}
+.pf-preview-paper .pf-key-handover .pf-handover-grid section{font-size:11px;line-height:1.65;min-height:29mm}
+.pf-preview-paper .pf-key-handover h3{font-size:11px;text-transform:uppercase;letter-spacing:.5px;border-bottom:1px solid #b6c2c9;padding-bottom:2mm;margin:0 0 3mm}
+.pf-preview-paper .pf-key-handover .pf-handover-grid strong{font-size:12px;display:block}
+.pf-preview-paper .pf-key-handover .pf-handover-block{margin:0 0 7mm;font-size:11px}
+.pf-preview-paper .pf-key-handover .pf-handover-block p{margin:0;line-height:1.5;white-space:normal;overflow-wrap:anywhere}
+.pf-preview-paper .pf-key-handover .pf-handover-keys{min-height:16mm;padding:3mm 0;border-bottom:1px dotted #8a969c;line-height:1.6}
+.pf-preview-paper .pf-key-handover .pf-handover-declaration{font-size:11px;line-height:1.6;text-align:justify;margin:9mm 0 7mm}
+.pf-preview-paper .pf-key-handover .pf-handover-date{font-size:11px;margin:0 0 8mm}
+.pf-preview-paper .pf-key-handover .pf-handover-signatures{display:grid;grid-template-columns:1fr 1fr;gap:15mm;break-inside:avoid}
+.pf-preview-paper .pf-key-handover .pf-handover-signatures>div{text-align:center;font-size:11px}
+.pf-preview-paper .pf-key-handover .pf-handover-signmark{height:24mm;display:flex;align-items:flex-end;justify-content:center;position:relative}
+.pf-preview-paper .pf-key-handover .pf-handover-sign-image{max-width:40mm;max-height:20mm;object-fit:contain;position:relative;z-index:2}
+.pf-preview-paper .pf-key-handover .pf-handover-stamp{max-width:37mm;max-height:22mm;object-fit:contain;position:absolute;left:40%;top:0;opacity:.9}
+.pf-preview-paper .pf-key-handover .pf-handover-line{border-bottom:1px dotted #53646c;margin-bottom:3mm}
+.pf-preview-paper .pf-key-handover .pf-handover-signatures strong,.pf-preview-paper .pf-key-handover .pf-handover-signatures small{display:block}
+.pf-preview-paper .pf-key-handover .pf-handover-signatures small{font-size:9px;color:#52616a;margin-top:1mm}
+
+
+/* Razítko překrývá podpis (jako při skutečném orazítkování), nikoli nad ním. */
+.pf-preview-paper .pf-signature{position:relative!important}
+.pf-preview-paper .pf-signature-image{position:relative!important;z-index:1!important}
+.pf-preview-paper .pf-stamp-image{position:absolute!important;z-index:3!important;top:1mm!important;left:50%!important;transform:translateX(-50%)!important;opacity:.88!important;pointer-events:none}
+.pf-pdf-staging .pf-signature{position:relative!important}
+.pf-pdf-staging .pf-signature-image{position:relative!important;z-index:1!important}
+.pf-pdf-staging .pf-stamp-image{position:absolute!important;z-index:3!important;top:1mm!important;left:50%!important;transform:translateX(-50%)!important;opacity:.88!important;pointer-events:none}
+/* Trvalý předávací protokol: razítko přímo přes podpis předávajícího. */
+.pf-preview-paper .pf-key-handover .pf-handover-sign-image{z-index:1!important}
+.pf-preview-paper .pf-key-handover .pf-handover-stamp{z-index:3!important;left:50%!important;top:50%!important;transform:translate(-50%,-50%)!important;opacity:.88!important;pointer-events:none}
+
+/* Upozornění „Pozn.“ ve stavebních úpravách je červené v náhledu i staženém PDF. */
+.pf-preview-paper .pf-bodytext .pf-building-works-note{color:#c82026!important;font-weight:600}
+
+
+/* Renovation conditions: document-like flow rather than an absolute footer
+   that collides with text at the A4 page boundary. */
+.pf-preview-paper .pf-building-works{
+  height:auto!important;
+  min-height:297mm!important;
+  padding-bottom:18mm!important;
+  display:flex!important;
+  flex-direction:column!important;
+}
+.pf-preview-paper .pf-building-works .pf-letterbody{
+  font-size:11px;
+  line-height:1.55;
+  flex:1 0 auto;
+}
+.pf-preview-paper .pf-building-works .pf-bodytext{
+  min-height:0!important;
+  line-height:1.55;
+  white-space:normal;
+}
+.pf-preview-paper .pf-building-works .pf-building-works-note{
+  display:block!important;
+  color:#bc2026!important;
+  font-weight:600;
+  line-height:1.6;
+  padding:3mm 0 0;
+  margin:3mm 0 4mm;
+  break-inside:avoid!important;
+  page-break-inside:avoid!important;
+  orphans:3;
+  widows:3;
+}
+.pf-preview-paper .pf-building-works .pf-signature{
+  margin-top:12mm!important;
+  break-inside:avoid!important;
+  page-break-inside:avoid!important;
+}
+.pf-preview-paper .pf-building-works .pf-footer{
+  position:relative!important;
+  left:auto!important;
+  right:auto!important;
+  bottom:auto!important;
+  flex:0 0 auto;
+  margin-top:12mm!important;
+  padding-top:3mm!important;
+  break-inside:avoid!important;
+  page-break-inside:avoid!important;
+}
+
+
+/* Official A4 letterhead footer, aligned to the paper margins. */
+.pf-preview-paper .pf-paper:not(.pf-building-works):not(.pf-glazing) .pf-footer{
+ position:absolute!important;left:20mm!important;right:20mm!important;bottom:12mm!important;
+ margin:0!important;padding:3mm 0 0!important;background:#fff!important;
+ border-top:1px solid #9da8b1!important;color:#263746!important;
+}
+.pf-preview-paper .pf-footer strong{font-size:10px!important;font-weight:700!important;letter-spacing:.05px}
+.pf-preview-paper .pf-footer>div{font-size:9px!important;color:#536676!important}
+.pf-preview-paper .pf-building-works .pf-footer,
+.pf-preview-paper .pf-glazing .pf-footer{
+ position:relative!important;left:auto!important;right:auto!important;bottom:auto!important;
+ margin-top:14mm!important;
+}
+.pf-preview-paper.pf-exporting .pf-footer{visibility:hidden!important}
+
+/* PDF: header is drawn separately on each page; avoid duplicate on page one. */
+.pf-preview-paper.pf-exporting .sbd-header{display:none!important}
+.pf-preview-paper.pf-exporting .pf-top{margin-top:0!important}
+
+/* Červená závěrečná poznámka ve všech šablonách typu Podmínky. */
+.pf-preview-paper .pf-bodytext .pf-conditions-note{display:block;color:#bc2026!important;font-weight:600;line-height:1.6;margin:3mm 0 4mm;padding-top:2mm;break-inside:avoid!important;page-break-inside:avoid!important}
+
+/* Conditions: prevent a mostly empty extra PDF page containing only a signature.
+   Apply only during PDF export and only if the signature nearly fits. */
+.pf-preview-paper.pf-exporting.pf-compact-signature .pf-glazing .pf-signature,
+.pf-preview-paper.pf-exporting.pf-compact-signature .pf-building-works .pf-signature{
+ margin-top:5mm!important;
+ padding-top:4mm!important;
+ break-inside:avoid!important;
+ page-break-inside:avoid!important;
+}
+.pf-preview-paper.pf-exporting.pf-compact-signature .pf-glazing .pf-letterbody,
+.pf-preview-paper.pf-exporting.pf-compact-signature .pf-building-works .pf-letterbody{
+ line-height:1.43!important;
+}
+.pf-preview-paper.pf-exporting.pf-compact-signature .pf-glazing .pf-letterbody p,
+.pf-preview-paper.pf-exporting.pf-compact-signature .pf-building-works .pf-letterbody p{margin-bottom:4mm!important}
+.pf-preview-paper.pf-exporting.pf-compact-signature .pf-glazing .pf-bodytext,
+.pf-preview-paper.pf-exporting.pf-compact-signature .pf-building-works .pf-bodytext{line-height:1.43!important}
+.pf-preview-paper.pf-exporting.pf-compact-signature .pf-glazing .pf-conditions-note,
+.pf-preview-paper.pf-exporting.pf-compact-signature .pf-building-works .pf-conditions-note{margin:2mm 0 2mm!important;padding-top:1mm!important;line-height:1.45!important}
+.pf-preview-paper.pf-exporting.pf-compact-signature .pf-building-works .pf-footer,
+.pf-preview-paper.pf-exporting.pf-compact-signature .pf-glazing .pf-footer{display:none!important}
+
+
+/* PDF has its own repeating header/footer and page margins. Do not render
+   a whole A4-height preview sheet inside that smaller printable region:
+   this was producing an additional entirely empty page. */
+.pf-preview-paper.pf-exporting{
+ min-height:0!important;
+ height:auto!important;
+ box-shadow:none!important;
+}
+.pf-preview-paper.pf-exporting .pf-paper,
+.pf-preview-paper.pf-exporting .pf-building-works,
+.pf-preview-paper.pf-exporting .pf-glazing,
+.pf-preview-paper.pf-exporting .pf-key-handover{
+ min-height:0!important;
+ height:auto!important;
+ padding-top:0!important;
+ padding-bottom:0!important;
+ margin-bottom:0!important;
+}
+.pf-preview-paper.pf-exporting .pf-letterbody{
+ flex:0 0 auto!important;
+ min-height:0!important;
+}
+.pf-preview-paper.pf-exporting .pf-footer{display:none!important}

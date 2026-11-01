@@ -1,0 +1,74 @@
+.technicalmodule{max-width:1150px;margin:auto}.technicalhead{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;flex-wrap:wrap}.technicalhead h1{margin:0}.technicalhead p,.technicalpanel>p{color:var(--muted,#7b8796);font-size:13px}.technicalbuttons{display:flex;gap:9px;flex-wrap:wrap}.technicalbuttons button{border:1px solid #247ca6;background:#146c9c;color:#fff;padding:10px 14px;border-radius:9px;cursor:pointer;font-weight:600}.technicalbuttons .technicalclear{background:transparent;color:inherit;border-color:#9ba8b5}.technicalnotice{padding:12px;background:#e5f4fa;color:#163e53;border-radius:9px}.technicalpanel{margin:18px 0;padding:22px;border:1px solid #dce5ec;border-radius:14px;background:#fff}.technicalpanel h2{font-size:18px;margin:0 0 16px}.technicalfields{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:13px}.technicalmodule label{display:grid;gap:6px;font-size:13px;font-weight:600}.technicalmodule input,.technicalmodule select,.technicalmodule textarea{width:100%;min-width:0;border:1px solid #cbd8e0;border-radius:8px;padding:9px;font:inherit;background:#fff;color:#223d52}.technicaltablewrap{overflow-x:auto}.technicaltable{width:100%;min-width:660px;border-collapse:collapse}.technicaltable td,.technicaltable th{border:1px solid #dce5ec;padding:8px;text-align:left}.technicaltable th{font-size:13px}.technicalgroup{border:1px solid #dce5ec;border-radius:10px;overflow:hidden;margin:10px 0}.technicalgrouphead{width:100%;display:flex;justify-content:space-between;gap:12px;align-items:center;padding:13px 16px;border:0;background:#edf4f8;color:#183c51;text-align:left;cursor:pointer}.technicalgrouphead span{font-size:12px}.technicalrows{padding:12px;display:grid;gap:12px}.technicalrow{display:grid;grid-template-columns:1.1fr 1.5fr 1.5fr 1fr;gap:12px;align-items:start;border-bottom:1px solid #e5edf2;padding:10px 0}.technicalrow:last-child{border-bottom:0}.technicalrow strong{font-size:13px}.technicalbottom{justify-content:flex-end;margin:16px 0 30px}[data-theme="dark"] .technicalpanel{background:#142334;border-color:#2d465c;color:#e4edf5}[data-theme="dark"] .technicalgroup,[data-theme="dark"] .technicaltable td,[data-theme="dark"] .technicaltable th{border-color:#2d465c}[data-theme="dark"] .technicalgrouphead{background:#1d3a50;color:#e4edf5}[data-theme="dark"] .technicalmodule input,[data-theme="dark"] .technicalmodule select,[data-theme="dark"] .technicalmodule textarea{background:#1a3043;border-color:#36546a;color:#e3edf6}[data-theme="dark"] .technicalrow{border-color:#2d465c}@media(max-width:800px){.technicalrow{grid-template-columns:1fr 1fr}.technicalrow strong{grid-column:1/-1}}@media(max-width:550px){.technicalrow{grid-template-columns:1fr}.technicalrow strong{grid-column:auto}.technicalbuttons{width:100%}.technicalbuttons button{flex:1}}.technicalphotoupload{max-width:400px;margin:12px 0}.technicalphotogrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin-top:15px}.technicalphotocard{border:1px solid #c8d4df;border-radius:10px;padding:12px;display:grid;gap:10px}.technicalphotocard img{width:100%;height:170px;object-fit:contain;background:#fff;border-radius:6px}.technicalphotocard button{justify-self:start;padding:8px 12px;cursor:pointer}.technicalsignatures{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px;margin-top:16px}.technicalsignature{padding:14px;border:1px solid #c8d4df;border-radius:10px}.technicalsignature h3{margin:0 0 12px;font-size:15px}.technicalsignature>img{display:block;max-width:220px;max-height:100px;object-fit:contain;background:#fff;margin:8px 0}.technicalsignatureupload{display:grid;gap:5px}.technicalsignatureupload input{max-width:220px}[data-theme="dark"] .technicalphotocard,[data-theme="dark"] .technicalsignature{border-color:#36546a}
+/* Rounded headings and sections — consistent with FOXA cards in light/dark themes. */
+.technicalmodule .technicalhead{background:var(--card-bg,var(--surface,#fff));border:1px solid var(--border,#dce5ec);border-radius:16px;padding:18px 20px;margin-bottom:18px;overflow:hidden}
+.technicalmodule .technicalpanel{overflow:visible}
+.technicalmodule .technicalpanel>h2{display:block;width:fit-content;max-width:100%;border-radius:11px;padding:10px 14px;background:var(--foxa-heading-bg,#e8f1f7);color:var(--foxa-heading-text,#183c51);margin:-4px 0 18px;font-size:18px;overflow-wrap:anywhere}
+.technicalmodule .technicalgrouphead{border-radius:10px}
+.technicalmodule .technicalgroup{border-radius:12px}
+.technicalautofillnote{font-size:12px;line-height:1.5;color:var(--muted,#71869a);margin:12px 0 0}
+[data-theme="dark"] .technicalmodule .technicalhead{background:#142334;border-color:#2d465c}
+[data-theme="dark"] .technicalmodule .technicalpanel>h2{background:#25445c;color:#e4edf5}
+@media(max-width:650px){.technicalmodule .technicalhead{padding:14px;border-radius:13px}.technicalmodule .technicalpanel>h2{font-size:16px;padding:9px 12px}}
+
+/* Single searchable building dropdown */
+.technicalbuildingfield{min-width:0;position:relative;display:grid;align-content:start;gap:6px}
+.technicalbuildingfield>label{font-size:13px;font-weight:600;line-height:1.4}
+.technicalcombobox{position:relative;min-width:0;isolation:isolate}
+.technicalcomboboxcontrol{display:flex;min-width:0;align-items:stretch;border:1px solid #cbd8e0;border-radius:10px;background:#fff;overflow:hidden}
+.technicalmodule .technicalcomboboxcontrol input{flex:1 1 0;width:0;min-width:0;border:0!important;border-radius:0!important;padding:11px 10px;font-size:15px;line-height:1.4;text-overflow:ellipsis;background:transparent}
+.technicalmodule .technicalcomboboxcontrol input:focus{outline:none}
+.technicalcomboboxcontrol:focus-within{outline:2px solid #66add1;outline-offset:1px}
+.technicalmodule .technicalcomboboxarrow{flex:0 0 42px;min-height:44px;border:0;border-left:1px solid #cbd8e0;border-radius:0;background:transparent;color:inherit;font-size:22px;cursor:pointer;padding:4px}
+.technicalcomboboxbackdrop{position:fixed!important;inset:0!important;z-index:40!important;opacity:0!important;background:transparent!important;border:0!important;cursor:default!important}
+.technicalcomboboxlist{position:absolute;top:calc(100% + 5px);left:0;right:0;min-width:0;max-height:min(360px,45dvh);overflow-y:auto;overscroll-behavior:contain;background:#fff;color:#20394d;border:1px solid #b5c9d9;border-radius:12px;box-shadow:0 14px 32px #071b3050;z-index:41;padding:5px}
+.technicalmodule .technicalcomboboxoption{display:flex;flex-direction:column;align-items:flex-start;text-align:left;gap:3px;width:100%;min-height:48px;border:0;border-radius:8px;background:transparent;color:inherit;padding:10px 12px;cursor:pointer;white-space:normal;overflow-wrap:anywhere;word-break:normal}
+.technicalcomboboxoption strong,.technicalcomboboxoption small{max-width:100%;white-space:normal;overflow-wrap:anywhere;line-height:1.35}
+.technicalcomboboxoption small{font-size:12px;opacity:.75}
+.technicalmodule .technicalcomboboxoption:hover,.technicalmodule .technicalcomboboxoption.is-active{background:#e8f2f8;color:#163d59}
+.technicalcomboboxempty{padding:14px;font-size:13px}
+.technicalmodule .technicalfields{grid-template-columns:repeat(auto-fit,minmax(min(100%,220px),1fr))}
+.technicalmodule .technicalfields>*{min-width:0;max-width:100%}
+.technicalmodule .technicalfields label{min-width:0;overflow-wrap:anywhere}
+.technicalmodule .technicalfields input,.technicalmodule .technicalfields select{min-width:0;max-width:100%;text-overflow:ellipsis}
+.technicalmodule .technicalhead,.technicalmodule .technicalhead>div,.technicalmodule .technicalbuttons,.technicalmodule .technicalpanel,.technicalmodule .technicalrow>*{min-width:0;max-width:100%}
+.technicalmodule .technicalhead h1,.technicalmodule .technicalpanel h2,.technicalmodule .technicalgrouphead strong{overflow-wrap:anywhere;white-space:normal}
+.technicalmodule .technicalbuttons button{white-space:normal;overflow-wrap:anywhere}
+[data-theme="dark"] .technicalcomboboxcontrol,[data-theme="dark"] .technicalcomboboxlist{background:#1a3043;border-color:#36546a;color:#e3edf6}
+[data-theme="dark"] .technicalmodule .technicalcomboboxoption:hover,[data-theme="dark"] .technicalmodule .technicalcomboboxoption.is-active{background:#294d66;color:#fff}
+[data-theme="dark"] .technicalmodule .technicalcomboboxarrow{border-color:#36546a}
+@media(max-width:650px){.technicalcomboboxlist{max-height:min(300px,45dvh)}.technicalmodule .technicalcomboboxcontrol input{font-size:16px}.technicalmodule .technicalfields{grid-template-columns:minmax(0,1fr)}}
+
+/* Override global fixed-height header rules: prevent title and description clipping. */
+.technicalmodule > header.technicalhead{
+ height:auto!important;
+ min-height:0!important;
+ max-height:none!important;
+ display:flex;
+ align-items:flex-start;
+ justify-content:space-between;
+ flex-wrap:wrap;
+ gap:16px;
+ overflow:visible;
+ position:relative;
+ z-index:auto;
+ padding:20px 22px;
+}
+.technicalmodule > header.technicalhead > div:first-child{flex:1 1 320px;min-width:0;max-width:100%}
+.technicalmodule > header.technicalhead h1{display:block;font-size:clamp(23px,2.6vw,34px);line-height:1.25;letter-spacing:-.025em;margin:0 0 9px;max-height:none;white-space:normal;overflow-wrap:break-word}
+.technicalmodule > header.technicalhead p{display:block;margin:0;line-height:1.55;max-height:none;white-space:normal;overflow-wrap:break-word}
+.technicalmodule > header.technicalhead .technicalbuttons{flex:0 1 auto;align-self:flex-start;min-width:0}
+@media(max-width:750px){
+ .technicalmodule > header.technicalhead{padding:16px;gap:14px}
+ .technicalmodule > header.technicalhead > div:first-child{flex-basis:100%}
+ .technicalmodule > header.technicalhead .technicalbuttons{width:100%;flex:1 1 100%}
+}
+
+/* Match the existing 24-hour PDF archive from regular inspections. */
+.technicalmodule .temporaryreportrow{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:12px 0;border-bottom:1px solid var(--border,#d8e0e7)}
+.technicalmodule .temporaryreportrow>div{min-width:0;flex:1}
+.technicalmodule .temporaryreportrow strong{display:block;overflow-wrap:anywhere}
+.technicalmodule .temporaryreportrow small{display:block;margin-top:4px;opacity:.75;overflow-wrap:anywhere}
+.technicalmodule .technicalreportrefresh,.technicalmodule .technicalreportdownload{padding:10px 14px;min-height:44px;border-radius:9px;border:1px solid #9ba8b5;background:transparent;color:inherit;font:inherit;font-weight:600;cursor:pointer}
+.technicalmodule .technicalreportrefresh:disabled,.technicalmodule .technicalreportdownload:disabled{opacity:.55;cursor:wait}
+[data-theme="dark"] .technicalmodule .technicalreportrefresh,[data-theme="dark"] .technicalmodule .technicalreportdownload{border-color:#36546a;color:#e3edf6}
+@media(max-width:650px){.technicalmodule .temporaryreportrow{align-items:stretch;flex-direction:column}.technicalmodule .technicalreportdownload{align-self:flex-start}}
