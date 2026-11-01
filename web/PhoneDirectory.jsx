@@ -9,6 +9,10 @@ const mobileOnly=v=>{const parts=clean(v).split(/[;,\n]+/).map(x=>x.trim());retu
 const personKey=v=>clean(v).normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLocaleLowerCase("cs").replace(/\b(ing|mgr|bc|mudr|judr|rndr|phdr|phd|dis)\b\.?/g," ").replace(/[^a-z\s]/g," ").split(/\s+/).filter(Boolean).sort().join(" ");
 export default function PhoneDirectory({supabase,staff=[] ,buildings=[],isAdmin=false}){
  const [search,setSearch]=useState("");
+ const [mergeRows,setMergeRows]=useState([]);
+ const [mergeTarget,setMergeTarget]=useState(null);
+ const [mergeSource,setMergeSource]=useState("");
+ const [mergeBusy,setMergeBusy]=useState(false);
  const [contactFilter,setContactFilter]=useState("all");
  const [presence,setPresence]=useState({});
  const [presenceError,setPresenceError]=useState("");
@@ -43,6 +47,32 @@ export default function PhoneDirectory({supabase,staff=[] ,buildings=[],isAdmin=
  },[supabase]);
  useEffect(()=>{let active=true;supabase.from("foxa_staff_directory_contacts").select("id,full_name,phone,email,position,department").then(({data,error})=>{if(active){if(error)setError(error.message);else setStaffContacts(data||[])}});return()=>{active=false}},[supabase,reload]);
  useEffect(()=>{let active=true;supabase.from("foxa_phone_directory_hidden").select("person_key").then(({data,error})=>{if(active){if(error)setError("Skryté kontakty nelze načíst: "+error.message);else setHiddenKeys((data||[]).map(x=>x.person_key))}});return()=>{active=false}},[supabase]);
+ useEffect(()=>{let active=true;supabase.from("foxa_phone_directory_merges").select("source_key,target_key").then(({data,error})=>{if(!active)return;if(error)setError("Sloučení kontaktů nelze načíst: "+error.message);else setMergeRows(data||[])});return()=>{active=false}},[supabase]);
+ async function saveMerge(){
+  if(!isAdmin||!mergeTarget||!mergeSource||mergeBusy)return;
+  const target=personKey(mergeTarget.name);
+  if(!target||target===mergeSource){setError("Vyber dva různé kontakty.");return}
+  const paths=new Map(mergeRows.map(x=>[x.source_key,x.target_key]));
+  let next=target;const seen=new Set([mergeSource]);
+  while(paths.has(next)){if(seen.has(next)){setError("Sloučení by vytvořilo cyklus.");return}seen.add(next);next=paths.get(next)}
+  if(next===mergeSource){setError("Sloučení by vytvořilo cyklus.");return}
+  setMergeBusy(true);setError("");
+  const {error:mergeError}=await supabase.from("foxa_phone_directory_merges").upsert({source_key:mergeSource,target_key:target},{onConflict:"source_key"});
+  if(mergeError)setError("Kontakty nelze sloučit: "+mergeError.message);
+  else{setMergeRows(rows=>[...rows.filter(x=>x.source_key!==mergeSource),{source_key:mergeSource,target_key:target}]);setMergeTarget(null);setMergeSource("")}
+  setMergeBusy(false);
+ }
+ async function undoMerge(person){
+  if(!isAdmin)return;
+  const key=personKey(person.name);
+  const related=mergeRows.filter(x=>x.target_key===key);
+  if(!related.length)return;
+  setMergeBusy(true);setError("");
+  const {error:mergeError}=await supabase.from("foxa_phone_directory_merges").delete().in("source_key",related.map(x=>x.source_key));
+  if(mergeError)setError("Sloučení nelze zrušit: "+mergeError.message);
+  else setMergeRows(rows=>rows.filter(x=>!related.some(y=>y.source_key===x.source_key)));
+  setMergeBusy(false);
+ }
  async function toggleHidden(person){
   if(!isAdmin)return;
   const key=personKey(person.name);if(!key)return;
@@ -60,10 +90,14 @@ export default function PhoneDirectory({supabase,staff=[] ,buildings=[],isAdmin=
   const imported=staffContacts.map(s=>({id:"import-"+s.id,name:clean(s.full_name),position:[s.position,s.department].filter(Boolean).join(" · ")||"SBD Praha 8",phone:mobileOnly(s.phone),email:clean(s.email),object:""}));
   const functionaries=contacts.map(c=>{const b=buildingById.get(String(c.building_id));return {id:"contact-"+c.id,name:clean(c.full_name),position:clean(c.position)||"Člen výboru",phone:mobileOnly(c.phone),email:clean(c.email),object:b?[(b.object_number||""),(b.street||b.address||b.name||"")].filter(Boolean).join(" – "):"Objekt nenalezen"}});
   const merged=new Map();
+  const aliases=new Map(mergeRows.map(x=>[x.source_key,x.target_key]));
+  const resolveKey=key=>{const seen=new Set();while(aliases.has(key)&&!seen.has(key)){seen.add(key);key=aliases.get(key)}return key};
+  const names=new Map([...employees,...imported,...functionaries].map(x=>[personKey(x.name),x.name]));
   for(const person of [...employees,...imported,...functionaries]){
-   const key=personKey(person.name)||person.id;
+   const originalKey=personKey(person.name)||person.id;
+   const key=resolveKey(originalKey);
    const existing=merged.get(key);
-   if(!existing){merged.set(key,{...person,positions:[person.position],objects:person.object?[person.object]:[],emails:emailList(person.email),sources:[person],employeeId:person.employeeId||null});continue}
+   if(!existing){merged.set(key,{...person,name:names.get(key)||person.name,mergeKey:key,positions:[person.position],objects:person.object?[person.object]:[],emails:emailList(person.email),sources:[person],employeeId:person.employeeId||null});continue}
    // Stejný člověk může být současně zaměstnancem SBD i kontaktem objektu.
    // Upřednostníme skutečně vyplněné kontaktní údaje z importu Domus.
    if(!existing.phone&&person.phone)existing.phone=person.phone;
@@ -80,7 +114,12 @@ export default function PhoneDirectory({supabase,staff=[] ,buildings=[],isAdmin=
   const q=search.toLocaleLowerCase("cs").trim();
   const digits=q.replace(/[^0-9]/g,"");
   return people.filter(p=>(contactFilter==="all"||(contactFilter==="employees"?p.sources.some(s=>s.id.startsWith("staff-")||s.id.startsWith("import-")):p.sources.some(s=>s.id.startsWith("contact-"))))&&(isAdmin&&showHidden||!hiddenKeys.includes(personKey(p.name)))&&(!q||[p.name,p.phone,p.email].some(v=>v.toLocaleLowerCase("cs").includes(q))||(digits.length>=3&&p.phone.replace(/[^0-9]/g,"").includes(digits)))).sort((a,b)=>a.name.localeCompare(b.name,"cs"));
- },[staff,staffContacts,contacts,buildingById,search,contactFilter,hiddenKeys,isAdmin,showHidden]);
+ },[staff,staffContacts,contacts,buildingById,search,contactFilter,hiddenKeys,isAdmin,showHidden,mergeRows]);
+ const mergeCandidates=useMemo(()=>{
+  const all=[...staff.map(s=>clean(s.display_name||s.full_name||s.email)),...staffContacts.map(s=>clean(s.full_name)),...contacts.map(c=>clean(c.full_name))];
+  const unique=new Map();for(const name of all){const key=personKey(name);if(key&&!unique.has(key))unique.set(key,{name})}
+  return [...unique.values()].sort((a,b)=>a.name.localeCompare(b.name,"cs"));
+ },[staff,staffContacts,contacts]);
  function startEdit(person){
   const source=person.sources.find(x=>x.id.startsWith("import-"))||person.sources.find(x=>x.id.startsWith("contact-"))||person.sources[0];
   const kind=source.id.startsWith("import-")?"staff":source.id.startsWith("contact-")?"committee":"account";
@@ -168,10 +207,11 @@ export default function PhoneDirectory({supabase,staff=[] ,buildings=[],isAdmin=
   <div className="foxa-phonebook-body">
    {isAdmin&&<div className="foxa-phonebook-import"><label className="secondarybutton filebutton">Importovat zaměstnance SBD (.xls, .xlsx)<input type="file" accept=".xls,.xlsx" onChange={readImport}/></label>{importRows&&<div className="importpanel"><p>Připraveno {importRows.length} kontaktů. Existující jména se aktualizují, nové kontakty se přidají.</p><button type="button" className="primary" disabled={importBusy} onClick={saveImport}>{importBusy?"Importuji…":"Potvrdit import"}</button><button type="button" className="secondarybutton" onClick={()=>setImportRows(null)}>Zrušit</button></div>}</div>}
    <div className="foxa-phonebook-filter" role="group" aria-label="Filtrovat telefonní seznam">{[["all","Všechny kontakty"],["employees","Zaměstnanci SBD"],["committees","Výbory objektů"]].map(([value,label])=><button key={value} type="button" aria-pressed={contactFilter===value} className={contactFilter===value?"active":""} onClick={()=>setContactFilter(value)}>{label}</button>)}</div>
+   {isAdmin&&mergeTarget&&<div className="foxa-phonebook-merge"><strong>Sloučit kontakt: {mergeTarget.name}</strong><p>Vyber další kontakt, který se má připojit k vybranému kontaktu. Původní databázové záznamy zůstanou zachované.</p><select aria-label="Kontakt ke sloučení" value={mergeSource} onChange={e=>setMergeSource(e.target.value)}><option value="">Vyber kontakt…</option>{mergeCandidates.filter(p=>personKey(p.name)!==personKey(mergeTarget.name)).map(p=><option key={personKey(p.name)} value={personKey(p.name)}>{p.name}</option>)}</select><button type="button" disabled={!mergeSource||mergeBusy} onClick={saveMerge}>Potvrdit sloučení</button><button type="button" className="secondarybutton" onClick={()=>{setMergeTarget(null);setMergeSource("")}}>Zrušit</button></div>}
    <div className="foxa-phonebook-controls">{isAdmin&&<label className="foxa-phonebook-showhidden"><input type="checkbox" checked={showHidden} onChange={e=>setShowHidden(e.target.checked)}/> Zobrazit i skryté kontakty</label>}<input type="search" aria-label="Hledat kontakt" placeholder="Hledat podle jména, telefonního čísla nebo e-mailu…" value={search} onChange={e=>setSearch(e.target.value)}/></div>
    {presenceError&&<p className="foxa-presence-warning">{presenceError}</p>}
    {error&&<p role="alert" className="error">Kontakty se nepodařilo načíst: {error}</p>}
-   {loading?<p>Načítám kontakty…</p>:<div className="foxa-phonebook-list">{entries.length?entries.map(p=><article className="foxa-phonebook-person" key={p.id}><div><strong>{p.name}</strong>{p.employeeId&&<span className={"foxa-presence foxa-presence-"+(presence[p.employeeId]||"unknown")}>{presence[p.employeeId]==="vacation"?"Dovolená":presence[p.employeeId]==="present"?"Přítomen":presence[p.employeeId]==="absent"?"Nepřítomen":"Stav nezjištěn"}</span>}<small>{[p.position,p.object].filter(Boolean).join(" · ")}</small></div><div className="foxa-phonebook-links">{p.phone&&<a href={"tel:"+dial(p.phone)}>{p.phone}</a>}{emailList(p.email).map(address=><a key={address} href={"mailto:"+address}>{address}</a>)}{!p.phone&&!p.email&&<small>Kontaktní údaje nejsou vyplněny</small>}</div>{isAdmin&&<div className="foxa-phonebook-admin-actions"><button type="button" className="secondarybutton" onClick={()=>startEdit(p)}>Upravit kontakt</button><button type="button" className="secondarybutton" disabled={hiddenBusy===personKey(p.name)} onClick={()=>toggleHidden(p)}>{hiddenKeys.includes(personKey(p.name))?"Znovu zobrazit":"Skrýt ze seznamu"}</button></div>}{hiddenKeys.includes(personKey(p.name))&&<small>Skrytý kontakt</small>}</article>):<p>Žádné odpovídající kontakty.</p>}</div>}
+   {loading?<p>Načítám kontakty…</p>:<div className="foxa-phonebook-list">{entries.length?entries.map(p=><article className="foxa-phonebook-person" key={p.id}><div><strong>{p.name}</strong>{p.employeeId&&<span className={"foxa-presence foxa-presence-"+(presence[p.employeeId]||"unknown")}>{presence[p.employeeId]==="vacation"?"Dovolená":presence[p.employeeId]==="present"?"Přítomen":presence[p.employeeId]==="absent"?"Nepřítomen":"Stav nezjištěn"}</span>}<small>{[p.position,p.object].filter(Boolean).join(" · ")}</small></div><div className="foxa-phonebook-links">{p.phone&&<a href={"tel:"+dial(p.phone)}>{p.phone}</a>}{emailList(p.email).map(address=><a key={address} href={"mailto:"+address}>{address}</a>)}{!p.phone&&!p.email&&<small>Kontaktní údaje nejsou vyplněny</small>}</div>{isAdmin&&<div className="foxa-phonebook-admin-actions"><button type="button" className="secondarybutton" onClick={()=>startEdit(p)}>Upravit kontakt</button><button type="button" className="secondarybutton" onClick={()=>{setMergeTarget(p);setMergeSource("");setError("")}}>Sloučit</button>{mergeRows.some(x=>x.target_key===personKey(p.name))&&<button type="button" className="secondarybutton" disabled={mergeBusy} onClick={()=>undoMerge(p)}>Zrušit sloučení</button>}<button type="button" className="secondarybutton" disabled={hiddenBusy===personKey(p.name)} onClick={()=>toggleHidden(p)}>{hiddenKeys.includes(personKey(p.name))?"Znovu zobrazit":"Skrýt ze seznamu"}</button></div>}{hiddenKeys.includes(personKey(p.name))&&<small>Skrytý kontakt</small>}</article>):<p>Žádné odpovídající kontakty.</p>}</div>}
   </div>
   {isAdmin&&editing&&<div className="foxa-contact-edit-backdrop" role="presentation"><form className="foxa-contact-edit" onSubmit={saveEdit} role="dialog" aria-modal="true" aria-label="Upravit kontakt"><h3>Upravit kontakt</h3>{editing.kind==="account"&&<p>Kontakt je z uživatelského adresáře. Úpravy se uloží do telefonního seznamu bez změny uživatelského účtu.</p>}{editing.kind==="committee"&&<p>Upravuješ kontaktní záznam přiřazený k objektu.</p>}<label>Jméno a příjmení<input required value={editing.name} onChange={e=>setEditing(s=>({...s,name:e.target.value}))}/></label><label>Telefonní číslo<input type="tel" value={editing.phone} onChange={e=>setEditing(s=>({...s,phone:e.target.value}))}/></label><label>E-maily (odděl středníkem)<textarea rows={2} value={editing.email} onChange={e=>setEditing(s=>({...s,email:e.target.value}))}/></label><label>Funkce<input value={editing.position} onChange={e=>setEditing(s=>({...s,position:e.target.value}))}/></label>{editing.kind!=="committee"&&<label>Oddělení<input value={editing.department} onChange={e=>setEditing(s=>({...s,department:e.target.value}))}/></label>}{editError&&<p role="alert" className="error">{editError}</p>}<div className="foxa-contact-edit-actions"><button type="button" className="secondarybutton" disabled={editBusy} onClick={()=>setEditing(null)}>Zrušit</button><button type="submit" disabled={editBusy}>{editBusy?"Ukládám…":"Uložit kontakt"}</button></div></form></div>}
  </section>;
