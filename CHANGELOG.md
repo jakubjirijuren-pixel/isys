@@ -1,3 +1,14 @@
+## 2026-11-01 – Telefonní seznam, docházka a úvodní přehled
+
+- **Samostatný telefonní seznam:** Společné vyhledávání zaměstnanců SBD Praha 8 a kontaktů na výbory, kontrolní komise a domovní funkcionáře podle jména, telefonu nebo e-mailu. Filtr Všechny / Zaměstnanci SBD / Výbory objektů.
+- **Kontakty:** Automatické sjednocování duplicitních osob podle normalizovaného jména; zachování více e-mailových adres. Interní linky se nezobrazují.
+- **Docházka v adresáři:** U zaměstnanců propojených s účtem FOXA se zobrazují stavy Přítomen, Nepřítomen (červeně) a Dovolená. Stav se průběžně obnovuje; pokud jej nelze načíst, zobrazí se upozornění.
+- **Administrace telefonního seznamu:** Import zaměstnaneckých kontaktů z Excelu, ruční úpravy kontaktů, skrytí a obnovení kontaktu, ruční sloučení se zachováním zdrojových záznamů a možnost zrušení sloučení. Výběr kontaktu ke sloučení má vyhledávací pole.
+- **Docházka:** Oprava načítání administrátorské historie odstraněných záznamů pomocí chráněné databázové funkce a zobrazení chyb načítání.
+- **Evidence objektů:** Excelový export referentů vynechává objekty bez přiřazeného referenta; pro kontakt využívá také údaje importované z Domusu.
+- **Přehled:** Zmenšen uvítací banner „Vítej v FOXA“ v desktopovém i mobilním rozhraní.
+- **Wiki:** Doplněny návody k telefonnímu seznamu, stavu docházky, administraci kontaktů a exportu referentů.
+
 ## 2026-10-28 – Postupné doplňování kontaktů na výbory\n\n- V evidenci objektů probíhá **postupné doplňování kontaktů na členy výborů SVJ a bytových družstev**. Kontaktní údaje proto zatím nemusí být vyplněné u všech objektů.\n- U jednotlivých kontaktů se eviduje jméno, funkce, telefon a e-mail. Telefonní čísla a e-mailové adresy jsou v detailu objektu proklikávací.\n\n## 2026-10-26 – Centrální registr klíčů
 
 - Modul Evidence klíčů přejmenován v uživatelském rozhraní na **Centrální registr klíčů**.
