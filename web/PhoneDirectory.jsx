@@ -161,7 +161,7 @@ export default function PhoneDirectory({supabase,staff=[] ,buildings=[],isAdmin=
   try{
    const wb=XLSX.read(await file.arrayBuffer(),{type:"array"});
    const sheet=wb.Sheets[wb.SheetNames[0]];
-   const grid=XLSX.utils.sheet_to_json(sheet,{header:1,defval:"",raw:false});
+   const grid=XLSX.utils.sheet_to_json(sheet,{header:1,defval:"",raw:true});
    const normalize=s=>clean(s).normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase();
    // Starší telefonní seznamy SBD mohou mít několik řádků hlavičky a samostatný
    // sloupec s krátkými interními linkami bez výslovného označení.
@@ -175,7 +175,7 @@ export default function PhoneDirectory({supabase,staff=[] ,buildings=[],isAdmin=
    const first=col("jmeno"),last=col("prijmeni");
    const phone=col("mobil","telefon","tel."),extension=col("linka","klapka","pobocka","interni"),email=col("e-mail","email"),position=col("funkce","pozice","pracovni zarazeni","pracovni cinnost"),department=col("oddeleni","utvar","usek");
    const isName=s=>/^[\p{L}][\p{L} .'-]{3,}$/u.test(clean(s))&&!/telefon|email|e-mail|mobil|ustredna|seznam|zamestnanc|oddeleni|referat/i.test(clean(s));
-   const phoneNumbers=v=>[...new Set(clean(v).split(/[;,\n/]+/).map(s=>s.trim()).filter(s=>{const d=s.replace(/\D/g,"");return d.length===9||d.length===12&&d.startsWith("420")}))];
+   const phoneNumbers=v=>[...new Set(clean(v).split(/[;\n/]+/).map(s=>s.trim()).filter(s=>{const d=s.replace(/\D/g,"");return d.length===9||d.length===12&&d.startsWith("420")}))];
    const internalNumbers=v=>[...new Set(clean(v).split(/[;,\n/]+/).flatMap(s=>{
     const match=s.match(/(?:linka|klapka|intern[ií]|ext\.?)\s*[:#.-]?\s*(\d{2,6})/i);
     if(match)return [match[1]];
