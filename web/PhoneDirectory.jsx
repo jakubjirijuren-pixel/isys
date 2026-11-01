@@ -16,6 +16,9 @@ export default function PhoneDirectory({supabase,staff=[] ,buildings=[],isAdmin=
  const [importBusy,setImportBusy]=useState(false);
  const [staffContacts,setStaffContacts]=useState([]);
  const [reload,setReload]=useState(0);
+ const [hiddenKeys,setHiddenKeys]=useState([]);
+ const [hiddenBusy,setHiddenBusy]=useState("");
+ const [showHidden,setShowHidden]=useState(false);
  const [editing,setEditing]=useState(null);
  const [editBusy,setEditBusy]=useState(false);
  const [editError,setEditError]=useState("");
@@ -36,6 +39,17 @@ export default function PhoneDirectory({supabase,staff=[] ,buildings=[],isAdmin=
   return()=>{alive=false};
  },[supabase]);
  useEffect(()=>{let active=true;supabase.from("foxa_staff_directory_contacts").select("id,full_name,phone,email,position,department").then(({data,error})=>{if(active){if(error)setError(error.message);else setStaffContacts(data||[])}});return()=>{active=false}},[supabase,reload]);
+ useEffect(()=>{let active=true;supabase.from("foxa_phone_directory_hidden").select("person_key").then(({data,error})=>{if(active){if(error)setError("Skryté kontakty nelze načíst: "+error.message);else setHiddenKeys((data||[]).map(x=>x.person_key))}});return()=>{active=false}},[supabase]);
+ async function toggleHidden(person){
+  if(!isAdmin)return;
+  const key=personKey(person.name);if(!key)return;
+  setHiddenBusy(key);setError("");
+  const currentlyHidden=hiddenKeys.includes(key);
+  const {error:err}=currentlyHidden?await supabase.from("foxa_phone_directory_hidden").delete().eq("person_key",key):await supabase.from("foxa_phone_directory_hidden").insert({person_key:key});
+  if(err)setError("Viditelnost kontaktu se nepodařilo změnit: "+err.message);
+  else setHiddenKeys(keys=>currentlyHidden?keys.filter(x=>x!==key):[...keys,key]);
+  setHiddenBusy("");
+ }
  const buildingById=useMemo(()=>new Map(buildings.map(b=>[String(b.id),b])),[buildings]);
  const entries=useMemo(()=>{
   const employees=staff.map(s=>({id:"staff-"+s.id,name:clean(s.display_name||s.full_name||s.email),position:"SBD Praha 8",phone:mobileOnly(s.mobile||s.phone||s.phone_number),email:clean(s.email),object:""})).filter(s=>s.name);
@@ -60,8 +74,8 @@ export default function PhoneDirectory({supabase,staff=[] ,buildings=[],isAdmin=
   const people=[...merged.values()].map(p=>({...p,position:p.positions.join(" · "),object:p.objects.join("; "),email:p.emails.join("; ")}));
   const q=search.toLocaleLowerCase("cs").trim();
   const digits=q.replace(/[^0-9]/g,"");
-  return people.filter(p=>!q||[p.name,p.phone,p.email].some(v=>v.toLocaleLowerCase("cs").includes(q))||(digits.length>=3&&p.phone.replace(/[^0-9]/g,"").includes(digits))).sort((a,b)=>a.name.localeCompare(b.name,"cs"));
- },[staff,staffContacts,contacts,buildingById,search]);
+  return people.filter(p=>(isAdmin&&showHidden||!hiddenKeys.includes(personKey(p.name)))&&(!q||[p.name,p.phone,p.email].some(v=>v.toLocaleLowerCase("cs").includes(q))||(digits.length>=3&&p.phone.replace(/[^0-9]/g,"").includes(digits)))).sort((a,b)=>a.name.localeCompare(b.name,"cs"));
+ },[staff,staffContacts,contacts,buildingById,search,hiddenKeys,isAdmin,showHidden]);
  function startEdit(person){
   const source=person.sources.find(x=>x.id.startsWith("import-"))||person.sources.find(x=>x.id.startsWith("contact-"))||person.sources[0];
   const kind=source.id.startsWith("import-")?"staff":source.id.startsWith("contact-")?"committee":"account";
@@ -148,9 +162,9 @@ export default function PhoneDirectory({supabase,staff=[] ,buildings=[],isAdmin=
   <div className="foxa-phonebook-head"><div><h2>Telefonní seznam</h2><p>Zaměstnanci SBD Praha 8 a kontakty spravovaných objektů.</p></div></div>
   <div className="foxa-phonebook-body">
    {isAdmin&&<div className="foxa-phonebook-import"><label className="secondarybutton filebutton">Importovat zaměstnance SBD (.xls, .xlsx)<input type="file" accept=".xls,.xlsx" onChange={readImport}/></label>{importRows&&<div className="importpanel"><p>Připraveno {importRows.length} kontaktů. Existující jména se aktualizují, nové kontakty se přidají.</p><button type="button" className="primary" disabled={importBusy} onClick={saveImport}>{importBusy?"Importuji…":"Potvrdit import"}</button><button type="button" className="secondarybutton" onClick={()=>setImportRows(null)}>Zrušit</button></div>}</div>}
-   <div className="foxa-phonebook-controls"><input type="search" aria-label="Hledat kontakt" placeholder="Hledat podle jména, telefonního čísla nebo e-mailu…" value={search} onChange={e=>setSearch(e.target.value)}/></div>
+   <div className="foxa-phonebook-controls">{isAdmin&&<label className="foxa-phonebook-showhidden"><input type="checkbox" checked={showHidden} onChange={e=>setShowHidden(e.target.checked)}/> Zobrazit i skryté kontakty</label>}<input type="search" aria-label="Hledat kontakt" placeholder="Hledat podle jména, telefonního čísla nebo e-mailu…" value={search} onChange={e=>setSearch(e.target.value)}/></div>
    {error&&<p role="alert" className="error">Kontakty se nepodařilo načíst: {error}</p>}
-   {loading?<p>Načítám kontakty…</p>:<div className="foxa-phonebook-list">{entries.length?entries.map(p=><article className="foxa-phonebook-person" key={p.id}><div><strong>{p.name}</strong><small>{[p.position,p.object].filter(Boolean).join(" · ")}</small></div><div className="foxa-phonebook-links">{p.phone&&<a href={"tel:"+dial(p.phone)}>{p.phone}</a>}{emailList(p.email).map(address=><a key={address} href={"mailto:"+address}>{address}</a>)}{!p.phone&&!p.email&&<small>Kontaktní údaje nejsou vyplněny</small>}</div>{isAdmin&&<button type="button" className="secondarybutton" onClick={()=>startEdit(p)}>Upravit kontakt</button>}</article>):<p>Žádné odpovídající kontakty.</p>}</div>}
+   {loading?<p>Načítám kontakty…</p>:<div className="foxa-phonebook-list">{entries.length?entries.map(p=><article className="foxa-phonebook-person" key={p.id}><div><strong>{p.name}</strong><small>{[p.position,p.object].filter(Boolean).join(" · ")}</small></div><div className="foxa-phonebook-links">{p.phone&&<a href={"tel:"+dial(p.phone)}>{p.phone}</a>}{emailList(p.email).map(address=><a key={address} href={"mailto:"+address}>{address}</a>)}{!p.phone&&!p.email&&<small>Kontaktní údaje nejsou vyplněny</small>}</div>{isAdmin&&<div className="foxa-phonebook-admin-actions"><button type="button" className="secondarybutton" onClick={()=>startEdit(p)}>Upravit kontakt</button><button type="button" className="secondarybutton" disabled={hiddenBusy===personKey(p.name)} onClick={()=>toggleHidden(p)}>{hiddenKeys.includes(personKey(p.name))?"Znovu zobrazit":"Skrýt ze seznamu"}</button></div>}{hiddenKeys.includes(personKey(p.name))&&<small>Skrytý kontakt</small>}</article>):<p>Žádné odpovídající kontakty.</p>}</div>}
   </div>
   {isAdmin&&editing&&<div className="foxa-contact-edit-backdrop" role="presentation"><form className="foxa-contact-edit" onSubmit={saveEdit} role="dialog" aria-modal="true" aria-label="Upravit kontakt"><h3>Upravit kontakt</h3>{editing.kind==="account"&&<p>Kontakt je z uživatelského adresáře. Úpravy se uloží do telefonního seznamu bez změny uživatelského účtu.</p>}{editing.kind==="committee"&&<p>Upravuješ kontaktní záznam přiřazený k objektu.</p>}<label>Jméno a příjmení<input required value={editing.name} onChange={e=>setEditing(s=>({...s,name:e.target.value}))}/></label><label>Telefonní číslo<input type="tel" value={editing.phone} onChange={e=>setEditing(s=>({...s,phone:e.target.value}))}/></label><label>E-maily (odděl středníkem)<textarea rows={2} value={editing.email} onChange={e=>setEditing(s=>({...s,email:e.target.value}))}/></label><label>Funkce<input value={editing.position} onChange={e=>setEditing(s=>({...s,position:e.target.value}))}/></label>{editing.kind!=="committee"&&<label>Oddělení<input value={editing.department} onChange={e=>setEditing(s=>({...s,department:e.target.value}))}/></label>}{editError&&<p role="alert" className="error">{editError}</p>}<div className="foxa-contact-edit-actions"><button type="button" className="secondarybutton" disabled={editBusy} onClick={()=>setEditing(null)}>Zrušit</button><button type="submit" disabled={editBusy}>{editBusy?"Ukládám…":"Uložit kontakt"}</button></div></form></div>}
  </section>;
