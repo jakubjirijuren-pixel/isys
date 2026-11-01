@@ -98,7 +98,7 @@ export default function PhoneDirectory({supabase,staff=[] ,buildings=[],isAdmin=
  const entries=useMemo(()=>{
   const employees=staff.map(s=>({id:"staff-"+s.id,name:clean(s.display_name||s.full_name||s.email),position:"SBD Praha 8",phone:mobileOnly(s.mobile||s.phone||s.phone_number),email:clean(s.email),extension:extensionOnly([s.extension,s.internal_extension,s.phone_extension,s.linka,s.phone,s.phone_number].filter(Boolean).join("; ")),object:"",employeeId:String(s.id)})).filter(s=>s.name);
   const imported=staffContacts.map(s=>({id:"import-"+s.id,name:clean(s.full_name),position:[s.position,s.department].filter(Boolean).join(" · ")||"SBD Praha 8",phone:mobileOnly(s.phone),extension:extensionOnly(s.phone),email:clean(s.email),object:""}));
-  const functionaries=contacts.map(c=>{const b=buildingById.get(String(c.building_id));return {id:"contact-"+c.id,name:clean(c.full_name),position:clean(c.position)||"Člen výboru",phone:mobileOnly(c.phone),extension:extensionOnly(c.phone),email:clean(c.email),object:b?[(b.object_number||""),(b.street||b.address||b.name||"")].filter(Boolean).join(" – "):"Objekt nenalezen"}});
+  const functionaries=contacts.map(c=>{const b=buildingById.get(String(c.building_id));return {id:"contact-"+c.id,name:clean(c.full_name),position:clean(c.position)||"Člen výboru",phone:mobileOnly(c.phone),extension:extensionOnly(c.phone),email:clean(c.email),object:b?[(b.object_number||""),(b.street||b.address||b.name||"")].filter(Boolean).join(" – "):"Objekt nenalezen",searchLocation:b?[b.object_number,b.center_number,b.cost_center,b.stredisko,b.street,b.address,b.name,b.city].filter(Boolean).join(" "):""}});
   const merged=new Map();
   const aliases=new Map(mergeRows.map(x=>[x.source_key,x.target_key]));
   const resolveKey=key=>{const seen=new Set();while(aliases.has(key)&&!seen.has(key)){seen.add(key);key=aliases.get(key)}return key};
@@ -107,7 +107,7 @@ export default function PhoneDirectory({supabase,staff=[] ,buildings=[],isAdmin=
    const originalKey=personKey(person.name)||person.id;
    const key=resolveKey(originalKey);
    const existing=merged.get(key);
-   if(!existing){merged.set(key,{...person,name:names.get(key)||person.name,mergeKey:key,positions:[person.position],objects:person.object?[person.object]:[],emails:emailList(person.email),extensions:extensionList(person.extension),sources:[person],employeeId:person.employeeId||null});continue}
+   if(!existing){merged.set(key,{...person,name:names.get(key)||person.name,mergeKey:key,positions:[person.position],objects:person.object?[person.object]:[],searchLocations:person.searchLocation?[person.searchLocation]:[],emails:emailList(person.email),extensions:extensionList(person.extension),sources:[person],employeeId:person.employeeId||null});continue}
    // Stejný člověk může být současně zaměstnancem SBD i kontaktem objektu.
    // Upřednostníme skutečně vyplněné kontaktní údaje z importu Domus.
    if(!existing.phone&&!existing.sources.some(s=>s.id.startsWith("import-"))&&person.phone)existing.phone=person.phone;
@@ -120,12 +120,13 @@ export default function PhoneDirectory({supabase,staff=[] ,buildings=[],isAdmin=
    if(!existing.phone&&!existing.sources.some(s=>s.id.startsWith("import-"))&&person.phone)existing.phone=person.phone;
    if(!existing.positions.includes(person.position))existing.positions.push(person.position);
    if(person.object&&!existing.objects.includes(person.object))existing.objects.push(person.object);
+   if(person.searchLocation&&!existing.searchLocations.includes(person.searchLocation))existing.searchLocations.push(person.searchLocation);
    if(person.position!=="SBD Praha 8"&&person.phone&&person.email)existing.name=person.name;
   }
-  const people=[...merged.values()].map(p=>({...p,position:p.positions.join(" · "),object:p.objects.join("; "),email:p.emails.join("; "),extension:p.extensions.join(", ")}));
+  const people=[...merged.values()].map(p=>({...p,position:p.positions.join(" · "),object:p.objects.join("; "),email:p.emails.join("; "),extension:p.extensions.join(", "),searchLocation:p.searchLocations.join(" ")}));
   const q=search.toLocaleLowerCase("cs").trim();
   const digits=q.replace(/[^0-9]/g,"");
-  return people.filter(p=>(contactFilter==="all"||(contactFilter==="employees"?p.sources.some(s=>s.id.startsWith("staff-")||s.id.startsWith("import-")):p.sources.some(s=>s.id.startsWith("contact-"))))&&(isAdmin&&showHidden||!hiddenKeys.includes(personKey(p.name)))&&(!q||[p.name,p.phone,p.extension,p.email].some(v=>v.toLocaleLowerCase("cs").includes(q))||(digits.length>=3&&[p.phone,p.extension].some(v=>v.replace(/[^0-9]/g,"").includes(digits))))).sort((a,b)=>a.name.localeCompare(b.name,"cs"));
+  return people.filter(p=>(contactFilter==="all"||(contactFilter==="employees"?p.sources.some(s=>s.id.startsWith("staff-")||s.id.startsWith("import-")):p.sources.some(s=>s.id.startsWith("contact-"))))&&(isAdmin&&showHidden||!hiddenKeys.includes(personKey(p.name)))&&(!q||[p.name,p.phone,p.extension,p.email,p.object,p.searchLocation].some(v=>clean(v).normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLocaleLowerCase("cs").includes(q.normalize("NFD").replace(/[\u0300-\u036f]/g,"")))||(digits.length>=3&&[p.phone,p.extension,p.searchLocation].some(v=>clean(v).replace(/[^0-9]/g,"").includes(digits))))).sort((a,b)=>a.name.localeCompare(b.name,"cs"));
  },[staff,staffContacts,contacts,buildingById,search,contactFilter,hiddenKeys,isAdmin,showHidden,mergeRows]);
  const mergeCandidates=useMemo(()=>{
   const all=[...staff.map(s=>clean(s.display_name||s.full_name||s.email)),...staffContacts.map(s=>clean(s.full_name)),...contacts.map(c=>clean(c.full_name))];
