@@ -9,6 +9,7 @@ const mobileOnly=v=>{const parts=clean(v).split(/[;,\n]+/).map(x=>x.trim());retu
 const personKey=v=>clean(v).normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLocaleLowerCase("cs").replace(/\b(ing|mgr|bc|mudr|judr|rndr|phdr|phd|dis)\b\.?/g," ").replace(/[^a-z\s]/g," ").split(/\s+/).filter(Boolean).sort().join(" ");
 export default function PhoneDirectory({supabase,staff=[] ,buildings=[],isAdmin=false}){
  const [search,setSearch]=useState("");
+ const [contactFilter,setContactFilter]=useState("all");
  const [presence,setPresence]=useState({});
  const [presenceError,setPresenceError]=useState("");
  const [contacts,setContacts]=useState([]);
@@ -78,8 +79,8 @@ export default function PhoneDirectory({supabase,staff=[] ,buildings=[],isAdmin=
   const people=[...merged.values()].map(p=>({...p,position:p.positions.join(" · "),object:p.objects.join("; "),email:p.emails.join("; ")}));
   const q=search.toLocaleLowerCase("cs").trim();
   const digits=q.replace(/[^0-9]/g,"");
-  return people.filter(p=>(isAdmin&&showHidden||!hiddenKeys.includes(personKey(p.name)))&&(!q||[p.name,p.phone,p.email].some(v=>v.toLocaleLowerCase("cs").includes(q))||(digits.length>=3&&p.phone.replace(/[^0-9]/g,"").includes(digits)))).sort((a,b)=>a.name.localeCompare(b.name,"cs"));
- },[staff,staffContacts,contacts,buildingById,search,hiddenKeys,isAdmin,showHidden]);
+  return people.filter(p=>(contactFilter==="all"||(contactFilter==="employees"?p.sources.some(s=>s.id.startsWith("staff-")||s.id.startsWith("import-")):p.sources.some(s=>s.id.startsWith("contact-"))))&&(isAdmin&&showHidden||!hiddenKeys.includes(personKey(p.name)))&&(!q||[p.name,p.phone,p.email].some(v=>v.toLocaleLowerCase("cs").includes(q))||(digits.length>=3&&p.phone.replace(/[^0-9]/g,"").includes(digits)))).sort((a,b)=>a.name.localeCompare(b.name,"cs"));
+ },[staff,staffContacts,contacts,buildingById,search,contactFilter,hiddenKeys,isAdmin,showHidden]);
  function startEdit(person){
   const source=person.sources.find(x=>x.id.startsWith("import-"))||person.sources.find(x=>x.id.startsWith("contact-"))||person.sources[0];
   const kind=source.id.startsWith("import-")?"staff":source.id.startsWith("contact-")?"committee":"account";
@@ -166,6 +167,7 @@ export default function PhoneDirectory({supabase,staff=[] ,buildings=[],isAdmin=
   <div className="foxa-phonebook-head"><div><h2>Telefonní seznam</h2><p>Zaměstnanci SBD Praha 8 a kontakty spravovaných objektů.</p></div></div>
   <div className="foxa-phonebook-body">
    {isAdmin&&<div className="foxa-phonebook-import"><label className="secondarybutton filebutton">Importovat zaměstnance SBD (.xls, .xlsx)<input type="file" accept=".xls,.xlsx" onChange={readImport}/></label>{importRows&&<div className="importpanel"><p>Připraveno {importRows.length} kontaktů. Existující jména se aktualizují, nové kontakty se přidají.</p><button type="button" className="primary" disabled={importBusy} onClick={saveImport}>{importBusy?"Importuji…":"Potvrdit import"}</button><button type="button" className="secondarybutton" onClick={()=>setImportRows(null)}>Zrušit</button></div>}</div>}
+   <div className="foxa-phonebook-filter" role="group" aria-label="Filtrovat telefonní seznam">{[["all","Všechny kontakty"],["employees","Zaměstnanci SBD"],["committees","Výbory objektů"]].map(([value,label])=><button key={value} type="button" aria-pressed={contactFilter===value} className={contactFilter===value?"active":""} onClick={()=>setContactFilter(value)}>{label}</button>)}</div>
    <div className="foxa-phonebook-controls">{isAdmin&&<label className="foxa-phonebook-showhidden"><input type="checkbox" checked={showHidden} onChange={e=>setShowHidden(e.target.checked)}/> Zobrazit i skryté kontakty</label>}<input type="search" aria-label="Hledat kontakt" placeholder="Hledat podle jména, telefonního čísla nebo e-mailu…" value={search} onChange={e=>setSearch(e.target.value)}/></div>
    {presenceError&&<p className="foxa-presence-warning">{presenceError}</p>}
    {error&&<p role="alert" className="error">Kontakty se nepodařilo načíst: {error}</p>}
