@@ -1,16 +1,54 @@
-const CACHE="isys-shell-v4";
-const SHELL=["/isys/icon.svg","/isys/icon-maskable.svg"];
-self.addEventListener("install",event=>{event.waitUntil(caches.open(CACHE).then(cache=>cache.addAll(SHELL)).then(()=>self.skipWaiting()))});
-self.addEventListener("activate",event=>{event.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(key=>key.startsWith("isys-shell-")&&key!==CACHE).map(key=>caches.delete(key)))).then(()=>self.clients.claim()))});
+/* FOXA offline app shell. The build replaces __FOXA_PRECACHE__ with the exact hashed assets. */
+const VERSION="__FOXA_VERSION__";
+const CACHE="foxa-offline-"+VERSION;
+const PREFIX="/isys/";
+const PRECACHE=__FOXA_PRECACHE__;
+const SHELL=PREFIX;
+self.addEventListener("install",event=>{
+ event.waitUntil((async()=>{
+  const cache=await caches.open(CACHE);
+  await cache.addAll(PRECACHE.map(path=>new Request(path,{cache:"reload"})));
+  await self.skipWaiting();
+ })());
+});
+self.addEventListener("activate",event=>{
+ event.waitUntil((async()=>{
+  const keys=await caches.keys();
+  await Promise.all(keys.filter(key=>(key.startsWith("foxa-offline-")||key.startsWith("isys-shell-"))&&key!==CACHE).map(key=>caches.delete(key)));
+  await self.clients.claim();
+ })());
+});
 self.addEventListener("fetch",event=>{
- const req=event.request;if(req.method!=="GET"||new URL(req.url).origin!==self.location.origin)return;
- const url=new URL(req.url);if(!url.pathname.startsWith("/isys/"))return;
- // Never cache the HTML entry point or versioned JS/CSS chunks: stale HTML
- // can reference hashed assets that no longer exist after a GitHub Pages deploy.
- if(req.mode==="navigate"||url.pathname.endsWith(".html")||url.pathname.endsWith(".js")||url.pathname.endsWith(".css")){
-  event.respondWith(fetch(req,{cache:"no-store"}));return;
+ const req=event.request;
+ if(req.method!=="GET"||new URL(req.url).origin!==self.location.origin)return;
+ const url=new URL(req.url);
+ if(!url.pathname.startsWith(PREFIX))return;
+ // Only cache the published app shell and static assets. Never store private API responses.
+ if(req.mode==="navigate"){
+  event.respondWith((async()=>{
+   try{
+    const response=await fetch(req);
+    if(response.ok){const cache=await caches.open(CACHE);await cache.put(SHELL,response.clone());}
+    return response;
+   }catch{
+    return (await caches.match(SHELL))||(await caches.match(PREFIX+"index.html"))||Response.error();
+   }
+  })());return;
  }
- event.respondWith(fetch(req).then(response=>{if(response.ok&&response.type==="basic"){const copy=response.clone();caches.open(CACHE).then(cache=>cache.put(req,copy))}return response}).catch(()=>caches.match(req)));
+ const isAsset=/\\.(?:js|css|svg|png|jpg|jpeg|webp|woff2?|ico|webmanifest)$/i.test(url.pathname);
+ if(!isAsset)return;
+ event.respondWith((async()=>{
+  const cached=await caches.match(req,{ignoreSearch:true});
+  if(cached)return cached;
+  try{
+   const response=await fetch(req);
+   if(response.ok&&response.type==="basic"){
+    const cache=await caches.open(CACHE);
+    await cache.put(req,response.clone());
+   }
+   return response;
+  }catch{return Response.error();}
+ })());
 });
 self.addEventListener("push",event=>{
  let data={};try{data=event.data?.json()||{}}catch{data={title:"FOXA",body:event.data?.text()||"Nové oznámení"}}
