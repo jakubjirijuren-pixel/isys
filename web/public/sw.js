@@ -4,40 +4,49 @@ const CACHE="foxa-offline-"+VERSION;
 const PREFIX="/isys/";
 const PRECACHE=__FOXA_PRECACHE__;
 const SHELL=PREFIX;
+const SHELL_HTML=PREFIX+"index.html";
 self.addEventListener("install",event=>{
  event.waitUntil((async()=>{
   const cache=await caches.open(CACHE);
-  const results=await Promise.allSettled(PRECACHE.map(async path=>{const response=await fetch(path,{cache:"reload"});if(!response.ok||response.type==="opaque")throw new Error("Offline resource unavailable: "+path+" ("+response.status+")");await cache.put(path,response)}));
-  // A missing noncritical image must never block installing the offline shell.
-  const essential=PRECACHE.filter(path=>path==="/isys/"||path.endsWith(".html")||path.endsWith(".js")||path.endsWith(".css"));
-  const missing=essential.filter(path=>!results.some((result,index)=>result.status==="fulfilled"&&PRECACHE[index]===path));
-  if(missing.length)throw new Error("Essential offline assets missing: "+missing.join(", "));
+  // Install the navigation shell first; optional images must not prevent activation.
+  const shell=await fetch(SHELL,{cache:"reload",redirect:"follow"});
+  if(!shell.ok)throw new Error("FOXA offline shell HTTP "+shell.status);
+  await cache.put(SHELL,shell.clone());
+  await cache.put(SHELL_HTML,shell.clone());
+  await Promise.allSettled(PRECACHE.filter(path=>path!==SHELL&&path!==SHELL_HTML).map(async path=>{
+   const response=await fetch(path,{cache:"reload"});
+   if(response.ok&&response.type!=="opaque")await cache.put(path,response);
+  }));
   await self.skipWaiting();
  })());
 });
 self.addEventListener("activate",event=>{
  event.waitUntil((async()=>{
-  const keys=await caches.keys();
-  // Keep the preceding complete shell as a fallback if a new release has a missing asset.
-  const old=keys.filter(key=>key.startsWith("foxa-offline-")&&key!==CACHE).sort();
-  await Promise.all([...old.slice(0,-1),...keys.filter(key=>key.startsWith("isys-shell-"))].map(key=>caches.delete(key)));
+  // Preserve older caches: Android may still have an earlier app shell open.
   await self.clients.claim();
  })());
 });
 self.addEventListener("fetch",event=>{
  const req=event.request;
- if(req.method!=="GET"||new URL(req.url).origin!==self.location.origin)return;
+ if(req.method!=="GET")return;
  const url=new URL(req.url);
- if(!url.pathname.startsWith(PREFIX))return;
- // Only cache the published app shell and static assets. Never store private API responses.
+ if(url.origin!==self.location.origin||!url.pathname.startsWith(PREFIX))return;
  if(req.mode==="navigate"){
   event.respondWith((async()=>{
+   const cached=(await caches.match(SHELL))||(await caches.match(SHELL_HTML));
+   if(cached){
+    // Navigation must be immediate offline; refresh in background when available.
+    if(self.navigator.onLine!==false)event.waitUntil(fetch(req).then(async response=>{
+     if(response.ok){const cache=await caches.open(CACHE);await cache.put(SHELL,response.clone());}
+    }).catch(()=>{}));
+    return cached;
+   }
    try{
-    const response=await Promise.race([fetch(req),new Promise((_,reject)=>setTimeout(()=>reject(new Error("Offline navigation timeout")),3500))]);
+    const response=await fetch(req);
     if(response.ok){const cache=await caches.open(CACHE);await cache.put(SHELL,response.clone());}
     return response;
    }catch{
-    return (await caches.match(SHELL))||(await caches.match(PREFIX+"index.html"))||Response.error();
+    return new Response("<!doctype html><html lang='cs'><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'><title>FOXA offline</title><body style='font:16px sans-serif;background:#0c2032;color:white;padding:25px'><h1>FOXA</h1><p>Offline verze zatím není připravena. Připojte se jednou k internetu a otevřete aplikaci.</p></body></html>",{headers:{"Content-Type":"text/html; charset=utf-8"}});
    }
   })());return;
  }
@@ -48,10 +57,7 @@ self.addEventListener("fetch",event=>{
   if(cached)return cached;
   try{
    const response=await fetch(req);
-   if(response.ok&&response.type==="basic"){
-    const cache=await caches.open(CACHE);
-    await cache.put(req,response.clone());
-   }
+   if(response.ok){const cache=await caches.open(CACHE);await cache.put(req,response.clone());}
    return response;
   }catch{return Response.error();}
  })());
