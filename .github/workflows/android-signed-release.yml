@@ -62,6 +62,15 @@ jobs:
           printf '%s' "$ANDROID_KEYSTORE_BASE64" | base64 --decode > "$RUNNER_TEMP/foxa-upload.jks"
           echo "FOXA_KEYSTORE_PATH=$RUNNER_TEMP/foxa-upload.jks" >> "$GITHUB_ENV"
           node scripts/configure-android-release.mjs
+      - name: Validate keystore alias
+        env:
+          ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          ANDROID_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+        run: |
+          if ! keytool -list -keystore "$FOXA_KEYSTORE_PATH" -storepass "$ANDROID_KEYSTORE_PASSWORD" -alias "$ANDROID_KEY_ALIAS" >/dev/null 2>&1; then
+            echo "::error::ANDROID_KEY_ALIAS does not match an alias in the uploaded keystore. Run locally: keytool -list -keystore foxa-upload.jks"
+            exit 1
+          fi
       - name: Build signed APK and AAB
         working-directory: web/android
         env:
