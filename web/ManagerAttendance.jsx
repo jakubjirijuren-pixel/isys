@@ -1,3 +1,4 @@
+import AttendanceEditHistory from "./AttendanceEditHistory.jsx";
 import React,{useEffect,useState} from "react";
 const nowLocal=()=>{const d=new Date();return new Date(d.getTime()-d.getTimezoneOffset()*60000).toISOString().slice(0,16)};
 export default function ManagerAttendance({supabase}){
