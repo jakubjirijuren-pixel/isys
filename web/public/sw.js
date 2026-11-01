@@ -8,7 +8,8 @@ self.addEventListener("install",event=>{
  event.waitUntil((async()=>{
   const cache=await caches.open(CACHE);
   const results=await Promise.allSettled(PRECACHE.map(async path=>{const response=await fetch(path,{cache:"reload"});if(!response.ok||response.type==="opaque")throw new Error("Offline resource unavailable: "+path+" ("+response.status+")");await cache.put(path,response)}));
-  const essential=[SHELL,...PRECACHE.filter(path=>/\\.(?:js|css)$/.test(path))];
+  // A missing noncritical image must never block installing the offline shell.
+  const essential=PRECACHE.filter(path=>path==="/isys/"||path.endsWith(".html")||path.endsWith(".js")||path.endsWith(".css"));
   const missing=essential.filter(path=>!results.some((result,index)=>result.status==="fulfilled"&&PRECACHE[index]===path));
   if(missing.length)throw new Error("Essential offline assets missing: "+missing.join(", "));
   await self.skipWaiting();
@@ -18,7 +19,7 @@ self.addEventListener("activate",event=>{
  event.waitUntil((async()=>{
   const keys=await caches.keys();
   // Keep the preceding complete shell as a fallback if a new release has a missing asset.
-  const old=keys.filter(key=>key.startsWith("foxa-offline-")&&key!==CACHE);
+  const old=keys.filter(key=>key.startsWith("foxa-offline-")&&key!==CACHE).sort();
   await Promise.all([...old.slice(0,-1),...keys.filter(key=>key.startsWith("isys-shell-"))].map(key=>caches.delete(key)));
   await self.clients.claim();
  })());
@@ -40,7 +41,7 @@ self.addEventListener("fetch",event=>{
    }
   })());return;
  }
- const isAsset=/\\.(?:js|css|svg|png|jpg|jpeg|webp|woff2?|ico|webmanifest)$/i.test(url.pathname);
+ const isAsset=[".js",".css",".svg",".png",".jpg",".jpeg",".webp",".woff",".woff2",".ico",".webmanifest"].some(ext=>url.pathname.toLowerCase().endsWith(ext));
  if(!isAsset)return;
  event.respondWith((async()=>{
   const cached=await caches.match(req,{ignoreSearch:true});
