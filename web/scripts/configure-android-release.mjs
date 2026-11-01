@@ -21,6 +21,6 @@ const config=`android {
 `;
 s=s.replace("android {",config);
 if(!/buildTypes\s*\{/.test(s)||!/release\s*\{/.test(s))throw Error("Release build type not found");
-s=s.replace(/(release\s*\{)/,'$1\n            signingConfig signingConfigs.release');
+s=s.replace(/(buildTypes\s*\{[\s\S]*?release\s*\{)/,'$1\n            signingConfig signingConfigs.release');
 writeFileSync(file,s);
 console.log("Configured release signing and version "+versionName+" ("+versionCode+")");
