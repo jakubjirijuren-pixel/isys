@@ -110,7 +110,8 @@ export default function PhoneDirectory({supabase,staff=[] ,buildings=[],isAdmin=
    // Upřednostníme skutečně vyplněné kontaktní údaje z importu Domus.
    if(!existing.phone&&!existing.sources.some(s=>s.id.startsWith("import-"))&&person.phone)existing.phone=person.phone;
    existing.sources.push(person);
-   if(person.id.startsWith("import-"))existing.extensions=extensionList(person.extension);\n   else if(!existing.sources.some(s=>s.id.startsWith("import-")))for(const extension of extensionList(person.extension))if(!existing.extensions.includes(extension))existing.extensions.push(extension);
+   if(person.id.startsWith("import-"))existing.extensions=extensionList(person.extension);
+   else if(!existing.sources.some(s=>s.id.startsWith("import-")))for(const extension of extensionList(person.extension))if(!existing.extensions.includes(extension))existing.extensions.push(extension);
    if(person.employeeId)existing.employeeId=person.employeeId;
    if(person.id.startsWith("import-")){existing.phone=person.phone||""; if(person.email)existing.name=person.name;}
    for(const address of emailList(person.email))if(!existing.emails.includes(address))existing.emails.push(address);
