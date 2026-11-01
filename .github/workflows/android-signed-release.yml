@@ -1,0 +1,83 @@
+name: FOXA signed Android release
+on:
+  workflow_dispatch:
+    inputs:
+      version_name:
+        description: "Release version (e.g. 1.0.1)"
+        required: true
+        default: "1.0.1"
+      version_code:
+        description: "Android versionCode (must increase for every update)"
+        required: true
+        default: "2"
+permissions:
+  contents: read
+jobs:
+  signed-android:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: web-supabase
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+      - name: Validate signing secrets
+        env:
+          ANDROID_KEYSTORE_BASE64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+          ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          ANDROID_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+          ANDROID_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
+        run: |
+          test -n "$ANDROID_KEYSTORE_BASE64" || { echo "Missing ANDROID_KEYSTORE_BASE64"; exit 1; }
+          test -n "$ANDROID_KEYSTORE_PASSWORD" || { echo "Missing ANDROID_KEYSTORE_PASSWORD"; exit 1; }
+          test -n "$ANDROID_KEY_ALIAS" || { echo "Missing ANDROID_KEY_ALIAS"; exit 1; }
+          test -n "$ANDROID_KEY_PASSWORD" || { echo "Missing ANDROID_KEY_PASSWORD"; exit 1; }
+      - name: Install dependencies
+        working-directory: web
+        run: npm install --no-audit --no-fund
+      - name: Build bundled web application
+        working-directory: web
+        run: |
+          npm run build:android
+          node scripts/prepare-android.mjs
+      - name: Generate Android project
+        working-directory: web
+        run: npx cap add android
+      - name: Prepare signed release
+        working-directory: web
+        env:
+          FOXA_VERSION_NAME: ${{ inputs.version_name }}
+          FOXA_VERSION_CODE: ${{ inputs.version_code }}
+          ANDROID_KEYSTORE_BASE64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+          ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          ANDROID_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+          ANDROID_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
+        run: |
+          umask 077
+          printf '%s' "$ANDROID_KEYSTORE_BASE64" | base64 --decode > "$RUNNER_TEMP/foxa-upload.jks"
+          echo "FOXA_KEYSTORE_PATH=$RUNNER_TEMP/foxa-upload.jks" >> "$GITHUB_ENV"
+          node scripts/configure-android-release.mjs
+      - name: Build signed APK and AAB
+        working-directory: web/android
+        env:
+          ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          ANDROID_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+          ANDROID_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
+        run: bash ./gradlew assembleRelease bundleRelease --no-daemon
+      - name: Verify APK signature
+        working-directory: web/android
+        run: |
+          "$ANDROID_HOME/build-tools/$(ls "$ANDROID_HOME/build-tools" | sort -V | tail -1)/apksigner" verify --verbose --print-certs app/build/outputs/apk/release/app-release.apk
+      - name: Upload signed APK and AAB
+        uses: actions/upload-artifact@v4
+        with:
+          name: FOXA-signed-${{ inputs.version_name }}
+          path: |
+            web/android/app/build/outputs/apk/release/app-release.apk
+            web/android/app/build/outputs/bundle/release/app-release.aab
+          retention-days: 30
