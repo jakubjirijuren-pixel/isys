@@ -7,14 +7,19 @@ const SHELL=PREFIX;
 self.addEventListener("install",event=>{
  event.waitUntil((async()=>{
   const cache=await caches.open(CACHE);
-  await cache.addAll(PRECACHE.map(path=>new Request(path,{cache:"reload"})));
+  const results=await Promise.allSettled(PRECACHE.map(async path=>{const response=await fetch(path,{cache:"reload"});if(!response.ok||response.type==="opaque")throw new Error("Offline resource unavailable: "+path+" ("+response.status+")");await cache.put(path,response)}));
+  const essential=[SHELL,...PRECACHE.filter(path=>/\\.(?:js|css)$/.test(path))];
+  const missing=essential.filter(path=>!results.some((result,index)=>result.status==="fulfilled"&&PRECACHE[index]===path));
+  if(missing.length)throw new Error("Essential offline assets missing: "+missing.join(", "));
   await self.skipWaiting();
  })());
 });
 self.addEventListener("activate",event=>{
  event.waitUntil((async()=>{
   const keys=await caches.keys();
-  await Promise.all(keys.filter(key=>(key.startsWith("foxa-offline-")||key.startsWith("isys-shell-"))&&key!==CACHE).map(key=>caches.delete(key)));
+  // Keep the preceding complete shell as a fallback if a new release has a missing asset.
+  const old=keys.filter(key=>key.startsWith("foxa-offline-")&&key!==CACHE);
+  await Promise.all([...old.slice(0,-1),...keys.filter(key=>key.startsWith("isys-shell-"))].map(key=>caches.delete(key)));
   await self.clients.claim();
  })());
 });
@@ -27,7 +32,7 @@ self.addEventListener("fetch",event=>{
  if(req.mode==="navigate"){
   event.respondWith((async()=>{
    try{
-    const response=await fetch(req);
+    const response=await Promise.race([fetch(req),new Promise((_,reject)=>setTimeout(()=>reject(new Error("Offline navigation timeout")),3500))]);
     if(response.ok){const cache=await caches.open(CACHE);await cache.put(SHELL,response.clone());}
     return response;
    }catch{
