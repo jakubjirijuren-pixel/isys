@@ -162,30 +162,41 @@ export default function PhoneDirectory({supabase,staff=[] ,buildings=[],isAdmin=
    const sheet=wb.Sheets[wb.SheetNames[0]];
    const grid=XLSX.utils.sheet_to_json(sheet,{header:1,defval:"",raw:false});
    const normalize=s=>clean(s).normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase();
+   // Starší telefonní seznamy SBD mohou mít několik řádků hlavičky a samostatný
+   // sloupec s krátkými interními linkami bez výslovného označení.
    const headerIndex=grid.findIndex(row=>{
     const h=row.map(normalize);
-    return h.some(v=>/jmeno|prijmeni|zamestnanec|pracovnik|kontaktni osoba/.test(v));
+    return h.some(v=>/jmeno|prijmeni|zamestnanec|pracovnik|kontaktni osoba/.test(v))
+      &&h.some(v=>/telefon|mobil|linka|klapka|email|e-mail/.test(v));
    });
    const headers=headerIndex>=0?grid[headerIndex].map(normalize):[];
    const col=(...names)=>headers.findIndex(h=>names.some(n=>h.includes(n)));
    const full=col("prijmeni a jmeno","jmeno a prijmeni","cele jmeno","zamestnanec","pracovnik","kontaktni osoba");
    const first=col("jmeno"),last=col("prijmeni");
-   const phone=col("mobil","telefon"),extension=col("linka","klapka","pobocka","interni"),email=col("e-mail","email"),position=col("funkce","pozice","pracovni zarazeni"),department=col("oddeleni","utvar","usek");
-   const isName=s=>/^[\p{L}][\p{L} .'-]{3,}$/u.test(clean(s))&&!/telefon|email|e-mail|mobil|ustredna|seznam|zamestnanc|oddeleni|referat/i.test(clean(s));
-   const emailPattern=/[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}/i;
-   const phonePattern=/(?:\+420\s*)?(?:\d[\s-]*){9,}/;
+   const phone=col("mobil","telefon","tel."),extension=col("linka","klapka","pobocka","interni"),email=col("e-mail","email"),position=col("funkce","pozice","pracovni zarazeni"),department=col("oddeleni","utvar","usek");
+   const isName=s=>/^[\\p{L}][\\p{L} .'-]{3,}$/u.test(clean(s))&&!/telefon|email|e-mail|mobil|ustredna|seznam|zamestnanc|oddeleni|referat/i.test(clean(s));
+   const numberTokens=value=>clean(value).split(/[;,\\n/]+/).map(x=>x.trim()).filter(Boolean);
+   const phoneNumbers=value=>numberTokens(value).filter(x=>{const digits=x.replace(/\\D/g,"");return digits.length===9||digits.length===12&&digits.startsWith("420")});
+   const internalNumbers=value=>numberTokens(value).flatMap(x=>{
+    const explicit=extensionList(x);
+    if(explicit.length)return explicit;
+    const digits=x.replace(/\\D/g,"");
+    return /^\\d{2,6}$/.test(x)?[digits]:[];
+   });
    const rows=[];
    for(const row of grid.slice(headerIndex>=0?headerIndex+1:0)){
     const cells=row.map(clean);
-    const foundEmail=cells.flatMap(emailList).join("; ");
-    const foundPhone=cells.find(v=>phonePattern.test(v)&&!emailPattern.test(v))||"";
+    const foundEmail=[...new Set(cells.flatMap(emailList))].join("; ");
     const name=full>=0?cells[full]:first>=0&&last>=0&&first!==last?[cells[last],cells[first]].filter(Boolean).join(" "):first>=0?cells[first]:last>=0?cells[last]:"";
-    const candidates=cells.filter(v=>isName(v)&&!emailPattern.test(v)&&!phonePattern.test(v));
-    const inferred=name||candidates.find(v=>v.split(/\s+/).length>=2)||"";
+    const candidates=cells.filter(v=>isName(v)&&!emailList(v).length&&!phoneNumbers(v).length);
+    const inferred=name||candidates.find(v=>v.split(/\\s+/).length>=2)||"";
     if(!isName(inferred))continue;
-    // U starších tiskových telefonních seznamů nemusí existovat řádek s hlavičkami.
-    if(headerIndex<0&&!foundEmail&&!foundPhone)continue;
-    rows.push({full_name:inferred,phone:[phone>=0?cells[phone]||foundPhone:foundPhone,extension>=0&&cells[extension]?"linka "+cells[extension]:""].filter(Boolean).join("; "),email:[...new Set([...emailList(email>=0?cells[email]:""),...emailList(foundEmail)])].join("; "),position:position>=0?cells[position]||"":"",department:department>=0?cells[department]||"":""});
+    const telephoneCells=cells.filter((_,i)=>i!==full&&i!==first&&i!==last&&i!==email);
+    const phones=[...new Set([...(phone>=0?phoneNumbers(cells[phone]):[]),...telephoneCells.flatMap(phoneNumbers)])];
+    const links=[...new Set([...(extension>=0?internalNumbers(cells[extension]):[]),...telephoneCells.flatMap(internalNumbers)])];
+    // Bez hlavičky vyžadujeme alespoň telefon, linku nebo e-mail.
+    if(headerIndex<0&&!foundEmail&&!phones.length&&!links.length)continue;
+    rows.push({full_name:inferred,phone:[...phones,...links.map(x=>"linka "+x)].join("; "),email:foundEmail,position:position>=0?cells[position]||"":"",department:department>=0?cells[department]||"":""});
    }
    if(!rows.length)throw Error("Nebyly nalezeny žádné kontakty.");
    setImportRows(rows);
