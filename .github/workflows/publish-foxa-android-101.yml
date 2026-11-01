@@ -1,0 +1,30 @@
+name: Publish existing FOXA Android 1.0.1 APK
+on:
+  workflow_dispatch:
+permissions:
+  actions: read
+  contents: write
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download previously verified signed build
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh run download 41335341794 --repo "$GITHUB_REPOSITORY" --name FOXA-signed-1.0.1 --dir signed
+          find signed -type f
+      - name: Publish APK and AAB as permanent release assets
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          apk="$(find signed -type f -name '*.apk' -print -quit)"
+          aab="$(find signed -type f -name '*.aab' -print -quit)"
+          test -n "$apk" && test -s "$apk"
+          test -n "$aab" && test -s "$aab"
+          if gh release view android-v1.0.1 --repo "$GITHUB_REPOSITORY" >/dev/null 2>&1; then
+            gh release upload android-v1.0.1 "$apk#FOXA-Android-1.0.1.apk" "$aab#FOXA-Android-1.0.1.aab" --repo "$GITHUB_REPOSITORY" --clobber
+          else
+            gh release create android-v1.0.1 "$apk#FOXA-Android-1.0.1.apk" "$aab#FOXA-Android-1.0.1.aab" --repo "$GITHUB_REPOSITORY" --target web-supabase --title "FOXA Android 1.0.1" --notes "Ověřené podepsané sestavení z GitHub Actions #41335341794."
+          fi
