@@ -11,7 +11,7 @@ on:
         required: true
         default: "2"
 permissions:
-  contents: read
+  contents: write
 jobs:
   signed-android:
     runs-on: ubuntu-latest
@@ -82,6 +82,22 @@ jobs:
         working-directory: web/android
         run: |
           "$ANDROID_HOME/build-tools/$(ls "$ANDROID_HOME/build-tools" | sort -V | tail -1)/apksigner" verify --verbose --print-certs app/build/outputs/apk/release/app-release.apk
+      - name: Publish signed Android APK as GitHub Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          VERSION_NAME: ${{ inputs.version_name }}
+        run: |
+          set -euo pipefail
+          tag="android-v${VERSION_NAME}"
+          apk="web/android/app/build/outputs/apk/release/app-release.apk"
+          aab="web/android/app/build/outputs/bundle/release/app-release.aab"
+          test -s "$apk"
+          test -s "$aab"
+          if gh release view "$tag" >/dev/null 2>&1; then
+            echo "::error::Release $tag already exists. Increase version_name and version_code for a new release."
+            exit 1
+          fi
+          gh release create "$tag" "$apk#FOXA-Android-${VERSION_NAME}.apk" "$aab#FOXA-Android-${VERSION_NAME}.aab" --repo "$GITHUB_REPOSITORY" --target web-supabase --title "FOXA Android ${VERSION_NAME}" --notes "Podepsané vydání FOXA pro Android. APK pro přímou instalaci; AAB pro Google Play."
       - name: Upload signed APK and AAB
         uses: actions/upload-artifact@v4
         with:
