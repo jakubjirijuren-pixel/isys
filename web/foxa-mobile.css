@@ -491,3 +491,6 @@
     box-shadow:none!important;
   }
 }
+
+/* Compact network indicator next to the mobile terminal header actions */
+.foxa-header-network{display:inline-flex;align-items:center;gap:6px;white-space:nowrap;padding:6px 9px;border-radius:999px;font-size:11px;font-weight:700;line-height:1.2;border:1px solid transparent}.foxa-header-network-dot{width:7px;height:7px;flex:none;border-radius:50%;background:currentColor}.foxa-header-network.is-online{color:#19734a;background:#e0f5e9;border-color:#a7ddbf}.foxa-header-network.is-offline{color:#a72d30;background:#ffe5e5;border-color:#f3aaaa}[data-theme="dark"] .foxa-header-network.is-online{color:#a7f2c6;background:#174532;border-color:#2d7853}[data-theme="dark"] .foxa-header-network.is-offline{color:#ffb9b9;background:#58262a;border-color:#99424b}@media(max-width:650px){.layout header .userbar .foxa-header-network{padding:5px 8px;font-size:10px;gap:5px}.layout header .userbar{gap:6px}}
