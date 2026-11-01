@@ -477,3 +477,41 @@ button,select,input,textarea{max-width:100%}
 .foxa-test-banner-toggle{align-self:flex-end;padding:7px 12px;border-radius:8px;border:1px solid #b78300;background:transparent;color:inherit;font-size:12px;cursor:pointer}
 .foxa-test-banner-toggle:disabled{opacity:.5;cursor:wait}
 @media(max-width:640px){.foxa-test-banner{padding:12px;gap:5px;flex-direction:column;align-items:flex-start}.foxa-test-banner-toggle{align-self:stretch}}
+
+
+/* Responsive Android handset layout: compact 320–400dp phones, XCover 7,
+   larger handsets, landscape and accessibility font scaling. */
+@media screen and (max-width:650px){
+ html,body,#root{min-width:0;max-width:100%;width:100%;overflow-x:clip}
+ .layout,.layout .content,.layout .body{min-width:0;max-width:100%;box-sizing:border-box}
+ .layout .body{padding-inline:max(12px,env(safe-area-inset-left)) max(12px,env(safe-area-inset-right))}
+ .layout .body :is(.toolbar,.pageheading,.actions,.formgrid,.buildinggrid){min-width:0;max-width:100%}
+ .layout .body :is(input,textarea,select){max-width:100%;min-width:0;font-size:max(16px,1em)}
+ .layout .body :is(img,video,canvas,svg){max-width:100%}
+ .layout .body :is(.modal,.overlay){max-width:100%}
+ .layout .overlay{padding:max(12px,env(safe-area-inset-top)) max(12px,env(safe-area-inset-right)) max(12px,env(safe-area-inset-bottom)) max(12px,env(safe-area-inset-left))}
+ .layout .modal{max-height:calc(100dvh - 24px);overflow-y:auto;overscroll-behavior:contain}
+ .layout .body :is(.toolbar,.actions){flex-wrap:wrap}
+ .layout .body :is(.toolbar,.actions)>button{min-height:44px}
+ .layout .body :is(.pageheading,.detailtop){min-width:0;flex-wrap:wrap}
+ .layout .body :is(.pageheading h1,.detailhero h2,.foxa-field-module-title h1){overflow-wrap:anywhere}
+ .layout .body .buildinggrid{grid-template-columns:repeat(auto-fill,minmax(min(100%,205px),1fr))}
+ .layout .body :is(.buildingcard,.detailsection,.tiles article){min-width:0}
+ .layout .body table{max-width:100%}
+ .layout .body :is(.table-wrap,.table-responsive,.table-container){max-width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch}
+ .layout .foxa-terminal-dock{padding-bottom:env(safe-area-inset-bottom)}
+ .layout aside .mobile-nav-top{padding-left:max(12px,env(safe-area-inset-left));padding-right:max(12px,env(safe-area-inset-right))}
+}
+@media screen and (max-width:390px){
+ .layout .body{padding-inline:12px}
+ .layout .body .tiles{grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
+ .layout .body .tiles article{padding:12px}
+ .layout .body .formgrid{grid-template-columns:minmax(0,1fr)}
+}
+@media screen and (max-width:340px){
+ .layout .body .tiles{grid-template-columns:minmax(0,1fr)}
+}
+@media screen and (max-width:950px) and (orientation:landscape) and (max-height:500px){
+ .layout .modal{max-height:calc(100dvh - 16px)}
+ .layout .body{padding-bottom:calc(72px + env(safe-area-inset-bottom))}
+}
