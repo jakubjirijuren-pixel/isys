@@ -1,0 +1,45 @@
+name: FOXA Android release (guarded)
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  android-release:
+    if: ${{ vars.FOXA_ANDROID_SOURCE_VERIFIED == 'true' }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify production Android project exists
+        run: |
+          test -f android/gradlew || (echo 'Missing audited Android project' && exit 1)
+          test -f android/app/build.gradle || test -f android/app/build.gradle.kts
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - uses: android-actions/setup-android@v3
+      - name: Restore upload keystore
+        env:
+          KEYSTORE_B64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+        run: |
+          test -n "$KEYSTORE_B64"
+          printf '%s' "$KEYSTORE_B64" | base64 --decode > "$RUNNER_TEMP/upload-key.jks"
+      - name: Build signed bundle
+        env:
+          ANDROID_KEYSTORE_PATH: ${{ runner.temp }}/upload-key.jks
+          ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          ANDROID_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+          ANDROID_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
+        run: |
+          test -n "$ANDROID_KEYSTORE_PASSWORD"
+          test -n "$ANDROID_KEY_ALIAS"
+          test -n "$ANDROID_KEY_PASSWORD"
+          cd android
+          chmod +x gradlew
+          ./gradlew --no-daemon bundleRelease
+      - uses: actions/upload-artifact@v4
+        with:
+          name: foxa-release-aab
+          path: android/app/build/outputs/bundle/release/*.aab
+          if-no-files-found: error
+          retention-days: 14
