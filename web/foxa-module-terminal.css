@@ -130,3 +130,36 @@
  .foxa-terminal-module:not(.foxa-terminal-page-prehled) :is(.attendance-module,.vacation,.foxa-fleet,.inspectionmodule,.technicalmodule,.keys-module,.tasks) :is(h2,h3){overflow-wrap:normal;word-break:normal;hyphens:none}
  .foxa-terminal-module:not(.foxa-terminal-page-prehled) :is(.attendance-module,.vacation,.foxa-fleet,.inspectionmodule,.technicalmodule,.keys-module,.tasks) :is(table){display:block;max-width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch}
 }
+
+/* Referent field inspection: compact, touch-first workflow */
+.foxa-referent-step-tabs{display:none}
+.foxa-referent-save-state{display:none}
+@media(max-width:650px){
+ .foxa-field-referent-wizard .inspectionheading{display:none}
+ .foxa-field-referent-wizard .inspection-actions-outside{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:8px 0}
+ .foxa-field-referent-wizard .inspection-actions-outside .inspection-desktop-pdf{display:none}
+ .foxa-field-referent-wizard .inspection-actions-outside .inspection-autosave-status{font-size:11px;flex:1}
+ .foxa-field-referent-wizard .foxa-inspection-wizard-nav{position:sticky;top:0;z-index:20;padding:11px;border-radius:12px;background:#0b263c;border:1px solid #276a91;box-shadow:0 5px 16px #0003}
+ .foxa-field-referent-wizard .foxa-referent-step-tabs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:5px;margin:10px 0}
+ .foxa-field-referent-wizard .foxa-referent-step-tabs button{min-height:45px;border-radius:8px;border:1px solid #386480;background:#14344d;color:#b7d7e9;font-size:11px;font-weight:700;padding:5px;line-height:1.25}
+ .foxa-field-referent-wizard .foxa-referent-step-tabs button.active{border-color:#50c6f4;background:#215778;color:white}
+ .foxa-field-referent-wizard .foxa-wizard-controls{display:grid;grid-template-columns:1fr 1.5fr;gap:8px}
+ .foxa-field-referent-wizard .foxa-wizard-controls button{min-height:48px}
+ .foxa-field-referent-wizard .foxa-referent-save-state{display:block;font-size:11px;color:#a7d9ef;margin-top:7px}
+ .foxa-field-referent-wizard .foxa-referent-reports{padding:10px;margin-bottom:10px}
+ .foxa-field-referent-wizard .foxa-referent-reports>button{width:100%;min-height:43px}
+ .foxa-field-referent-wizard .inspectionprogress{margin:10px 0}
+ .foxa-field-referent-wizard .inspectionpanel.foxa-field-referent-step{padding:14px 12px;border-radius:12px}
+ .foxa-field-referent-wizard .inspectionfields{display:grid;grid-template-columns:minmax(0,1fr);gap:12px}
+ .foxa-field-referent-wizard :is(input,select,textarea,.filtertrigger){min-height:46px;font-size:16px;max-width:100%;box-sizing:border-box}
+ .foxa-field-referent-wizard .inspectionitem{padding:13px 10px;margin-bottom:12px;border-radius:12px}
+ .foxa-field-referent-wizard .inspectionitemtitle{margin-bottom:10px}
+ .foxa-field-referent-wizard .inspectionitemcontrols{display:grid;grid-template-columns:minmax(0,1fr);gap:11px}
+ .foxa-field-referent-wizard .foxa-referent-status-field>span{display:block;font-size:12px;font-weight:700;margin-bottom:7px}
+ .foxa-field-referent-wizard .foxa-referent-status-buttons{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}
+ .foxa-field-referent-wizard .foxa-referent-status-buttons button{min-height:51px;border:1px solid #52738d;border-radius:9px;background:#1a3a53;color:#e6f4ff;font-size:12px;font-weight:750;line-height:1.2;padding:6px 3px;overflow-wrap:anywhere}
+ .foxa-field-referent-wizard .foxa-referent-status-buttons button.selected{background:#126445;border-color:#3ce2a0;color:#fff}
+ .foxa-field-referent-wizard .foxa-referent-status-buttons button.selected.fault{background:#94373c;border-color:#ff8d91}
+ .foxa-field-referent-wizard .inspectionphotoupload{display:flex;align-items:center;justify-content:center;min-height:50px;text-align:center;border-radius:10px}
+ .foxa-field-referent-wizard .foxa-referent-review{padding:11px;border-radius:9px;background:#163c56;color:#e6f5ff;font-size:13px}
+}
