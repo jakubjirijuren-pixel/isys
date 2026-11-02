@@ -26,13 +26,24 @@ export default function NotificationCenter({supabase,userId,roles=[],onNavigate,
   finally{setBusy(false)}
  };
  const [pushStatus,setPushStatus]=useState(""),[pushEnabled,setPushEnabled]=useState(false),[pushBusy,setPushBusy]=useState(false);
+ const [offerPush,setOfferPush]=useState(false);
  const supported=typeof window!=="undefined"&&"serviceWorker" in navigator&&"PushManager" in window&&"Notification" in window;
  const pushEndpoint=supabase.supabaseUrl+"/functions/v1/isys-web-push";
+ const withTimeout=(promise,ms,label)=>Promise.race([promise,new Promise((_,reject)=>setTimeout(()=>reject(Error(label)),ms))]);
+ useEffect(()=>{
+  if(!supported||!userId||Notification.permission==="denied")return;
+  const key="foxa-push-offer:"+userId;
+  if(sessionStorage.getItem(key))return;
+  let live=true;
+  const timer=setTimeout(()=>{if(live&&!pushEnabled&&Notification.permission!=="denied")setOfferPush(true)},1800);
+  return()=>{live=false;clearTimeout(timer)};
+ },[supported,userId,pushEnabled]);
+ const dismissOffer=()=>{setOfferPush(false);if(userId)sessionStorage.setItem("foxa-push-offer:"+userId,"1")};
  const bytes=key=>{const padding="=".repeat((4-key.length%4)%4);const raw=atob((key+padding).replace(/-/g,"+").replace(/_/g,"/"));return Uint8Array.from(raw,c=>c.charCodeAt(0))};
  useEffect(()=>{if(!supported||!userId)return;let live=true;
   (async()=>{try{
-   const reg=await navigator.serviceWorker.ready;
-   const sub=await reg.pushManager.getSubscription();
+   const reg=await withTimeout(navigator.serviceWorker.ready,6500,"Registrace služby trvá příliš dlouho. Zkus obnovit aplikaci.");
+   const sub=await withTimeout(reg.pushManager.getSubscription(),5000,"Kontrola odběru oznámení trvá příliš dlouho.");
    if(!live)return;
    if(!sub){setPushEnabled(false);return}
    const {data,error:e}=await supabase.from("push_subscriptions").select("id").eq("user_id",userId).eq("endpoint",sub.endpoint).maybeSingle();
@@ -49,12 +60,15 @@ export default function NotificationCenter({supabase,userId,roles=[],onNavigate,
   try{
    const permission=await Notification.requestPermission();setPermission(permission);
    if(permission!=="granted")throw Error("Povol oznámení v nastavení telefonu nebo prohlížeče.");
-   const reg=await navigator.serviceWorker.ready;
-   const response=await fetch(pushEndpoint);
+   dismissOffer();
+   const [reg,response]=await Promise.all([
+    withTimeout(navigator.serviceWorker.ready,6500,"Služba oznámení není připravená. Zkus aplikaci obnovit."),
+    withTimeout(fetch(pushEndpoint),6500,"Server oznámení neodpovídá.")
+   ]);
    if(!response.ok)throw Error("Push server není dostupný. Zkontroluj nasazení Edge Function.");
    const {publicKey}=await response.json();
    if(!publicKey)throw Error("Chybí veřejný VAPID klíč.");
-   const existing=await reg.pushManager.getSubscription();
+   const existing=await withTimeout(reg.pushManager.getSubscription(),5000,"Kontrola odběru trvá příliš dlouho.");
    let subscription=existing;
    if(existing){
     const currentKey=existing.options?.applicationServerKey;
@@ -65,10 +79,10 @@ export default function NotificationCenter({supabase,userId,roles=[],onNavigate,
      subscription=null;
     }
    }
-   if(!subscription)subscription=await reg.pushManager.subscribe({userVisibleOnly:true,applicationServerKey:bytes(publicKey)});
+   if(!subscription)subscription=await withTimeout(reg.pushManager.subscribe({userVisibleOnly:true,applicationServerKey:bytes(publicKey)}),12000,"Registrace zařízení trvá příliš dlouho.");
    const register=async sub=>{
     const keys=sub.toJSON().keys;
-    return supabase.rpc("isys_register_push_subscription",{p_endpoint:sub.endpoint,p_p256dh:keys?.p256dh,p_auth:keys?.auth});
+    return withTimeout(supabase.rpc("isys_register_push_subscription",{p_endpoint:sub.endpoint,p_p256dh:keys?.p256dh,p_auth:keys?.auth}),9000,"Uložení registrace na serveru trvá příliš dlouho.");
    };
    let {error:e}=await register(subscription);
    if(e&&e.code==="P0001"){
@@ -96,5 +110,5 @@ export default function NotificationCenter({supabase,userId,roles=[],onNavigate,
  const markReleaseRead=async ids=>{if(!ids.length)return true;const {error:e}=await supabase.from("foxa_changelog_reads").upsert(ids.map(release_id=>({user_id:userId,release_id})),{onConflict:"user_id,release_id",ignoreDuplicates:true});if(e){setError(e.message);return false}setReadReleaseIds(old=>[...new Set([...old,...ids])]);window.dispatchEvent(new Event("foxa-changelog-updated"));return true};
  const markAllRead=async()=>{setBusy(true);try{await markRead(unread.filter(x=>!x.isRelease).map(x=>x.id));await markReleaseRead(unread.filter(x=>x.isRelease).map(x=>x.releaseId))}finally{setBusy(false)}};
  const allow=async()=>{if(typeof Notification==="undefined")return;try{const p=await Notification.requestPermission();setPermission(p)}catch{setError("Prohlížeč nepovolil oznámení.")}};
- return <div className="notification-root" ref={panel}><button type="button" className="notification-bell" aria-label={"Oznámení, nepřečtených: "+unread.length} aria-expanded={open} onClick={()=>setOpen(v=>!v)}><span aria-hidden="true">♧</span>{unread.length>0&&<span className="notification-badge">{unread.length>99?"99+":unread.length}</span>}</button>{open&&<div className="notification-panel"><div className="notification-heading"><strong>Centrum oznámení</strong><button type="button" className="notification-close" onClick={()=>setOpen(false)} aria-label="Zavřít oznámení">×</button></div><div className="notification-toolbar"><span>{unread.length} nepřečtených</span><div className="notification-toolbar-actions"><button type="button" disabled={busy||!unread.length} onClick={markAllRead}>Označit vše jako přečtené</button><button type="button" className="notification-delete-all" disabled={busy||!items.length} onClick={deleteAll}>{busy?"Pracuji…":"Smazat všechna"}</button></div></div>{error&&<p className="notification-error" role="alert">{error}</p>}{supported&&<div className="notification-permission"><span>{pushEnabled?"Push na tomto zařízení: registrováno k účtu":"Push na tomto zařízení: vypnuto"}</span><button type="button" disabled={pushBusy} onClick={pushEnabled?disablePush:enablePush}>{pushBusy?"Čekej…":pushEnabled?"Vypnout push":"Zapnout push"}</button></div>}{pushStatus&&<p className="notification-hint" role="status">{pushStatus}</p>}{permission==="default"&&<div className="notification-permission"><span>Zapnout oznámení při otevřené aplikaci na podporovaných zařízeních?</span><button type="button" onClick={allow}>Povolit</button></div>}{permission==="denied"&&<p className="notification-hint">Oznámení prohlížeče jsou zakázaná v nastavení zařízení.</p>}<div className="notification-items">{allItems.length?allItems.map(n=><button type="button" key={n.id} className={"notification-item"+(!n.read_at?" unread":"")} onClick={async()=>{if(n.isRelease){setOpen(false);onOpenChangelog?.();return}if(!n.read_at)await markRead([n.id]);if(n.module){onNavigate(n.module);setOpen(false)}}}><span className="notification-item-title">{!n.read_at&&<i aria-hidden="true"/>}{n.title}</span><span className="notification-item-body">{n.body}</span><time>{new Date(n.created_at).toLocaleString("cs-CZ",{dateStyle:"short",timeStyle:"short"})}</time></button>):<p className="notification-empty">Zatím nemáš žádná oznámení.</p>}</div></div>}</div>;
+ return <div className="notification-root" ref={panel}>{offerPush&&!pushEnabled&&<div className="foxa-push-offer" role="region" aria-label="Nabídka oznámení"><span>Chceš dostávat oznámení FOXA i mimo aplikaci?</span><button type="button" disabled={pushBusy} onClick={enablePush}>{pushBusy?"Připojuji…":"Povolit oznámení"}</button><button type="button" onClick={dismissOffer} aria-label="Připomenout později">×</button></div>}<button type="button" className="notification-bell" aria-label={"Oznámení, nepřečtených: "+unread.length} aria-expanded={open} onClick={()=>setOpen(v=>!v)}><span aria-hidden="true">♧</span>{unread.length>0&&<span className="notification-badge">{unread.length>99?"99+":unread.length}</span>}</button>{open&&<div className="notification-panel"><div className="notification-heading"><strong>Centrum oznámení</strong><button type="button" className="notification-close" onClick={()=>setOpen(false)} aria-label="Zavřít oznámení">×</button></div><div className="notification-toolbar"><span>{unread.length} nepřečtených</span><div className="notification-toolbar-actions"><button type="button" disabled={busy||!unread.length} onClick={markAllRead}>Označit vše jako přečtené</button><button type="button" className="notification-delete-all" disabled={busy||!items.length} onClick={deleteAll}>{busy?"Pracuji…":"Smazat všechna"}</button></div></div>{error&&<p className="notification-error" role="alert">{error}</p>}{supported&&<div className="notification-permission"><span>{pushEnabled?"Push na tomto zařízení: registrováno k účtu":"Push na tomto zařízení: vypnuto"}</span><button type="button" disabled={pushBusy} onClick={pushEnabled?disablePush:enablePush}>{pushBusy?"Čekej…":pushEnabled?"Vypnout push":"Zapnout push"}</button></div>}{pushStatus&&<p className="notification-hint" role="status">{pushStatus}</p>}{permission==="default"&&<div className="notification-permission"><span>Zapnout oznámení při otevřené aplikaci na podporovaných zařízeních?</span><button type="button" onClick={allow}>Povolit</button></div>}{permission==="denied"&&<p className="notification-hint">Oznámení prohlížeče jsou zakázaná v nastavení zařízení.</p>}<div className="notification-items">{allItems.length?allItems.map(n=><button type="button" key={n.id} className={"notification-item"+(!n.read_at?" unread":"")} onClick={async()=>{if(n.isRelease){setOpen(false);onOpenChangelog?.();return}if(!n.read_at)await markRead([n.id]);if(n.module){onNavigate(n.module);setOpen(false)}}}><span className="notification-item-title">{!n.read_at&&<i aria-hidden="true"/>}{n.title}</span><span className="notification-item-body">{n.body}</span><time>{new Date(n.created_at).toLocaleString("cs-CZ",{dateStyle:"short",timeStyle:"short"})}</time></button>):<p className="notification-empty">Zatím nemáš žádná oznámení.</p>}</div></div>}</div>;
 }
