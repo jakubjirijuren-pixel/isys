@@ -1,10 +1,6 @@
 name: Build FOXA Android APK
 on:
-  push:
-    branches: [web-supabase]
-    paths:
-      - 'web/**'
-      - '.github/workflows/android-apk.yml'
+  # Android builds are manual; ordinary web updates deploy only to GitHub Pages.
   workflow_dispatch:
 permissions:
   contents: read
