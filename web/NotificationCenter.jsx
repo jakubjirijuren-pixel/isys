@@ -29,7 +29,10 @@ export default function NotificationCenter({supabase,userId,roles=[],onNavigate,
  const [offerPush,setOfferPush]=useState(false);
  const supported=typeof window!=="undefined"&&"serviceWorker" in navigator&&"PushManager" in window&&"Notification" in window;
  const pushEndpoint=supabase.supabaseUrl+"/functions/v1/isys-web-push";
- const withTimeout=(promise,ms,label)=>Promise.race([promise,new Promise((_,reject)=>setTimeout(()=>reject(Error(label)),ms))]);
+ const withTimeout=(promise,ms,label)=>new Promise((resolve,reject)=>{const timer=setTimeout(()=>reject(Error(label)),ms);Promise.resolve(promise).then(value=>{clearTimeout(timer);resolve(value)},error=>{clearTimeout(timer);reject(error)})});
+ const retryTemporary=async(task,attempts=2)=>{for(let i=0;;i++){try{return await task()}catch(e){if(i>=attempts||/denied|permission|notallowed|P0001|neplatn|přihlášení/i.test(String(e?.message||e)))throw e;await new Promise(resolve=>setTimeout(resolve,600*(i+1)))}}};
+ const pushStep=useRef("");
+ const stage=(name)=>{pushStep.current=name;setPushStatus("Nastavuji oznámení: "+name+"…")};
  useEffect(()=>{
   if(!supported||!userId||Notification.permission==="denied")return;
   const key="foxa-push-offer:"+userId;
@@ -42,7 +45,7 @@ export default function NotificationCenter({supabase,userId,roles=[],onNavigate,
  const bytes=key=>{const padding="=".repeat((4-key.length%4)%4);const raw=atob((key+padding).replace(/-/g,"+").replace(/_/g,"/"));return Uint8Array.from(raw,c=>c.charCodeAt(0))};
  useEffect(()=>{if(!supported||!userId)return;let live=true;
   (async()=>{try{
-   const reg=await withTimeout(navigator.serviceWorker.ready,6500,"Registrace služby trvá příliš dlouho. Zkus obnovit aplikaci.");
+   const reg=await withTimeout(navigator.serviceWorker.ready,15000,"Registrace služby trvá příliš dlouho. Zkus obnovit aplikaci.");
    const sub=await withTimeout(reg.pushManager.getSubscription(),5000,"Kontrola odběru oznámení trvá příliš dlouho.");
    if(!live)return;
    if(!sub){setPushEnabled(false);return}
@@ -56,19 +59,23 @@ export default function NotificationCenter({supabase,userId,roles=[],onNavigate,
  },[supabase,userId]);
  const enablePush=async()=>{
   if(!supported)return;
-  setPushBusy(true);setPushStatus("");
+  setPushBusy(true);setPushStatus("");pushStep.current="oprávnění";
   try{
+   if(!window.isSecureContext)throw Error("Oznámení vyžadují zabezpečené HTTPS připojení.");
+   if(/iPhone|iPad|iPod/.test(navigator.userAgent)&&!window.navigator.standalone&&!window.matchMedia("(display-mode: standalone)").matches)throw Error("Na iPhonu otevři FOXA ikonou na ploše, nikoliv v Safari.");
    const permission=await Notification.requestPermission();setPermission(permission);
    if(permission!=="granted")throw Error("Povol oznámení v nastavení telefonu nebo prohlížeče.");
    dismissOffer();
+   stage("příprava zařízení a serveru");
    const [reg,response]=await Promise.all([
     withTimeout(navigator.serviceWorker.ready,6500,"Služba oznámení není připravená. Zkus aplikaci obnovit."),
-    withTimeout(fetch(pushEndpoint),6500,"Server oznámení neodpovídá.")
+    retryTemporary(()=>withTimeout(fetch(pushEndpoint),12000,"Server oznámení neodpovídá."))
    ]);
    if(!response.ok)throw Error("Push server není dostupný. Zkontroluj nasazení Edge Function.");
    const {publicKey}=await response.json();
    if(!publicKey)throw Error("Chybí veřejný VAPID klíč.");
-   const existing=await withTimeout(reg.pushManager.getSubscription(),5000,"Kontrola odběru trvá příliš dlouho.");
+   stage("kontrola odběru");
+   const existing=await withTimeout(reg.pushManager.getSubscription(),10000,"Kontrola odběru trvá příliš dlouho.");
    let subscription=existing;
    if(existing){
     const currentKey=existing.options?.applicationServerKey;
@@ -79,22 +86,23 @@ export default function NotificationCenter({supabase,userId,roles=[],onNavigate,
      subscription=null;
     }
    }
-   if(!subscription)subscription=await withTimeout(reg.pushManager.subscribe({userVisibleOnly:true,applicationServerKey:bytes(publicKey)}),12000,"Registrace zařízení trvá příliš dlouho.");
+   if(!subscription){stage("registrace v telefonu nebo prohlížeči");subscription=await withTimeout(reg.pushManager.subscribe({userVisibleOnly:true,applicationServerKey:bytes(publicKey)}),30000,"Registrace zařízení trvá příliš dlouho.");}
    const register=async sub=>{
     const keys=sub.toJSON().keys;
-    return withTimeout(supabase.rpc("isys_register_push_subscription",{p_endpoint:sub.endpoint,p_p256dh:keys?.p256dh,p_auth:keys?.auth}),9000,"Uložení registrace na serveru trvá příliš dlouho.");
+    return retryTemporary(()=>withTimeout(supabase.rpc("isys_register_push_subscription",{p_endpoint:sub.endpoint,p_p256dh:keys?.p256dh,p_auth:keys?.auth}),15000,"Uložení registrace na serveru trvá příliš dlouho."));
    };
+   stage("uložení odběru do FOXA");
    let {error:e}=await register(subscription);
    if(e&&e.code==="P0001"){
     // An old browser endpoint may belong to a different account with rotated keys.
     // Never take it over: unsubscribe locally and request a fresh endpoint.
     await subscription.unsubscribe();
-    subscription=await reg.pushManager.subscribe({userVisibleOnly:true,applicationServerKey:bytes(publicKey)});
+    subscription=await withTimeout(reg.pushManager.subscribe({userVisibleOnly:true,applicationServerKey:bytes(publicKey)}),30000,"Obnovení odběru trvá příliš dlouho.");
     ({error:e}=await register(subscription));
    }
    if(e)throw Error(e.message);
    setPushEnabled(true);setPushStatus("Push oznámení jsou na tomto zařízení aktivní.");
-  }catch(e){setPushStatus(e.message||"Push oznámení se nepodařilo aktivovat.")}finally{setPushBusy(false)}
+  }catch(e){setPushStatus("Registrace selhala – "+(pushStep.current||"neznámý krok")+": "+(e.message||"Neznámá chyba")+". Zkus to znovu; pokud problém přetrvá, předej tuto zprávu správci.")}finally{setPushBusy(false)}
  };
  const disablePush=async()=>{
   setPushBusy(true);setPushStatus("");
