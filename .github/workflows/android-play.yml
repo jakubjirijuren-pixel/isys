@@ -27,12 +27,12 @@ jobs:
       - name: Configure signing and Android target
         working-directory: web/android
         env:
-          KEYSTORE_B64: ${{ secrets.FOXA_ANDROID_KEYSTORE_BASE64 }}
-          STORE_PASSWORD: ${{ secrets.FOXA_ANDROID_STORE_PASSWORD }}
-          KEY_ALIAS: ${{ secrets.FOXA_ANDROID_KEY_ALIAS }}
-          KEY_PASSWORD: ${{ secrets.FOXA_ANDROID_KEY_PASSWORD }}
+          KEYSTORE_B64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+          STORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+          KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
         run: |
-          test -n "$KEYSTORE_B64" && test -n "$STORE_PASSWORD" && test -n "$KEY_ALIAS" && test -n "$KEY_PASSWORD" || { echo "::error::Missing FOXA_ANDROID_* signing secrets"; exit 1; }
+          test -n "$KEYSTORE_B64" && test -n "$STORE_PASSWORD" && test -n "$KEY_ALIAS" && test -n "$KEY_PASSWORD" || { echo "::error::Missing ANDROID_* signing secrets"; exit 1; }
           printf '%s' "$KEYSTORE_B64" | base64 --decode > app/foxa-upload.jks
           python3 - <<'PY'
           from pathlib import Path
@@ -62,9 +62,9 @@ jobs:
       - name: Generate signed Play bundle
         working-directory: web/android
         env:
-          STORE_PASSWORD: ${{ secrets.FOXA_ANDROID_STORE_PASSWORD }}
-          KEY_ALIAS: ${{ secrets.FOXA_ANDROID_KEY_ALIAS }}
-          KEY_PASSWORD: ${{ secrets.FOXA_ANDROID_KEY_PASSWORD }}
+          STORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+          KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
         run: bash ./gradlew bundleRelease --no-daemon
       - uses: actions/upload-artifact@v4
         with:
