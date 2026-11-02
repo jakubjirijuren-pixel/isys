@@ -3,3 +3,10 @@
 .notification-toolbar .notification-delete-all{color:#b63737}
 [data-theme="dark"] .notification-toolbar .notification-delete-all{color:#ffaaa9}
 @media(max-width:420px){.notification-toolbar{align-items:flex-start;flex-direction:column}.notification-toolbar-actions{justify-content:flex-start}}
+
+/* Proactive push permission invitation; also visible on narrow terminal screens. */
+.foxa-push-offer{position:fixed;z-index:99999;top:max(12px,env(safe-area-inset-top,0px));right:12px;left:auto;display:flex;align-items:center;gap:10px;max-width:min(540px,calc(100vw - 24px));padding:12px 14px;border-radius:12px;border:1px solid #bfd3e1;background:#fff;color:#17344b;box-shadow:0 8px 30px #102b4330;font-size:13px}
+.foxa-push-offer span{flex:1;min-width:0}
+.foxa-push-offer button{border:0;border-radius:8px;background:#176b9a;color:white;padding:9px 11px;cursor:pointer;min-height:38px}
+.foxa-push-offer button:last-child{background:transparent;color:#17344b;font-size:20px;padding:4px 8px}
+@media(max-width:650px){.foxa-push-offer{top:max(10px,env(safe-area-inset-top,0px));left:10px;right:10px;max-width:none;flex-wrap:wrap}.foxa-push-offer span{flex-basis:100%}.foxa-push-offer button:last-child{position:absolute;right:5px;top:5px}}
