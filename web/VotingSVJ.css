@@ -7,3 +7,7 @@
 .foxa-vote-building-options button:hover,.foxa-vote-building-options button:focus-visible{background:rgba(55,145,205,.18)}
 .foxa-vote-building-empty{padding:12px;color:var(--muted,#9eacbc)}
 .foxa-vote{font-family:inherit}.foxa-vote-card{box-shadow:var(--shadow-sm,none)}.foxa-vote input,.foxa-vote select,.foxa-vote button{font-family:inherit}
+
+.foxa-vote-dropzone{width:100%;max-width:620px;min-height:142px;box-sizing:border-box;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:7px;padding:20px 24px;border:2px dashed var(--border,#53677d);border-radius:14px;background:rgba(70,135,185,.055);color:inherit;cursor:pointer;text-align:center;transition:border-color .15s,background .15s,box-shadow .15s}
+.foxa-vote-dropzone:hover,.foxa-vote-dropzone:focus-visible,.foxa-vote-dropzone.is-dragging{border-color:#45a8ed;background:rgba(48,151,220,.15);outline:none;box-shadow:0 0 0 3px rgba(48,151,220,.12)}
+.foxa-vote-dropzone>strong{font-size:15px}.foxa-vote-dropzone>span{font-size:13px;color:var(--muted,#a9b7c9)}.foxa-vote-dropzone .foxa-vote-drop-icon{font-size:28px;color:#65b7f0;line-height:1}.foxa-vote-dropzone .foxa-vote-drop-link{color:#65b7f0;text-decoration:underline;font-weight:650}.foxa-vote-dropzone .foxa-vote-selected{margin-top:5px;color:#80d6b2;overflow-wrap:anywhere}.foxa-vote-file-hidden{position:absolute!important;width:1px!important;height:1px!important;opacity:0!important;pointer-events:none!important;overflow:hidden!important}
