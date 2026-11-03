@@ -15,7 +15,7 @@ function parseOwners(book){
    const h=rows[i].map(norm),find=(keys)=>h.findIndex(v=>keys.some(k=>v===k||v.includes(k)));
    const byt=find(["byt","jednotka","cislo bytu"]),prij=find(["prijmeni","vlastnik"]),jmeno=find(["jmeno"]),podil=find(["podil","hlas"]);
    if(byt<0||prij<0||podil<0)continue;
-   const entries=rows.slice(i+1).map((r,j)=>({id:crypto.randomUUID(),unit:r[byt]||"",name:[r[prij],jmeno>=0?r[jmeno]:""].filter(Boolean).join(" ").replace(/\s+/g," ").trim(),share:number(r[podil]),sourceRow:i+j+2})).filter(r=>r.name&&r.share>0&&!/celkem|sou[cč]et|úhrnem/i.test(r.name));
+   const entries=rows.slice(i+1).map((r,j)=>({id:crypto.randomUUID(),unit:r[byt]||"",name:[r[prij],jmeno>=0?r[jmeno]:""].filter(Boolean).join(" ").replace(/\s+/g," ").trim(),surname:r[prij]||"",given:jmeno>=0?r[jmeno]||"":"",share:number(r[podil]),sourceRow:i+j+2})).filter(r=>r.name&&r.share>0&&!/celkem|sou[cč]et|úhrnem/i.test(r.name));
    if(!best||entries.length>best.entries.length)best={entries,rows,header:i};
   }
  }
