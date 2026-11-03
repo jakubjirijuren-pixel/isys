@@ -7,7 +7,7 @@ const number=v=>{const n=Number(String(v??"").replace(/\s/g,"").replace(",",".")
 const norm=s=>String(s??"").normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase().replace(/\s+/g," ").trim();
 const percent=(n,d)=>d>0?(100*n/d).toLocaleString("cs-CZ",{maximumFractionDigits:2})+" %":"—";
 const rowsFromSheet=sheet=>XLSX.utils.sheet_to_json(sheet,{header:1,defval:"",raw:false}).map(r=>r.map(v=>String(v??"").trim()));
-function parseOwners(book){
+export function parseOwners(book){
  let best=null;
  for(const sheet of Object.values(book.Sheets)){
   const rows=rowsFromSheet(sheet);
