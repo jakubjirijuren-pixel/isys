@@ -57,3 +57,7 @@
 .layout .body .offer-approvals .offer-picker .filtermenu button:hover,.layout .body .offer-approvals .offer-picker .filtermenu button.chosen{background:var(--isys-control-option-selected)}
 .offer-picker-results p,.offer-help{margin:8px 10px;color:var(--fx-muted);font-size:13px}
 @media(max-width:780px){.layout .body .offer-approvals .offer-form{grid-template-columns:minmax(0,1fr);padding:18px}.layout .body .offer-approvals .offer-form>button[type=submit]{width:100%;min-width:0}.layout .body .offer-approvals .offer-heading{padding:20px}}
+
+/* Destructive action stays visually distinct without changing the FOXA layout */
+.layout .body .offer-approvals .offer-delete{color:#e07070;border-color:color-mix(in srgb,#e07070 42%,var(--fx-border));background:transparent}
+.layout .body .offer-approvals .offer-delete:hover:not(:disabled){color:#fff;background:#ad3434;border-color:#ad3434}
