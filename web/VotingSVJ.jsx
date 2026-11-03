@@ -34,7 +34,7 @@ export default function VotingSVJ({buildings=[]}){
  const present=useMemo(()=>doc.owners.filter(o=>doc.attendance[o.id]),[doc]);
  const total=doc.owners.reduce((s,o)=>s+number(o.share),0),presentShare=present.reduce((s,o)=>s+number(o.share),0),den=number(doc.denominator)||total;
  const quorum=den>0&&presentShare/den*100>number(doc.threshold);
- const importFile=async file=>{if(!file)return;setError("");if(!/\\.(xlsx|xls)$/i.test(file.name||"")){setError("Nahraj excelový soubor ve formátu .xlsx nebo .xls.");return}setSelectedFile(file.name);try{const buf=await file.arrayBuffer(),wb=XLSX.read(buf,{type:"array"}),result=parseOwners(wb);setDoc(d=>({...d,owners:result.owners,denominator:result.denominator,attendance:{},points:d.points.map(p=>({...p,votes:{}}))}));setNotice(`Načteno ${result.owners.length} záznamů. ${result.warning} Před hlasováním zkontroluj vlastníky a podíly.`)}catch(e){setError(e.message)}};
+ const importFile=async file=>{if(!file)return;setError("");if(!/\.(xlsx|xls)$/i.test(file.name||"")){setError("Nahraj excelový soubor ve formátu .xlsx nebo .xls.");return}setSelectedFile(file.name);try{const buf=await file.arrayBuffer(),wb=XLSX.read(buf,{type:"array"}),result=parseOwners(wb);setDoc(d=>({...d,owners:result.owners,denominator:result.denominator,attendance:{},points:d.points.map(p=>({...p,votes:{}}))}));setNotice(`Načteno ${result.owners.length} záznamů. ${result.warning} Před hlasováním zkontroluj vlastníky a podíly.`)}catch(e){setError(e.message)}};
  const setAttendance=(id,value)=>setDoc(d=>({...d,attendance:{...d.attendance,[id]:value}}));
  const setVote=(pointId,id,value)=>setDoc(d=>({...d,points:d.points.map(p=>p.id===pointId?{...p,votes:{...p.votes,[id]:value}}:p)}));
 
