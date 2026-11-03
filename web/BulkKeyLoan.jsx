@@ -22,7 +22,7 @@ export default function BulkKeyLoan({supabase,buildings,onSaved,onCancel,default
   try{
    const {data,error:rpcError}=await supabase.rpc("foxa_bulk_key_loan_create",{p_borrower:borrower.trim(),p_phone:"",p_company:"",p_email:"",p_office:office.trim(),p_note:"",p_items:items.map(x=>({building_id:x.building_id,description:x.description.trim()}))});
    if(rpcError)throw rpcError;
-   onSaved?.({count:data?.length||items.length,groupId:data?.[0]?.group_id});
+   onSaved?.({count:data?.length||items.length,groupId:data?.[0]?.group_id,loanIds:(data||[]).map(x=>x.loan_id)});
   }catch(err){setError(err.message||"Hromadnou výpůjčku se nepodařilo uložit.")}finally{setBusy(false)}
  };
  return <section className="keys-panel foxa-bulk-loan"><div className="foxa-bulk-heading"><div><h2>Hromadná výpůjčka klíčů</h2><p>Jeden vypůjčitel, více objektů. Každý dům se eviduje samostatně pro nezávislé vrácení klíčů.</p></div><button type="button" className="secondarybutton" onClick={onCancel}>Zrušit</button></div>
