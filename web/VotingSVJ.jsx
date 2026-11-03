@@ -39,7 +39,7 @@ function parseOwners(book){
  const declared=totalIndex>=0?best.rows.slice(best.header+1).map(r=>number(r[totalIndex])).find(v=>v>0):0;
  return {owners:best.entries,denominator:declared||total,warning:declared&&Math.abs(declared-total)>0.01?`Součet importovaných podílů (${total}) se liší od celku uvedeného v souboru (${declared}). Zkontroluj import.`:""};
 }
-export default function VotingSVJ({buildings=[]}){
+export default function VotingSVJ({buildings=[],theme="dark"}){
  const [dragActive,setDragActive]=useState(false),[selectedFile,setSelectedFile]=useState(""),[fileInputRef]=useState(()=>React.createRef()),[doc,setDoc]=useState(empty),[buildingQuery,setBuildingQuery]=useState(""),[buildingOpen,setBuildingOpen]=useState(false),[notice,setNotice]=useState(""),[error,setError]=useState("");
  const update=(key,value)=>setDoc(d=>({...d,[key]:value}));
  const buildingLabel=b=>[b.object_number||b.external_id,b.name,b.address||[b.street,b.city].filter(Boolean).join(", ")].filter(Boolean).join(" · ");
@@ -103,7 +103,7 @@ export default function VotingSVJ({buildings=[]}){
    setNotice("Stažena hlasovací tabulka podle struktury dodaného vzoru. V Excelu fungují rozbalovací nabídky i výpočty.");
   }catch(e){setError("Vytvoření Excelu selhalo: "+e.message)}
  };
- return <main className="foxa-vote">
+ return <main className={"foxa-vote "+(theme==="light"?"foxa-vote-light":"foxa-vote-dark")}>
  <header className="foxa-vote-head"><div className="foxa-vote-head-copy"><span className="foxa-vote-eyebrow">SPRÁVA SVJ · DOKUMENTY</span><h1>Generátor hlasovací tabulky</h1><p>Připravte hlasovací tabulku v Excelu z prezenční listiny vlastníků pro použití přímo na schůzi.</p></div><div className="foxa-vote-actions"><button type="button" className="foxa-vote-action-secondary" onClick={()=>{setDoc(empty());setBuildingQuery("");setBuildingOpen(false);setSelectedFile("");setNotice("");setError("")}}><span aria-hidden="true">＋</span> Nová tabulka</button><button type="button" className="foxa-vote-action-primary" disabled={!doc.owners.length} onClick={exportExcel}><span aria-hidden="true">↓</span> Stáhnout Excel (.xlsx)</button></div></header>
  {error&&<div className="foxa-vote-error" role="alert">{error}</div>}{notice&&<div className="foxa-vote-notice">{notice}</div>}
  <section className="foxa-vote-card"><h2>Podklady pro tabulku</h2><div className="foxa-vote-fields"><label>Název schůze<input value={doc.title} onChange={e=>update("title",e.target.value)}/></label>
