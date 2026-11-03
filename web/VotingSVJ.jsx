@@ -73,7 +73,7 @@ export default function VotingSVJ({buildings=[]}){
     set("B"+row,total,{numFmt:"#,##0",border});
     set("C"+row,o.unit,{border});
     set("D"+row,{formula:`IFERROR(A${row}/B${row},0)`,result:0},{numFmt:"0.00%",border});
-    set("E"+row,surname,{border});set("F"+row,given,{border});
+    set("E"+row,o.surname??surname,{border});set("F"+row,o.given??given,{border});
     set("G"+row,"nepřítomen",{border,fill:{type:"pattern",pattern:"solid",fgColor:{argb:"FFF0F0F0"}}});
     set("H"+row,"_",{border,fill:{type:"pattern",pattern:"solid",fgColor:{argb:"FFFFFFD6"}}});
    });
