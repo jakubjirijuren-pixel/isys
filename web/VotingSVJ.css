@@ -11,3 +11,21 @@
 .foxa-vote-dropzone{width:100%;max-width:620px;min-height:142px;box-sizing:border-box;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:7px;padding:20px 24px;border:2px dashed var(--border,#53677d);border-radius:14px;background:rgba(70,135,185,.055);color:inherit;cursor:pointer;text-align:center;transition:border-color .15s,background .15s,box-shadow .15s}
 .foxa-vote-dropzone:hover,.foxa-vote-dropzone:focus-visible,.foxa-vote-dropzone.is-dragging{border-color:#45a8ed;background:rgba(48,151,220,.15);outline:none;box-shadow:0 0 0 3px rgba(48,151,220,.12)}
 .foxa-vote-dropzone>strong{font-size:15px}.foxa-vote-dropzone>span{font-size:13px;color:var(--muted,#a9b7c9)}.foxa-vote-dropzone .foxa-vote-drop-icon{font-size:28px;color:#65b7f0;line-height:1}.foxa-vote-dropzone .foxa-vote-drop-link{color:#65b7f0;text-decoration:underline;font-weight:650}.foxa-vote-dropzone .foxa-vote-selected{margin-top:5px;color:#80d6b2;overflow-wrap:anywhere}.foxa-vote-file-hidden{position:absolute!important;width:1px!important;height:1px!important;opacity:0!important;pointer-events:none!important;overflow:hidden!important}
+
+/* FOXA unified module heading and action styling */
+.foxa-vote{max-width:none;padding:clamp(14px,2vw,26px);box-sizing:border-box;color:inherit}
+.foxa-vote *{box-sizing:border-box}
+.foxa-vote-head{display:flex;align-items:center;justify-content:space-between;gap:24px;flex-wrap:wrap;margin:0 0 22px;padding:22px 24px;border:1px solid var(--border,#415166);border-radius:18px;background:var(--surface,transparent);box-shadow:none}
+.foxa-vote-head-copy{flex:1 1 360px;min-width:0}
+.foxa-vote-eyebrow{display:block;margin-bottom:8px;color:#4da3d9;font-size:11px;font-weight:800;letter-spacing:.1em}
+.foxa-vote-head h1{margin:0 0 9px;font-size:clamp(22px,2vw,28px);line-height:1.2;font-weight:750;letter-spacing:-.02em}
+.foxa-vote-head p{max-width:650px;margin:0;color:var(--muted,#9eacbc);font-size:13px;line-height:1.55}
+.foxa-vote-actions{display:flex;align-items:center;justify-content:flex-end;gap:10px;flex-wrap:wrap}
+.foxa-vote .foxa-vote-actions button{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:43px;padding:10px 16px;border-radius:11px;font-size:13px;font-weight:700;line-height:1.2;white-space:nowrap;transition:background .15s,border-color .15s,opacity .15s}
+.foxa-vote .foxa-vote-actions .foxa-vote-action-secondary{background:transparent;color:inherit;border:1px solid var(--border,#53677d)}
+.foxa-vote .foxa-vote-actions .foxa-vote-action-secondary:hover{background:rgba(96,165,250,.09);border-color:#4da3d9}
+.foxa-vote .foxa-vote-actions .foxa-vote-action-primary{background:#1686c7;color:#fff;border:1px solid #1686c7}
+.foxa-vote .foxa-vote-actions .foxa-vote-action-primary:hover:not(:disabled){background:#0877b8;border-color:#0877b8}
+.foxa-vote .foxa-vote-actions .foxa-vote-action-primary:disabled{opacity:.45;cursor:not-allowed}
+.foxa-vote .foxa-vote-actions button:focus-visible{outline:3px solid #5fb5ee;outline-offset:2px}
+@media(max-width:750px){.foxa-vote-head{padding:18px;align-items:stretch}.foxa-vote-actions{justify-content:flex-start}.foxa-vote-actions button{flex:1 1 auto}}
