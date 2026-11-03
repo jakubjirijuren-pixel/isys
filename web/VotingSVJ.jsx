@@ -58,7 +58,7 @@ export default function VotingSVJ({buildings=[],theme="dark"}){
   try{
    const workbook=new ExcelJS.Workbook();
    workbook.creator="FOXA";workbook.calcProperties.fullCalcOnLoad=true;
-   const ws=workbook.addWorksheet("hlasování",{views:[{state:"frozen",ySplit:10,topLeftCell:"A11",zoomScale:115}],pageSetup:{orientation:"landscape",fitToPage:true,fitToWidth:1,fitToHeight:0,paperSize:9}});
+   const ws=workbook.addWorksheet("hlasování",{views:[{state:"frozen",ySplit:1,topLeftCell:"A2",zoomScale:115}],pageSetup:{orientation:"landscape",fitToPage:true,fitToWidth:1,fitToHeight:0,paperSize:9}});
    [13.57,11.71,8.43,16.14,24.43,31.29,15.29,11.29,9.14].forEach((w,i)=>ws.getColumn(i+1).width=w);
    const border={bottom:{style:"thin",color:{argb:"FF8C8C8C"}}};
    const heading={name:"Arial",size:11,bold:true,color:{argb:"FF000000"}};
@@ -73,26 +73,26 @@ export default function VotingSVJ({buildings=[],theme="dark"}){
    const summaryFill={type:"pattern",pattern:"solid",fgColor:{argb:"FFF0F5FA"}};
    const summaryBorder={bottom:{style:"thin",color:{argb:"FFD5DEE8"}}};
    const summary=(address,value,style={})=>set(address,value,{fill:summaryFill,border:summaryBorder,...style});
-   summary("J11","Přítomno v %",{font:heading});
-   summary("L11",{formula:'SUMIFS($D:$D,$G:$G,"ano")',result:0},{numFmt:"0.00%"});
-   summary("J12","z přítomných",{font:heading});
-   summary("J16","ze všech",{font:heading});
+   summary("J2","Přítomno v %",{font:heading});
+   summary("L2",{formula:'SUMIFS($D:$D,$G:$G,"ano")',result:0},{numFmt:"0.00%"});
+   summary("J3","z přítomných",{font:heading});
+   summary("J7","ze všech",{font:heading});
    ["PRO","PROTI","ZDRŽEL"].forEach((vote,i)=>{
-    const r=i+12,all=i+16;
+    const r=i+3,all=i+7;
     summary("K"+r,vote,{font:heading});summary("K"+all,vote,{font:heading});
     summary("L"+r,{formula:`IFERROR(SUMIFS($D:$D,$G:$G,"ano",$H:$H,K${r})/SUMIFS($D:$D,$G:$G,"ano"),0)`,result:0},{numFmt:"0.00%"});
     summary("L"+all,{formula:`SUMIFS($D:$D,$G:$G,"ano",$H:$H,K${all})`,result:0},{numFmt:"0.00%"});
    });
-   summary("L15",{formula:'IF(AND(L11>0,SUM(L12:L14)<0.999999),"pozor nehlasovali všichni přítomní","")',result:""},{font:{...normal,bold:true,color:{argb:"FFB00000"}},alignment:{vertical:"middle",wrapText:true}});
-   ws.getRow(15).height=34;
-   ws.getRow(9).height=7.5;ws.getRow(10).height=33;
+   summary("L6",{formula:'IF(AND(L2>0,SUM(L3:L5)<0.999999),"pozor nehlasovali všichni přítomní","")',result:""},{font:{...normal,bold:true,color:{argb:"FFB00000"}},alignment:{vertical:"middle",wrapText:true}});
+   ws.getRow(6).height=34;
+   ws.getRow(1).height=33;
    ["podíl","celkem","Č. bytu","%","příjmení","jméno","přítomen","hlasoval"].forEach((x,i)=>{
-    const c=set(ws.getCell(10,i+1).address,x,{font:heading,border:{bottom:{style:"medium",color:{argb:"FF000000"}}},fill:{type:"pattern",pattern:"solid",fgColor:{argb:"FFE7E7E7"}}});
+    const c=set(ws.getCell(1,i+1).address,x,{font:heading,border:{bottom:{style:"medium",color:{argb:"FF000000"}}},fill:{type:"pattern",pattern:"solid",fgColor:{argb:"FFE7E7E7"}}});
     c.alignment={horizontal:"center",vertical:"middle",wrapText:true};
    });
    const total=number(doc.denominator)||doc.owners.reduce((sum,o)=>sum+number(o.share),0);
    doc.owners.forEach((o,i)=>{
-    const row=i+11;ws.getRow(row).height=30;
+    const row=i+2;ws.getRow(row).height=30;
     const name=String(o.name||"").trim(),parts=name.split(/\\s+/),surname=parts.shift()||"",given=parts.join(" ");
     set("A"+row,number(o.share),{numFmt:"#,##0",border});
     set("B"+row,total,{numFmt:"#,##0",border});
@@ -102,12 +102,12 @@ export default function VotingSVJ({buildings=[],theme="dark"}){
     set("G"+row,"nepřítomen",{border,fill:{type:"pattern",pattern:"solid",fgColor:{argb:"FFF0F0F0"}}});
     set("H"+row,"_",{border,fill:{type:"pattern",pattern:"solid",fgColor:{argb:"FFFFFFD6"}}});
    });
-   const last=10+doc.owners.length;
-   ws.dataValidations.add(`G11:G${last}`,{type:"list",allowBlank:true,formulae:['"ano,nepřítomen"'],showErrorMessage:true,errorTitle:"Neplatná hodnota",error:"Vyber ano nebo nepřítomen."});
-   ws.dataValidations.add(`H11:H${last}`,{type:"list",allowBlank:true,formulae:['"_,PRO,PROTI,ZDRŽEL"'],showErrorMessage:true,errorTitle:"Neplatná hodnota",error:"Vyber _, PRO, PROTI nebo ZDRŽEL."});
+   const last=1+doc.owners.length;
+   ws.dataValidations.add(`G2:G${last}`,{type:"list",allowBlank:true,formulae:['"ano,nepřítomen"'],showErrorMessage:true,errorTitle:"Neplatná hodnota",error:"Vyber ano nebo nepřítomen."});
+   ws.dataValidations.add(`H2:H${last}`,{type:"list",allowBlank:true,formulae:['"_,PRO,PROTI,ZDRŽEL"'],showErrorMessage:true,errorTitle:"Neplatná hodnota",error:"Vyber _, PRO, PROTI nebo ZDRŽEL."});
    ws.getCell("C"+(last+2)).value="kontrola";
-   ws.getCell("D"+(last+2)).value={formula:`SUM(D11:D${last})`,result:0};
-   ws.autoFilter={from:"A10",to:`H${last}`};
+   ws.getCell("D"+(last+2)).value={formula:`SUM(D2:D${last})`,result:0};
+   ws.autoFilter={from:"A1",to:`H${last}`};
    const buffer=await workbook.xlsx.writeBuffer();
    const url=URL.createObjectURL(new Blob([buffer],{type:"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"}));
    const link=document.createElement("a");link.href=url;link.download=`FOXA-hlasovani-${(doc.building_center||"bez-strediska").replace(/[^0-9A-Za-z_-]/g,"_")}-${doc.meeting_date||"schuze"}.xlsx`;document.body.appendChild(link);link.click();link.remove();setTimeout(()=>URL.revokeObjectURL(url),3000);
