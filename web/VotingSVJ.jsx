@@ -56,7 +56,7 @@ export default function VotingSVJ({buildings=[]}){
    const row=resultsStart+2+i;
    const cells=[label,...Array.from({length:pointCount},(_,j)=>{
     const col=XLSX.utils.encode_col(j+4);
-    return {t:"n",f:label==="NEHLASOVAL"?`SUMIF($D$${start}:$D$${end},"ANO",$C$${start}:$C$${end})-SUMIF(${col}${start}:${col}${end},"PRO",$C$${start}:$C$${end})-SUMIF(${col}${start}:${col}${end},"PROTI",$C$${start}:$C$${end})-SUMIF(${col}${start}:${col}${end},"ZDRŽEL SE",$C$${start}:$C$${end})`:`SUMIFS($C$${start}:$C$${end},$D$${start}:$D$${end},"ANO",${col}${start}:${col}${end},"${label}")`};
+    return {t:"n",f:label==="NEHLASOVAL"?`SUMIF($D$${start}:$D$${end},"ANO",$C$${start}:$C$${end})-SUMIFS($C${start}:$C${end},$D${start}:$D${end},"ANO",${col}${start}:${col}${end},"PRO")-SUMIFS($C${start}:$C${end},$D${start}:$D${end},"ANO",${col}${start}:${col}${end},"PROTI")-SUMIFS($C${start}:$C${end},$D${start}:$D${end},"ANO",${col}${start}:${col}${end},"ZDRŽEL SE")`:`SUMIFS($C$${start}:$C$${end},$D$${start}:$D$${end},"ANO",${col}${start}:${col}${end},"${label}")`};
    })];
    XLSX.utils.sheet_add_aoa(ws,[cells],{origin:`A${row}`});
   });
