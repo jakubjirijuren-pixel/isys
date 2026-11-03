@@ -13,14 +13,28 @@ function parseOwners(book){
   const rows=rowsFromSheet(sheet);
   for(let i=0;i<Math.min(rows.length,35);i++){
    const h=rows[i].map(norm),find=(keys)=>h.findIndex(v=>keys.some(k=>v===k||v.includes(k)));
-   const byt=find(["byt","jednotka","cislo bytu"]),prij=find(["prijmeni","vlastnik"]),jmeno=find(["jmeno"]),podil=find(["podil","hlas"]);
-   if(byt<0||prij<0||podil<0)continue;
-   const entries=rows.slice(i+1).map((r,j)=>({id:crypto.randomUUID(),unit:r[byt]||"",name:[r[prij],jmeno>=0?r[jmeno]:""].filter(Boolean).join(" ").replace(/\s+/g," ").trim(),surname:r[prij]||"",given:jmeno>=0?r[jmeno]||"":"",share:number(r[podil]),sourceRow:i+j+2})).filter(r=>r.name&&r.share>0&&!/celkem|sou[cč]et|úhrnem/i.test(r.name));
-   if(!best||entries.length>best.entries.length)best={entries,rows,header:i};
+   const byt=find(["byt","jednotka","cislo bytu"]),prij=find(["prijmeni","vlastnik"]),jmeno=find(["jmeno"]);
+   const numerator=find(["citatel"]),denominator=find(["jmen.","jmenovatel"]);
+   const shareIndex=find(["podil","hlas"]);
+   const fractionFormat=numerator>=0&&denominator>=0;
+   if(prij<0||(!fractionFormat&&shareIndex<0))continue;
+   const entries=rows.slice(i+1).map((r,j)=>{
+    const surname=r[prij]||"",given=jmeno>=0?r[jmeno]||"":"";
+    const share=fractionFormat?number(r[numerator]):number(r[shareIndex]);
+    const denominatorValue=fractionFormat?number(r[denominator]):0;
+    return {id:crypto.randomUUID(),unit:byt>=0?r[byt]||"":"",name:[surname,given].filter(Boolean).join(" ").replace(/\\s+/g," ").trim(),surname,given,share,denominator:denominatorValue,sourceRow:i+j+2};
+   }).filter(r=>r.name&&r.share>0&&!/^(celkem|sou[cč]et|úhrnem)/i.test(r.name));
+   if(!best||entries.length>best.entries.length)best={entries,rows,header:i,fractionFormat};
   }
  }
- if(!best||!best.entries.length)throw Error("Nenašel jsem sloupce byt, příjmení/jméno a podíl. Zkontroluj strukturu souboru.");
+ if(!best||!best.entries.length)throw Error("Nenašel jsem sloupce vlastníků a hlasovacích podílů. Podporovány jsou také listiny se sloupci čitatel a jmenovatel.");
  const total=best.entries.reduce((s,x)=>s+x.share,0);
+ if(best.fractionFormat){
+  const denominators=[...new Set(best.entries.map(x=>x.denominator).filter(v=>v>0))];
+  if(denominators.length!==1)throw Error("V prezenční listině jsou různé nebo chybějící jmenovatele podílů. Zkontroluj soubor.");
+  const declared=denominators[0];
+  return {owners:best.entries,denominator:declared,warning:Math.abs(declared-total)>0.01?`Součet čitatelů (${total}) se liší od jmenovatele (${declared}). Zkontroluj úplnost seznamu.`:""};
+ }
  const header=best.rows[best.header].map(norm),totalIndex=header.findIndex(x=>x==="celkem"||x.includes("celkovy"));
  const declared=totalIndex>=0?best.rows.slice(best.header+1).map(r=>number(r[totalIndex])).find(v=>v>0):0;
  return {owners:best.entries,denominator:declared||total,warning:declared&&Math.abs(declared-total)>0.01?`Součet importovaných podílů (${total}) se liší od celku uvedeného v souboru (${declared}). Zkontroluj import.`:""};
