@@ -30,3 +30,5 @@
 .foxa-live .foxa-live-object-selected span{min-width:0;display:flex;flex-direction:column;gap:3px;font-size:12px}
 .foxa-live .foxa-live-object-selected small{color:var(--lv-muted);font-size:12px;overflow-wrap:anywhere}
 .foxa-live .foxa-live-object-clear{background:transparent!important;border:1px solid var(--lv-border)!important;color:var(--lv-ink)!important;min-height:30px;width:30px;padding:0;font-size:18px}
+
+.foxa-live .foxa-live-board-share{display:flex;flex-direction:column;gap:10px;background:var(--lv-soft);border:1px solid var(--lv-border);border-radius:11px;padding:13px;margin:12px 0}.foxa-live .foxa-live-board-share input{font-family:ui-monospace,monospace;font-size:12px}.foxa-live .foxa-live-board-share .foxa-live-row{justify-content:flex-start;margin:0}
