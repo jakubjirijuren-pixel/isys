@@ -20,6 +20,7 @@
     "react-dom": "^19.1.0",
     "vite": "^7.1.0",
     "xlsx": "^0.18.5",
+    "exceljs": "^4.4.0",
     "html2pdf.js": "^0.10.3",
     "qrcode": "^1.5.4",
     "@zxing/browser": "^0.1.5",
