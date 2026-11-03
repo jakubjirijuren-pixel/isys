@@ -19,3 +19,13 @@
 /* Referent mobile layout: content-sized panels without empty vertical spacer. */
 @media(max-width:650px){.inspectionmodule .inspectionpanel,.inspectionmodule .inspectionitems,.inspectionmodule .inspectionitem{height:auto!important;min-height:0!important;flex:0 0 auto!important}.inspectionmodule .inspectionpanel{justify-content:flex-start!important}.inspection-section-photos{margin-top:12px;padding-top:10px;border-top:1px solid var(--border,#48617a)}}
 .inspection-section-photos .inspectionphotoupload{max-width:100%}
+
+/* Unified PWA-style inspection status choices across desktop and mobile terminal. */
+.inspectionitem .foxa-referent-status-field{width:100%;min-width:0}
+.inspectionitem .foxa-referent-status-buttons{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px!important;width:100%;margin-top:8px}
+.inspectionitem .foxa-referent-status-buttons button{appearance:none;display:flex;align-items:center;justify-content:center;min-width:0;min-height:46px;padding:11px 8px!important;margin:0!important;border:1px solid var(--border,#53677d)!important;border-radius:11px!important;background:rgba(110,135,160,.09)!important;color:inherit!important;font:inherit;font-size:13px!important;font-weight:650!important;line-height:1.2;text-align:center;white-space:normal;box-shadow:none!important;cursor:pointer;transition:background .16s,border-color .16s,box-shadow .16s}
+.inspectionitem .foxa-referent-status-buttons button:hover{background:rgba(55,145,205,.16)!important;border-color:#4b9bd0!important}
+.inspectionitem .foxa-referent-status-buttons button.selected,.inspectionitem .foxa-referent-status-buttons button[aria-pressed="true"]{background:rgba(20,137,202,.2)!important;border-color:#2c9fdd!important;box-shadow:inset 0 0 0 1px #2c9fdd!important}
+.inspectionitem .foxa-referent-status-buttons button.selected.fault{background:rgba(217,99,72,.18)!important;border-color:#e58b6f!important;box-shadow:inset 0 0 0 1px #e58b6f!important}
+.inspectionitem .foxa-referent-status-buttons button:focus-visible{outline:3px solid #62b3ec!important;outline-offset:2px}
+@media(max-width:420px){.inspectionitem .foxa-referent-status-buttons{gap:5px!important}.inspectionitem .foxa-referent-status-buttons button{font-size:12px!important;padding:10px 5px!important;min-height:48px}}
