@@ -10,6 +10,21 @@ const invoke=async(supabase,fields)=>{
  if(!response.ok)throw Error(result.error||"Operace selhala");
  return result;
 };
+function OfferSearchPicker({label,value,items,onChange,placeholder,disabled=false}){
+ const [open,setOpen]=useState(false),[query,setQuery]=useState("");
+ const root=useRef(null),search=useRef(null);
+ useEffect(()=>{if(!open)return;const close=e=>{if(!root.current?.contains(e.target))setOpen(false)};const escape=e=>{if(e.key==="Escape")setOpen(false)};document.addEventListener("pointerdown",close);document.addEventListener("keydown",escape);return()=>{document.removeEventListener("pointerdown",close);document.removeEventListener("keydown",escape)}},[open]);
+ useEffect(()=>{if(open)search.current?.focus();else setQuery("")},[open]);
+ const selected=items.find(item=>item.id===value);
+ const matches=items.filter(item=>item.name.toLocaleLowerCase("cs").includes(query.toLocaleLowerCase("cs")));
+ return <div className="offer-picker"><div className="filterdropdown" ref={root}>
+ <button type="button" disabled={disabled} className="filtertrigger" aria-label={label} aria-haspopup="listbox" aria-expanded={open} onClick={()=>setOpen(v=>!v)}><span>{selected?.name||placeholder}</span><span className="filterchevron" aria-hidden="true">⌄</span></button>
+ {open&&<div className="filtermenu offer-picker-menu" role="listbox" aria-label={label}>
+ <input ref={search} type="search" placeholder={"Hledat "+label.toLocaleLowerCase("cs")+"…"} value={query} onChange={e=>setQuery(e.target.value)}/>
+ <div className="offer-picker-results"><button type="button" role="option" aria-selected={!value} onClick={()=>{onChange("");setOpen(false)}}>— Bez výběru —</button>
+ {matches.map(item=><button key={item.id} type="button" role="option" aria-selected={item.id===value} className={item.id===value?"chosen":""} onClick={()=>{onChange(item.id);setOpen(false)}}>{item.name}</button>)}
+ {!matches.length&&<p>Žádné odpovídající položky.</p>}</div></div>}</div></div>;
+}
 function SignatureCanvas({onChange}){
  const canvas=useRef(null),active=useRef(false),last=useRef(null);
  useEffect(()=>{
@@ -35,17 +50,17 @@ export default function OfferApprovals({supabase,buildings=[],userId,roles=[]}){
  const download=async id=>{setBusy(true);setError("");try{const result=await invoke(supabase,{action:"download",id});window.open(result.url,"_blank","noopener,noreferrer")}catch(e){setError(e.message)}finally{setBusy(false)}};
  const isCreator=roles.some(r=>["admin","technician"].includes(r));
  return <div className="offer-approvals">
- <header className="offer-heading"><div><h1>Elektronické podpisy</h1><p>Interní schvalování cenových nabídek referentem. Schválení není objednávkou ani závazným přijetím nabídky dodavatele.</p></div><span className="offer-heading-mark">FOXA</span></header>
+ <header className="offer-heading"><div><h1>Elektronické podpisy</h1><p>Interní schvalování cenových nabídek referentem. Schválení není objednávkou ani závazným přijetím nabídky dodavatele.</p></div></header>
  {error&&<p role="alert" style={{color:"#c53030"}}>{error}</p>}{notice&&<p role="status">{notice}</p>}
  {isCreator&&<form onSubmit={submit} className="offer-panel offer-form">
  <h2>Nová cenová nabídka</h2>
- <label>Objekt<select required value={buildingId} onChange={e=>{setBuildingId(e.target.value);setApproverId("")}}><option value="">Vyberte objekt</option>{buildings.filter(b=>roles.includes("admin")||b.manager_user_id===userId).map(b=><option key={b.id} value={b.id}>{b.object_number} – {b.name||b.address}</option>)}</select></label>
- <label>Referent<select required value={approverId} onChange={e=>setApproverId(e.target.value)}><option value="">Vyberte referenta</option>{availableReferents.map(p=><option key={p.id} value={p.id}>{p.display_name||p.full_name}</option>)}</select></label>
+ <div className="offer-field"><span className="offer-field-label">Objekt</span><OfferSearchPicker label="Objekt" value={buildingId} onChange={v=>{setBuildingId(v);setApproverId("")}} placeholder="Vyberte objekt…" items={buildings.filter(b=>roles.includes("admin")||b.manager_user_id===userId).map(b=>({id:b.id,name:[b.object_number,b.name||b.address].filter(Boolean).join(" – ")}))}/></div>
+ <div className="offer-field"><span className="offer-field-label">Referent</span><OfferSearchPicker label="Referent" value={approverId} onChange={setApproverId} placeholder={buildingId?"Vyberte referenta…":"Nejprve vyberte objekt"} disabled={!buildingId} items={availableReferents.map(p=>({id:p.id,name:p.display_name||p.full_name||p.id}))}/>{buildingId&&!availableReferents.length&&<small className="offer-help">K tomuto objektu není v profilu přiřazen referent.</small>}</div>
  <label>Název nabídky<input required minLength={3} maxLength={200} value={title} onChange={e=>setTitle(e.target.value)}/></label>
  <label>Dodavatel<input required value={supplier} onChange={e=>setSupplier(e.target.value)}/></label>
  <label>Cena v Kč<input required type="number" min="0" step="0.01" value={amount} onChange={e=>setAmount(e.target.value)}/></label>
  <label>Cenová nabídka PDF (max. 20 MB)<input required type="file" accept="application/pdf,.pdf" onChange={e=>setFile(e.target.files?.[0]||null)}/></label>
- <button className="offer-primary" disabled={busy||!file||!approverId} type="submit">Odeslat referentovi ke schválení</button></form>}
+ <button className="offer-primary" disabled={busy||!file||!approverId||!buildingId} type="submit">Odeslat referentovi ke schválení</button></form>}
  <div className="offer-list-heading"><h2>Evidence nabídek</h2><span>{rows.length} dokumentů</span></div>
  <div className="offer-list">{rows.map(r=><div key={r.id} className="offer-panel offer-row">
  <div><strong>{r.title}</strong><div>{r.supplier} · {Number(r.amount).toLocaleString("cs-CZ")} Kč</div><small>{r.status==="approved"?"Interně schváleno":"Čeká na podpis"} · {new Date(r.created_at).toLocaleString("cs-CZ")}</small></div>
