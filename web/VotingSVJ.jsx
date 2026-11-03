@@ -22,7 +22,7 @@ function parseOwners(book){
     const surname=r[prij]||"",given=jmeno>=0?r[jmeno]||"":"";
     const share=fractionFormat?number(r[numerator]):number(r[shareIndex]);
     const denominatorValue=fractionFormat?number(r[denominator]):0;
-    return {id:crypto.randomUUID(),unit:byt>=0?r[byt]||"":"",name:[surname,given].filter(Boolean).join(" ").replace(/\\s+/g," ").trim(),surname,given,share,denominator:denominatorValue,sourceRow:i+j+2};
+    return {id:crypto.randomUUID(),unit:byt>=0?r[byt]||"":"",name:[surname,given].filter(Boolean).join(" ").replace(/\s+/g," ").trim(),surname,given,share,denominator:denominatorValue,sourceRow:i+j+2};
    }).filter(r=>r.name&&r.share>0&&!/^(celkem|sou[cč]et|úhrnem)/i.test(r.name));
    if(!best||entries.length>best.entries.length)best={entries,rows,header:i,fractionFormat};
   }
