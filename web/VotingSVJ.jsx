@@ -64,16 +64,27 @@ export default function VotingSVJ({buildings=[],theme="dark"}){
    const heading={name:"Arial",size:11,bold:true,color:{argb:"FF000000"}};
    const normal={name:"Arial",size:10,color:{argb:"FF000000"}};
    const set=(cell,value,style={})=>{const c=ws.getCell(cell);c.value=value;c.font={...normal,...(style.font||{})};c.alignment=style.alignment||{vertical:"middle",wrapText:true};if(style.fill)c.fill=style.fill;if(style.border)c.border=style.border;if(style.numFmt)c.numFmt=style.numFmt;return c};
-   set("A1","Přítomno v %",{font:heading});
-   set("B1",{formula:'SUMIFS($D:$D,$G:$G,"ano")',result:0},{numFmt:"0.00%"});
-   set("A2","z přítomných",{font:heading});set("A6","ze všech",{font:heading});
+   // Keep the owner table at A:H and place the live voting summary beside it.
+   // I is a visual spacer; J:L is the summary panel.
+   ws.getColumn(9).width=4;
+   ws.getColumn(10).width=19;
+   ws.getColumn(11).width=18;
+   ws.getColumn(12).width=21;
+   const summaryFill={type:"pattern",pattern:"solid",fgColor:{argb:"FFF0F5FA"}};
+   const summaryBorder={bottom:{style:"thin",color:{argb:"FFD5DEE8"}}};
+   const summary=(address,value,style={})=>set(address,value,{fill:summaryFill,border:summaryBorder,...style});
+   summary("J11","Přítomno v %",{font:heading});
+   summary("L11",{formula:'SUMIFS($D:$D,$G:$G,"ano")',result:0},{numFmt:"0.00%"});
+   summary("J12","z přítomných",{font:heading});
+   summary("J16","ze všech",{font:heading});
    ["PRO","PROTI","ZDRŽEL"].forEach((vote,i)=>{
-    const r=i+2,all=i+6;
-    set("B"+r,vote,{font:heading});set("B"+all,vote,{font:heading});
-    set("C"+r,{formula:`IFERROR(SUMIFS($D:$D,$G:$G,"ano",$H:$H,B${r})/SUMIFS($D:$D,$G:$G,"ano"),0)`,result:0},{numFmt:"0.00%"});
-    set("C"+all,{formula:`SUMIFS($D:$D,$G:$G,"ano",$H:$H,B${all})`,result:0},{numFmt:"0.00%"});
+    const r=i+12,all=i+16;
+    summary("K"+r,vote,{font:heading});summary("K"+all,vote,{font:heading});
+    summary("L"+r,{formula:`IFERROR(SUMIFS($D:$D,$G:$G,"ano",$H:$H,K${r})/SUMIFS($D:$D,$G:$G,"ano"),0)`,result:0},{numFmt:"0.00%"});
+    summary("L"+all,{formula:`SUMIFS($D:$D,$G:$G,"ano",$H:$H,K${all})`,result:0},{numFmt:"0.00%"});
    });
-   set("C5",{formula:'IF(SUM(C2:C4)=1,"","pozor nehlasovali všichni přítomní")',result:""},{font:{bold:true,color:{argb:"FFB00000"}}});
+   summary("L15",{formula:'IF(AND(L11>0,SUM(L12:L14)<0.999999),"pozor nehlasovali všichni přítomní","")',result:""},{font:{...normal,bold:true,color:{argb:"FFB00000"}},alignment:{vertical:"middle",wrapText:true}});
+   ws.getRow(15).height=34;
    ws.getRow(9).height=7.5;ws.getRow(10).height=33;
    ["podíl","celkem","Č. bytu","%","příjmení","jméno","přítomen","hlasoval"].forEach((x,i)=>{
     const c=set(ws.getCell(10,i+1).address,x,{font:heading,border:{bottom:{style:"medium",color:{argb:"FF000000"}}},fill:{type:"pattern",pattern:"solid",fgColor:{argb:"FFE7E7E7"}}});
