@@ -28,3 +28,32 @@
 .offer-sign-panel p{color:var(--fx-muted)}
 .offer-sign-actions{margin-top:14px}
 @media(max-width:640px){.offer-row{align-items:stretch;flex-direction:column}.offer-actions{width:100%}.offer-actions button{flex:1 1 160px}.offer-heading-mark{display:none}}
+
+/* Compact FOXA module heading: override legacy global header height/position */
+.layout .body .offer-approvals .offer-heading{
+ position:relative;inset:auto;float:none;display:block;
+ height:auto!important;min-height:0!important;max-height:none!important;
+ overflow:visible;box-sizing:border-box;width:100%;margin:0;
+ padding:22px 26px;border-radius:var(--fx-radius-lg);
+}
+.layout .body .offer-approvals .offer-heading>div{min-width:0;max-width:100%}
+.layout .body .offer-approvals .offer-heading h1{margin:0 0 8px;font-size:clamp(1.45rem,2.1vw,2rem);line-height:1.2}
+.layout .body .offer-approvals .offer-heading p{margin:0;color:var(--fx-muted);font-size:14px;line-height:1.55;max-width:900px}
+.layout .body .offer-approvals{display:flex;flex-direction:column;align-items:stretch;gap:18px}
+.layout .body .offer-approvals .offer-form{max-width:100%;width:100%;padding:24px 26px;gap:16px;grid-template-columns:repeat(2,minmax(0,1fr))}
+.layout .body .offer-approvals .offer-form h2{grid-column:1/-1;margin:0 0 2px}
+.layout .body .offer-approvals .offer-form>label,.layout .body .offer-approvals .offer-form>.offer-field{min-width:0}
+.layout .body .offer-approvals .offer-form>label:nth-last-of-type(1){grid-column:1/-1}
+.layout .body .offer-approvals .offer-form>button[type=submit]{grid-column:1/-1;justify-self:start;min-width:260px}
+.offer-field{display:flex;flex-direction:column;gap:7px;min-width:0}
+.offer-field-label{font-size:14px;font-weight:600;color:var(--fx-text)}
+.offer-picker,.offer-picker .filterdropdown{width:100%;min-width:0}
+.layout .body .offer-approvals .offer-picker .filtertrigger{display:flex;align-items:center;justify-content:space-between;text-align:left;width:100%;min-height:46px;padding:10px 14px;background:var(--isys-control-bg);border:1px solid var(--isys-control-border);border-radius:var(--fx-radius-control);color:var(--isys-control-text);font-size:14px;font-weight:500}
+.layout .body .offer-approvals .offer-picker .filtertrigger:hover:not(:disabled){border-color:var(--isys-control-hover);background:var(--isys-control-bg)}
+.layout .body .offer-approvals .offer-picker .filtermenu{top:calc(100% + 5px);z-index:1000;min-width:100%;width:100%;box-sizing:border-box;max-height:320px;padding:8px;background:var(--isys-control-bg);border:1px solid var(--isys-control-border);box-shadow:var(--isys-control-shadow)}
+.layout .body .offer-approvals .offer-picker .filtermenu input[type=search]{width:100%;min-height:40px;margin:0 0 7px;background:var(--isys-control-bg);border:1px solid var(--isys-control-border);color:var(--isys-control-text);border-radius:8px;padding:8px 11px;font:inherit}
+.offer-picker-results{max-height:225px;overflow-y:auto}
+.layout .body .offer-approvals .offer-picker .filtermenu button{display:block;width:100%;height:auto;min-height:39px;border:0;border-radius:8px;text-align:left;background:transparent;padding:9px 12px;color:var(--isys-control-text);font-size:13px;font-weight:500;white-space:normal}
+.layout .body .offer-approvals .offer-picker .filtermenu button:hover,.layout .body .offer-approvals .offer-picker .filtermenu button.chosen{background:var(--isys-control-option-selected)}
+.offer-picker-results p,.offer-help{margin:8px 10px;color:var(--fx-muted);font-size:13px}
+@media(max-width:780px){.layout .body .offer-approvals .offer-form{grid-template-columns:minmax(0,1fr);padding:18px}.layout .body .offer-approvals .offer-form>button[type=submit]{width:100%;min-width:0}.layout .body .offer-approvals .offer-heading{padding:20px}}
