@@ -41,13 +41,21 @@ function SignatureCanvas({onChange}){
 export default function OfferApprovals({supabase,buildings=[],userId,roles=[]}){
  const [rows,setRows]=useState([]),[profiles,setProfiles]=useState([]),[busy,setBusy]=useState(false),[error,setError]=useState(""),[notice,setNotice]=useState("");
  const [buildingId,setBuildingId]=useState(""),[title,setTitle]=useState(""),[supplier,setSupplier]=useState(""),[amount,setAmount]=useState(""),[file,setFile]=useState(null),[selected,setSelected]=useState(null),[signature,setSignature]=useState("");
- const refresh=async()=>{const [{data,error:e},{data:people}]=await Promise.all([supabase.from("foxa_offer_approvals").select("*").order("created_at",{ascending:false}),supabase.from("profiles").select("id,display_name,full_name")]);if(e)throw e;setRows(data||[]);setProfiles(people||[])};
+ const refresh=async()=>{const [{data,error:e},{data:people}]=await Promise.all([supabase.from("foxa_offer_approvals").select("*").is("deleted_at",null).order("created_at",{ascending:false}),supabase.from("profiles").select("id,display_name,full_name")]);if(e)throw e;setRows(data||[]);setProfiles(people||[])};
  useEffect(()=>{refresh().catch(e=>setError(e.message))},[]);
  const selectedBuilding=buildings.find(b=>b.id===buildingId);
  const assignedReferent=profiles.find(p=>p.id===selectedBuilding?.referent_user_id);
  const submit=async e=>{e.preventDefault();setError("");setNotice("");setBusy(true);try{await invoke(supabase,{action:"create",building_id:buildingId,title,supplier,amount,file});setTitle("");setSupplier("");setAmount("");setFile(null);setNotice("Nabídka byla odeslána referentovi.");await refresh()}catch(e){setError(e.message)}finally{setBusy(false)}};
  const sign=async()=>{if(!signature)return setError("Nejprve se podepište.");setBusy(true);setError("");try{await invoke(supabase,{action:"sign",id:selected.id,signature});setSelected(null);setSignature("");setNotice("Nabídka byla interně schválena. Certifikát je připojen jako poslední stránka PDF.");await refresh()}catch(e){setError(e.message)}finally{setBusy(false)}};
  const download=async id=>{setBusy(true);setError("");try{const result=await invoke(supabase,{action:"download",id});window.open(result.url,"_blank","noopener,noreferrer")}catch(e){setError(e.message)}finally{setBusy(false)}};
+ const removeOffer=async offer=>{
+  const approved=offer.status==="approved";
+  const message=approved?"Odstranit schválenou nabídku ze seznamu? Podepsané PDF a auditní historie zůstanou bezpečně uložené.":"Odstranit odeslanou cenovou nabídku? Referent ji už nebude moci schválit.";
+  if(!window.confirm(message))return;
+  setBusy(true);setError("");setNotice("");
+  try{await invoke(supabase,{action:"delete",id:offer.id});if(selected?.id===offer.id)setSelected(null);setNotice("Cenová nabídka byla odstraněna ze seznamu. Auditní historie zůstala zachována.");await refresh()}
+  catch(e){setError(e.message)}finally{setBusy(false)}
+ };
  const isCreator=roles.some(r=>["admin","technician"].includes(r));
  return <div className="offer-approvals">
  <header className="offer-heading"><div><h1>Elektronické podpisy</h1><p>Interní schvalování cenových nabídek referentem. Schválení není objednávkou ani závazným přijetím nabídky dodavatele.</p></div></header>
@@ -64,7 +72,7 @@ export default function OfferApprovals({supabase,buildings=[],userId,roles=[]}){
  <div className="offer-list-heading"><h2>Evidence nabídek</h2><span>{rows.length} dokumentů</span></div>
  <div className="offer-list">{rows.map(r=><div key={r.id} className="offer-panel offer-row">
  <div><strong>{r.title}</strong><div>{r.supplier} · {Number(r.amount).toLocaleString("cs-CZ")} Kč</div><small>{r.status==="approved"?"Interně schváleno":"Čeká na podpis"} · {new Date(r.created_at).toLocaleString("cs-CZ")}</small></div>
- <div className="offer-actions"><button type="button" disabled={busy} onClick={()=>download(r.id)}>Zobrazit PDF</button>{r.status==="pending"&&r.approver_id===userId&&<button className="offer-primary" type="button" onClick={()=>{setSelected(r);setSignature("")}}>Schválit podpisem</button>}</div>
+ <div className="offer-actions"><button type="button" disabled={busy} onClick={()=>download(r.id)}>Zobrazit PDF</button>{r.status==="pending"&&r.approver_id===userId&&<button className="offer-primary" type="button" onClick={()=>{setSelected(r);setSignature("")}}>Schválit podpisem</button>}{(r.creator_id===userId||roles.includes("admin"))&&<button className="offer-delete" type="button" disabled={busy} onClick={()=>removeOffer(r)}>Odstranit</button>}</div>
  </div>)}</div>
  {selected&&<div className="offer-panel offer-sign-panel"><h2>Podpis referenta – {selected.title}</h2><p>Potvrzuji pouze interní souhlas s touto cenovou nabídkou.</p><SignatureCanvas onChange={setSignature}/><div className="offer-actions offer-sign-actions"><button className="offer-primary" disabled={busy||!signature} onClick={sign}>Podepsat a vytvořit certifikát</button><button type="button" onClick={()=>setSelected(null)}>Zrušit</button></div></div>}
  </div>;
