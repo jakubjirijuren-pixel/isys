@@ -1,3 +1,4 @@
+import "./OfferApprovals.css";
 import React,{useEffect,useRef,useState} from "react";
 const invoke=async(supabase,fields)=>{
  const {data:{session}}=await supabase.auth.getSession();
@@ -34,9 +35,9 @@ export default function OfferApprovals({supabase,buildings=[],userId,roles=[]}){
  const download=async id=>{setBusy(true);setError("");try{const result=await invoke(supabase,{action:"download",id});window.open(result.url,"_blank","noopener,noreferrer")}catch(e){setError(e.message)}finally{setBusy(false)}};
  const isCreator=roles.some(r=>["admin","technician"].includes(r));
  return <div className="offer-approvals">
- <h1>Elektronické podpisy – cenové nabídky</h1><p>Interní souhlas referenta. Schválení není objednávkou ani závazným přijetím nabídky dodavatele.</p>
+ <header className="offer-heading"><div><h1>Elektronické podpisy</h1><p>Interní schvalování cenových nabídek referentem. Schválení není objednávkou ani závazným přijetím nabídky dodavatele.</p></div><span className="offer-heading-mark">FOXA</span></header>
  {error&&<p role="alert" style={{color:"#c53030"}}>{error}</p>}{notice&&<p role="status">{notice}</p>}
- {isCreator&&<form onSubmit={submit} className="card" style={{padding:20,display:"grid",gap:12,maxWidth:760}}>
+ {isCreator&&<form onSubmit={submit} className="offer-panel offer-form">
  <h2>Nová cenová nabídka</h2>
  <label>Objekt<select required value={buildingId} onChange={e=>{setBuildingId(e.target.value);setApproverId("")}}><option value="">Vyberte objekt</option>{buildings.filter(b=>roles.includes("admin")||b.manager_user_id===userId).map(b=><option key={b.id} value={b.id}>{b.object_number} – {b.name||b.address}</option>)}</select></label>
  <label>Referent<select required value={approverId} onChange={e=>setApproverId(e.target.value)}><option value="">Vyberte referenta</option>{availableReferents.map(p=><option key={p.id} value={p.id}>{p.display_name||p.full_name}</option>)}</select></label>
@@ -44,12 +45,12 @@ export default function OfferApprovals({supabase,buildings=[],userId,roles=[]}){
  <label>Dodavatel<input required value={supplier} onChange={e=>setSupplier(e.target.value)}/></label>
  <label>Cena v Kč<input required type="number" min="0" step="0.01" value={amount} onChange={e=>setAmount(e.target.value)}/></label>
  <label>Cenová nabídka PDF (max. 20 MB)<input required type="file" accept="application/pdf,.pdf" onChange={e=>setFile(e.target.files?.[0]||null)}/></label>
- <button disabled={busy||!file||!approverId} type="submit">Odeslat referentovi ke schválení</button></form>}
- <h2>Evidence nabídek</h2>
- <div style={{display:"grid",gap:12}}>{rows.map(r=><div key={r.id} className="card" style={{padding:16,display:"flex",gap:12,alignItems:"center",justifyContent:"space-between",flexWrap:"wrap"}}>
+ <button className="offer-primary" disabled={busy||!file||!approverId} type="submit">Odeslat referentovi ke schválení</button></form>}
+ <div className="offer-list-heading"><h2>Evidence nabídek</h2><span>{rows.length} dokumentů</span></div>
+ <div className="offer-list">{rows.map(r=><div key={r.id} className="offer-panel offer-row">
  <div><strong>{r.title}</strong><div>{r.supplier} · {Number(r.amount).toLocaleString("cs-CZ")} Kč</div><small>{r.status==="approved"?"Interně schváleno":"Čeká na podpis"} · {new Date(r.created_at).toLocaleString("cs-CZ")}</small></div>
- <div style={{display:"flex",gap:8}}><button type="button" disabled={busy} onClick={()=>download(r.id)}>Zobrazit PDF</button>{r.status==="pending"&&r.approver_id===userId&&<button type="button" onClick={()=>{setSelected(r);setSignature("")}}>Schválit podpisem</button>}</div>
+ <div className="offer-actions"><button type="button" disabled={busy} onClick={()=>download(r.id)}>Zobrazit PDF</button>{r.status==="pending"&&r.approver_id===userId&&<button className="offer-primary" type="button" onClick={()=>{setSelected(r);setSignature("")}}>Schválit podpisem</button>}</div>
  </div>)}</div>
- {selected&&<div className="card" style={{padding:20,maxWidth:760,marginTop:20}}><h2>Podpis referenta – {selected.title}</h2><p>Potvrzuji pouze interní souhlas s touto cenovou nabídkou.</p><SignatureCanvas onChange={setSignature}/><div style={{display:"flex",gap:12,marginTop:12}}><button disabled={busy||!signature} onClick={sign}>Podepsat a vytvořit certifikát</button><button type="button" onClick={()=>setSelected(null)}>Zrušit</button></div></div>}
+ {selected&&<div className="offer-panel offer-sign-panel"><h2>Podpis referenta – {selected.title}</h2><p>Potvrzuji pouze interní souhlas s touto cenovou nabídkou.</p><SignatureCanvas onChange={setSignature}/><div className="offer-actions offer-sign-actions"><button className="offer-primary" disabled={busy||!signature} onClick={sign}>Podepsat a vytvořit certifikát</button><button type="button" onClick={()=>setSelected(null)}>Zrušit</button></div></div>}
  </div>;
 }
