@@ -16,13 +16,13 @@
   "orientation": "any",
   "icons": [
     {
-      "src": "./icon.svg",
+      "src": "./icon.svg?v=foxa-orange-20261103",
       "sizes": "any",
       "type": "image/svg+xml",
       "purpose": "any"
     },
     {
-      "src": "./icon-maskable.svg",
+      "src": "./icon-maskable.svg?v=foxa-orange-20261103",
       "sizes": "any",
       "type": "image/svg+xml",
       "purpose": "maskable"
