@@ -40,12 +40,12 @@ function SignatureCanvas({onChange}){
 }
 export default function OfferApprovals({supabase,buildings=[],userId,roles=[]}){
  const [rows,setRows]=useState([]),[profiles,setProfiles]=useState([]),[busy,setBusy]=useState(false),[error,setError]=useState(""),[notice,setNotice]=useState("");
- const [buildingId,setBuildingId]=useState(""),[approverId,setApproverId]=useState(""),[title,setTitle]=useState(""),[supplier,setSupplier]=useState(""),[amount,setAmount]=useState(""),[file,setFile]=useState(null),[selected,setSelected]=useState(null),[signature,setSignature]=useState("");
+ const [buildingId,setBuildingId]=useState(""),[title,setTitle]=useState(""),[supplier,setSupplier]=useState(""),[amount,setAmount]=useState(""),[file,setFile]=useState(null),[selected,setSelected]=useState(null),[signature,setSignature]=useState("");
  const refresh=async()=>{const [{data,error:e},{data:people}]=await Promise.all([supabase.from("foxa_offer_approvals").select("*").order("created_at",{ascending:false}),supabase.from("profiles").select("id,display_name,full_name")]);if(e)throw e;setRows(data||[]);setProfiles(people||[])};
  useEffect(()=>{refresh().catch(e=>setError(e.message))},[]);
  const selectedBuilding=buildings.find(b=>b.id===buildingId);
- const availableReferents=profiles.filter(p=>p.id===selectedBuilding?.referent_user_id);
- const submit=async e=>{e.preventDefault();setError("");setNotice("");setBusy(true);try{await invoke(supabase,{action:"create",building_id:buildingId,approver_id:approverId,title,supplier,amount,file});setTitle("");setSupplier("");setAmount("");setFile(null);setNotice("Nabídka byla odeslána referentovi.");await refresh()}catch(e){setError(e.message)}finally{setBusy(false)}};
+ const assignedReferent=profiles.find(p=>p.id===selectedBuilding?.referent_user_id);
+ const submit=async e=>{e.preventDefault();setError("");setNotice("");setBusy(true);try{await invoke(supabase,{action:"create",building_id:buildingId,title,supplier,amount,file});setTitle("");setSupplier("");setAmount("");setFile(null);setNotice("Nabídka byla odeslána referentovi.");await refresh()}catch(e){setError(e.message)}finally{setBusy(false)}};
  const sign=async()=>{if(!signature)return setError("Nejprve se podepište.");setBusy(true);setError("");try{await invoke(supabase,{action:"sign",id:selected.id,signature});setSelected(null);setSignature("");setNotice("Nabídka byla interně schválena. Certifikát je připojen jako poslední stránka PDF.");await refresh()}catch(e){setError(e.message)}finally{setBusy(false)}};
  const download=async id=>{setBusy(true);setError("");try{const result=await invoke(supabase,{action:"download",id});window.open(result.url,"_blank","noopener,noreferrer")}catch(e){setError(e.message)}finally{setBusy(false)}};
  const isCreator=roles.some(r=>["admin","technician"].includes(r));
@@ -54,13 +54,13 @@ export default function OfferApprovals({supabase,buildings=[],userId,roles=[]}){
  {error&&<p role="alert" style={{color:"#c53030"}}>{error}</p>}{notice&&<p role="status">{notice}</p>}
  {isCreator&&<form onSubmit={submit} className="offer-panel offer-form">
  <h2>Nová cenová nabídka</h2>
- <div className="offer-field"><span className="offer-field-label">Objekt</span><OfferSearchPicker label="Objekt" value={buildingId} onChange={v=>{setBuildingId(v);setApproverId("")}} placeholder="Vyberte objekt…" items={buildings.filter(b=>roles.includes("admin")||b.manager_user_id===userId).map(b=>({id:b.id,name:[b.object_number,b.name||b.address].filter(Boolean).join(" – ")}))}/></div>
- <div className="offer-field"><span className="offer-field-label">Referent</span><OfferSearchPicker label="Referent" value={approverId} onChange={setApproverId} placeholder={buildingId?"Vyberte referenta…":"Nejprve vyberte objekt"} disabled={!buildingId} items={availableReferents.map(p=>({id:p.id,name:p.display_name||p.full_name||p.id}))}/>{buildingId&&!availableReferents.length&&<small className="offer-help">K tomuto objektu není v profilu přiřazen referent.</small>}</div>
+ <div className="offer-field"><span className="offer-field-label">Objekt</span><OfferSearchPicker label="Objekt" value={buildingId} onChange={v=>{setBuildingId(v)}} placeholder="Vyberte objekt…" items={buildings.filter(b=>roles.includes("admin")||b.manager_user_id===userId).map(b=>({id:b.id,name:[b.object_number,b.name||b.address].filter(Boolean).join(" – ")}))}/></div>
+ 
  <label>Název nabídky<input required minLength={3} maxLength={200} value={title} onChange={e=>setTitle(e.target.value)}/></label>
  <label>Dodavatel<input required value={supplier} onChange={e=>setSupplier(e.target.value)}/></label>
  <label>Cena v Kč<input required type="number" min="0" step="0.01" value={amount} onChange={e=>setAmount(e.target.value)}/></label>
  <label>Cenová nabídka PDF (max. 20 MB)<input required type="file" accept="application/pdf,.pdf" onChange={e=>setFile(e.target.files?.[0]||null)}/></label>
- <button className="offer-primary" disabled={busy||!file||!approverId||!buildingId} type="submit">Odeslat referentovi ke schválení</button></form>}
+ <button className="offer-primary" disabled={busy||!file||!buildingId} type="submit">Odeslat referentovi ke schválení</button></form>}
  <div className="offer-list-heading"><h2>Evidence nabídek</h2><span>{rows.length} dokumentů</span></div>
  <div className="offer-list">{rows.map(r=><div key={r.id} className="offer-panel offer-row">
  <div><strong>{r.title}</strong><div>{r.supplier} · {Number(r.amount).toLocaleString("cs-CZ")} Kč</div><small>{r.status==="approved"?"Interně schváleno":"Čeká na podpis"} · {new Date(r.created_at).toLocaleString("cs-CZ")}</small></div>
