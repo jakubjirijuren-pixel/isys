@@ -38,3 +38,30 @@
 .foxa-vote .foxa-vote-head p{display:block!important;position:static!important;float:none!important;transform:none!important;margin:0!important;padding:0!important;line-height:1.5!important;height:auto!important}
 .foxa-vote .foxa-vote-head .foxa-vote-actions{flex:0 0 auto!important;align-self:center!important;margin:0!important}
 @media(max-width:780px){.foxa-vote .foxa-vote-head{padding:18px!important;gap:16px!important}.foxa-vote .foxa-vote-head-copy{flex-basis:100%!important}.foxa-vote .foxa-vote-head .foxa-vote-actions{width:100%!important;justify-content:flex-start!important;flex-wrap:wrap!important}}
+
+/* Light-mode tokens are scoped to this module and follow FOXA's active appearance. */
+.foxa-vote.foxa-vote-light{--vote-bg:#fff;--vote-subtle:#f7f9fc;--vote-border:#d5dee9;--vote-text:#172b40;--vote-muted:#596c81;--vote-accent:#146ba3;--vote-accent-hover:#0d5888;color:var(--vote-text)}
+.foxa-vote.foxa-vote-light .foxa-vote-head,.foxa-vote.foxa-vote-light .foxa-vote-card{background:var(--vote-bg)!important;border-color:var(--vote-border)!important;color:var(--vote-text)!important;box-shadow:0 2px 10px rgba(25,48,75,.045)}
+.foxa-vote.foxa-vote-light .foxa-vote-head h1,.foxa-vote.foxa-vote-light .foxa-vote-card h2,.foxa-vote.foxa-vote-light .foxa-vote-dropzone strong,.foxa-vote.foxa-vote-light .foxa-vote-stats strong{color:var(--vote-text)!important}
+.foxa-vote.foxa-vote-light .foxa-vote-head p,.foxa-vote.foxa-vote-light .foxa-vote-help,.foxa-vote.foxa-vote-light .foxa-vote-stats span,.foxa-vote.foxa-vote-light .foxa-vote-dropzone>span,.foxa-vote.foxa-vote-light .foxa-vote-building-empty{color:var(--vote-muted)!important}
+.foxa-vote.foxa-vote-light .foxa-vote-eyebrow,.foxa-vote.foxa-vote-light .foxa-vote-dropzone .foxa-vote-drop-icon,.foxa-vote.foxa-vote-light .foxa-vote-dropzone .foxa-vote-drop-link{color:var(--vote-accent)!important}
+.foxa-vote.foxa-vote-light .foxa-vote-stats>div,.foxa-vote.foxa-vote-light .foxa-vote-results>div{background:var(--vote-subtle)!important;border-color:var(--vote-border)!important;color:var(--vote-text)!important}
+.foxa-vote.foxa-vote-light input:not([type=checkbox]):not([type=file]),.foxa-vote.foxa-vote-light select{background:#fff!important;border:1px solid #b9c8d9!important;color:#172b40!important;box-shadow:none!important}
+.foxa-vote.foxa-vote-light input::placeholder{color:#72849a!important;opacity:1}
+.foxa-vote.foxa-vote-light input:focus-visible,.foxa-vote.foxa-vote-light select:focus-visible{outline:2px solid #3b92ca!important;outline-offset:1px}
+.foxa-vote.foxa-vote-light .foxa-vote-building-options{background:#fff!important;border-color:var(--vote-border)!important;box-shadow:0 12px 28px rgba(22,43,65,.14)!important}
+.foxa-vote.foxa-vote-light .foxa-vote-building-options button{color:var(--vote-text)!important;background:transparent!important}
+.foxa-vote.foxa-vote-light .foxa-vote-building-options button:hover,.foxa-vote.foxa-vote-light .foxa-vote-building-options button:focus-visible{background:#e8f3fc!important}
+.foxa-vote.foxa-vote-light .foxa-vote-dropzone{background:#f5faff!important;border-color:#9bbbd4!important;color:var(--vote-text)!important}
+.foxa-vote.foxa-vote-light .foxa-vote-dropzone:hover,.foxa-vote.foxa-vote-light .foxa-vote-dropzone.is-dragging{background:#e9f5ff!important;border-color:#2184bd!important}
+.foxa-vote.foxa-vote-light .foxa-vote-dropzone .foxa-vote-selected{color:#14714b!important}
+.foxa-vote.foxa-vote-light .foxa-vote-actions .foxa-vote-action-secondary{background:#fff!important;color:#25415b!important;border-color:#b8c8d8!important}
+.foxa-vote.foxa-vote-light .foxa-vote-actions .foxa-vote-action-secondary:hover{background:#edf5fb!important;border-color:#5e9cc4!important}
+.foxa-vote.foxa-vote-light .foxa-vote-actions .foxa-vote-action-primary{background:var(--vote-accent)!important;color:#fff!important;border-color:var(--vote-accent)!important}
+.foxa-vote.foxa-vote-light .foxa-vote-actions .foxa-vote-action-primary:hover:not(:disabled){background:var(--vote-accent-hover)!important}
+.foxa-vote.foxa-vote-light .foxa-vote-actions .foxa-vote-action-primary:disabled{background:#e3e9ef!important;color:#627386!important;border-color:#cbd6e1!important;opacity:1!important}
+.foxa-vote.foxa-vote-light table th{background:#eaf0f6!important;color:#223c56!important;border-color:var(--vote-border)!important}
+.foxa-vote.foxa-vote-light table td{color:var(--vote-text)!important;border-color:#e1e7ef!important}
+.foxa-vote.foxa-vote-light table tbody tr:nth-child(even){background:#f9fbfd}
+.foxa-vote.foxa-vote-light .foxa-vote-notice{background:#eaf7f0!important;color:#1d6247!important}
+.foxa-vote.foxa-vote-light .foxa-vote-error{background:#fff0f0!important;color:#982e36!important}
