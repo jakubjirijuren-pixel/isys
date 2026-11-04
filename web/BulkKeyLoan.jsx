@@ -11,7 +11,7 @@ function BuildingSearch({buildings,value,onChange,excluded=[]}){
  return <div ref={root} className={"filterdropdown inspectionbuildingpicker foxa-bulk-picker"+(open?" isopen":"")}><button type="button" className="filtertrigger" aria-expanded={open} aria-haspopup="listbox" onClick={()=>setOpen(v=>!v)}><span>{selected?label(selected):"Vyber objekt…"}</span><span className="filterchevron" aria-hidden="true">⌄</span></button>{open&&<div className="filtermenu inspectionbuildingmenu"><input ref={search} type="search" aria-label="Vyhledat objekt" placeholder="Hledat číslo, ulici nebo město…" value={query} onChange={e=>setQuery(e.target.value)}/><div role="listbox" aria-label="Seznam objektů" className="inspectionbuildingoptions">{options.length?options.map(b=><button type="button" role="option" aria-selected={String(b.id)===String(value)} className={String(b.id)===String(value)?"chosen":""} key={b.id} onClick={()=>{onChange(String(b.id));setOpen(false)}}>{label(b)}</button>):<p>Žádné odpovídající objekty.</p>}</div></div>}</div>;
 }
 export default function BulkKeyLoan({supabase,buildings,onSaved,onCancel,defaultOffice="",officeOptions=[]}){
- const [borrower,setBorrower]=useState(""),[office,setOffice]=useState(defaultOffice);
+ const [borrower,setBorrower]=useState(""),[office,setOffice]=useState(defaultOffice),[returnDueAt,setReturnDueAt]=useState("");
  useEffect(()=>{setOffice(defaultOffice)},[defaultOffice]);
  const offices=[...new Set(["312","313","314","315","316","317",...officeOptions,defaultOffice].filter(Boolean))].sort((a,b)=>String(a).localeCompare(String(b),"cs",{numeric:true}));
  const [items,setItems]=useState([{building_id:"",description:""},{building_id:"",description:""}]),[busy,setBusy]=useState(false),[error,setError]=useState("");
@@ -21,7 +21,7 @@ export default function BulkKeyLoan({supabase,buildings,onSaved,onCancel,default
   if(new Set(items.map(x=>x.building_id)).size!==items.length){setError("Stejný objekt je uveden vícekrát. Klíče od jednoho domu spojte do jednoho řádku.");return}
   setBusy(true);
   try{
-   const {data,error:rpcError}=await supabase.rpc("foxa_bulk_key_loan_create",{p_borrower:borrower.trim(),p_phone:"",p_company:"",p_email:"",p_office:office.trim(),p_note:"",p_items:items.map(x=>({building_id:x.building_id,description:x.description.trim()}))});
+   const {data,error:rpcError}=await supabase.rpc("foxa_bulk_key_loan_create",{p_borrower:borrower.trim(),p_phone:"",p_company:"",p_email:"",p_office:office.trim(),p_note:"",p_items:items.map(x=>({building_id:x.building_id,description:x.description.trim(),return_due_at:returnDueAt?new Date(returnDueAt).toISOString():null}))});
    if(rpcError)throw rpcError;
    onSaved?.({count:data?.length||items.length,groupId:data?.[0]?.group_id,loanIds:(data||[]).map(x=>x.loan_id)});
   }catch(err){setError(err.message||"Hromadnou výpůjčku se nepodařilo uložit.")}finally{setBusy(false)}
@@ -29,7 +29,7 @@ export default function BulkKeyLoan({supabase,buildings,onSaved,onCancel,default
  return <section className="keys-panel foxa-bulk-loan"><div className="foxa-bulk-heading"><div><h2>Hromadná výpůjčka klíčů</h2><p>Jeden vypůjčitel, více objektů. Každý dům se eviduje samostatně pro nezávislé vrácení klíčů.</p></div><button type="button" className="secondarybutton" onClick={onCancel}>Zrušit</button></div>
  <form onSubmit={save} className="foxa-bulk-form"><div className="foxa-bulk-fields">
  <label>Jméno a příjmení vypůjčitele<KeyBorrowerPicker supabase={supabase} value={borrower} onChange={setBorrower}/></label>
- <label>Kancelář pro vrácení<select value={office} onChange={e=>setOffice(e.target.value)}><option value="">Vyberte kancelář</option>{offices.map(n=><option key={n} value={n}>{n}</option>)}</select></label></div>
+ <label>VRÁTIT DO (nepovinné)<input type="datetime-local" value={returnDueAt} onChange={e=>setReturnDueAt(e.target.value)}/></label><label>Kancelář pro vrácení<select value={office} onChange={e=>setOffice(e.target.value)}><option value="">Vyberte kancelář</option>{offices.map(n=><option key={n} value={n}>{n}</option>)}</select></label></div>
  <h3>Vypůjčené klíče podle objektů</h3>
  <div className="foxa-bulk-items">{items.map((item,i)=><div className="foxa-bulk-item" key={i}><span className="foxa-bulk-number">{i+1}.</span><label>Objekt<BuildingSearch buildings={buildings} value={item.building_id} onChange={value=>change(i,"building_id",value)} excluded={items.filter((_,j)=>j!==i).map(x=>x.building_id)}/></label><label>Popis klíčů<input required minLength={2} maxLength={500} placeholder="Např. hlavní vchod, strojovna" value={item.description} onChange={e=>change(i,"description",e.target.value)}/></label><button type="button" className="secondarybutton" disabled={items.length<=2} onClick={()=>setItems(old=>old.filter((_,j)=>j!==i))}>Odebrat</button></div>)}</div>
  <div className="foxa-bulk-actions"><button type="button" className="secondarybutton" disabled={items.length>=30} onClick={()=>setItems(old=>[...old,{building_id:"",description:""}])}>+ Přidat další objekt</button><button type="submit" className="primary" disabled={busy}>{busy?"Ukládám…":`Zapsat hromadnou výpůjčku (${items.length} objektů)`}</button></div>
