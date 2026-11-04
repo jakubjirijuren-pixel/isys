@@ -32,6 +32,10 @@ export default function PhoneDirectory({supabase,staff=[] ,buildings=[],isAdmin=
  const [importRows,setImportRows]=useState(null);
  const [importBusy,setImportBusy]=useState(false);
  const [staffContacts,setStaffContacts]=useState([]);
+ const [supplierContacts,setSupplierContacts]=useState([]);
+ const [supplierOpen,setSupplierOpen]=useState(false);
+ const [supplierDraft,setSupplierDraft]=useState({company:"",full_name:"",phone:"",email:"",position:""});
+ const [supplierBusy,setSupplierBusy]=useState(false);
  const [reload,setReload]=useState(0);
  const [hiddenKeys,setHiddenKeys]=useState([]);
  const [hiddenBusy,setHiddenBusy]=useState("");
@@ -56,6 +60,7 @@ export default function PhoneDirectory({supabase,staff=[] ,buildings=[],isAdmin=
   return()=>{alive=false};
  },[supabase]);
  useEffect(()=>{let active=true;supabase.from("foxa_staff_directory_contacts").select("id,full_name,phone,email,position,department").then(({data,error})=>{if(active){if(error)setError(error.message);else setStaffContacts(data||[])}});return()=>{active=false}},[supabase,reload]);
+ useEffect(()=>{let active=true;supabase.from("foxa_supplier_directory_contacts").select("id,company,full_name,phone,email,position").order("company").then(({data,error})=>{if(active){if(error)setError(error.message);else setSupplierContacts(data||[])}});return()=>{active=false}},[supabase,reload]);
  useEffect(()=>{let active=true;supabase.from("foxa_phone_directory_hidden").select("person_key").then(({data,error})=>{if(active){if(error)setError("Skryté kontakty nelze načíst: "+error.message);else setHiddenKeys((data||[]).map(x=>x.person_key))}});return()=>{active=false}},[supabase]);
  useEffect(()=>{let active=true;supabase.from("foxa_phone_directory_merges").select("source_key,target_key").then(({data,error})=>{if(!active)return;if(error)setError("Sloučení kontaktů nelze načíst: "+error.message);else setMergeRows(data||[])});return()=>{active=false}},[supabase]);
  async function saveMerge(){
@@ -99,11 +104,12 @@ export default function PhoneDirectory({supabase,staff=[] ,buildings=[],isAdmin=
   const employees=staff.map(s=>({id:"staff-"+s.id,name:clean(s.display_name||s.full_name||s.email),position:"SBD Praha 8",phone:mobileOnly(s.mobile||s.phone||s.phone_number),email:clean(s.email),extension:extensionOnly([s.extension,s.internal_extension,s.phone_extension,s.linka,s.phone,s.phone_number].filter(Boolean).join("; ")),object:"",employeeId:String(s.id)})).filter(s=>s.name);
   const imported=staffContacts.map(s=>({id:"import-"+s.id,name:clean(s.full_name),position:[s.position,s.department].filter(Boolean).join(" · ")||"SBD Praha 8",phone:mobileOnly(s.phone),extension:extensionOnly(s.phone),email:clean(s.email),object:""}));
   const functionaries=contacts.map(c=>{const b=buildingById.get(String(c.building_id));return {id:"contact-"+c.id,name:clean(c.full_name),position:clean(c.position)||"Člen výboru",phone:mobileOnly(c.phone),extension:extensionOnly(c.phone),email:clean(c.email),object:b?[(b.object_number||""),(b.street||b.address||b.name||"")].filter(Boolean).join(" – "):"Objekt nenalezen",searchLocation:b?[b.object_number,b.center_number,b.cost_center,b.stredisko,b.street,b.address,b.name,b.city].filter(Boolean).join(" "):""}});
+  const suppliers=supplierContacts.map(c=>({id:"supplier-"+c.id,name:clean(c.full_name),position:[c.company,c.position].filter(Boolean).join(" · "),phone:mobileOnly(c.phone),extension:"",email:clean(c.email),object:"",searchLocation:c.company}));
   const merged=new Map();
   const aliases=new Map(mergeRows.map(x=>[x.source_key,x.target_key]));
   const resolveKey=key=>{const seen=new Set();while(aliases.has(key)&&!seen.has(key)){seen.add(key);key=aliases.get(key)}return key};
-  const names=new Map([...employees,...imported,...functionaries].map(x=>[personKey(x.name),x.name]));
-  for(const person of [...employees,...imported,...functionaries]){
+  const names=new Map([...employees,...imported,...functionaries,...suppliers].map(x=>[personKey(x.name),x.name]));
+  for(const person of [...employees,...imported,...functionaries,...suppliers]){
    const originalKey=personKey(person.name)||person.id;
    const key=resolveKey(originalKey);
    const existing=merged.get(key);
@@ -126,18 +132,18 @@ export default function PhoneDirectory({supabase,staff=[] ,buildings=[],isAdmin=
   const people=[...merged.values()].map(p=>({...p,position:p.positions.join(" · "),object:p.objects.join("; "),email:p.emails.join("; "),extension:p.extensions.join(", "),searchLocation:p.searchLocations.join(" ")}));
   const q=search.toLocaleLowerCase("cs").trim();
   const digits=q.replace(/[^0-9]/g,"");
-  return people.filter(p=>(contactFilter==="all"||(contactFilter==="employees"?p.sources.some(s=>s.id.startsWith("staff-")||s.id.startsWith("import-")):p.sources.some(s=>s.id.startsWith("contact-"))))&&(isAdmin&&showHidden||!hiddenKeys.includes(personKey(p.name)))&&(!q||[p.name,p.phone,p.extension,p.email,p.object,p.searchLocation].some(v=>clean(v).normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLocaleLowerCase("cs").includes(q.normalize("NFD").replace(/[\u0300-\u036f]/g,"")))||(digits.length>=3&&[p.phone,p.extension,p.searchLocation].some(v=>clean(v).replace(/[^0-9]/g,"").includes(digits))))).sort((a,b)=>a.name.localeCompare(b.name,"cs"));
- },[staff,staffContacts,contacts,buildingById,search,contactFilter,hiddenKeys,isAdmin,showHidden,mergeRows]);
+  return people.filter(p=>(contactFilter==="all"||(contactFilter==="employees"?p.sources.some(s=>s.id.startsWith("staff-")||s.id.startsWith("import-")):contactFilter==="suppliers"?p.sources.some(s=>s.id.startsWith("supplier-")):p.sources.some(s=>s.id.startsWith("contact-"))))&&(isAdmin&&showHidden||!hiddenKeys.includes(personKey(p.name)))&&(!q||[p.name,p.phone,p.extension,p.email,p.object,p.searchLocation].some(v=>clean(v).normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLocaleLowerCase("cs").includes(q.normalize("NFD").replace(/[\u0300-\u036f]/g,"")))||(digits.length>=3&&[p.phone,p.extension,p.searchLocation].some(v=>clean(v).replace(/[^0-9]/g,"").includes(digits))))).sort((a,b)=>a.name.localeCompare(b.name,"cs"));
+ },[staff,staffContacts,supplierContacts,contacts,buildingById,search,contactFilter,hiddenKeys,isAdmin,showHidden,mergeRows]);
  const mergeCandidates=useMemo(()=>{
-  const all=[...staff.map(s=>clean(s.display_name||s.full_name||s.email)),...staffContacts.map(s=>clean(s.full_name)),...contacts.map(c=>clean(c.full_name))];
+  const all=[...staff.map(s=>clean(s.display_name||s.full_name||s.email)),...staffContacts.map(s=>clean(s.full_name)),...contacts.map(c=>clean(c.full_name)),...supplierContacts.map(c=>clean(c.full_name))];
   const unique=new Map();for(const name of all){const key=personKey(name);if(key&&!unique.has(key))unique.set(key,{name})}
   return [...unique.values()].sort((a,b)=>a.name.localeCompare(b.name,"cs"));
- },[staff,staffContacts,contacts]);
+ },[staff,staffContacts,contacts,supplierContacts]);
  function startEdit(person){
-  const source=person.sources.find(x=>x.id.startsWith("import-"))||person.sources.find(x=>x.id.startsWith("contact-"))||person.sources[0];
-  const kind=source.id.startsWith("import-")?"staff":source.id.startsWith("contact-")?"committee":"account";
+  const source=person.sources.find(x=>x.id.startsWith("supplier-"))||person.sources.find(x=>x.id.startsWith("import-"))||person.sources.find(x=>x.id.startsWith("contact-"))||person.sources[0];
+  const kind=source.id.startsWith("supplier-")?"supplier":source.id.startsWith("import-")?"staff":source.id.startsWith("contact-")?"committee":"account";
   setEditError("");
-  setEditing({kind,recordId:kind==="account"?null:source.id.slice(source.id.indexOf("-")+1),name:source.name,phone:source.phone,extension:source.extension||"",email:source.email,position:kind==="staff"?(staffContacts.find(x=>String(x.id)===source.id.slice(7))?.position||""):kind==="committee"?(contacts.find(x=>String(x.id)===source.id.slice(8))?.position||""):"",department:kind==="staff"?(staffContacts.find(x=>String(x.id)===source.id.slice(7))?.department||""):"",buildingId:kind==="committee"?(contacts.find(x=>String(x.id)===source.id.slice(8))?.building_id||""):null});
+  setEditing({kind,company:kind==="supplier"?(supplierContacts.find(x=>String(x.id)===source.id.slice(9))?.company||""):"",recordId:kind==="account"?null:source.id.slice(source.id.indexOf("-")+1),name:source.name,phone:source.phone,extension:source.extension||"",email:source.email,position:kind==="staff"?(staffContacts.find(x=>String(x.id)===source.id.slice(7))?.position||""):kind==="committee"?(contacts.find(x=>String(x.id)===source.id.slice(8))?.position||""):"",department:kind==="staff"?(staffContacts.find(x=>String(x.id)===source.id.slice(7))?.department||""):"",buildingId:kind==="committee"?(contacts.find(x=>String(x.id)===source.id.slice(8))?.building_id||""):null});
  }
  async function saveEdit(e){
   e.preventDefault();if(!isAdmin||!editing||editBusy)return;
@@ -146,8 +152,9 @@ export default function PhoneDirectory({supabase,staff=[] ,buildings=[],isAdmin=
   try{
    const data={full_name:clean(editing.name),phone:[clean(editing.phone),...extensionList(editing.extension).map(x=>"linka "+x)].filter(Boolean).join("; "),email:emailList(editing.email).join("; "),position:clean(editing.position)};
    if(editing.kind==="staff")data.department=clean(editing.department);
-   const table=editing.kind==="committee"?"foxa_building_committee_contacts":"foxa_staff_directory_contacts";
-   const request=editing.recordId?supabase.from(table).update(data).eq("id",editing.recordId).select("id").single():supabase.from(table).insert({...data,department:clean(editing.department)}).select("id").single();
+   if(editing.kind==="supplier"){if(!clean(editing.company)){setEditError("Vyplň název dodavatele.");setEditBusy(false);return}data.company=clean(editing.company)}
+   const table=editing.kind==="committee"?"foxa_building_committee_contacts":editing.kind==="supplier"?"foxa_supplier_directory_contacts":"foxa_staff_directory_contacts";
+   const request=editing.recordId?supabase.from(table).update(data).eq("id",editing.recordId).select("id").single():supabase.from(table).insert(editing.kind==="staff"?{...data,department:clean(editing.department)}:data).select("id").single();
    const {error:saveError}=await request;
    if(saveError)throw saveError;
    if(editing.kind==="committee"){
@@ -223,9 +230,9 @@ export default function PhoneDirectory({supabase,staff=[] ,buildings=[],isAdmin=
  }
  return <section className="foxa-phonebook">
   <div className="foxa-phonebook-head"><div><h2>Telefonní seznam</h2><p>Zaměstnanci SBD Praha 8 a kontakty spravovaných objektů.</p></div></div>
-  <div className="foxa-phonebook-body">
+  <div className="foxa-phonebook-body">{isAdmin&&<button type="button" className="primary" onClick={()=>{setEditError("");setEditing({kind:"supplier",recordId:null,company:"",name:"",phone:"",extension:"",email:"",position:"",department:"",buildingId:null})}}>+ Přidat dodavatele</button>}
    {isAdmin&&<div className="foxa-phonebook-import"><label className="secondarybutton filebutton">Importovat zaměstnance SBD (.xls, .xlsx)<input type="file" accept=".xls,.xlsx" onChange={readImport}/></label>{importRows&&<div className="importpanel"><p>Připraveno {importRows.length} kontaktů. Existujícím zaměstnancům se mobilní číslo a interní linka nahradí údaji ze souboru (původní linka se odstraní). Nové kontakty se přidají.</p><button type="button" className="primary" disabled={importBusy} onClick={saveImport}>{importBusy?"Importuji…":"Potvrdit import"}</button><button type="button" className="secondarybutton" onClick={()=>setImportRows(null)}>Zrušit</button></div>}</div>}
-   <div className="foxa-phonebook-filter" role="group" aria-label="Filtrovat telefonní seznam">{[["all","Všechny kontakty"],["employees","Zaměstnanci SBD"],["committees","Výbory objektů"]].map(([value,label])=><button key={value} type="button" aria-pressed={contactFilter===value} className={contactFilter===value?"active":""} onClick={()=>setContactFilter(value)}>{label}</button>)}</div>
+   <div className="foxa-phonebook-filter" role="group" aria-label="Filtrovat telefonní seznam">{[["all","Všechny kontakty"],["employees","Zaměstnanci SBD"],["committees","Výbory objektů"],["suppliers","Dodavatelé"]].map(([value,label])=><button key={value} type="button" aria-pressed={contactFilter===value} className={contactFilter===value?"active":""} onClick={()=>setContactFilter(value)}>{label}</button>)}</div>
    {isAdmin&&mergeTarget&&<div className="foxa-phonebook-merge"><strong>Sloučit kontakt: {mergeTarget.name}</strong><p>Vyber další kontakt, který se má připojit k vybranému kontaktu. Původní databázové záznamy zůstanou zachované.</p><div className="foxa-merge-picker"><input type="search" aria-label="Vyhledat kontakt ke sloučení" placeholder="Hledat kontakt podle jména…" value={mergeSearch} onChange={e=>setMergeSearch(e.target.value)}/><div className="foxa-merge-results" role="listbox" aria-label="Výsledky hledání kontaktů">{mergeCandidates.filter(p=>personKey(p.name)!==personKey(mergeTarget.name)&&(!mergeSearch||personKey(p.name).includes(personKey(mergeSearch))||p.name.toLocaleLowerCase("cs").includes(mergeSearch.toLocaleLowerCase("cs")))).slice(0,60).map(p=><button type="button" role="option" aria-selected={mergeSource===personKey(p.name)} className={mergeSource===personKey(p.name)?"selected":""} key={personKey(p.name)} onClick={()=>{setMergeSource(personKey(p.name));setMergeSearch(p.name)}}>{p.name}</button>)}{!mergeCandidates.some(p=>personKey(p.name)!==personKey(mergeTarget.name)&&(!mergeSearch||personKey(p.name).includes(personKey(mergeSearch))||p.name.toLocaleLowerCase("cs").includes(mergeSearch.toLocaleLowerCase("cs"))))&&<span>Žádný odpovídající kontakt</span>}</div></div><button type="button" disabled={!mergeSource||mergeBusy} onClick={saveMerge}>Potvrdit sloučení</button><button type="button" className="secondarybutton" onClick={()=>{setMergeTarget(null);setMergeSource("")}}>Zrušit</button></div>}
    <div className="foxa-phonebook-controls">{isAdmin&&<label className="foxa-phonebook-showhidden"><input type="checkbox" checked={showHidden} onChange={e=>setShowHidden(e.target.checked)}/> Zobrazit i skryté kontakty</label>}<input type="search" aria-label="Hledat kontakt" placeholder="Hledat podle jména, telefonního čísla nebo e-mailu…" value={search} onChange={e=>setSearch(e.target.value)}/></div>
    {presenceError&&<p className="foxa-presence-warning">{presenceError}</p>}
