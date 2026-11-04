@@ -211,3 +211,24 @@
 .layout .body .tiles.dashboardtiles > article.widgetcard.widgetcolor-default :is(h3,.widgetvalue){color:var(--fx-widget-default-text)!important}
 .layout .body .tiles.dashboardtiles > article.widgetcard:not(.widgetcolor-default) :is(h3,.widgetvalue){color:var(--widget-ink)!important}
 .layout .body .tiles.dashboardtiles > article.widgetcard:not(.widgetcolor-default)>small{color:var(--widget-muted)!important}
+
+/* Praha 8 RSS board: accessible colors in light/dark and TV modes. */
+.foxa-praha8-board{color:var(--fx-text,#213b50);}
+.foxa-praha8-board h1,.foxa-praha8-board h2{color:inherit;}
+.foxa-praha8-board > div > div > div > p{color:var(--fx-muted,#667f92);}
+.foxa-praha8-board article{background:var(--fx-surface,#fff)!important;color:var(--fx-text,#213b50);border-color:var(--fx-border,#dce6ed)!important;box-shadow:0 2px 10px rgba(0,0,0,.06);}
+.foxa-praha8-board article > div:first-child{color:var(--fx-muted,#667f92);opacity:1!important;}
+.foxa-praha8-board article p{color:var(--fx-text,#213b50);}
+.foxa-praha8-board article a{color:var(--isys-accent-strong,#176d98);text-decoration:underline;text-underline-offset:3px;}
+.foxa-praha8-board button{background:var(--fx-surface-soft,#e6f1f7);color:var(--fx-text,#213b50);border:1px solid var(--fx-border,#dce6ed);border-radius:9px;padding:10px 14px;cursor:pointer;}
+.foxa-praha8-board button:hover{border-color:var(--isys-accent,#176d98);}
+.foxa-praha8-board button:focus-visible,.foxa-praha8-board a:focus-visible{outline:3px solid var(--isys-accent,#176d98);outline-offset:3px;}
+.foxa-praha8-board button:disabled{opacity:.6;cursor:wait;}
+:root[data-theme="dark"] .foxa-praha8-board{color:#e8f1f9;}
+:root[data-theme="dark"] .foxa-praha8-board article{background:#182b3d!important;color:#e8f1f9;border-color:#355169!important;box-shadow:0 4px 16px rgba(0,0,0,.2);}
+:root[data-theme="dark"] .foxa-praha8-board article p{color:#dce9f4;}
+:root[data-theme="dark"] .foxa-praha8-board article > div:first-child{color:#b7cbdc;}
+:root[data-theme="dark"] .foxa-praha8-board article a{color:var(--isys-accent-strong,#78c6ed);}
+:root[data-theme="dark"] .foxa-praha8-board button{background:#20384e;color:#f0f7fc;border-color:#466179;}
+:root[data-theme="dark"] .foxa-praha8-board button:hover{background:#2b4962;}
+:root[data-theme="dark"] .foxa-praha8-board > div > div > div > p{color:#b7cbdc;}
