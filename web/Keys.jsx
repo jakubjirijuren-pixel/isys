@@ -124,7 +124,7 @@ export default function Keys({supabase,buildings,userId,isAdmin=false,initialFil
    if(created&&form.contact_email&&window.confirm("Otevřít e-mailové upozornění vypůjčiteli v poštovní aplikaci? E-mail se odešle až po vašem potvrzení.")){
     const b=buildings.find(x=>String(x.id)===String(form.building_id));
     const subject="FOXA – potvrzení výpůjčky klíčů";
-    const body=["Dobrý den,","", "potvrzujeme výpůjčku klíčů v systému FOXA.","Vypůjčitel: "+form.borrower,"Objekt: "+[b?.object_number,b?.street||b?.name].filter(Boolean).join(" – "),"Klíče: "+form.key_description,form.return_due_at?"Vrátit do: "+new Date(form.return_due_at).toLocaleString("cs-CZ"):"","", "S pozdravem","FOXA"].filter(x=>x!==null).join("\\n");
+    const body=["Dobrý den,","", "potvrzujeme výpůjčku klíčů v systému FOXA.","Vypůjčitel: "+form.borrower,"Objekt: "+[b?.object_number,b?.street||b?.name].filter(Boolean).join(" – "),"Klíče: "+form.key_description,form.return_due_at?"Vrátit do: "+new Date(form.return_due_at).toLocaleString("cs-CZ"):"","", "S pozdravem","FOXA"].filter(x=>x!==null).join("\n");
     window.location.href="mailto:"+encodeURIComponent(form.contact_email)+"?subject="+encodeURIComponent(subject)+"&body="+encodeURIComponent(body);
    }
    if(loanVariant==="handover"&&created)await exportProtocol(created);
