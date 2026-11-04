@@ -1,3 +1,4 @@
+import KeyBorrowerPicker from "./KeyBorrowerPicker.jsx";
 import React,{useEffect,useRef,useState} from "react";
 const label=b=>[b.object_number,b.street||b.name||b.address,b.city].filter(Boolean).join(" – ");
 function BuildingSearch({buildings,value,onChange,excluded=[]}){
@@ -27,7 +28,7 @@ export default function BulkKeyLoan({supabase,buildings,onSaved,onCancel,default
  };
  return <section className="keys-panel foxa-bulk-loan"><div className="foxa-bulk-heading"><div><h2>Hromadná výpůjčka klíčů</h2><p>Jeden vypůjčitel, více objektů. Každý dům se eviduje samostatně pro nezávislé vrácení klíčů.</p></div><button type="button" className="secondarybutton" onClick={onCancel}>Zrušit</button></div>
  <form onSubmit={save} className="foxa-bulk-form"><div className="foxa-bulk-fields">
- <label>Jméno a příjmení vypůjčitele<input required minLength={2} maxLength={200} value={borrower} onChange={e=>setBorrower(e.target.value)} placeholder="Jméno řemeslníka"/></label>
+ <label>Jméno a příjmení vypůjčitele<KeyBorrowerPicker supabase={supabase} value={borrower} onChange={setBorrower}/></label>
  <label>Kancelář pro vrácení<select value={office} onChange={e=>setOffice(e.target.value)}><option value="">Vyberte kancelář</option>{offices.map(n=><option key={n} value={n}>{n}</option>)}</select></label></div>
  <h3>Vypůjčené klíče podle objektů</h3>
  <div className="foxa-bulk-items">{items.map((item,i)=><div className="foxa-bulk-item" key={i}><span className="foxa-bulk-number">{i+1}.</span><label>Objekt<BuildingSearch buildings={buildings} value={item.building_id} onChange={value=>change(i,"building_id",value)} excluded={items.filter((_,j)=>j!==i).map(x=>x.building_id)}/></label><label>Popis klíčů<input required minLength={2} maxLength={500} placeholder="Např. hlavní vchod, strojovna" value={item.description} onChange={e=>change(i,"description",e.target.value)}/></label><button type="button" className="secondarybutton" disabled={items.length<=2} onClick={()=>setItems(old=>old.filter((_,j)=>j!==i))}>Odebrat</button></div>)}</div>
