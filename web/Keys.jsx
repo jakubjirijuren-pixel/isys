@@ -133,18 +133,23 @@ export default function Keys({supabase,buildings,userId,isAdmin=false,initialFil
  };
  const emailBorrower=async loan=>{
   setError("");
+  const validEmail=value=>/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(value||"").trim());
   let email=String(loan.borrower_email||"").trim();
-  if(!email){
+  if(!validEmail(email)){
    const tables=["foxa_staff_directory_contacts","foxa_supplier_directory_contacts","foxa_building_committee_contacts"];
-   const results=await Promise.all(tables.map(table=>supabase.from(table).select("full_name,email").ilike("full_name",loan.borrower_name).limit(10)));
-   const found=[...new Set(results.flatMap(x=>(x.data||[]).flatMap(c=>String(c.email||"").split(/[;,]/).map(v=>v.trim()).filter(v=>/^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(v)))))];
+   const name=String(loan.borrower_name||"").trim();
+   const normalize=value=>String(value||"").normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLocaleLowerCase("cs-CZ").replace(/\s+/g," ").trim();
+   const parts=normalize(name).split(" ").filter(Boolean);
+   const results=await Promise.all(tables.map(table=>supabase.from(table).select("full_name,email").limit(1000)));
+   const candidates=results.flatMap(x=>x.data||[]).filter(c=>{const n=normalize(c.full_name);return n===normalize(name)||(parts.length>=2&&parts.every(part=>n.split(" ").includes(part)))});
+   const found=[...new Set(candidates.flatMap(c=>String(c.email||"").split(/[;,\s]+/).map(v=>v.trim()).filter(validEmail)))];
    if(found.length===1)email=found[0];
-   else if(found.length>1){const chosen=window.prompt("V databázi je více e-mailů vypůjčitele. Vyberte správnou adresu:\\n"+found.join("\\n"),found[0]);if(!chosen)return;email=chosen.trim()}
+   else if(found.length>1){const chosen=window.prompt("V databázi je více e-mailů vypůjčitele. Vyberte správnou adresu:\n"+found.join("\n"),found[0]);if(!chosen)return;email=chosen.trim()}
   }
-  if(!/^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(email)){setError("U vypůjčitele nebyl nalezen e-mail. Doplňte ho v databázi kontaktů.");return}
+  if(!validEmail(email)){setError("U vypůjčitele nebyl nalezen platný e-mail. Zkontrolujte e-mail v evidenci výpůjčky nebo v telefonním seznamu.");return}
   const b=buildings.find(x=>String(x.id)===String(loan.building_id));
   const subject="FOXA – upozornění na výpůjčku klíčů";
-  const body=["Dobrý den,","","upozorňujeme na evidovanou výpůjčku klíčů.","Vypůjčitel: "+loan.borrower_name,"Objekt: "+buildingDisplay(b),"Klíče: "+loanKeys(loan),"Vypůjčeno: "+fmt(loan.loaned_at),loan.return_due_at?"Vrátit do: "+fmt(loan.return_due_at):"",loan.return_office?"Vrátit do kanceláře: "+loan.return_office:"","","S pozdravem","FOXA"].filter(Boolean).join("\\n");
+  const body=["Dobrý den,","","upozorňujeme na evidovanou výpůjčku klíčů.","Vypůjčitel: "+loan.borrower_name,"Objekt: "+buildingDisplay(b),"Klíče: "+loanKeys(loan),"Vypůjčeno: "+fmt(loan.loaned_at),loan.return_due_at?"Vrátit do: "+fmt(loan.return_due_at):"",loan.return_office?"Vrátit do kanceláře: "+loan.return_office:"","","S pozdravem","FOXA"].filter(Boolean).join("\n");
   window.location.href="mailto:"+encodeURIComponent(email)+"?subject="+encodeURIComponent(subject)+"&body="+encodeURIComponent(body);
  };
  const exportProtocol=async loan=>{
