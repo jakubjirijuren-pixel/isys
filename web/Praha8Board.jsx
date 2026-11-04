@@ -1,0 +1,14 @@
+import React,{useEffect,useState} from "react";
+export default function Praha8Board({supabase}){
+ const [items,setItems]=useState([]),[error,setError]=useState(""),[last,setLast]=useState(null),[tv,setTv]=useState(()=>new URLSearchParams(location.search).get("foxa_tv")==="1"),[onlyImportant,setOnlyImportant]=useState(false);
+ useEffect(()=>{let active=true;const load=async()=>{const {data,error}=await supabase.from("foxa_praha8_rss").select("*").order("published_at",{ascending:false,nullsFirst:false}).limit(100);if(!active)return;if(error)setError(error.message);else{setItems(data||[]);setError("");setLast(new Date())}};load();const timer=setInterval(load,60000);return()=>{active=false;clearInterval(timer)}},[supabase]);
+ const important=/havári|odstáv|výluk|uzavír|omezen|přerušen|poruch|oprava|voda|elektř|teplo|doprav/i;
+ const shown=onlyImportant?items.filter(x=>important.test(x.title+" "+x.description)):items;
+ const fmt=v=>v?new Date(v).toLocaleString("cs-CZ"):"Datum neuvedeno";
+ return <div className={"foxa-praha8-board"+(tv?" foxa-praha8-tv":"")} style={{padding:tv?28:12,maxWidth:tv?"none":1200,margin:"auto"}}>
+ <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",gap:12,flexWrap:"wrap"}}><div><h1 style={{marginBottom:4}}>Informační tabule · Praha 8</h1><p style={{marginTop:0}}>Aktuality z RSS ÚMČ Praha 8 · aktualizace každých 15 minut</p></div><div style={{display:"flex",gap:8}}>{!tv&&<label style={{display:"flex",alignItems:"center",gap:6}}><input type="checkbox" checked={onlyImportant} onChange={e=>setOnlyImportant(e.target.checked)}/>Jen provozní zprávy</label>}<button type="button" className="secondarybutton" onClick={()=>{const next=!tv;setTv(next);const url=new URL(location.href);if(next)url.searchParams.set("foxa_tv","1");else url.searchParams.delete("foxa_tv");history.replaceState(null,"",url)}}>{tv?"Ukončit TV režim":"Režim TV"}</button></div></div>
+ {error&&<p role="alert">Načítání zpráv selhalo: {error}</p>}{!items.length&&!error&&<p>Žádné zprávy zatím nebyly načteny. První import proběhne po spuštění synchronizace RSS.</p>}
+ <div style={{display:"grid",gridTemplateColumns:tv?"repeat(auto-fit,minmax(380px,1fr))":"repeat(auto-fit,minmax(280px,1fr))",gap:16,marginTop:20}}>
+ {shown.map(item=><article key={item.id} style={{padding:20,border:"1px solid var(--border,#ccd4de)",borderRadius:14,background:"var(--surface,#fff)"}}><div style={{fontSize:13,opacity:.7}}>{item.category} · {fmt(item.published_at)}</div><h2 style={{fontSize:tv?23:19,margin:"10px 0"}}>{item.title}</h2><p style={{lineHeight:1.5,overflowWrap:"anywhere"}}>{item.description?.slice(0,tv?250:400)}</p>{item.url&&<a href={item.url} target="_blank" rel="noopener noreferrer">Původní zpráva ↗</a>}</article>)}
+ </div><p style={{opacity:.65,fontSize:12,marginTop:18}}>Zdroj: ÚMČ Praha 8 · Poslední načtení obrazovky: {last?fmt(last):"—"}. Obsah je informativní, nikoli potvrzení aktuálního stavu sítí.</p></div>
+}
