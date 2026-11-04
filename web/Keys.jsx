@@ -132,15 +132,20 @@ export default function Keys({supabase,buildings,userId,isAdmin=false,initialFil
   setBusy(false)
  };
  const emailBorrower=async loan=>{
-  if(busy)return;
-  setBusy(true);setError("");setNotice("");
-  try{
-   const {data,error}=await supabase.functions.invoke("foxa-key-loan-email",{body:{loan_id:loan.id}});
-   if(error){let message=error.message;try{const response=error.context;if(response?.json){const details=await response.json();message=details.error||message}}catch{}throw new Error(message)}
-   if(!data?.ok)throw new Error(data?.error||"Odeslání nebylo potvrzeno.");
-   setNotice("E-mailové upozornění vypůjčiteli bylo odesláno.");
-  }catch(e){setError("E-mail se nepodařilo odeslat: "+(e.message||"Neznámá chyba"))}
-  finally{setBusy(false)}
+  setError("");
+  let email=String(loan.borrower_email||"").trim();
+  if(!email){
+   const tables=["foxa_staff_directory_contacts","foxa_supplier_directory_contacts","foxa_building_committee_contacts"];
+   const results=await Promise.all(tables.map(table=>supabase.from(table).select("full_name,email").ilike("full_name",loan.borrower_name).limit(10)));
+   const found=[...new Set(results.flatMap(x=>(x.data||[]).flatMap(c=>String(c.email||"").split(/[;,]/).map(v=>v.trim()).filter(v=>/^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(v)))))];
+   if(found.length===1)email=found[0];
+   else if(found.length>1){const chosen=window.prompt("V databázi je více e-mailů vypůjčitele. Vyberte správnou adresu:\\n"+found.join("\\n"),found[0]);if(!chosen)return;email=chosen.trim()}
+  }
+  if(!/^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(email)){setError("U vypůjčitele nebyl nalezen e-mail. Doplňte ho v databázi kontaktů.");return}
+  const b=buildings.find(x=>String(x.id)===String(loan.building_id));
+  const subject="FOXA – upozornění na výpůjčku klíčů";
+  const body=["Dobrý den,","","upozorňujeme na evidovanou výpůjčku klíčů.","Vypůjčitel: "+loan.borrower_name,"Objekt: "+buildingDisplay(b),"Klíče: "+loanKeys(loan),"Vypůjčeno: "+fmt(loan.loaned_at),loan.return_due_at?"Vrátit do: "+fmt(loan.return_due_at):"",loan.return_office?"Vrátit do kanceláře: "+loan.return_office:"","","S pozdravem","FOXA"].filter(Boolean).join("\\n");
+  window.location.href="mailto:"+encodeURIComponent(email)+"?subject="+encodeURIComponent(subject)+"&body="+encodeURIComponent(body);
  };
  const exportProtocol=async loan=>{
   if(pdfBusy)return;
