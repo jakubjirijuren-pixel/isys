@@ -26,7 +26,7 @@ export default function BulkKeyLoan({supabase,buildings,onSaved,onCancel,default
    onSaved?.({count:data?.length||items.length,groupId:data?.[0]?.group_id,loanIds:(data||[]).map(x=>x.loan_id)});
    if(borrowerEmail&&window.confirm("Otevřít e-mailové potvrzení hromadné výpůjčky v poštovní aplikaci? Odeslání ještě musíte potvrdit.")){
     const subject="FOXA – potvrzení výpůjčky klíčů";
-    const body=["Dobrý den,","","potvrzujeme výpůjčku klíčů v systému FOXA.","Vypůjčitel: "+borrower,...items.map(x=>{const b=buildings.find(y=>String(y.id)===String(x.building_id));return "Objekt: "+[b?.object_number,b?.street||b?.name].filter(Boolean).join(" – ")+"; klíče: "+x.description}),returnDueAt?"Vrátit do: "+new Date(returnDueAt).toLocaleString("cs-CZ"):"","","S pozdravem","FOXA"].join("\\n");
+    const body=["Dobrý den,","","potvrzujeme výpůjčku klíčů v systému FOXA.","Vypůjčitel: "+borrower,...items.map(x=>{const b=buildings.find(y=>String(y.id)===String(x.building_id));return "Objekt: "+[b?.object_number,b?.street||b?.name].filter(Boolean).join(" – ")+"; klíče: "+x.description}),returnDueAt?"Vrátit do: "+new Date(returnDueAt).toLocaleString("cs-CZ"):"","","S pozdravem","FOXA"].join("\n");
     window.location.href="mailto:"+encodeURIComponent(borrowerEmail)+"?subject="+encodeURIComponent(subject)+"&body="+encodeURIComponent(body);
    }
   }catch(err){setError(err.message||"Hromadnou výpůjčku se nepodařilo uložit.")}finally{setBusy(false)}
