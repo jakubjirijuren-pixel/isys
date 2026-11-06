@@ -4,9 +4,11 @@ const manifestPath="android/app/src/main/AndroidManifest.xml";
 let manifest=readFileSync(manifestPath,"utf8");
 if(!manifest.includes("android:screenOrientation=\"portrait\"")){
  manifest=manifest.replace(/(<activity\b)/,'$1 android:screenOrientation="portrait"');
+ if(!manifest.includes('android:screenOrientation="portrait"'))throw Error("Unable to set portrait orientation in AndroidManifest.xml");
  writeFileSync(manifestPath,manifest);
  console.log("Locked FOXA FIELD to portrait orientation");
 }
+if(!manifest.includes('android:screenOrientation="portrait"'))throw Error("Portrait orientation missing from Android manifest");
 let source=readFileSync(path,"utf8");
 if(!source.includes("extends BridgeActivity"))throw Error("Unexpected Capacitor MainActivity");
 if(source.includes("WindowInsetsCompat"))process.exit(0);
