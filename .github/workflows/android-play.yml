@@ -64,6 +64,11 @@ jobs:
           if n!=1: raise SystemExit('versionCode not found')
           p.write_text(s)
           PY
+      - name: Verify Android minimum SDK configuration
+        working-directory: web/android
+        run: |
+          grep -E 'minSdkVersion = 24' variables.gradle
+          grep -E 'targetSdkVersion = 36' variables.gradle
       - name: Generate signed Play bundle
         working-directory: web/android
         env:
