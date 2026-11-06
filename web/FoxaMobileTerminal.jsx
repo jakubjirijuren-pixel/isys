@@ -18,6 +18,7 @@ export default function FoxaMobileTerminal({pages=[],onNavigate=()=>{},onOpenIns
  const [availableUpdate,setAvailableUpdate]=useState(null);
  const [checkingUpdate,setCheckingUpdate]=useState(false);
  const isAndroidApp=typeof window!=="undefined"&&Boolean(window.Capacitor?.isNativePlatform?.());
+ useEffect(()=>{document.body.classList.toggle("foxa-native-android",isAndroidApp);return()=>document.body.classList.remove("foxa-native-android")},[isAndroidApp]);
  const checkForUpdate=async()=>{
   if(!navigator.onLine||!isAndroidApp)return;
   setCheckingUpdate(true);
