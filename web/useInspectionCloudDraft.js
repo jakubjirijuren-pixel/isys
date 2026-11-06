@@ -1,9 +1,11 @@
+import {useFoxaConnectivity} from "./foxaConnectivity.js";
 import {useEffect,useRef,useState} from "react";
 
 // One private draft per authenticated user and inspection type.
 // Keep local recovery as fallback when the device is offline.
 export default function useInspectionCloudDraft({supabase,kind,data,setData,localKey,validate,normalize}){
  const [status,setStatus]=useState("Načítám uložený koncept…");
+ const {online:backendOnline,checked:connectionChecked}=useFoxaConnectivity();
  const ready=useRef(false);
  const skip=useRef(false);
  const paused=useRef(false);
@@ -62,7 +64,7 @@ export default function useInspectionCloudDraft({supabase,kind,data,setData,loca
     try{localStorage.setItem(localKey,JSON.stringify({...snapshot,photoFiles:[]}));localStorage.setItem(localStampKey,String(time))}catch{}
    }
    try{
-    if(!navigator.onLine)throw new Error("offline");
+    if(!navigator.onLine||connectionChecked&&!backendOnline)throw new Error("offline");
     const id=user.current;
     if(!id)throw new Error("Chybí přihlášení.");
     const request=supabase.from("isys_inspection_drafts").upsert({user_id:id,kind,content:snapshot,updated_at:new Date(time).toISOString()},{onConflict:"user_id,kind"});
@@ -118,7 +120,7 @@ export default function useInspectionCloudDraft({supabase,kind,data,setData,loca
    dirty.current=true;
    try{localStorage.setItem(dirtyKey,"1")}catch{}
    try{localStorage.setItem(pendingKey,"1")}catch{}
-   if(!navigator.onLine){setStatus("Koncept uložen lokálně – synchronizuje se po připojení");return true}
+   if(!navigator.onLine||connectionChecked&&!backendOnline){setStatus("Koncept uložen lokálně – synchronizuje se po připojení");return true}
    const id=user.current;
    if(!id)throw new Error("Chybí přihlášení");
    const operation=pending.current.then(()=>supabase.from("isys_inspection_drafts").upsert({user_id:id,kind,content:snapshot,updated_at:new Date().toISOString()},{onConflict:"user_id,kind"}));
