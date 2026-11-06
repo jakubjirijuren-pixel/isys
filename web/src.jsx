@@ -47,6 +47,7 @@ function NativeAndroidStatusBar(){
  useEffect(()=>{
   if(!Capacitor.isNativePlatform()||Capacitor.getPlatform()!=="android")return;
   document.body.classList.add("foxa-native-android");
+  document.documentElement.classList.add("foxa-native-android");
   let active=true;
   const apply=async()=>{
    try{
@@ -57,7 +58,7 @@ function NativeAndroidStatusBar(){
   };
   apply();
   document.addEventListener("visibilitychange",apply);
-  return()=>{active=false;document.removeEventListener("visibilitychange",apply)};
+  return()=>{active=false;document.removeEventListener("visibilitychange",apply);document.documentElement.classList.remove("foxa-native-android");document.body.classList.remove("foxa-native-android")};
  },[]);
  return null;
 }
