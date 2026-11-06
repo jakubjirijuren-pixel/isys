@@ -556,3 +556,26 @@
   padding-top:8px!important;
  }
 }
+
+/* One global Android status-bar spacer, independent of active module.
+   It stays fixed during scrolling, navigation and modal overlays. */
+html.foxa-native-android{
+ --foxa-statusbar-spacer: max(28px, env(safe-area-inset-top, 0px));
+}
+html.foxa-native-android body::before{
+ content:"";
+ position:fixed;
+ top:0;left:0;right:0;
+ height:var(--foxa-statusbar-spacer);
+ background:#071622;
+ z-index:2147483646;
+ pointer-events:none;
+}
+@media screen and (max-width:800px){
+ html.foxa-native-android body .layout{
+  padding-top:var(--foxa-statusbar-spacer)!important;
+ }
+ html.foxa-native-android body .layout aside{
+  top:var(--foxa-statusbar-spacer)!important;
+ }
+}
