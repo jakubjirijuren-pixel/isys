@@ -43,7 +43,7 @@ jobs:
           p=Path('variables.gradle')
           s,n=re.subn(r'targetSdkVersion\s*=\s*\d+','targetSdkVersion = 36',p.read_text())
           if n!=1: raise SystemExit('targetSdkVersion not found')
-          s,n=re.subn(r'minSdkVersion\\s*=\\s*\\d+','minSdkVersion = 24',s)
+          s,n=re.subn(r'minSdkVersion\s*=\s*\d+','minSdkVersion = 24',s)
           if n!=1: raise SystemExit('minSdkVersion not found')
           p.write_text(s)
           p=Path('app/build.gradle')
