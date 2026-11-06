@@ -10,6 +10,7 @@ export default function useInspectionCloudDraft({supabase,kind,data,setData,loca
  const pending=useRef(Promise.resolve());
  const revision=useRef(0);
  const latest=useRef(data);
+ const dirty=useRef(false);
  latest.current=data;
  const user=useRef(null);
  const localStampKey=localKey+"-updated-at";
@@ -57,6 +58,7 @@ export default function useInspectionCloudDraft({supabase,kind,data,setData,loca
     try{localStorage.setItem(localKey,JSON.stringify({...snapshot,photoFiles:[]}));localStorage.setItem(localStampKey,String(time))}catch{}
    }
    try{
+    if(!navigator.onLine)throw new Error("offline");
     const id=user.current;
     if(!id)throw new Error("Chybí přihlášení.");
     const request=supabase.from("isys_inspection_drafts").upsert({user_id:id,kind,content:snapshot,updated_at:new Date(time).toISOString()},{onConflict:"user_id,kind"});
@@ -64,13 +66,32 @@ export default function useInspectionCloudDraft({supabase,kind,data,setData,loca
     pending.current=operation.catch(()=>{});
     const {error}=await operation;
     if(error)throw error;
+    if(current===revision.current)dirty.current=false;
     if(current===revision.current)setStatus("Uloženo do Supabase v "+new Date().toLocaleTimeString("cs-CZ",{hour:"2-digit",minute:"2-digit"}));
-   }catch(e){if(current===revision.current)setStatus("Cloudové uložení selhalo – zkontroluj připojení nebo velikost fotografií")}
+   }catch(e){if(current===revision.current)setStatus("Koncept je uložen lokálně a čeká na synchronizaci")}
   },1200);
   return()=>clearTimeout(timer);
  },[data,supabase,kind,localKey]);
+ useEffect(()=>{
+  const retry=async()=>{
+   if(!navigator.onLine||!dirty.current||!user.current)return;
+   const snapshot=latest.current;
+   const stamp=Date.now();
+   try{
+    const {error}=await supabase.from("isys_inspection_drafts").upsert({user_id:user.current,kind,content:snapshot,updated_at:new Date(stamp).toISOString()},{onConflict:"user_id,kind"});
+    if(error)throw error;
+    dirty.current=false;
+    setStatus("Offline koncept synchronizován do Supabase");
+   }catch{setStatus("Koncept čeká na synchronizaci");}
+  };
+  window.addEventListener("online",retry);
+  const onVisible=()=>{if(!document.hidden)retry()};
+  document.addEventListener("visibilitychange",onVisible);
+  return()=>{window.removeEventListener("online",retry);document.removeEventListener("visibilitychange",onVisible)};
+ },[supabase,kind]);
  const discard=async()=>{
   paused.current=true;
+  dirty.current=false;
   revision.current++;
   skip.current=true;
   await pending.current;
@@ -87,6 +108,9 @@ export default function useInspectionCloudDraft({supabase,kind,data,setData,loca
   paused.current=false;
   const snapshot=latest.current;
   try{
+   localStorage.setItem(localKey,JSON.stringify(snapshot));localStorage.setItem(localStampKey,String(Date.now()));
+   dirty.current=true;
+   if(!navigator.onLine){setStatus("Koncept uložen lokálně – synchronizuje se po připojení");return true}
    const id=user.current;
    if(!id)throw new Error("Chybí přihlášení");
    const operation=pending.current.then(()=>supabase.from("isys_inspection_drafts").upsert({user_id:id,kind,content:snapshot,updated_at:new Date().toISOString()},{onConflict:"user_id,kind"}));
@@ -94,6 +118,7 @@ export default function useInspectionCloudDraft({supabase,kind,data,setData,loca
    const {error}=await operation;
    if(error)throw error;
    try{localStorage.setItem(localKey,JSON.stringify(snapshot));localStorage.setItem(localStampKey,String(Date.now()))}catch{}
+   dirty.current=false;
    setStatus("Uloženo do Supabase");return true;
   }catch{setStatus("Nepodařilo se uložit do Supabase");return false}
  };
