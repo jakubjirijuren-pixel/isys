@@ -1,3 +1,4 @@
+import {useFoxaConnectivity} from "./foxaConnectivity.js";
 import React,{useEffect,useState} from "react";
 import "./foxa-terminal.css";
 
@@ -13,40 +14,25 @@ const TerminalIcon=({name,size=26})=>{const paths={
  };return <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">{paths[name]||paths.building}</svg>};
 
 export default function FoxaMobileTerminal({pages=[],onNavigate=()=>{},onOpenInspections=()=>{},userLabel="",onOpenChangelog=()=>{}}){
- const [online,setOnline]=useState(()=>navigator.onLine);
+ const {online,checked}=useFoxaConnectivity();
  const [clock,setClock]=useState(()=>new Date());
- const [availableUpdate,setAvailableUpdate]=useState(null);
- const [checkingUpdate,setCheckingUpdate]=useState(false);
+
+
  const isAndroidApp=typeof window!=="undefined"&&Boolean(window.Capacitor?.isNativePlatform?.());
  useEffect(()=>{document.body.classList.toggle("foxa-native-android",isAndroidApp);return()=>document.body.classList.remove("foxa-native-android")},[isAndroidApp]);
- const checkForUpdate=async()=>{
-  if(!navigator.onLine||!isAndroidApp)return;
-  setCheckingUpdate(true);
-  try{
-   const response=await fetch("https://api.github.com/repos/jakubjirijuren-pixel/isys/releases/latest",{cache:"no-store"});
-   if(!response.ok)throw Error("Release unavailable");
-   const release=await response.json();
-   const apk=release.assets?.find(item=>item.name?.endsWith(".apk"));
-   const version=String(release.tag_name||"").replace(/^v/,"");
-   if(apk&&version&&version!=="0.1.0")setAvailableUpdate({version,url:apk.browser_download_url});
-   else setAvailableUpdate(null);
-  }catch{setAvailableUpdate(null)}finally{setCheckingUpdate(false)}
- };
- // Google Play manages updates for the installed application; never offer a separate APK in Play builds.
-
- useEffect(()=>{const update=()=>setOnline(navigator.onLine);window.addEventListener("online",update);window.addEventListener("offline",update);const t=setInterval(()=>setClock(new Date()),30000);return()=>{window.removeEventListener("online",update);window.removeEventListener("offline",update);clearInterval(t)}},[]);
+ useEffect(()=>{const t=setInterval(()=>setClock(new Date()),30000);return()=>clearInterval(t)},[]);
  const navigate=target=>onNavigate(target);
  const has=target=>pages.includes(target);
  return <section className="foxa-terminal-home" aria-label="Mobilní pracovní terminál">
-  <div className="terminal-head"><span className="terminal-building-symbol"><TerminalIcon name="building" size={43}/></span><div className="terminal-head-copy"><span className="terminal-kicker">PRACOVNÍ TERMINÁL</span><h1>FOXA <span>FIELD</span></h1><p>{userLabel||"Pracovní prostředí"}</p></div><div className={"terminal-connection "+(online?"is-online":"is-offline")}><span aria-hidden="true">●</span> {online?"ONLINE":"OFFLINE"}</div></div>
-  <div className="terminal-status"><div><span className="terminal-status-symbol"><TerminalIcon name="clock"/></span><small>AKTUÁLNÍ ČAS</small><strong>{clock.toLocaleTimeString("cs-CZ",{hour:"2-digit",minute:"2-digit"})}</strong><span>{clock.toLocaleDateString("cs-CZ",{weekday:"long",day:"numeric",month:"long"})}</span></div><div className="terminal-status-side"><span className="terminal-status-symbol"><TerminalIcon name="cloud"/></span><small>PŘIPOJENÍ</small><strong>{online?"Připraveno":"Bez sítě"}</strong><span>{online?"Cloudové moduly dostupné":"Pouze místní koncepty"}</span></div></div>
+  <div className="terminal-head"><span className="terminal-building-symbol"><TerminalIcon name="building" size={43}/></span><div className="terminal-head-copy"><span className="terminal-kicker">PRACOVNÍ TERMINÁL</span><h1>FOXA <span>FIELD</span></h1><p>{userLabel||"Pracovní prostředí"}</p></div><div className={"terminal-connection "+(online?"is-online":"is-offline")}><span aria-hidden="true">●</span> {!checked?"OVĚŘUJI":online?"ONLINE":"OFFLINE"}</div></div>
+  <div className="terminal-status"><div><span className="terminal-status-symbol"><TerminalIcon name="clock"/></span><small>AKTUÁLNÍ ČAS</small><strong>{clock.toLocaleTimeString("cs-CZ",{hour:"2-digit",minute:"2-digit"})}</strong><span>{clock.toLocaleDateString("cs-CZ",{weekday:"long",day:"numeric",month:"long"})}</span></div><div className="terminal-status-side"><span className="terminal-status-symbol"><TerminalIcon name="cloud"/></span><small>PŘIPOJENÍ</small><strong>{!checked?"Ověřuji":online?"Připraveno":"Bez spojení"}</strong><span>{!checked?"Kontroluji spojení se serverem":online?"Spojení se serverem dostupné":"Pracuj s lokálně uloženými daty"}</span></div></div>
   <div className="terminal-section-heading"><h2 className="terminal-section-title">Rychlé akce</h2></div>
   <div className="terminal-action-grid">
    {has("Objekty")&&<button type="button" className="action-objects" onClick={()=>navigate("Objekty")}><span className="terminal-action-icon"><TerminalIcon name="building" size={33}/></span><span className="terminal-action-arrow"><TerminalIcon name="chevron" size={20}/></span><strong>Najít objekt</strong><small>Evidence domů</small></button>}
    {(has("Objekty"))&&<button type="button" className="action-inspection" onClick={onOpenInspections}><span className="terminal-action-icon"><TerminalIcon name="clipboard" size={33}/></span><span className="terminal-action-arrow"><TerminalIcon name="chevron" size={20}/></span><strong>Nová kontrola</strong><small>Kontrolní výkaz</small></button>}
    {has("Telefonní seznam")&&<button type="button" className="action-keys" onClick={()=>navigate("Telefonní seznam")}><span className="terminal-action-icon"><TerminalIcon name="phone" size={33}/></span><span className="terminal-action-arrow"><TerminalIcon name="chevron" size={20}/></span><strong>Telefonní seznam</strong><small>Kontakty a vyhledávání</small></button>}
    {has("Docházka")&&<button type="button" className="action-attendance" onClick={()=>navigate("Docházka")}><span className="terminal-action-icon"><TerminalIcon name="clock" size={33}/></span><span className="terminal-action-arrow"><TerminalIcon name="chevron" size={20}/></span><strong>Docházka</strong><small>Pracovní doba</small></button>}
-   {has("Android aplikace")&&<button type="button" className="action-android" onClick={()=>navigate("Android aplikace")}><span className="terminal-action-icon"><TerminalIcon name="cloud" size={33}/></span><span className="terminal-action-arrow"><TerminalIcon name="chevron" size={20}/></span><strong>Stáhnout aplikaci</strong><small>Android APK a aktualizace</small></button>}
+  
   </div>
   <button type="button" className="terminal-updates" onClick={onOpenChangelog}>Novinky a aktualizace FOXA ›</button>
  </section>
