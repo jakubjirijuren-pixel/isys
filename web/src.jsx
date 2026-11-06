@@ -1,3 +1,4 @@
+import {useFoxaConnectivity} from "./foxaConnectivity.js";
 import {Capacitor} from "@capacitor/core";
 import {StatusBar,Style} from "@capacitor/status-bar";
 import LiveVotingSVJ from "./LiveVotingSVJ.jsx";
@@ -61,9 +62,8 @@ function NativeAndroidStatusBar(){
  return null;
 }
 function FoxaHeaderNetworkStatus(){
- const [online,setOnline]=useState(()=>typeof navigator==="undefined"?true:navigator.onLine);
- useEffect(()=>{const update=()=>setOnline(navigator.onLine);window.addEventListener("online",update);window.addEventListener("offline",update);return()=>{window.removeEventListener("online",update);window.removeEventListener("offline",update)}},[]);
- return <span className={"foxa-header-network "+(online?"is-online":"is-offline")} role="status" aria-live="polite"><span className="foxa-header-network-dot" aria-hidden="true"/>{online?"Online":"Offline"}</span>;
+ const {online,checked}=useFoxaConnectivity();
+ return <span className={"foxa-header-network "+(online&&checked?"is-online":"is-offline")} role="status" aria-live="polite"><span className="foxa-header-network-dot" aria-hidden="true"/>{!checked?"Ověřuji…":online?"Online":"Offline"}</span>;
 }
 export const supabase=createClient("https://qcbyjxovnf fdruiznlnt.supabase.co".replace(" ",""),"sb_publishable_AFfvrodRnmBTOLjlFadYfQ_Foa4e_P1");
 const extraFields=[["object_number","Číslo objektu"],["street","Ulice"],["city","Město"],["manager","Technik"],["referent","Referent"],["economist","Ekonom"],["accountant","Účetní"],["legal_entity","Hlavní účetní subjekt"],["company_id","IČO"],["external_id","Unikátní číslo"],["flats_count","Počet bytů"],["nonresidential_count","Počet nebytů"],["garages_count","Počet garáží"],["shared_spaces_count","Počet spol. prostor"],["invoice_approvers_count","Počet schvalovatelů faktur"],["manager_flag","P. Správce"],["economist_flag","P. Ekon"]];
