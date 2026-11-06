@@ -1,4 +1,5 @@
-import React,{useEffect,useState} from "react";
+import {useFoxaConnectivity} from "./foxaConnectivity.js";
+import React from "react";
 import "./foxa-module-terminal.css";
 
 const MODULES={
@@ -17,8 +18,7 @@ const MODULES={
  "Zpětná vazba":{icon:"✎",subtitle:"Nahlášení podnětů a problémů",links:["Wiki"]}
 };
 export default function FoxaModuleTerminal({page,availablePages=[],onNavigate}){
- const [online,setOnline]=useState(()=>typeof navigator==="undefined"||navigator.onLine);
- useEffect(()=>{const update=()=>setOnline(navigator.onLine);window.addEventListener("online",update);window.addEventListener("offline",update);return()=>{window.removeEventListener("online",update);window.removeEventListener("offline",update)}},[]);
+ const {online,checked}=useFoxaConnectivity();
  if(page==="Přehled"||page==="Kontroly")return null;
  const info=MODULES[page]||{icon:"▦",subtitle:"Pracovní modul",links:[]};
  const links=info.links.filter(name=>availablePages.includes(name));
