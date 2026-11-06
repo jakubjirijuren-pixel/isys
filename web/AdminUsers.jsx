@@ -6,7 +6,7 @@ import ModuleAvailability from "./ModuleAvailability.jsx";
 const roleLabels={admin:"Administrátor",technician:"Technik",referent:"Referent",terminal:"Terminál",department_head:"Vedoucí oddělení",director:"Ředitel",betatester:"Betatester"};
 export default function AdminUsers({supabase,currentUserId}){
  const [emailTemplate,setEmailTemplate]=useState(null),[emailTemplateSaving,setEmailTemplateSaving]=useState(false);
- useEffect(()=>{if(section!=="email-templates")return;let active=true;(async()=>{const {data,error:e}=await supabase.from("foxa_email_templates").select("template_key,title,subject,body").eq("template_key","key_loan_notice").maybeSingle();if(!active)return;if(e)setError("Načtení šablony: "+e.message);else setEmailTemplate(data)})();return()=>{active=false}},[section,supabase]);
+
  const saveEmailTemplate=async e=>{e.preventDefault();if(!emailTemplate)return;setEmailTemplateSaving(true);setError("");const {error:e2}=await supabase.from("foxa_email_templates").update({subject:emailTemplate.subject,body:emailTemplate.body,updated_at:new Date().toISOString(),updated_by:currentUserId}).eq("template_key","key_loan_notice");if(e2)setError("Uložení šablony: "+e2.message);else setNotice("E-mailová šablona byla uložena.");setEmailTemplateSaving(false)};
  const [bulkOpen,setBulkOpen]=useState(false),[bulkRecipients,setBulkRecipients]=useState([]),[bulkTitle,setBulkTitle]=useState("Oznámení FOXA"),[bulkBody,setBulkBody]=useState(""),[bulkRole,setBulkRole]=useState("all");
  const [notifyUser,setNotifyUser]=useState(null),[notifyTitle,setNotifyTitle]=useState("Zpráva od správce FOXA"),[notifyBody,setNotifyBody]=useState("");
@@ -87,6 +87,7 @@ export default function AdminUsers({supabase,currentUserId}){
   finally{setSaving("")}
  };
  const [roleFilter,setRoleFilter]=useState("all"),[section,setSection]=useState("users"),[menuUser,setMenuUser]=useState(null);
+ useEffect(()=>{if(section!=="email-templates")return;let active=true;(async()=>{const {data,error:e}=await supabase.from("foxa_email_templates").select("template_key,title,subject,body").eq("template_key","key_loan_notice").maybeSingle();if(!active)return;if(e)setError("Načtení šablony: "+e.message);else setEmailTemplate(data)})();return()=>{active=false}},[section,supabase]);
  const filtered=users.filter(u=>{const term=search.trim().toLocaleLowerCase("cs");const matchesText=!term||[u.email,u.display_name].some(x=>(x||"").toLocaleLowerCase("cs").includes(term));const roles=u.roles?.length?u.roles:[u.role];return matchesText&&(roleFilter==="all"||roles.includes(roleFilter))});
  const countRole=role=>users.filter(u=>(u.roles?.length?u.roles:[u.role]).includes(role)).length;
  const initials=u=>(u.display_name||u.email||"?").split(/[\\s@._-]+/).filter(Boolean).slice(0,2).map(x=>x[0].toLocaleUpperCase("cs")).join("");
