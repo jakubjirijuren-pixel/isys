@@ -61,6 +61,8 @@ export default function useInspectionCloudDraft({supabase,kind,data,setData,loca
    }catch{
     try{localStorage.setItem(localKey,JSON.stringify({...snapshot,photoFiles:[]}));localStorage.setItem(localStampKey,String(time))}catch{}
    }
+   dirty.current=true;
+   try{localStorage.setItem(pendingKey,"1")}catch{}
    try{
     if(!navigator.onLine||connectionChecked&&!backendOnline)throw new Error("offline");
     const id=user.current;
@@ -80,13 +82,16 @@ export default function useInspectionCloudDraft({supabase,kind,data,setData,loca
   const retry=async()=>{
    if(!navigator.onLine||!dirty.current||!user.current)return;
    const snapshot=latest.current;
+   const current=revision.current;
    const stamp=Date.now();
    try{
     const {error}=await supabase.from("isys_inspection_drafts").upsert({user_id:user.current,kind,content:snapshot,updated_at:new Date(stamp).toISOString()},{onConflict:"user_id,kind"});
     if(error)throw error;
-    dirty.current=false;
-    try{localStorage.removeItem(pendingKey)}catch{}
-    setStatus("Offline koncept synchronizován do Supabase");
+    if(current===revision.current){
+     dirty.current=false;
+     try{localStorage.removeItem(pendingKey)}catch{}
+     setStatus("Offline koncept synchronizován do Supabase");
+    }
    }catch{setStatus("Koncept čeká na synchronizaci");}
   };
   if(backendOnline)retry();
@@ -118,7 +123,6 @@ export default function useInspectionCloudDraft({supabase,kind,data,setData,loca
    localStorage.setItem(localKey,JSON.stringify(snapshot));localStorage.setItem(localStampKey,String(Date.now()));
    dirty.current=true;
    try{localStorage.setItem(pendingKey,"1")}catch{}
-   try{localStorage.setItem(pendingKey,"1")}catch{}
    if(!navigator.onLine||connectionChecked&&!backendOnline){setStatus("Koncept uložen lokálně – synchronizuje se po připojení");return true}
    const id=user.current;
    if(!id)throw new Error("Chybí přihlášení");
@@ -130,7 +134,7 @@ export default function useInspectionCloudDraft({supabase,kind,data,setData,loca
    dirty.current=false;
    try{localStorage.removeItem(pendingKey)}catch{}
    setStatus("Uloženo do Supabase");return true;
-  }catch{setStatus("Nepodařilo se uložit do Supabase");return false}
+  }catch{setStatus("Koncept zůstává uložen lokálně a čeká na synchronizaci");return true}
  };
  return {status,discard,saveNow};
 }
