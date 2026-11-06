@@ -22,6 +22,7 @@ jobs:
           npm run build:android
           node scripts/prepare-android.mjs
           npx cap add android
+          node scripts/configure-android-insets.mjs
       - name: Generate FOXA native launcher icons
         working-directory: web
         run: |
