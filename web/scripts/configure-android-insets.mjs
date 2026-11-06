@@ -1,5 +1,12 @@
 import {readFileSync,writeFileSync} from "node:fs";
 const path="android/app/src/main/java/cz/kubisoft/foxa/MainActivity.java";
+const manifestPath="android/app/src/main/AndroidManifest.xml";
+let manifest=readFileSync(manifestPath,"utf8");
+if(!manifest.includes("android:screenOrientation=\"portrait\"")){
+ manifest=manifest.replace(/(<activity\\b)/,'$1 android:screenOrientation="portrait"');
+ writeFileSync(manifestPath,manifest);
+ console.log("Locked FOXA FIELD to portrait orientation");
+}
 let source=readFileSync(path,"utf8");
 if(!source.includes("extends BridgeActivity"))throw Error("Unexpected Capacitor MainActivity");
 if(source.includes("WindowInsetsCompat"))process.exit(0);
