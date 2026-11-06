@@ -535,3 +535,24 @@
   padding-bottom:8px!important;
  }
 }
+
+/* FOXA FIELD Android: dedicated status-bar clearance across EVERY module.
+   Native inset handling may vary by Android/WebView version; keep a visible
+   reserved strip above the application instead of letting headers overlap. */
+@media screen and (max-width:800px){
+ body.foxa-native-android{
+  --foxa-android-status-clearance: max(28px, env(safe-area-inset-top, 0px));
+ }
+ body.foxa-native-android .layout{
+  padding-top:var(--foxa-android-status-clearance)!important;
+  box-sizing:border-box!important;
+  min-height:100dvh;
+ }
+ body.foxa-native-android .layout aside{
+  top:var(--foxa-android-status-clearance)!important;
+  max-height:calc(100dvh - var(--foxa-android-status-clearance))!important;
+ }
+ body.foxa-native-android .layout .content>header{
+  padding-top:8px!important;
+ }
+}
