@@ -23,11 +23,12 @@ export default function BulkKeyLoan({supabase,buildings,onSaved,onCancel,default
   try{
    const {data,error:rpcError}=await supabase.rpc("foxa_bulk_key_loan_create",{p_borrower:borrower.trim(),p_phone:"",p_company:"",p_email:borrowerEmail.trim(),p_office:office.trim(),p_note:"",p_items:items.map(x=>({building_id:x.building_id,description:x.description.trim(),return_due_at:returnDueAt?new Date(returnDueAt+"T12:00:00").toISOString():null}))});
    if(rpcError)throw rpcError;
+   let emailWarning="";
    if(borrowerEmail.trim()&&data?.[0]?.loan_id){
     const {error:mailError}=await supabase.functions.invoke("foxa-key-loan-email",{body:{loan_id:data[0].loan_id,kind:"loan_receipt",group_id:data[0].group_id}});
-    if(mailError)setError("Výpůjčka byla uložena, ale souhrnnou e-mailovou stvrzenku se nepodařilo odeslat.");
+    if(mailError){let reason=mailError.message;try{const details=await mailError.context?.json?.();reason=details?.error||reason}catch{}emailWarning="Výpůjčka byla uložena, ale souhrnný e-mail nebyl odeslán: "+reason;}
    }
-   onSaved?.({count:data?.length||items.length,groupId:data?.[0]?.group_id,loanIds:(data||[]).map(x=>x.loan_id)});
+   onSaved?.({count:data?.length||items.length,groupId:data?.[0]?.group_id,loanIds:(data||[]).map(x=>x.loan_id),emailWarning,emailSent:!!borrowerEmail.trim()&&!emailWarning});
   }catch(err){setError(err.message||"Hromadnou výpůjčku se nepodařilo uložit.")}finally{setBusy(false)}
  };
  return <section className="keys-panel foxa-bulk-loan"><div className="foxa-bulk-heading"><div><h2>Hromadná výpůjčka klíčů</h2><p>Jeden vypůjčitel, více objektů. Každý dům se eviduje samostatně pro nezávislé vrácení klíčů.</p></div><button type="button" className="secondarybutton" onClick={onCancel}>Zrušit</button></div>
