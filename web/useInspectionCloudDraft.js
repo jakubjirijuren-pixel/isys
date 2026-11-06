@@ -17,13 +17,11 @@ export default function useInspectionCloudDraft({supabase,kind,data,setData,loca
  latest.current=data;
  const user=useRef(null);
  const localStampKey=localKey+"-updated-at";
- const dirtyKey=localKey+"-pending-sync";
  useEffect(()=>{
   let active=true;
   ready.current=false;
   const init=async()=>{
    let local=null,localTime=0;
-   try{dirty.current=localStorage.getItem(dirtyKey)==="1"}catch{}
    try{dirty.current=localStorage.getItem(pendingKey)==="1"}catch{}
    try{const raw=localStorage.getItem(localKey);if(raw){local=JSON.parse(raw);localTime=Number(localStorage.getItem(localStampKey)||0);if(!validate(local))local=null}}catch{}
    try{
@@ -91,11 +89,12 @@ export default function useInspectionCloudDraft({supabase,kind,data,setData,loca
     setStatus("Offline koncept synchronizován do Supabase");
    }catch{setStatus("Koncept čeká na synchronizaci");}
   };
+  if(backendOnline)retry();
   window.addEventListener("online",retry);
   const onVisible=()=>{if(!document.hidden)retry()};
   document.addEventListener("visibilitychange",onVisible);
   return()=>{window.removeEventListener("online",retry);document.removeEventListener("visibilitychange",onVisible)};
- },[supabase,kind,localKey]);
+ },[supabase,kind,localKey,backendOnline]);
  const discard=async()=>{
   paused.current=true;
   dirty.current=false;
@@ -118,7 +117,7 @@ export default function useInspectionCloudDraft({supabase,kind,data,setData,loca
   try{
    localStorage.setItem(localKey,JSON.stringify(snapshot));localStorage.setItem(localStampKey,String(Date.now()));
    dirty.current=true;
-   try{localStorage.setItem(dirtyKey,"1")}catch{}
+   try{localStorage.setItem(pendingKey,"1")}catch{}
    try{localStorage.setItem(pendingKey,"1")}catch{}
    if(!navigator.onLine||connectionChecked&&!backendOnline){setStatus("Koncept uložen lokálně – synchronizuje se po připojení");return true}
    const id=user.current;
