@@ -80,7 +80,7 @@ export default function TechnicalInspections({buildings=[],userEmail="",currentA
  const editPhoto=(id,caption)=>setData(p=>({...p,photoFiles:(p.photoFiles||[]).map(x=>x.id===id?{...x,caption}:x)}));
  const removePhoto=id=>setData(p=>({...p,photoFiles:(p.photoFiles||[]).filter(x=>x.id!==id)}));
  const addSignature=(file,field)=>{if(!file?.type?.startsWith("image/"))return;const reader=new FileReader();reader.onload=()=>{const src=String(reader.result||"");if(!/^data:image\/(png|jpeg|webp);base64,/.test(src)){setNotice("Podporované podpisy: PNG, JPG, WEBP.");return}set(field,src);setSignatureMode("");setNotice("Podpis vložen.")};reader.readAsDataURL(file)};
- const save=async()=>{setNotice(await saveNow()?"Koncept technické kontroly uložen do Supabase.":"Koncept se nepodařilo uložit do Supabase.")};
+ const save=async()=>{setNotice(await saveNow()?(navigator.onLine?"Koncept uložen; ověř stav synchronizace.":"Koncept uložen lokálně; po připojení se synchronizuje."):"Koncept se nepodařilo uložit.")};
  const clear=async()=>{if(!window.confirm("Opravdu vymazat rozpracovanou technickou kontrolu?"))return;if(await discard()){setData(fresh());setNotice("Formulář byl vymazán.")}};
  const buildHtml=()=>{
 
