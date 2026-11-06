@@ -292,3 +292,28 @@
  .foxa-terminal-home .terminal-status{grid-template-columns:1fr!important;gap:9px!important;}
  .foxa-terminal-home .terminal-status-side{border-left:0!important;border-top:1px solid #235d7e!important;padding:9px 0 0 29px!important;}
 }
+
+/* FOXA FIELD: center all visible bottom navigation actions, including when only 4 are available. */
+@media screen and (max-width: 800px){
+ .layout:has(.foxa-terminal-home) .foxa-terminal-dock{
+   display:flex!important;
+   align-items:stretch!important;
+   justify-content:space-evenly!important;
+   gap:4px!important;
+   padding-left:max(10px,env(safe-area-inset-left,0px))!important;
+   padding-right:max(10px,env(safe-area-inset-right,0px))!important;
+   padding-bottom:max(8px,env(safe-area-inset-bottom,0px))!important;
+ }
+ .layout:has(.foxa-terminal-home) .foxa-terminal-dock button{
+   flex:1 1 0!important;
+   width:0!important;
+   min-width:0!important;
+   max-width:105px!important;
+   margin:0!important;
+   text-align:center!important;
+   display:flex!important;
+   flex-direction:column!important;
+   align-items:center!important;
+   justify-content:center!important;
+ }
+}
