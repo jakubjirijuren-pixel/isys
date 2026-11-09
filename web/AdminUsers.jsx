@@ -29,7 +29,7 @@ export default function AdminUsers({supabase,currentUserId}){
   if(!u.email||saving)return;
   if(!window.confirm("Odeslat e-mail pro obnovení hesla uživateli "+u.email+"?"))return;
   setSaving(u.id);setError("");setNotice("");
-  const {error}=await supabase.auth.resetPasswordForEmail(u.email);
+  const {error}=await supabase.auth.resetPasswordForEmail(u.email,{redirectTo:window.location.origin+"/isys/"});
   if(error)setError("Odeslání odkazu pro obnovení hesla selhalo: "+error.message);
   else setNotice("Požadavek na odeslání e-mailu pro obnovení hesla byl přijat pro "+u.email+". Doručení závisí na nastavení e-mailů v Supabase.");
   setSaving("");
