@@ -382,3 +382,24 @@
   background:#17293a!important;border-color:#35506a!important;color:#e8f1f8;
  }
 }
+
+
+/* FOXA sidebar — layered blue gradient requested for desktop navigation. */
+@media screen and (min-width:701px){
+ .layout aside{
+  background:linear-gradient(158deg,#132b50 0%,#123e69 42%,#102e54 72%,#0c1c38 100%)!important;
+  border-right:1px solid rgba(115,186,239,.22)!important;
+ }
+ .layout aside .nav:hover{
+  background:rgba(81,157,216,.17)!important;
+  color:#f2faff!important;
+ }
+ .layout aside .nav.selected{
+  background:linear-gradient(100deg,rgba(29,115,166,.62),rgba(43,141,187,.38))!important;
+  border-color:rgba(91,194,245,.55)!important;
+  color:#b9f3ff!important;
+  box-shadow:inset 0 0 0 1px rgba(84,183,230,.12)!important;
+ }
+ .layout aside .sideTitle{color:#9bc3e4}
+ .layout aside .sidefooter{color:#9abbd7}
+}
