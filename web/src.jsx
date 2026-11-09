@@ -110,6 +110,7 @@ function App(){
  const accentThemes=[["blue","Modrá"],["green","Zelená"],["purple","Fialová"],["orange","Oranžová"],["red","Červená"],["teal","Tyrkysová"]];
  const [accentTheme,setAccentTheme]=useState(()=>{try{return localStorage.getItem("isys-accent-theme")||"blue"}catch{return "blue"}});
  useEffect(()=>{document.documentElement.dataset.accent=accentThemes.some(([id])=>id===accentTheme)?accentTheme:"blue";try{localStorage.setItem("isys-accent-theme",accentTheme)}catch{}},[accentTheme]);
+ const [session,setSession]=useState(null),[passwordRecovery,setPasswordRecovery]=useState(()=>{const p=new URLSearchParams(window.location.hash.slice(1));const q=new URLSearchParams(window.location.search);return p.get("type")==="recovery"||q.get("type")==="recovery"||q.has("token_hash")&&q.get("type")==="recovery"}),[passwordChange,setPasswordChange]=useState(""),[passwordRepeat,setPasswordRepeat]=useState(""),[passwordChangeError,setPasswordChangeError]=useState(""),[passwordChangeBusy,setPasswordChangeBusy]=useState(false),[loading,setLoading]=useState(true),[email,setEmail]=useState(""),[password,setPassword]=useState(""),[error,setError]=useState(""),[busy,setBusy]=useState(false);
  const [foxaOrganizations,setFoxaOrganizations]=useState([]);
  const [foxaOrgError,setFoxaOrgError]=useState("");
  useEffect(()=>{
@@ -128,7 +129,6 @@ function App(){
   })();
   return()=>{active=false};
  },[session?.user?.id]);
- const [session,setSession]=useState(null),[passwordRecovery,setPasswordRecovery]=useState(()=>{const p=new URLSearchParams(window.location.hash.slice(1));const q=new URLSearchParams(window.location.search);return p.get("type")==="recovery"||q.get("type")==="recovery"||q.has("token_hash")&&q.get("type")==="recovery"}),[passwordChange,setPasswordChange]=useState(""),[passwordRepeat,setPasswordRepeat]=useState(""),[passwordChangeError,setPasswordChangeError]=useState(""),[passwordChangeBusy,setPasswordChangeBusy]=useState(false),[loading,setLoading]=useState(true),[email,setEmail]=useState(""),[password,setPassword]=useState(""),[error,setError]=useState(""),[busy,setBusy]=useState(false);
  const [importRows,setImportRows]=useState(null),[importError,setImportError]=useState(""),[importBusy,setImportBusy]=useState(false),[search,setSearch]=useState(initialView.search||"");
  const [selectedBuilding,setSelectedBuilding]=useState(null);
  const [buildingView,setBuildingView]=useState(()=>{try{return localStorage.getItem("isys-building-view")==="list"?"list":"cards"}catch{return "cards"}});
