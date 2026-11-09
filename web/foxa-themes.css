@@ -232,3 +232,73 @@
 :root[data-theme="dark"] .foxa-praha8-board button{background:#20384e;color:#f0f7fc;border-color:#466179;}
 :root[data-theme="dark"] .foxa-praha8-board button:hover{background:#2b4962;}
 :root[data-theme="dark"] .foxa-praha8-board > div > div > div > p{color:#b7cbdc;}
+
+
+/* FOXA 2026 refresh — shared, non-destructive visual polish. */
+:root{
+ --fx-radius:18px;--fx-radius-lg:24px;--fx-radius-control:12px;
+ --fx-shadow:0 5px 24px rgba(17,47,71,.065);
+ --fx-shadow-hover:0 14px 36px rgba(17,47,71,.12);
+}
+.layout:not(.foxa-native-android){background:#f4f7fb}
+.layout aside{background:linear-gradient(180deg,#102d46 0%,#0b2034 100%);border-right:1px solid rgba(255,255,255,.08)}
+.layout aside .brand{border-bottom-color:rgba(255,255,255,.1)}
+.layout aside .nav{border:1px solid transparent;transition:background .18s,border-color .18s,transform .18s}
+.layout aside .nav:hover{background:rgba(255,255,255,.085);border-color:rgba(255,255,255,.08)}
+.layout aside .nav.selected{background:linear-gradient(110deg,#247ba6,#17618b);box-shadow:0 5px 16px rgba(0,13,31,.22)}
+.layout .content>header{background:rgba(255,255,255,.96);border-bottom:1px solid #e3eaf1;box-shadow:0 2px 12px rgba(17,47,71,.025)}
+.layout .body{background:transparent}
+.layout .body>h1,.layout .body .pageheading h1{letter-spacing:-.045em;font-weight:800}
+.layout .body :is(.tiles article,.buildinglist article,.inspectionpanel,.technicalpanel,.keys-panel,.attendance-card,.vacation-panel,.taskform,.tasklist,.taskdetail,.wiki-panel,.adminuserrow){
+ border-radius:var(--fx-radius)!important;
+ box-shadow:var(--fx-shadow);
+ transition:box-shadow .2s,border-color .2s;
+}
+@media(hover:hover){
+ .layout .body :is(.tiles article,.buildinglist article,.inspectionpanel,.technicalpanel,.keys-panel,.attendance-card,.vacation-panel,.tasklist,.wiki-panel):hover{
+  box-shadow:var(--fx-shadow-hover);border-color:color-mix(in srgb,var(--fx-accent) 24%,var(--fx-border));
+ }
+}
+.layout .body :is(button,.primary,.secondarybutton){transition:background-color .17s,border-color .17s,box-shadow .17s,transform .17s}
+.layout .body :is(button,.primary,.secondarybutton):focus-visible,.layout aside .nav:focus-visible{
+ outline:3px solid color-mix(in srgb,var(--fx-accent) 45%,transparent);outline-offset:2px;
+}
+.layout .body :is(input:not([type=checkbox]):not([type=radio]),select,textarea){
+ border-radius:var(--fx-radius-control);max-width:100%;
+}
+.layout .body :is(.pageheading,.inspectionheading,.technicalhead,.tasksheader,.wikihead){
+ border-radius:var(--fx-radius-lg)!important;
+}
+.layout .body .hero.foxa-dashboard-hero{
+ background:linear-gradient(120deg,#123650 0%,#1b6085 72%,#257b9d 100%);
+ border:1px solid rgba(255,255,255,.12);
+ box-shadow:0 12px 34px rgba(16,63,93,.16);
+}
+:root[data-theme="dark"] .layout{background:#0b1521}
+:root[data-theme="dark"] .layout .content>header{background:#122638;border-bottom-color:#2d4458}
+:root[data-theme="dark"] .layout .body .hero.foxa-dashboard-hero{background:linear-gradient(120deg,#102b43,#174963)}
+/* FOXA FIELD: touch-friendly, cohesive modern handheld treatment. */
+@media screen and (max-width:650px){
+ .layout .body.foxa-terminal-module:not(.foxa-terminal-page-prehled){
+  --field-bg:#091e30;--field-panel:#12334c;--field-border:#315c78;--field-accent:#54d4f4;
+  background:linear-gradient(180deg,#0a2439,#091b2b)!important;
+ }
+ .foxa-field-module-header{border-radius:20px!important;box-shadow:0 8px 26px rgba(0,0,0,.13)}
+ .foxa-field-module-back{border-radius:12px!important;min-height:44px}
+ .foxa-field-module-network{border-radius:999px}
+ .foxa-terminal-module:not(.foxa-terminal-page-prehled) :is(.keys-panel,.attendance-card,.fleet-card,.vacation-panel,.technicalpanel,.inspectionpanel,.taskform,.tasklist,.pf-editor,.pf-preview,.om-panel,.wiki-panel,.adminpanel){
+  border-radius:18px!important;
+ }
+ .foxa-terminal-module:not(.foxa-terminal-page-prehled) :is(input:not([type=checkbox]):not([type=radio]),select,textarea){
+  border-radius:12px!important;min-height:48px;
+ }
+ .foxa-terminal-module:not(.foxa-terminal-page-prehled) button:focus-visible{
+  outline:3px solid #69d8f2;outline-offset:2px;
+ }
+ .layout .body.foxa-terminal-module:not(.foxa-terminal-page-prehled) :is(.tiles article,.inspectionpanel,.technicalpanel,.keys-panel,.attendance-card,.vacation-panel,.tasklist):hover{
+  box-shadow:none;
+ }
+}
+@media(prefers-reduced-motion:reduce){
+ .layout aside .nav,.layout .body :is(button,.primary,.secondarybutton,.tiles article,.buildinglist article){transition:none!important}
+}
