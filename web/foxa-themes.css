@@ -450,3 +450,15 @@
  border-radius:10px;color:#fff;font-size:12px;font-weight:650;
 }
 .layout aside .foxa-organization-current span{color:#93e5d5}
+
+/* FOXA multi-organization workspace */
+.foxa-org-list{display:grid;gap:6px;margin:8px 0 12px}
+.foxa-org-entry{display:flex;align-items:center;gap:5px}
+.foxa-org-entry>button:first-child{flex:1;text-align:left;min-width:0;border:1px solid var(--border,#d5dce5);border-radius:8px;background:transparent;color:inherit;padding:9px 10px;cursor:pointer;overflow-wrap:anywhere}
+.foxa-org-entry>button[aria-current="page"]{font-weight:700;border-color:var(--accent,#3979cc)}
+.foxa-org-entry>button:disabled{opacity:.55;cursor:not-allowed}
+.foxa-org-entry>button:not(:first-child){padding:8px;border-radius:7px}
+.foxa-org-draft-panel{display:grid;gap:7px;padding:10px 0}
+.foxa-org-draft-panel label{font-size:12px;font-weight:600}
+.foxa-org-draft-panel input{min-width:0;width:100%;box-sizing:border-box;border:1px solid var(--border,#cbd5e1);border-radius:7px;padding:9px;background:var(--surface,#fff);color:inherit}
+.foxa-org-draft-panel button{border-radius:7px;padding:9px;cursor:pointer}
