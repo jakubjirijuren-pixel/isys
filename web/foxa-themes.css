@@ -403,3 +403,30 @@
  .layout aside .sideTitle{color:#9bc3e4}
  .layout aside .sidefooter{color:#9abbd7}
 }
+
+
+/* Accent-aware sidebar: follows the existing system color selection instantly. */
+:root{
+ --foxa-nav-gradient-top:#132b50;
+ --foxa-nav-gradient-mid:#123e69;
+ --foxa-nav-gradient-bottom:#0c1c38;
+ --foxa-nav-highlight:#5bc4f1;
+}
+:root[data-accent="green"]{--foxa-nav-gradient-top:#123b34;--foxa-nav-gradient-mid:#17634c;--foxa-nav-gradient-bottom:#0a2826;--foxa-nav-highlight:#6be3b5}
+:root[data-accent="purple"]{--foxa-nav-gradient-top:#292044;--foxa-nav-gradient-mid:#533c82;--foxa-nav-gradient-bottom:#19162f;--foxa-nav-highlight:#c2a4ff}
+:root[data-accent="orange"]{--foxa-nav-gradient-top:#42301f;--foxa-nav-gradient-mid:#855026;--foxa-nav-gradient-bottom:#302017;--foxa-nav-highlight:#ffbc73}
+:root[data-accent="red"]{--foxa-nav-gradient-top:#42232d;--foxa-nav-gradient-mid:#823d4b;--foxa-nav-gradient-bottom:#2d1722;--foxa-nav-highlight:#ff9ba9}
+:root[data-accent="teal"]{--foxa-nav-gradient-top:#11383e;--foxa-nav-gradient-mid:#17656c;--foxa-nav-gradient-bottom:#0c262d;--foxa-nav-highlight:#7de3e0}
+@media screen and (min-width:701px){
+ .layout aside{
+  background:linear-gradient(158deg,var(--foxa-nav-gradient-top) 0%,var(--foxa-nav-gradient-mid) 44%,var(--foxa-nav-gradient-top) 73%,var(--foxa-nav-gradient-bottom) 100%)!important;
+  border-right-color:color-mix(in srgb,var(--foxa-nav-highlight) 30%,transparent)!important;
+ }
+ .layout aside .nav:hover{background:color-mix(in srgb,var(--foxa-nav-highlight) 17%,transparent)!important}
+ .layout aside .nav.selected{
+  background:linear-gradient(100deg,color-mix(in srgb,var(--foxa-nav-highlight) 26%,transparent),color-mix(in srgb,var(--foxa-nav-highlight) 12%,transparent))!important;
+  border-color:color-mix(in srgb,var(--foxa-nav-highlight) 68%,transparent)!important;
+  color:var(--foxa-nav-highlight)!important;
+  box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--foxa-nav-highlight) 15%,transparent)!important;
+ }
+}
