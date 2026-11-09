@@ -430,3 +430,23 @@
   box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--foxa-nav-highlight) 15%,transparent)!important;
  }
 }
+
+
+/* Organization workspace identity — no switching until tenant-aware data APIs are verified. */
+.layout aside .foxa-organization-card{
+ display:flex;align-items:center;gap:12px;margin:14px 5px 18px;padding:12px;
+ background:rgba(255,255,255,.075);border:1px solid rgba(176,214,244,.2);
+ border-radius:12px;color:#fff;
+}
+.layout aside .foxa-organization-monogram{
+ display:grid;place-items:center;flex:0 0 38px;width:38px;height:38px;
+ border-radius:10px;background:rgba(139,189,231,.18);font-weight:800;font-size:17px;
+}
+.layout aside .foxa-organization-card strong{display:block;font-size:12px;line-height:1.4}
+.layout aside .foxa-organization-card small{display:block;font-size:11px;color:#a9c4e0}
+.layout aside .foxa-organization-current{
+ display:flex;align-items:center;justify-content:space-between;margin:6px 5px 18px;
+ padding:12px 13px;background:rgba(255,255,255,.075);border:1px solid rgba(176,214,244,.22);
+ border-radius:10px;color:#fff;font-size:12px;font-weight:650;
+}
+.layout aside .foxa-organization-current span{color:#93e5d5}
