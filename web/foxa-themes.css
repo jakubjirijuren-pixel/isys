@@ -302,3 +302,83 @@
 @media(prefers-reduced-motion:reduce){
  .layout aside .nav,.layout .body :is(button,.primary,.secondarybutton,.tiles article,.buildinglist article){transition:none!important}
 }
+
+
+/* FOXA visual direction inspired by REMESLO 2.0: navy shell, restrained
+   dashboard surfaces, compact navigation and clear hierarchy. */
+:root{
+ --fx-surface:#fff;--fx-surface-soft:#f7f9fc;--fx-text:#182b42;
+ --fx-muted:#74859b;--fx-border:#e3eaf2;
+ --fx-radius:14px;--fx-radius-lg:17px;--fx-radius-control:10px;
+ --fx-shadow:0 5px 22px rgba(22,43,73,.045);
+ --fx-shadow-hover:0 9px 26px rgba(22,43,73,.085);
+}
+.layout{background:#f5f7fb!important;color:#182b42}
+.layout aside{
+ background:#101b30!important;color:#c4cee0!important;
+ box-shadow:none!important;border-right:1px solid #26354b!important;
+}
+.layout aside .brand{padding-top:18px;padding-bottom:22px}
+.layout aside .nav{font-size:13px;font-weight:550;border-radius:9px!important;padding:11px 13px!important;color:#b6c3d6}
+.layout aside .nav:hover{background:#1b2a42!important;color:white!important}
+.layout aside .nav.selected{
+ background:#234b5b!important;color:#8de4d2!important;
+ border-color:#345e68!important;box-shadow:none!important;font-weight:750;
+}
+.layout .content>header{height:74px;background:#fff!important;border-bottom:1px solid #e8edf4;box-shadow:none!important}
+.layout .body{max-width:1600px;margin-inline:auto;padding:clamp(18px,2.4vw,34px);background:transparent!important}
+.layout .body :is(h1,h2,h3){letter-spacing:-.025em}
+.layout .body>h1,.layout .body .pageheading h1{font-size:clamp(24px,2vw,30px);font-weight:780}
+.layout .body :is(.tiles article,.buildinglist article,.inspectionpanel,.technicalpanel,.keys-panel,.attendance-card,.vacation-panel,.taskform,.tasklist,.taskdetail,.wiki-panel,.adminuserrow){
+ background:#fff;border:1px solid #e8edf4!important;border-radius:13px!important;
+ box-shadow:0 5px 22px rgba(27,52,83,.04)!important;
+}
+.layout .body :is(.pageheading,.inspectionheading,.technicalhead,.tasksheader,.wikihead){
+ background:#fff!important;border:1px solid #e8edf4!important;
+ border-radius:13px!important;box-shadow:0 5px 22px rgba(27,52,83,.035)!important;
+}
+.layout .body .tiles{gap:18px}
+.layout .body .tiles article{padding:22px}
+.layout .body .tiles article h3{font-size:12px;font-weight:650;color:#8190a4}
+.layout .body .tiles article p{font-size:clamp(22px,2.4vw,30px);font-weight:780;color:#1d2b42}
+.layout .body .hero.foxa-dashboard-hero{
+ background:linear-gradient(110deg,#152943,#20475a)!important;
+ border:1px solid #2c5364!important;border-radius:14px!important;
+ box-shadow:0 6px 20px rgba(16,38,62,.11)!important;
+}
+.layout .body :is(.primary,button.primary){border-radius:9px;font-weight:700}
+.layout .body :is(input:not([type=checkbox]):not([type=radio]),select,textarea){
+ border-radius:9px;border-color:#d8e1eb;
+}
+.layout .body :is(input,select,textarea):focus-visible{outline:2px solid var(--isys-accent,#146c9c);outline-offset:1px}
+:root[data-theme="dark"] .layout{background:#0d1625!important;color:#e5eef7}
+:root[data-theme="dark"] .layout aside{background:#0b1424!important;border-color:#27384e!important}
+:root[data-theme="dark"] .layout .content>header{background:#142338!important;border-color:#2a3d53}
+:root[data-theme="dark"] .layout .body :is(.tiles article,.buildinglist article,.inspectionpanel,.technicalpanel,.keys-panel,.attendance-card,.vacation-panel,.taskform,.tasklist,.taskdetail,.wiki-panel,.adminuserrow,.pageheading,.inspectionheading,.technicalhead,.tasksheader,.wikihead){
+ background:#17293a!important;border-color:#35506a!important;color:#e8f1f8;
+}
+:root[data-theme="dark"] .layout .body .tiles article :is(h3,p){color:#e3edf8}
+@media screen and (max-width:650px){
+ /* FIELD follows the same navy workspace language as the REMESLO terminal. */
+ .layout .body.foxa-terminal-module:not(.foxa-terminal-page-prehled){
+  --field-bg:#101e33;--field-panel:#172d44;--field-border:#334e66;
+  --field-accent:#72d6cf;
+  background:#f4f6fa!important;color:#17243b!important;
+ }
+ .foxa-field-module-header{
+  background:linear-gradient(110deg,#101e33,#1b304a)!important;
+  border:1px solid #2c445e!important;border-radius:16px!important;
+  box-shadow:0 5px 18px rgba(11,33,52,.1)!important;
+ }
+ .foxa-field-module-back{background:#1b304a!important;border-color:#37536e!important;color:#e5f4ff!important}
+ .foxa-terminal-module:not(.foxa-terminal-page-prehled) :is(.keys-panel,.attendance-card,.fleet-card,.vacation-panel,.technicalpanel,.inspectionpanel,.taskform,.tasklist,.pf-editor,.pf-preview,.om-panel,.wiki-panel,.adminpanel){
+  background:#fff;border:1px solid #e3e8f0!important;
+  border-radius:16px!important;box-shadow:0 5px 18px rgba(11,33,52,.045)!important;
+ }
+ :root[data-theme="dark"] .layout .body.foxa-terminal-module:not(.foxa-terminal-page-prehled){
+  background:#101b2b!important;color:#e6f0f8!important;
+ }
+ :root[data-theme="dark"] .foxa-terminal-module:not(.foxa-terminal-page-prehled) :is(.keys-panel,.attendance-card,.fleet-card,.vacation-panel,.technicalpanel,.inspectionpanel,.taskform,.tasklist,.pf-editor,.pf-preview,.om-panel,.wiki-panel,.adminpanel){
+  background:#17293a!important;border-color:#35506a!important;color:#e8f1f8;
+ }
+}
