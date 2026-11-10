@@ -12,3 +12,10 @@
 .foxa-merge-picker{flex:1 1 280px;min-width:220px;display:grid;gap:6px}.foxa-merge-picker>input{width:100%;box-sizing:border-box;padding:11px;border:1px solid #8baec8;border-radius:8px;background:#fff;color:#17354d;font:inherit}.foxa-merge-results{max-height:215px;overflow:auto;border:1px solid #9db7c9;border-radius:9px;background:#fff;display:grid}.foxa-merge-results button{display:block;width:100%;text-align:left;border:0;border-radius:0;background:transparent;color:#18364d;padding:9px 12px;font:inherit;cursor:pointer}.foxa-merge-results button:hover,.foxa-merge-results button.selected{background:#d7eaf8;color:#13496d}.foxa-merge-results span{padding:12px;font-size:13px}[data-theme="dark"] .foxa-merge-picker>input,[data-theme="dark"] .foxa-merge-results{background:#172b3e;color:#e3edf6;border-color:#486780}[data-theme="dark"] .foxa-merge-results button{color:#e3edf6}[data-theme="dark"] .foxa-merge-results button:hover,[data-theme="dark"] .foxa-merge-results button.selected{background:#315675;color:#fff}
 
 .foxa-phonebook-extension{display:inline-block;padding:4px 9px;border-radius:7px;border:1px solid #adc9dc;background:#e8f2f9;color:#244f6a;font-size:13px;font-weight:600;cursor:default}[data-theme="dark"] .foxa-phonebook-extension{background:#28445c;border-color:#51738b;color:#d2eaff}
+
+/* Email notification preference: clear accessible state colors */
+.foxa-phonebook-admin-actions .foxa-key-email-toggle{font-weight:700;border-width:1px;border-style:solid;transition:background-color .15s,border-color .15s,color .15s}
+.foxa-phonebook-admin-actions .foxa-key-email-toggle-on{background:#dcfce7!important;border-color:#16a34a!important;color:#166534!important}
+.foxa-phonebook-admin-actions .foxa-key-email-toggle-off{background:#fee2e2!important;border-color:#dc2626!important;color:#991b1b!important}
+.foxa-phonebook-admin-actions .foxa-key-email-toggle:focus-visible{outline:3px solid #2563eb;outline-offset:2px}
+.foxa-phonebook-admin-actions .foxa-key-email-toggle:disabled{opacity:.6}
